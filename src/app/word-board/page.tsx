@@ -1,13 +1,8 @@
 'use client';
 import WordBoard from "@/app/word-board/WordBoard";
-import Button from "./Button";
+import Button from "../../components/Button";
 import { useRef, useState } from "react";
-
-interface Word {
-  word: string,
-  x: number,
-  y: number
-}
+import Word from "@/interfaces/Word";
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +74,7 @@ export default function Home() {
   }
   return (
     <div className="p-5 my-10 mx-auto bg-gray-200 rounded shadow-2xl w-[1050px]">
-      <WordBoard words={words as [Word]} />
+      <WordBoard words={words as [Word]} setWords={setWords} />
       <div className="flex justify-center rounded mt-3 w-[1000px]">
         <input ref={inputRef} placeholder="在此插入/删除单词" type="text" className="focus:outline-none border-b-2 border-black" />
         <Button label="插入" onClick={insertWord}></Button>

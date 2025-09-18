@@ -1,5 +1,5 @@
 import { useState, useRef, forwardRef, useEffect, KeyboardEvent, useCallback } from "react";
-import Button from "../Button";
+import Button from "../../../../components/Button";
 import { getIndex, getNearistIndex, parseSrt } from "../../subtitle";
 import SubtitleDisplay from "./SubtitleDisplay";
 
