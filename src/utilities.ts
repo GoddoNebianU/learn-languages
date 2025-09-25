@@ -1,4 +1,4 @@
-export default function inspect(word: string) {
+export function inspect(word: string) {
     const goto = (url: string) => {
         window.open(url, '_blank');
     }

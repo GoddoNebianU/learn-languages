@@ -1,4 +1,4 @@
-import inspect from "@/utilities";
+import { inspect } from "@/utilities";
 
 export default function SubtitleDisplay({ subtitle }: { subtitle: string }) {
     const words = subtitle.match(/\b[\w']+(?:-[\w']+)*\b/g) || [];

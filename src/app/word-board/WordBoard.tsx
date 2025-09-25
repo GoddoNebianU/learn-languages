@@ -1,21 +1,11 @@
 'use client';
 
+import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/constants";
 import Word from "@/interfaces/Word";
-import inspect from "@/utilities";
-import { Dispatch, SetStateAction } from "react";
-
-function DraggableWord({ word }: { word: Word }) {
-    return ((<span
-        style={{
-            left: `${Math.floor(word.x * (1000 - 18 * word.word.length))}px`,
-            top: `${Math.floor(word.y * (600 - 30))}px`,
-        }}
-        className={`select-none cursor-pointer absolute font-mono text-[30px] border-amber-100 border-1`}
-        onClick={inspect(word.word)}>{word.word}</span>))
-}
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 export default function WordBoard(
-    { words, setWords }: {
+    { words, setWords, selectWord }: {
         words: [
             {
                 word: string,
@@ -23,20 +13,26 @@ export default function WordBoard(
                 y: number
             }
         ],
-        setWords: Dispatch<SetStateAction<Word[]>>
+        setWords: Dispatch<SetStateAction<Word[]>>,
+        selectWord: (word: string) => void
     }
 ) {
-    const inspect = (word: string) => {
-        const goto = (url: string) => {
-            window.open(url, '_blank');
-        }
-        return () => {
-            word = word.toLowerCase();
-            goto(`https://www.youdao.com/result?word=${word}&lang=en`);
-        }
+    function DraggableWord({ word }: { word: Word }) {
+        return (<span
+            style={{
+                left: `${Math.floor(word.x * (BOARD_WIDTH - TEXT_WIDTH * word.word.length))}px`,
+                top: `${Math.floor(word.y * (BOARD_HEIGHT - TEXT_SIZE))}px`,
+                fontSize: `${TEXT_SIZE}px`
+            }}
+            className="select-none cursor-pointer absolute font-mono border-amber-100 border-1"
+            // onClick={inspect(word.word)}>{word.word}</span>))
+            onClick={() => { selectWord(word.word); }}>{word.word}</span>);
     }
     return (
-        <div className="relative rounded bg-white w-[1000px] h-[600px]">
+        <div style={{
+            width: `${BOARD_WIDTH}px`,
+            height: `${BOARD_HEIGHT}px`
+        }} className="relative rounded bg-white">
             {words.map(
                 (v: {
                     word: string,

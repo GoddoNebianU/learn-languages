@@ -1,19 +1,24 @@
-function Link(
-  {href, label}: {href: string, label: string}
+import Link from "next/link";
+
+function MyLink(
+  { href, label }: { href: string, label: string }
 ) {
   return (
-    <a className="border-2 border-black m-1 p-5 rounded font-bold hover:bg-gray-200" href={href}>{label}</a>
+    <Link className="hover:bg-gray-400 border-2 border-black m-1 p-2 rounded font-bold" href={href}>{label}</Link>
   )
 }
 
 export default function Home() {
   return (
-    <div className="w-80 m-auto mt-[100px]">
-      <h1 className="mb-8 text-4xl font-bold">学外语</h1>
-      <Link href="/srt-player" label="srt-player"></Link>
-      <Link href="/word-board" label="word-board"></Link>
-      <p className="mt-8">srt-player: 一个基于srt字幕文件的逐句视频播放器，需要上传视频文件与字幕文件使用。</p>
-      <p>word-board: 一个板式单词记忆工具。</p>
+    <div className="bg-gray-50 flex h-screen w-screen items-center justify-center">
+      <div className="bg-white m-4 p-4 rounded-2xl shadow-2xl border-gray-400 border-2 flex-col flex items-center">
+        <span className="text-4xl font-bold">Learn Languages</span>
+        <div className="LinkList flex flex-wrap sm:flex-row">
+          <MyLink href="/srt-player" label="srt-player"></MyLink>
+          <MyLink href="/word-board" label="word-board"></MyLink>
+          <MyLink href={'/changelog.txt'} label="changelog"></MyLink>
+        </div>
+      </div>
     </div>
   );
 }
