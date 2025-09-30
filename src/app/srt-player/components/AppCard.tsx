@@ -11,7 +11,7 @@ export default function AppCard() {
     const [srtUrl, setSrtUrl] = useState<string | null>(null);
 
     return (
-        <div className="min-w-[410px] max-h-[1000px] max-w-[1400px] flex items-center flex-col bg-gray-200 rounded shadow-2xl w-8/12 py-12">
+        <div className="min-w-[410px] max-w-[1000px] w-10/12 flex items-center flex-col bg-gray-200 rounded shadow-2xl py-12">
             <p className="text-4xl font-extrabold">SRT Video Player</p>
             <VideoPanel
                 videoUrl={videoUrl}

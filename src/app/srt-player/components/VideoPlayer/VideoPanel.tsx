@@ -155,16 +155,14 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
 
     return (
         <div className="flex flex-col w-9/12" onKeyDown={handleKeyDownEvent}>
-            <video className="max-h-80" ref={videoRef} onTimeUpdate={timeUpdate}></video>
+            <video className="w-12/12" ref={videoRef} onTimeUpdate={timeUpdate}></video>
             <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
-            <div className="buttons">
-                <ul className="">
-                    <Button label={isPlaying ? 'PAUSE' : 'PLAY'} onClick={togglePlayPause}></Button>
-                    <Button label="NEXT" onClick={next}></Button>
-                    <Button label="PREVIOUS" onClick={previous}></Button>
-                    <Button label="RESTART" onClick={restart}></Button>
-                    <Button label={`AUTOPAUSE(${autoPause ? 'Y' : 'N'})`} onClick={handleAutoPauseToggle}></Button>
-                </ul>
+            <div className="buttons flex mt-2 gap-2 flex-wrap">
+                <Button label={isPlaying ? 'PAUSE' : 'PLAY'} onClick={togglePlayPause}></Button>
+                <Button label="NEXT" onClick={next}></Button>
+                <Button label="PREVIOUS" onClick={previous}></Button>
+                <Button label="RESTART" onClick={restart}></Button>
+                <Button label={`AUTOPAUSE(${autoPause ? 'Y' : 'N'})`} onClick={handleAutoPauseToggle}></Button>
             </div>
             <input className="seekbar" type="range" min={0} max={srtLength} onChange={handleSeek} step={1} value={progress}></input>
             <span>{spanText}</span>

@@ -139,19 +139,21 @@ export default function Home() {
   //   inputRef.current.value = '';
   // }
   return (
-    <div onKeyDown={handleKeyDown} className="p-5 my-10 mx-auto bg-gray-200 rounded shadow-2xl w-[1050px]">
-      <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
-      <div className="flex justify-center rounded mt-3 w-[1000px]">
-        <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
-        <Button label="插入" onClick={insertWord}></Button>
-        <Button label="删除" onClick={deleteWord}></Button>
-        <Button label="搜索" onClick={searchWord}></Button>
-        <Button label="导入" onClick={importWords}></Button>
-        <Button label="导出" onClick={exportWords}></Button>
-        <Button label="删光" onClick={deleteAll}></Button>
-        {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
+    <div className="flex w-screen h-screen justify-center items-center">
+      <div onKeyDown={handleKeyDown} className="p-5 bg-gray-200 rounded shadow-2xl">
+        <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
+        <div className="flex justify-center rounded mt-3">
+          <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
+          <Button label="插入" onClick={insertWord}></Button>
+          <Button label="删除" onClick={deleteWord}></Button>
+          <Button label="搜索" onClick={searchWord}></Button>
+          <Button label="导入" onClick={importWords}></Button>
+          <Button label="导出" onClick={exportWords}></Button>
+          <Button label="删光" onClick={deleteAll}></Button>
+          {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
+        </div>
+        <input type="file" ref={inputFileRef} className="hidden" accept="application/json" onChange={handleFileChange}></input>
       </div>
-      <input type="file" ref={inputFileRef} className="hidden" accept="application/json" onChange={handleFileChange}></input>
     </div>
   );
 }
