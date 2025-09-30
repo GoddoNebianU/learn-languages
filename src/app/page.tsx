@@ -16,6 +16,7 @@ export default function Home() {
         <div className="LinkList flex flex-wrap sm:flex-row">
           <MyLink href="/srt-player" label="srt-player"></MyLink>
           <MyLink href="/word-board" label="word-board"></MyLink>
+          <MyLink href="/ipa-reader" label="ipa-reader"></MyLink>
           <MyLink href={'/changelog.txt'} label="changelog"></MyLink>
         </div>
       </div>

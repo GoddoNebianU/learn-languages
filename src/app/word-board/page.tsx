@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import { KeyboardEvent, useRef, useState } from "react";
 import Word from "@/interfaces/Word";
 import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/constants";
-import { inspect } from "@/utilities";
+import { inspect } from "@/utils";
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
