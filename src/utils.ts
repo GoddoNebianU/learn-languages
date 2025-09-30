@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { env } from "process";
 
 export function inspect(word: string) {
     const goto = (url: string) => {
@@ -14,7 +15,8 @@ export function urlGoto(url: string) {
     window.open(url, '_blank');
 }
 
-const ai = new GoogleGenAI({});
+const api_key = env.GEMINI_API_KEY;
+const ai = new GoogleGenAI(api_key ? { apiKey: api_key } : {});
 const prompt = `[TEXT]
 请推断以上文本的语言，并返回其宽式国际音标(IPA)，以JSON格式
 如：
