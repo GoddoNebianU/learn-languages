@@ -1,20 +1,38 @@
 "use client";
 
 import Button from "@/components/Button";
-import { getIPA, urlGoto } from "@/utils";
 import { useRef, useState } from "react";
 
 export default function Home() {
   const respref = useRef<HTMLParagraphElement>(null);
   const inputref = useRef<HTMLTextAreaElement>(null);
   const [ipa_result, set_ipa_result] = useState<{ lang: string, ipa: string } | null>(null);
+  const [genaiEnabled, setGenaiEnabled] = useState<boolean>(true);
 
   const generateIPA = () => {
+    if (!genaiEnabled) return;
+    setGenaiEnabled(false);
+
     const text = inputref.current!.value.trim();
     if (text.length === 0) return;
-    getIPA(text).then((result: { lang: string, ipa: string } | null) => {
-      set_ipa_result(result);
-    });
+
+    const params = new URLSearchParams({ text: text });
+    fetch(`/api/ipa?${params}`)
+      .then(response => {
+        if (response.ok) {
+          return response.json().then((data) => {
+            set_ipa_result(data);
+          });
+        } else {
+          return response.text()
+            .then(errorText => {
+              console.error(errorText);
+            });
+        }
+      })
+      .finally(() => {
+        setGenaiEnabled(true);
+      });
   }
   const readIPA = () => {
     const text = inputref.current!.value.trim();
@@ -33,8 +51,9 @@ export default function Home() {
           </textarea>
         </div>
         <div className="m-2 flex-row flex gap-2">
-          <Button onClick={generateIPA} label="生成IPA"></Button>
+          <Button onClick={generateIPA} label="生成IPA" disabled={!genaiEnabled}></Button>
           <Button onClick={readIPA} label="朗读"></Button>
+          {/* <Button onClick={() => { setGenaiEnabled(!genaiEnabled) }} label="test"></Button> */}
         </div>
         <div ref={respref} className="whitespace-pre-line">
           语言：{ipa_result?.lang}{'\n'}
