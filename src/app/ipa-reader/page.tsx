@@ -12,7 +12,15 @@ export default function Home() {
     if (!reqEnabled) return;
     setReqEnabled(false);
 
-    respref.current!.innerText = '正在生成国际音标（IPA），请稍等～'
+    respref.current!.innerText = '正在生成国际音标（IPA），请稍等～';
+    let timer: NodeJS.Timeout;
+    (() => {
+      let count = 0;
+      timer = setInterval(() => {
+        respref.current!.innerText = '正在生成国际音标（IPA），请稍等～';
+        respref.current!.innerText += `\n(waiting for ${++count}s)`
+      }, 1000);
+    })();
 
     const text = inputref.current!.value.trim();
     if (text.length === 0) return;
@@ -28,13 +36,14 @@ export default function Home() {
         return response.json();
       })
       .then(data => {
-        respref.current!.innerText = `LANG: ${data.lang}\nIPA:${data.ipa}`;
+        respref.current!.innerText = `LANG: ${data.lang}\nIPA: ${data.ipa}`;
       })
       .catch(error => {
         respref.current!.innerText = `错误: ${error.message}`;
       })
       .finally(() => {
         setReqEnabled(true);
+        clearInterval(timer);
       });
   }
   const readIPA = () => {
