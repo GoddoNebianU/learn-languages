@@ -50,7 +50,7 @@ export default function Home() {
         <div className="flex flex-row">
           <textarea ref={inputref}
             placeholder="输入任意语言的文本"
-            className="h-8 w-128 border-gray-300 border rounded focus:outline-blue-400 focus:outline-2">
+            className="w-64 h-32 border-gray-300 border rounded focus:outline-blue-400 focus:outline-2">
           </textarea>
         </div>
         <div className="m-2 flex-row flex gap-2">
