@@ -6,12 +6,13 @@ import { useRef, useState } from "react";
 export default function Home() {
   const respref = useRef<HTMLParagraphElement>(null);
   const inputref = useRef<HTMLTextAreaElement>(null);
-  const [ipa_result, set_ipa_result] = useState<{ lang: string, ipa: string } | null>(null);
-  const [genaiEnabled, setGenaiEnabled] = useState<boolean>(true);
+  const [reqEnabled, setReqEnabled] = useState<boolean>(true);
 
   const generateIPA = () => {
-    if (!genaiEnabled) return;
-    setGenaiEnabled(false);
+    if (!reqEnabled) return;
+    setReqEnabled(false);
+
+    respref.current!.innerText = '正在生成国际音标（IPA），请稍等～'
 
     const text = inputref.current!.value.trim();
     if (text.length === 0) return;
@@ -19,19 +20,21 @@ export default function Home() {
     const params = new URLSearchParams({ text: text });
     fetch(`/api/ipa?${params}`)
       .then(response => {
-        if (response.ok) {
-          return response.json().then((data) => {
-            set_ipa_result(data);
-          });
-        } else {
-          return response.text()
-            .then(errorText => {
-              console.error(errorText);
-            });
+        if (!response.ok) {
+          return response.json().then(resj => {
+            throw new Error(`HTTP ${response.status}: ${resj.error} ${resj.message}`);
+          })
         }
+        return response.json();
+      })
+      .then(data => {
+        respref.current!.innerText = `LANG: ${data.lang}\nIPA:${data.ipa}`;
+      })
+      .catch(error => {
+        respref.current!.innerText = `错误: ${error.message}`;
       })
       .finally(() => {
-        setGenaiEnabled(true);
+        setReqEnabled(true);
       });
   }
   const readIPA = () => {
@@ -51,14 +54,10 @@ export default function Home() {
           </textarea>
         </div>
         <div className="m-2 flex-row flex gap-2">
-          <Button onClick={generateIPA} label="生成IPA" disabled={!genaiEnabled}></Button>
+          <Button onClick={generateIPA} label="生成IPA"></Button>
           <Button onClick={readIPA} label="朗读"></Button>
-          {/* <Button onClick={() => { setGenaiEnabled(!genaiEnabled) }} label="test"></Button> */}
         </div>
-        <div ref={respref} className="whitespace-pre-line">
-          语言：{ipa_result?.lang}{'\n'}
-          IPA：{ipa_result?.ipa}
-        </div>
+        <div ref={respref} className="whitespace-pre-line"></div>
       </div>
     </div>
   );
