@@ -1,13 +1,101 @@
 "use client";
 
 import Button from "@/components/Button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EdgeTTS } from "edge-tts-universal/browser";
+
+const useAudioPlayer = () => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio();
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const playAudio = (audioUrl: string) => {
+    if (audioRef.current) {
+      audioRef.current.src = audioUrl;
+      audioRef.current.play().catch(error => {
+        console.error('播放失败:', error);
+      });
+    }
+  };
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  };
+
+  return {
+    playAudio,
+    pauseAudio,
+    stopAudio
+  };
+};
 
 export default function Home() {
   const respref = useRef<HTMLParagraphElement>(null);
   const inputref = useRef<HTMLTextAreaElement>(null);
   const [reqEnabled, setReqEnabled] = useState<boolean>(true);
+  const [textInfo, setTextInfo] = useState<{
+    lang: string,
+    ipa: string,
+    locale: string,
+    text: string
+  } | null>(null);
 
+  const { playAudio, pauseAudio, stopAudio } = useAudioPlayer();
+  const [voicesData, setVoicesData] = useState<{
+    locale: string,
+    short_name: string
+  }[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/list_of_voices.json');
+        const jsonData = await response.json();
+        setVoicesData(jsonData);
+      } catch (error) {
+        console.error('加载JSON失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+  if (loading) return <div>加载中...</div>;
+  if (!voicesData) return <div>加载失败</div>;
+
+  const readIPA = async () => {
+    if (!textInfo) {
+      respref.current!.innerText = '请先生成IPA。';
+      return;
+    }
+    const voice = voicesData.find(v => v.locale.startsWith(textInfo.locale));
+    if (!voice) {
+      respref.current!.innerText = '暂不支持朗读' + textInfo.lang;
+      return;
+    }
+    const tts = new EdgeTTS(textInfo.text, voice.short_name);
+    const result = await tts.synthesize();
+    playAudio(URL.createObjectURL(result.audio));
+  }
   const generateIPA = () => {
     if (!reqEnabled) return;
     setReqEnabled(false);
@@ -36,6 +124,7 @@ export default function Home() {
         return response.json();
       })
       .then(data => {
+        setTextInfo({ ...data, text: text });
         respref.current!.innerText = `LANG: ${data.lang}\nIPA: ${data.ipa}`;
       })
       .catch(error => {
@@ -45,12 +134,6 @@ export default function Home() {
         setReqEnabled(true);
         clearInterval(timer);
       });
-  }
-  const readIPA = () => {
-    const text = inputref.current!.value.trim();
-    if (text.length === 0) return;
-    // urlGoto(`https://fanyi.baidu.com/gettts?lan=uk&text=${text}&spd=3`);
-    respref.current!.innerText = '暂不支持朗读';
   }
   return (
     <div className="flex w-screen justify-center">

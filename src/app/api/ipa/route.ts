@@ -39,12 +39,14 @@ async function getIPAFromLLM(text: string) {
 结果如：
 {
 "lang": "german",
-"ipa": "[ˈɡuːtn̩ ˈtaːk]"
+"ipa": "[ˈɡuːtn̩ ˈtaːk]",
+"locale": "de-DE"
 }
 注意：
 直接返回json文本，
 ipa一定要加[]，
-lang的值是小写字母的英文的语言名称
+lang的值是小写字母的英文的语言名称，
+locale如果可能有多个，选取最可能的一个，其中使用符号"-"
 `.replace('[TEXT]', text)
         }
     ];
