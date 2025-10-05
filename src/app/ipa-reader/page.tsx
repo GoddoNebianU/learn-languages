@@ -147,7 +147,7 @@ export default function Home() {
         </div>
         <div className="m-2 flex-row flex gap-2">
           <Button onClick={generateIPA} label="生成IPA"></Button>
-          <Button onClick={readIPA} label="朗读"></Button>
+          <Button onClick={readIPA} label="朗读IPA"></Button>
         </div>
         <div ref={respref} className="whitespace-pre-line w-64"></div>
       </div>
