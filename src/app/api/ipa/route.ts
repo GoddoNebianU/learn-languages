@@ -15,7 +15,7 @@ async function callZhipuAPI(messages: { role: string, content: string }[], model
         body: JSON.stringify({
             model: model,
             messages: messages,
-            temperature: 0.5,
+            temperature: 0.2,
             thinking: {
                 type: 'disabled'
             }
@@ -29,37 +29,31 @@ async function callZhipuAPI(messages: { role: string, content: string }[], model
     return await response.json();
 }
 
-
-
-// callZhipuAPI(messages)
-//     .then(result => {
-//         console.log(result.choices[0].message.content);
-//     })
-//     .catch(error => {
-//         console.error('错误:', error);
-//     });
-
 async function getIPAFromLLM(text: string) {
+    console.log(text);
     const messages = [
         {
             role: 'user', content: `
-[TEXT]
-请推断以上文本的语言，并返回其宽式国际音标(IPA)，以JSON格式
-如：
+请推断下面文本的语言，并返回其宽式国际音标(IPA)，以JSON格式
+[[TEXT]]
+结果如：
 {
 "lang": "german",
 "ipa": "[ˈɡuːtn̩ ˈtaːk]"
 }
-注意：直接返回json文本，
-不要带markdown记号，
+注意：
+直接返回json文本，
 ipa一定要加[]，
-lang的值是小写英语的语言名称
+lang的值是小写字母的英文的语言名称
 `.replace('[TEXT]', text)
         }
     ];
     try {
         const response = await callZhipuAPI(messages);
-        return JSON.parse(response.choices[0].message.content);
+        let to_parse = response.choices[0].message.content.trim() as string;
+        if (to_parse.startsWith('`')) to_parse = to_parse.slice(7, to_parse.length - 3);
+        if (to_parse.length === 0) throw Error('ai啥也每说');
+        return JSON.parse(to_parse);
     } catch (error) {
         console.error(error);
         return null;
