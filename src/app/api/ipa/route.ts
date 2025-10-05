@@ -15,7 +15,8 @@ async function callZhipuAPI(messages: { role: string, content: string }[], model
         body: JSON.stringify({
             model: model,
             messages: messages,
-            temperature: 0.6
+            temperature: 0.6,
+            thinking: 'disabled'
         })
     });
 
