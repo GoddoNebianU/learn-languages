@@ -66,7 +66,7 @@ export default function Home() {
           <Button onClick={generateIPA} label="生成IPA"></Button>
           <Button onClick={readIPA} label="朗读"></Button>
         </div>
-        <div ref={respref} className="whitespace-pre-line"></div>
+        <div ref={respref} className="whitespace-pre-line w-64"></div>
       </div>
     </div>
   );
