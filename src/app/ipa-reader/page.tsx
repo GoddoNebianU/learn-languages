@@ -12,7 +12,7 @@ export default function Home() {
     if (!reqEnabled) return;
     setReqEnabled(false);
 
-    respref.current!.innerText = '正在生成国际音标（IPA），请稍等～';
+    respref.current!.innerText = '生成国际音标中，请稍等～';
     let timer: NodeJS.Timeout;
     (() => {
       let count = 0;
