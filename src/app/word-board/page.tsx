@@ -142,7 +142,7 @@ export default function Home() {
     <div className="flex w-screen h-screen justify-center items-center">
       <div onKeyDown={handleKeyDown} className="p-5 bg-gray-200 rounded shadow-2xl">
         <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
-        <div className="flex justify-center rounded mt-3">
+        <div className="flex justify-center rounded mt-3 gap-1">
           <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
           <Button label="插入" onClick={insertWord}></Button>
           <Button label="删除" onClick={deleteWord}></Button>
