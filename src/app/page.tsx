@@ -43,9 +43,9 @@ function LinkGrid() {
     <div className="grid grid-cols-1 grid-rows-6 md:grid-cols-3">
 
       <LinkArea
-        href="/ipa-reader"
-        name="IPA朗读器"
-        description="生成任何已知语言的国际音标（IPA），大声朗读"
+        href="/translator"
+        name="翻译器"
+        description="翻译到任何语言，并标注国际音标（IPA）"
         color="#a56068"></LinkArea>
       <LinkArea
         href="/word-board"

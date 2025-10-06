@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import { EdgeTTS } from "edge-tts-universal";
 import { useRef, useState } from "react";
-import useAudioPlayer from "./useAudioPlayer";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 export default function IPAForm(
     { voicesData }: {

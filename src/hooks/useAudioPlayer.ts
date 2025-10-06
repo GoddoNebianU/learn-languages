@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 
-export default function useAudioPlayer() {
+
+export function useAudioPlayer() {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     useEffect(() => {
         audioRef.current = new Audio();
@@ -36,4 +37,4 @@ export default function useAudioPlayer() {
         pauseAudio,
         stopAudio
     };
-};
+}
