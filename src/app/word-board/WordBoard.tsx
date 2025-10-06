@@ -24,7 +24,7 @@ export default function WordBoard(
                 top: `${Math.floor(word.y * (BOARD_HEIGHT - TEXT_SIZE))}px`,
                 fontSize: `${TEXT_SIZE}px`
             }}
-            className="select-none cursor-pointer absolute font-mono border-amber-100 border-1"
+            className="select-none cursor-pointer absolute code-block border-amber-100 border-1"
             // onClick={inspect(word.word)}>{word.word}</span>))
             onClick={() => { selectWord(word.word); }}>{word.word}</span>);
     }
