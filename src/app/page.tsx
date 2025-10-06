@@ -1,33 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
 
-function MyLink(
-  { href, label }: { href: string, label: string }
-) {
-  return (
-    <Link className="font-bold" href={href}>{label}</Link>
-  )
-}
+
+
+
 
 function TopArea() {
   return (
     <div className="bg-[#35786f] text-white">
-      <div className="flex justify-between items-center w-screen h-16 px-8">
-        <Link href={'/'} className="text-xl flex">
-          <Image
-            src={'/favicon.ico'}
-            alt="logo"
-            width="32"
-            height="32"
-            className="rounded-4xl">
-          </Image>
-          <span className="font-bold">学语言</span>
-        </Link>
-        <div className="flex gap-4 text-xl">
-          <MyLink href="/changelog.txt" label="关于"></MyLink>
-          <MyLink href="https://github.com/GoddoNebianU/learn-languages" label="源码"></MyLink>
-        </div>
-      </div>
       <div className="flex justify-center items-center h-[75vh]">
         <div className="mb-16 mx-64">
           <h1 className="text-6xl md:text-9xl mb-8">Learn Languages</h1>
