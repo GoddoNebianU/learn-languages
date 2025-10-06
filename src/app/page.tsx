@@ -9,41 +9,95 @@ function MyLink(
   )
 }
 
-function Navbar() {
+function TopArea() {
   return (
-    <div className="flex justify-between items-center w-screen h-[96px] bg-white px-8">
-      <Link href={'/'} className="text-xl flex">
-        <Image
-          src={'/favicon.ico'}
-          alt="logo"
-          width="32"
-          height="32"
-          className="rounded-4xl">
-        </Image>
-        <span>学语言</span>
-      </Link>
-      <div className="flex gap-8 text-xl">
-        <MyLink href="/about" label="关于"></MyLink>
-        <MyLink href="https://github.com/GoddoNebianU/learn-languages" label="源码"></MyLink>
+    <div className="bg-[#35786f] text-white">
+      <div className="flex justify-between items-center w-screen h-16 px-8">
+        <Link href={'/'} className="text-xl flex">
+          <Image
+            src={'/favicon.ico'}
+            alt="logo"
+            width="32"
+            height="32"
+            className="rounded-4xl">
+          </Image>
+          <span className="font-bold">学语言</span>
+        </Link>
+        <div className="flex gap-4 text-xl">
+          <MyLink href="/changelog.txt" label="关于"></MyLink>
+          <MyLink href="https://github.com/GoddoNebianU/learn-languages" label="源码"></MyLink>
+        </div>
       </div>
-      <div></div>
+      <div className="flex justify-center items-center h-[75vh]">
+        <div className="mb-16 mx-64">
+          <h1 className="text-6xl md:text-9xl mb-8">Learn Languages</h1>
+          <p className="text-2xl md:text-5xl">Here is a very useful website to help you learn almost every language in the world, including artificial languages.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface LinkAreaProps {
+  href: string,
+  name: string,
+  description: string,
+  color: string
+}
+function LinkArea(
+  { href, name, description, color }: LinkAreaProps
+) {
+  return (
+    <Link href={href}
+      style={{ backgroundColor: color }}
+      className={`h-32 md:h-[20vw] flex justify-center items-center`}>
+      <div className="text-white m-8">
+        <h1 className="text-4xl">{name}</h1>
+        <p className="text-xl">{description}</p>
+      </div>
+    </Link>
+  );
+}
+
+function LinkGrid() {
+  return (
+    <div className="grid grid-cols-1 grid-rows-6 md:grid-cols-3">
+
+      <LinkArea
+        href="/ipa-reader"
+        name="IPA朗读器"
+        description="生成任何已知语言的国际音标（IPA），大声朗读"
+        color="#a56068"></LinkArea>
+      <LinkArea
+        href="/word-board"
+        name="词墙"
+        description="将单词固定到一片区域，高效便捷地记忆单词"
+        color="#e9b353"></LinkArea>
+      <LinkArea
+        href="/srt-player"
+        name="逐句视频播放器"
+        description="基于SRT字幕文件，逐句播放视频以模仿母语者的发音"
+        color="#3c988d"></LinkArea>
+      <LinkArea
+        href="#"
+        name="更多功能"
+        description="开发中，敬请期待"
+        color="#578aad"></LinkArea>
     </div>
   )
 }
 
 export default function Home() {
   return (<>
-    <Navbar></Navbar>
-    <div className="bg-gray-50 flex h-screen w-full items-center justify-center">
-      <div className="bg-white m-4 p-4 rounded-2xl shadow-2xl border-gray-400 border-2 flex-col flex items-center">
-        <span className="text-4xl font-bold">Learn Languages</span>
-        <div className="LinkList flex flex-wrap sm:flex-row">
-          <MyLink href="/srt-player" label="srt-player"></MyLink>
-          <MyLink href="/word-board" label="word-board"></MyLink>
-          <MyLink href="/ipa-reader" label="ipa-reader"></MyLink>
-          <MyLink href={'/changelog.txt'} label="changelog"></MyLink>
-        </div>
-      </div>
+    <TopArea></TopArea>
+    <div className="w-screen h-64 flex justify-center font-serif items-center flex-col">
+      <p className="text-3xl">Stay hungry, stay foolish.</p>
+      <cite className="text-[#e9b353] text-xl">—— Steve Jobs</cite>
     </div>
+    <div className="bg-[#bbbbbb] w-screen h-64 flex justify-center items-center flex-col">
+      <span className="text-[100px] text-white">探索网站</span>
+      <div className="w-0 h-0 border-l-[40px] border-r-[40px] border-t-[30px] border-l-transparent border-r-transparent border-t-white"></div>
+    </div>
+    <LinkGrid></LinkGrid>
   </>);
 }
