@@ -52,11 +52,11 @@ function LinkGrid() {
         name="朗读器"
         description="识别并朗读文本，支持循环朗读、朗读速度调节"
         color="#578aad"></LinkArea>
-      <LinkArea
+      {/* <LinkArea
         href="/word-board"
         name="词墙"
         description="将单词固定到一片区域，高效便捷地记忆单词"
-        color="#e9b353"></LinkArea>
+        color="#e9b353"></LinkArea> */}
       <LinkArea
         href="/srt-player"
         name="逐句视频播放器"
