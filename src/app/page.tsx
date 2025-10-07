@@ -48,6 +48,11 @@ function LinkGrid() {
         description="翻译到任何语言，并标注国际音标（IPA）"
         color="#a56068"></LinkArea>
       <LinkArea
+        href="/text-speaker"
+        name="朗读器"
+        description="识别并朗读文本，支持循环朗读、朗读速度调节"
+        color="#578aad"></LinkArea>
+      <LinkArea
         href="/word-board"
         name="词墙"
         description="将单词固定到一片区域，高效便捷地记忆单词"
@@ -61,7 +66,7 @@ function LinkGrid() {
         href="#"
         name="更多功能"
         description="开发中，敬请期待"
-        color="#578aad"></LinkArea>
+        color="#cab48a"></LinkArea>
     </div>
   )
 }

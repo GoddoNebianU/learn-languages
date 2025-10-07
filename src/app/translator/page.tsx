@@ -4,7 +4,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { EdgeTTS } from "edge-tts-universal/browser";
+import IMAGES from "@/config/images";
+import { getTTSAudioUrl } from "@/utils";
 
 export default function Home() {
   const [voicesData, setVoicesData] = useState<{
@@ -82,7 +83,7 @@ export default function Home() {
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setTextInfo({
       source: {
-        text: e.target.value,
+        text: e.target.value.trim(),
         language: null,
         ipa: null,
         locale: null
@@ -114,20 +115,21 @@ export default function Home() {
     if (!voice) {
       return;
     }
-    const tts = new EdgeTTS(textInfo.source.text, voice.short_name);
-    const result = await tts.synthesize();
-    playAudio(URL.createObjectURL(result.audio));
+
+    const url = await getTTSAudioUrl(textInfo.source.text, voice.short_name);
+    await playAudio(url);
+    URL.revokeObjectURL(url);
   }
+
   const readTarget = async () => {
     if (!textInfo.target.text || textInfo.target.text.length === 0) return;
 
     const voice = voicesData.find(v => v.locale.startsWith(textInfo.target.locale!));
-    if (!voice) {
-      return;
-    }
-    const tts = new EdgeTTS(textInfo.target.text, voice.short_name);
-    const result = await tts.synthesize();
-    playAudio(URL.createObjectURL(result.audio));
+    if (!voice) return;
+
+    const url = await getTTSAudioUrl(textInfo.target.text, voice.short_name);
+    await playAudio(url);
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -135,16 +137,16 @@ export default function Home() {
       <div className="w-screen flex flex-col md:flex-row md:justify-between gap-2 p-2">
         <div className="card1 w-full md:w-1/2 flex flex-col-reverse gap-2">
           <div className="textarea1 border-1 border-gray-200 rounded-2xl w-full h-64 p-2">
-            <textarea onChange={handleInputChange} className="resize-none h-9/12 w-full focus:outline-0"></textarea>
-            <div className="ipa w-full h-1/12 scroll-auto text-gray-600">
+            <textarea onChange={handleInputChange} className="resize-none h-8/12 w-full focus:outline-0"></textarea>
+            <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
               {textInfo.source.ipa || ''}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick onClick={async () => {
                 if (textInfo.source.text && textInfo.source.text.length !== 0)
                   await navigator.clipboard.writeText(textInfo.source.text);
-              }} src={'/copy_all_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg'} alt="copy"></IconClick>
-              <IconClick onClick={readSource} src={'/play_arrow_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg'} alt="play"></IconClick>
+              }} src={IMAGES.copy_all} alt="copy"></IconClick>
+              <IconClick onClick={readSource} src={IMAGES.play_arrow} alt="play"></IconClick>
             </div>
           </div>
           <div className="option1 w-full">
@@ -153,18 +155,18 @@ export default function Home() {
         </div>
         <div className="card2 w-full md:w-1/2 flex flex-col-reverse gap-2">
           <div className="textarea2 bg-gray-100 rounded-2xl w-full h-64 p-2">
-            <div className="h-9/12 w-full">{
+            <div className="h-8/12 w-full">{
               textInfo.target.text || ''
             }</div>
-            <div className="ipa w-full h-1/12 scroll-auto text-gray-600">
+            <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
               {textInfo.target.ipa || ''}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick onClick={async () => {
                 if (textInfo.target.text && textInfo.target.text.length !== 0)
                   await navigator.clipboard.writeText(textInfo.target.text);
-              }} src={'/copy_all_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg'} alt="copy"></IconClick>
-              <IconClick onClick={readTarget} src={'/play_arrow_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg'} alt="play"></IconClick>
+              }} src={IMAGES.copy_all} alt="copy"></IconClick>
+              <IconClick onClick={readTarget} src={IMAGES.play_arrow} alt="play"></IconClick>
             </div>
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">

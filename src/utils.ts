@@ -1,3 +1,4 @@
+import { EdgeTTS, ProsodyOptions } from "edge-tts-universal/browser";
 import { env } from "process";
 
 export function inspect(word: string) {
@@ -40,3 +41,12 @@ export async function callZhipuAPI(messages: { role: string; content: string; }[
     return await response.json();
 }
 
+export async function getTTSAudioUrl(text: string, short_name: string, options: ProsodyOptions | undefined = undefined) {
+    const tts = new EdgeTTS(text, short_name, options);
+    try {
+        const result = await tts.synthesize();
+        return URL.createObjectURL(result.audio);
+    } catch (e) {
+        throw e;
+    }
+}
