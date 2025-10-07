@@ -162,7 +162,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
                 <Button label="上句" onClick={previous}></Button>
                 <Button label="下句" onClick={next}></Button>
                 <Button label="句首" onClick={restart}></Button>
-                <Button label={`自动播放(${autoPause ? '是' : '否'})`} onClick={handleAutoPauseToggle}></Button>
+                <Button label={`自动暂停(${autoPause ? '是' : '否'})`} onClick={handleAutoPauseToggle}></Button>
             </div>
             <input className="seekbar" type="range" min={0} max={srtLength} onChange={handleSeek} step={1} value={progress}></input>
             <span>{spanText}</span>
