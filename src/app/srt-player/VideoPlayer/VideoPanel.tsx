@@ -1,7 +1,7 @@
 import { useState, useRef, forwardRef, useEffect, KeyboardEvent, useCallback } from "react";
-import Button from "../../../../components/Button";
-import { getIndex, getNearistIndex, parseSrt } from "../../subtitle";
 import SubtitleDisplay from "./SubtitleDisplay";
+import Button from "@/components/Button";
+import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
 
 type VideoPanelProps = {
     videoUrl: string | null;
@@ -154,15 +154,15 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
     }
 
     return (
-        <div className="flex flex-col w-9/12" onKeyDown={handleKeyDownEvent}>
-            <video className="w-12/12" ref={videoRef} onTimeUpdate={timeUpdate}></video>
+        <div className="w-full flex flex-col" onKeyDown={handleKeyDownEvent}>
+            <video className="bg-gray-200" ref={videoRef} onTimeUpdate={timeUpdate}></video>
             <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
             <div className="buttons flex mt-2 gap-2 flex-wrap">
-                <Button label={isPlaying ? 'PAUSE' : 'PLAY'} onClick={togglePlayPause}></Button>
-                <Button label="NEXT" onClick={next}></Button>
-                <Button label="PREVIOUS" onClick={previous}></Button>
-                <Button label="RESTART" onClick={restart}></Button>
-                <Button label={`AUTOPAUSE(${autoPause ? 'Y' : 'N'})`} onClick={handleAutoPauseToggle}></Button>
+                <Button label={isPlaying ? '暂停' : '播放'} onClick={togglePlayPause}></Button>
+                <Button label="上句" onClick={previous}></Button>
+                <Button label="下句" onClick={next}></Button>
+                <Button label="句首" onClick={restart}></Button>
+                <Button label={`自动播放(${autoPause ? '是' : '否'})`} onClick={handleAutoPauseToggle}></Button>
             </div>
             <input className="seekbar" type="range" min={0} max={srtLength} onChange={handleSeek} step={1} value={progress}></input>
             <span>{spanText}</span>

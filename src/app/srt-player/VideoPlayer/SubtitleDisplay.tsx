@@ -4,7 +4,7 @@ export default function SubtitleDisplay({ subtitle }: { subtitle: string }) {
     const words = subtitle.match(/\b[\w']+(?:-[\w']+)*\b/g) || [];
     let i = 0;
     return (
-        <div className="subtitle overflow-y-auto h-16 mt-2 break-words bg-black/50 font-sans text-white text-center text-2xl">
+        <div className="w-full subtitle overflow-auto h-16 mt-2 break-words bg-black/50 font-sans text-white text-center text-2xl">
             {
                 words.map((v) => (
                     <span

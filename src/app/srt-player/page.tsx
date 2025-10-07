@@ -1,9 +1,25 @@
-import AppCard from "./components/AppCard";
+'use client';
+
+import { useRef, useState } from "react";
+import UploadArea from "./UploadArea";
+import VideoPanel from "./VideoPlayer/VideoPanel";
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [srtUrl, setSrtUrl] = useState<string | null>(null);
   return (
-    <div className="flex w-screen h-screen items-center justify-center">
-      <AppCard />
+    <div className="flex w-screen pt-8 items-center justify-center">
+      <div className="w-[80vw] md:w-[45vw] flex items-center flex-col">
+        <VideoPanel
+          videoUrl={videoUrl}
+          srtUrl={srtUrl}
+          ref={videoRef} />
+        <UploadArea
+          setVideoUrl={setVideoUrl}
+          setSrtUrl={setSrtUrl} />
+      </div>
     </div>
   );
 }
