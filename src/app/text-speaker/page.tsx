@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -7,12 +8,13 @@ import { getTTSAudioUrl } from "@/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 export default function Home() {
+    const [ipaEnabled, setIPAEnabled] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [pause, setPause] = useState(true);
     const [autopause, setAutopause] = useState(true);
     const textRef = useRef('');
     const localeRef = useRef<string | null>(null);
-    const [ipa, setIPA] = useState<string | null>(null);
+    const [ipa, setIPA] = useState<string>('');
     const objurlRef = useRef<string | null>(null);
     const [processing, setProcessing] = useState(false);
 
@@ -44,7 +46,7 @@ export default function Home() {
         return () => {
             audio.removeEventListener('ended', handleEnded);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [audioRef, autopause]);
 
 
@@ -55,6 +57,20 @@ export default function Home() {
     const speak = async () => {
         if (processing) return;
         setProcessing(true);
+
+        if (ipa.length === 0 && ipaEnabled && textRef.current.length !== 0) {
+            const params = new URLSearchParams({
+                text: textRef.current
+            });
+            fetch(`/api/ipa?${params}`)
+                .then(res => res.json())
+                .then(data => {
+                    setIPA(data.ipa);
+                }).catch(e => {
+                    console.error(e);
+                    setIPA('');
+                })
+        }
 
         if (pause) {
             // 如果没在读
@@ -70,12 +86,11 @@ export default function Home() {
                     // 第一次播放
                     console.log('downloading text info');
                     const params = new URLSearchParams({
-                        text: textRef.current
+                        text: textRef.current.slice(0, 30)
                     });
                     try {
-                        const textinfo = await (await fetch(`/api/textinfo?${params}`)).json();
+                        const textinfo = await (await fetch(`/api/locale?${params}`)).json();
                         localeRef.current = textinfo.locale;
-                        setIPA(textinfo.ipa);
 
                         const voice = voicesData.find(v => v.locale.startsWith(localeRef.current!));
                         if (!voice) throw 'Voice not found.';
@@ -98,7 +113,6 @@ export default function Home() {
 
                         setPause(true);
                         localeRef.current = null;
-                        setIPA(null);
 
                         setProcessing(false);
                     }
@@ -116,7 +130,7 @@ export default function Home() {
     const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         textRef.current = e.target.value.trim();
         localeRef.current = null;
-        setIPA(null);
+        setIPA('');
         if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
         objurlRef.current = null;
         stopAudio();
@@ -142,6 +156,7 @@ export default function Home() {
                 {ipa}
             </div>
             <div className="w-full flex flex-row gap-2 justify-center items-center">
+                <Button label="generate ipa" selected={ipaEnabled} onClick={() => setIPAEnabled(!ipaEnabled)}></Button>
                 <IconClick size={45} onClick={() => {
                     setAutopause(!autopause); if (objurlRef) { stopAudio(); } setPause(true);
                 }} src={

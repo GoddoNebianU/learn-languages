@@ -8,40 +8,21 @@ import IMAGES from "@/config/images";
 import { getTTSAudioUrl } from "@/utils";
 
 export default function Home() {
+  const [ipaEnabled, setIPAEnabled] = useState(true);
   const [voicesData, setVoicesData] = useState<{
     locale: string,
     short_name: string
   }[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [targetLang, setTargetLang] = useState('Italian');
-  const nullTextInfo = {
-    source: {
-      text: null,
-      language: null,
-      ipa: null,
-      locale: null
-    },
-    target: {
-      text: null,
-      language: null,
-      ipa: null,
-      locale: null
-    }
-  };
-  const [textInfo, setTextInfo] = useState<{
-    source: {
-      text: string | null,
-      language: string | null,
-      ipa: string | null,
-      locale: string | null
-    },
-    target: {
-      text: string | null,
-      language: string | null,
-      ipa: string | null,
-      locale: string | null
-    }
-  }>(nullTextInfo);
+
+  const [sourceText, setSourceText] = useState('');
+  const [targetText, setTargetText] = useState('');
+  const [sourceIPA, setSourceIPA] = useState('');
+  const [targetIPA, setTargetIPA] = useState('');
+  const [sourceLocale, setSourceLocale] = useState<string | null>(null);
+  const [targetLocale, setTargetLocale] = useState<string | null>(null);
+
   const [translating, setTranslating] = useState(false);
   const { playAudio } = useAudioPlayer();
 
@@ -66,68 +47,140 @@ export default function Home() {
 
   const translate = () => {
     if (translating) return;
-    if (!textInfo.source.text || textInfo.source.text.length === 0) return;
+    if (sourceText.length === 0) return;
 
     setTranslating(true);
 
+    setTargetText('');
+    setSourceLocale(null);
+    setTargetLocale(null);
+    setSourceIPA('');
+    setTargetIPA('');
+
     const params = new URLSearchParams({
-      text: textInfo.source.text,
+      text: sourceText,
       target: targetLang
     })
     fetch(`/api/translate?${params}`)
       .then(res => res.json())
-      .then(setTextInfo)
-      .finally(() => setTranslating(false));
+      .then(obj => {
+        setSourceLocale(obj.source_locale);
+        setTargetLocale(obj.target_locale);
+        setTargetText(obj.target_text);
+
+        if (ipaEnabled) {
+          const params = new URLSearchParams({
+            text: sourceText
+          });
+          fetch(`/api/ipa?${params}`)
+            .then(res => res.json())
+            .then(data => {
+              setSourceIPA(data.ipa);
+            }).catch(e => {
+              console.error(e);
+              setSourceIPA('');
+            })
+          const params2 = new URLSearchParams({
+            text: obj.target_text
+          });
+          fetch(`/api/ipa?${params2}`)
+            .then(res => res.json())
+            .then(data => {
+              setTargetIPA(data.ipa);
+            }).catch(e => {
+              console.error(e);
+              setTargetIPA('');
+            })
+        }
+      }).catch(r => {
+        console.error(r);
+        setSourceLocale('');
+        setTargetLocale('');
+        setTargetText('');
+      }).finally(() => setTranslating(false));
   }
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setTextInfo({
-      source: {
-        text: e.target.value.trim(),
-        language: null,
-        ipa: null,
-        locale: null
-      },
-      target: {
-        text: null,
-        language: null,
-        ipa: null,
-        locale: null
-      }
-    });
+    setSourceText(e.target.value.trim());
+    setTargetText('');
+    setSourceLocale(null);
+    setTargetLocale(null);
+    setSourceIPA('');
+    setTargetIPA('');
   }
 
   const readSource = async () => {
-    if (!textInfo.source.text || textInfo.source.text.length === 0) return;
+    if (sourceText.length === 0) return;
 
-    if (!textInfo.source.locale) {
-      const params = new URLSearchParams({ text: textInfo.source.text });
-      const res = await fetch(`/api/textinfo?${params}`);
-      const info = await res.json();
-      setTextInfo(
-        {
-          source: info,
-          target: { ...textInfo.target }
+    if (sourceIPA.length === 0 && ipaEnabled) {
+      const params = new URLSearchParams({
+        text: sourceText
+      });
+      fetch(`/api/ipa?${params}`)
+        .then(res => res.json())
+        .then(data => {
+          setSourceIPA(data.ipa);
+        }).catch(e => {
+          console.error(e);
+          setSourceIPA('');
+        })
+    }
+
+    if (!sourceLocale) {
+      try {
+        const params = new URLSearchParams({
+          text: sourceText.slice(0, 30)
+        });
+        const res = await fetch(`/api/locale?${params}`);
+        const info = await res.json();
+        setSourceLocale(info.locale);
+
+        const voice = voicesData.find(v => v.locale.startsWith(info.locale));
+        if (!voice) {
+          return;
         }
-      );
-    }
-    const voice = voicesData.find(v => v.locale.startsWith(textInfo.source.locale!));
-    if (!voice) {
-      return;
-    }
 
-    const url = await getTTSAudioUrl(textInfo.source.text, voice.short_name);
-    await playAudio(url);
-    URL.revokeObjectURL(url);
+        const url = await getTTSAudioUrl(sourceText, voice.short_name);
+        await playAudio(url);
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        console.error(e);
+        setSourceLocale(null);
+        return;
+      }
+    } else {
+      const voice = voicesData.find(v => v.locale.startsWith(sourceLocale!));
+      if (!voice) {
+        return;
+      }
+
+      const url = await getTTSAudioUrl(sourceText, voice.short_name);
+      await playAudio(url);
+      URL.revokeObjectURL(url);
+    }
   }
 
   const readTarget = async () => {
-    if (!textInfo.target.text || textInfo.target.text.length === 0) return;
+    if (targetText.length === 0) return;
 
-    const voice = voicesData.find(v => v.locale.startsWith(textInfo.target.locale!));
+    if (targetIPA.length === 0 && ipaEnabled) {
+      const params = new URLSearchParams({
+        text: targetText
+      });
+      fetch(`/api/ipa?${params}`)
+        .then(res => res.json())
+        .then(data => {
+          setTargetIPA(data.ipa);
+        }).catch(e => {
+          console.error(e);
+          setTargetIPA('');
+        })
+    }
+
+    const voice = voicesData.find(v => v.locale.startsWith(targetLocale!));
     if (!voice) return;
 
-    const url = await getTTSAudioUrl(textInfo.target.text, voice.short_name);
+    const url = await getTTSAudioUrl(targetText, voice.short_name);
     await playAudio(url);
     URL.revokeObjectURL(url);
   }
@@ -139,32 +192,33 @@ export default function Home() {
           <div className="textarea1 border-1 border-gray-200 rounded-2xl w-full h-64 p-2">
             <textarea onChange={handleInputChange} className="resize-none h-8/12 w-full focus:outline-0"></textarea>
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
-              {textInfo.source.ipa || ''}
+              {sourceIPA}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick onClick={async () => {
-                if (textInfo.source.text && textInfo.source.text.length !== 0)
-                  await navigator.clipboard.writeText(textInfo.source.text);
+                if (sourceText.length !== 0)
+                  await navigator.clipboard.writeText(sourceText);
               }} src={IMAGES.copy_all} alt="copy"></IconClick>
               <IconClick onClick={readSource} src={IMAGES.play_arrow} alt="play"></IconClick>
             </div>
           </div>
-          <div className="option1 w-full">
+          <div className="option1 w-full flex flex-row justify-between items-center">
             <span>detect language</span>
+            <Button label="generate ipa" selected={ipaEnabled} onClick={() => setIPAEnabled(!ipaEnabled)}></Button>
           </div>
         </div>
         <div className="card2 w-full md:w-1/2 flex flex-col-reverse gap-2">
           <div className="textarea2 bg-gray-100 rounded-2xl w-full h-64 p-2">
             <div className="h-8/12 w-full">{
-              textInfo.target.text || ''
+              targetText
             }</div>
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
-              {textInfo.target.ipa || ''}
+              {targetIPA}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick onClick={async () => {
-                if (textInfo.target.text && textInfo.target.text.length !== 0)
-                  await navigator.clipboard.writeText(textInfo.target.text);
+                if (targetText.length !== 0)
+                  await navigator.clipboard.writeText(targetText);
               }} src={IMAGES.copy_all} alt="copy"></IconClick>
               <IconClick onClick={readTarget} src={IMAGES.play_arrow} alt="play"></IconClick>
             </div>
