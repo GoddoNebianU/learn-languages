@@ -34,7 +34,7 @@ function MyLink(
 }
 function Navbar() {
   return (
-    <div className="flex justify-between items-center w-screen h-16 px-8 bg-[#35786f] text-white">
+    <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
       <Link href={'/'} className="text-xl flex">
         <Image
           src={'/favicon.ico'}

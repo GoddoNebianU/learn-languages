@@ -1,17 +1,11 @@
 import Link from "next/link";
 
-
-
-
-
 function TopArea() {
   return (
-    <div className="bg-[#35786f] text-white">
-      <div className="flex justify-center items-center h-[75vh]">
-        <div className="mb-16 mx-64">
-          <h1 className="text-6xl md:text-9xl mb-8">Learn Languages</h1>
-          <p className="text-2xl md:text-5xl">Here is a very useful website to help you learn almost every language in the world, including artificial languages.</p>
-        </div>
+    <div className="bg-[#35786f] text-white w-full min-h-[75dvh] flex justify-center items-center">
+      <div className="mb-16 mx-16 md:mx-0 md:max-w-[60dvw]">
+        <h1 className="text-6xl md:text-9xl mb-8">Learn Languages</h1>
+        <p className="text-2xl md:text-5xl">Here is a very useful website to help you learn almost every language in the world, including constructed ones.</p>
       </div>
     </div>
   )
@@ -29,7 +23,7 @@ function LinkArea(
   return (
     <Link href={href}
       style={{ backgroundColor: color }}
-      className={`h-32 md:h-[20vw] flex justify-center items-center`}>
+      className={`h-32 md:h-64 flex justify-center items-center`}>
       <div className="text-white m-8">
         <h1 className="text-4xl">{name}</h1>
         <p className="text-xl">{description}</p>
@@ -40,7 +34,7 @@ function LinkArea(
 
 function LinkGrid() {
   return (
-    <div className="grid grid-cols-1 grid-rows-6 md:grid-cols-3">
+    <div className="w-full grid grid-cols-1 grid-rows-6 md:grid-cols-3">
 
       <LinkArea
         href="/translator"
@@ -71,17 +65,30 @@ function LinkGrid() {
   )
 }
 
-export default function Home() {
-  return (<>
-    <TopArea></TopArea>
-    <div className="w-screen h-64 flex justify-center font-serif items-center flex-col">
+function Fortune() {
+  return (
+    <div className="w-full flex justify-center font-serif items-center flex-col min-h-64 h-[25vdh]">
       <p className="text-3xl">Stay hungry, stay foolish.</p>
       <cite className="text-[#e9b353] text-xl">—— Steve Jobs</cite>
     </div>
-    <div className="bg-[#bbbbbb] w-screen h-64 flex justify-center items-center flex-col">
+  );
+}
+
+function Explore() {
+  return (
+    <div className="bg-[#bbbbbb] w-full flex justify-center items-center flex-col h-52">
       <span className="text-[100px] text-white">探索网站</span>
       <div className="w-0 h-0 border-l-[40px] border-r-[40px] border-t-[30px] border-l-transparent border-r-transparent border-t-white"></div>
     </div>
-    <LinkGrid></LinkGrid>
-  </>);
+  );
+}
+
+export default function Home() {
+  return (
+    <>
+      <TopArea></TopArea>
+      <Fortune></Fortune>
+      <Explore></Explore>
+      <LinkGrid></LinkGrid>
+    </>);
 }
