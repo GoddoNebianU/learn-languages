@@ -1,0 +1,142 @@
+[
+    {
+        "letter": "a",
+        "letter_name_ipa": "[a]",
+        "letter_sound_ipa": "[a]"
+    },
+    {
+        "letter": "b",
+        "letter_name_ipa": "[bo]",
+        "letter_sound_ipa": "[b]"
+    },
+    {
+        "letter": "c",
+        "letter_name_ipa": "[t͡so]",
+        "letter_sound_ipa": "[t͡s]"
+    },
+    {
+        "letter": "ĉ",
+        "letter_name_ipa": "[t͡ʃo]",
+        "letter_sound_ipa": "[t͡ʃ]"
+    },
+    {
+        "letter": "d",
+        "letter_name_ipa": "[do]",
+        "letter_sound_ipa": "[d]"
+    },
+    {
+        "letter": "e",
+        "letter_name_ipa": "[e]",
+        "letter_sound_ipa": "[e]"
+    },
+    {
+        "letter": "f",
+        "letter_name_ipa": "[fo]",
+        "letter_sound_ipa": "[f]"
+    },
+    {
+        "letter": "g",
+        "letter_name_ipa": "[ɡo]",
+        "letter_sound_ipa": "[ɡ]"
+    },
+    {
+        "letter": "ĝ",
+        "letter_name_ipa": "[d͡ʒo]",
+        "letter_sound_ipa": "[d͡ʒ]"
+    },
+    {
+        "letter": "h",
+        "letter_name_ipa": "[ho]",
+        "letter_sound_ipa": "[h]"
+    },
+    {
+        "letter": "ĥ",
+        "letter_name_ipa": "[xo]",
+        "letter_sound_ipa": "[x]"
+    },
+    {
+        "letter": "i",
+        "letter_name_ipa": "[i]",
+        "letter_sound_ipa": "[i]"
+    },
+    {
+        "letter": "j",
+        "letter_name_ipa": "[jo]",
+        "letter_sound_ipa": "[j]"
+    },
+    {
+        "letter": "ĵ",
+        "letter_name_ipa": "[ʒo]",
+        "letter_sound_ipa": "[ʒ]"
+    },
+    {
+        "letter": "k",
+        "letter_name_ipa": "[ko]",
+        "letter_sound_ipa": "[k]"
+    },
+    {
+        "letter": "l",
+        "letter_name_ipa": "[lo]",
+        "letter_sound_ipa": "[l]"
+    },
+    {
+        "letter": "m",
+        "letter_name_ipa": "[mo]",
+        "letter_sound_ipa": "[m]"
+    },
+    {
+        "letter": "n",
+        "letter_name_ipa": "[no]",
+        "letter_sound_ipa": "[n]"
+    },
+    {
+        "letter": "o",
+        "letter_name_ipa": "[o]",
+        "letter_sound_ipa": "[o]"
+    },
+    {
+        "letter": "p",
+        "letter_name_ipa": "[po]",
+        "letter_sound_ipa": "[p]"
+    },
+    {
+        "letter": "r",
+        "letter_name_ipa": "[ro]",
+        "letter_sound_ipa": "[r]"
+    },
+    {
+        "letter": "s",
+        "letter_name_ipa": "[so]",
+        "letter_sound_ipa": "[s]"
+    },
+    {
+        "letter": "ŝ",
+        "letter_name_ipa": "[ʃo]",
+        "letter_sound_ipa": "[ʃ]"
+    },
+    {
+        "letter": "t",
+        "letter_name_ipa": "[to]",
+        "letter_sound_ipa": "[t]"
+    },
+    {
+        "letter": "u",
+        "letter_name_ipa": "[u]",
+        "letter_sound_ipa": "[u]"
+    },
+    {
+        "letter": "ŭ",
+        "letter_name_ipa": "[u̯o]",
+        "letter_sound_ipa": "[u̯]"
+    },
+    {
+        "letter": "v",
+        "letter_name_ipa": "[vo]",
+        "letter_sound_ipa": "[v]"
+    },
+    {
+        "letter": "z",
+        "letter_name_ipa": "[zo]",
+        "letter_sound_ipa": "[z]"
+    }
+]

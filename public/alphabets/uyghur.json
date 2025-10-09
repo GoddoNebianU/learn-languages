@@ -1,0 +1,162 @@
+[
+    {
+        "letter": "ئا",
+        "letter_name_ipa": "[ʔɑ]",
+        "letter_sound_ipa": "[ɑ]"
+    },
+    {
+        "letter": "ئە",
+        "letter_name_ipa": "[ʔæ]",
+        "letter_sound_ipa": "[æ]"
+    },
+    {
+        "letter": "ب",
+        "letter_name_ipa": "[bɛ]",
+        "letter_sound_ipa": "[b]"
+    },
+    {
+        "letter": "پ",
+        "letter_name_ipa": "[pɛ]",
+        "letter_sound_ipa": "[p]"
+    },
+    {
+        "letter": "ت",
+        "letter_name_ipa": "[tɛ]",
+        "letter_sound_ipa": "[t]"
+    },
+    {
+        "letter": "ج",
+        "letter_name_ipa": "[dʒɛ]",
+        "letter_sound_ipa": "[dʒ]"
+    },
+    {
+        "letter": "چ",
+        "letter_name_ipa": "[tʃɛ]",
+        "letter_sound_ipa": "[tʃ]"
+    },
+    {
+        "letter": "خ",
+        "letter_name_ipa": "[xɛ]",
+        "letter_sound_ipa": "[x]"
+    },
+    {
+        "letter": "د",
+        "letter_name_ipa": "[dɛ]",
+        "letter_sound_ipa": "[d]"
+    },
+    {
+        "letter": "ر",
+        "letter_name_ipa": "[rɛ]",
+        "letter_sound_ipa": "[r]"
+    },
+    {
+        "letter": "ز",
+        "letter_name_ipa": "[zɛ]",
+        "letter_sound_ipa": "[z]"
+    },
+    {
+        "letter": "ژ",
+        "letter_name_ipa": "[ʒɛ]",
+        "letter_sound_ipa": "[ʒ]"
+    },
+    {
+        "letter": "س",
+        "letter_name_ipa": "[sɛ]",
+        "letter_sound_ipa": "[s]"
+    },
+    {
+        "letter": "ش",
+        "letter_name_ipa": "[ʃɛ]",
+        "letter_sound_ipa": "[ʃ]"
+    },
+    {
+        "letter": "غ",
+        "letter_name_ipa": "[ʁɛ]",
+        "letter_sound_ipa": "[ʁ]"
+    },
+    {
+        "letter": "ف",
+        "letter_name_ipa": "[fɛ]",
+        "letter_sound_ipa": "[f]"
+    },
+    {
+        "letter": "ق",
+        "letter_name_ipa": "[qɛ]",
+        "letter_sound_ipa": "[q]"
+    },
+    {
+        "letter": "ك",
+        "letter_name_ipa": "[kɛ]",
+        "letter_sound_ipa": "[k]"
+    },
+    {
+        "letter": "گ",
+        "letter_name_ipa": "[gɛ]",
+        "letter_sound_ipa": "[g]"
+    },
+    {
+        "letter": "ڭ",
+        "letter_name_ipa": "[ŋɛ]",
+        "letter_sound_ipa": "[ŋ]"
+    },
+    {
+        "letter": "ل",
+        "letter_name_ipa": "[lɛ]",
+        "letter_sound_ipa": "[l]"
+    },
+    {
+        "letter": "م",
+        "letter_name_ipa": "[mɛ]",
+        "letter_sound_ipa": "[m]"
+    },
+    {
+        "letter": "ن",
+        "letter_name_ipa": "[nɛ]",
+        "letter_sound_ipa": "[n]"
+    },
+    {
+        "letter": "ھ",
+        "letter_name_ipa": "[hɛ]",
+        "letter_sound_ipa": "[h]"
+    },
+    {
+        "letter": "ئو",
+        "letter_name_ipa": "[ʔo]",
+        "letter_sound_ipa": "[o]"
+    },
+    {
+        "letter": "ئۇ",
+        "letter_name_ipa": "[ʔu]",
+        "letter_sound_ipa": "[u]"
+    },
+    {
+        "letter": "ئۆ",
+        "letter_name_ipa": "[ʔø]",
+        "letter_sound_ipa": "[ø]"
+    },
+    {
+        "letter": "ئۈ",
+        "letter_name_ipa": "[ʔy]",
+        "letter_sound_ipa": "[y]"
+    },
+    {
+        "letter": "ۋ",
+        "letter_name_ipa": "[wɛ]",
+        "letter_sound_ipa": "[w], [v]"
+    },
+    {
+        "letter": "ئې",
+        "letter_name_ipa": "[ʔe]",
+        "letter_sound_ipa": "[e]"
+    },
+    {
+        "letter": "ئى",
+        "letter_name_ipa": "[ʔi]",
+        "letter_sound_ipa": "[i]"
+    },
+    {
+        "letter": "ي",
+        "letter_name_ipa": "[jɛ]",
+        "letter_sound_ipa": "[j]"
+    }
+]

@@ -56,6 +56,11 @@ function LinkGrid() {
         name="逐句视频播放器"
         description="基于SRT字幕文件，逐句播放视频以模仿母语者的发音"
         color="#3c988d"></LinkArea>
+              <LinkArea
+        href="/alphabet"
+        name="记忆字母表"
+        description="从字母表开始新语言的学习"
+        color="#dd7486"></LinkArea>
       <LinkArea
         href="#"
         name="更多功能"

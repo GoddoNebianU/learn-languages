@@ -1,7 +1,7 @@
 'use client';
 
 import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/constants";
-import Word from "@/interfaces/Word";
+import { Word } from "@/interfaces";
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 export default function WordBoard(

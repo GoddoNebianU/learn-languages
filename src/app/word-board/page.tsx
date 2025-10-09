@@ -2,7 +2,7 @@
 import WordBoard from "@/app/word-board/WordBoard";
 import Button from "../../components/Button";
 import { KeyboardEvent, useRef, useState } from "react";
-import Word from "@/interfaces/Word";
+import { Word } from "@/interfaces";
 import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/constants";
 import { inspect } from "@/utils";
 

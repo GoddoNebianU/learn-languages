@@ -1,0 +1,554 @@
+[
+    {
+        "letter": "あ",
+        "letter_name_ipa": "[a]",
+        "letter_sound_ipa": "[a]",
+        "roman_letter": "a"
+    },
+    {
+        "letter": "ア",
+        "letter_name_ipa": "[a]",
+        "letter_sound_ipa": "[a]",
+        "roman_letter": "a"
+    },
+    {
+        "letter": "い",
+        "letter_name_ipa": "[i]",
+        "letter_sound_ipa": "[i]",
+        "roman_letter": "i"
+    },
+    {
+        "letter": "イ",
+        "letter_name_ipa": "[i]",
+        "letter_sound_ipa": "[i]",
+        "roman_letter": "i"
+    },
+    {
+        "letter": "う",
+        "letter_name_ipa": "[ɯ]",
+        "letter_sound_ipa": "[ɯ]",
+        "roman_letter": "u"
+    },
+    {
+        "letter": "ウ",
+        "letter_name_ipa": "[ɯ]",
+        "letter_sound_ipa": "[ɯ]",
+        "roman_letter": "u"
+    },
+    {
+        "letter": "え",
+        "letter_name_ipa": "[e]",
+        "letter_sound_ipa": "[e]",
+        "roman_letter": "e"
+    },
+    {
+        "letter": "エ",
+        "letter_name_ipa": "[e]",
+        "letter_sound_ipa": "[e]",
+        "roman_letter": "e"
+    },
+    {
+        "letter": "お",
+        "letter_name_ipa": "[o]",
+        "letter_sound_ipa": "[o]",
+        "roman_letter": "o"
+    },
+    {
+        "letter": "オ",
+        "letter_name_ipa": "[o]",
+        "letter_sound_ipa": "[o]",
+        "roman_letter": "o"
+    },
+    {
+        "letter": "か",
+        "letter_name_ipa": "[ka]",
+        "letter_sound_ipa": "[ka]",
+        "roman_letter": "ka"
+    },
+    {
+        "letter": "カ",
+        "letter_name_ipa": "[ka]",
+        "letter_sound_ipa": "[ka]",
+        "roman_letter": "ka"
+    },
+    {
+        "letter": "き",
+        "letter_name_ipa": "[ki]",
+        "letter_sound_ipa": "[ki]",
+        "roman_letter": "ki"
+    },
+    {
+        "letter": "キ",
+        "letter_name_ipa": "[ki]",
+        "letter_sound_ipa": "[ki]",
+        "roman_letter": "ki"
+    },
+    {
+        "letter": "く",
+        "letter_name_ipa": "[kɯ]",
+        "letter_sound_ipa": "[kɯ]",
+        "roman_letter": "ku"
+    },
+    {
+        "letter": "ク",
+        "letter_name_ipa": "[kɯ]",
+        "letter_sound_ipa": "[kɯ]",
+        "roman_letter": "ku"
+    },
+    {
+        "letter": "け",
+        "letter_name_ipa": "[ke]",
+        "letter_sound_ipa": "[ke]",
+        "roman_letter": "ke"
+    },
+    {
+        "letter": "ケ",
+        "letter_name_ipa": "[ke]",
+        "letter_sound_ipa": "[ke]",
+        "roman_letter": "ke"
+    },
+    {
+        "letter": "こ",
+        "letter_name_ipa": "[ko]",
+        "letter_sound_ipa": "[ko]",
+        "roman_letter": "ko"
+    },
+    {
+        "letter": "コ",
+        "letter_name_ipa": "[ko]",
+        "letter_sound_ipa": "[ko]",
+        "roman_letter": "ko"
+    },
+    {
+        "letter": "さ",
+        "letter_name_ipa": "[sa]",
+        "letter_sound_ipa": "[sa]",
+        "roman_letter": "sa"
+    },
+    {
+        "letter": "サ",
+        "letter_name_ipa": "[sa]",
+        "letter_sound_ipa": "[sa]",
+        "roman_letter": "sa"
+    },
+    {
+        "letter": "し",
+        "letter_name_ipa": "[ɕi]",
+        "letter_sound_ipa": "[ɕi]",
+        "roman_letter": "shi"
+    },
+    {
+        "letter": "シ",
+        "letter_name_ipa": "[ɕi]",
+        "letter_sound_ipa": "[ɕi]",
+        "roman_letter": "shi"
+    },
+    {
+        "letter": "す",
+        "letter_name_ipa": "[sɯ]",
+        "letter_sound_ipa": "[sɯ]",
+        "roman_letter": "su"
+    },
+    {
+        "letter": "ス",
+        "letter_name_ipa": "[sɯ]",
+        "letter_sound_ipa": "[sɯ]",
+        "roman_letter": "su"
+    },
+    {
+        "letter": "せ",
+        "letter_name_ipa": "[se]",
+        "letter_sound_ipa": "[se]",
+        "roman_letter": "se"
+    },
+    {
+        "letter": "セ",
+        "letter_name_ipa": "[se]",
+        "letter_sound_ipa": "[se]",
+        "roman_letter": "se"
+    },
+    {
+        "letter": "そ",
+        "letter_name_ipa": "[so]",
+        "letter_sound_ipa": "[so]",
+        "roman_letter": "so"
+    },
+    {
+        "letter": "ソ",
+        "letter_name_ipa": "[so]",
+        "letter_sound_ipa": "[so]",
+        "roman_letter": "so"
+    },
+    {
+        "letter": "た",
+        "letter_name_ipa": "[ta]",
+        "letter_sound_ipa": "[ta]",
+        "roman_letter": "ta"
+    },
+    {
+        "letter": "タ",
+        "letter_name_ipa": "[ta]",
+        "letter_sound_ipa": "[ta]",
+        "roman_letter": "ta"
+    },
+    {
+        "letter": "ち",
+        "letter_name_ipa": "[tɕi]",
+        "letter_sound_ipa": "[tɕi]",
+        "roman_letter": "chi"
+    },
+    {
+        "letter": "チ",
+        "letter_name_ipa": "[tɕi]",
+        "letter_sound_ipa": "[tɕi]",
+        "roman_letter": "chi"
+    },
+    {
+        "letter": "つ",
+        "letter_name_ipa": "[t͡sɯ]",
+        "letter_sound_ipa": "[t͡sɯ]",
+        "roman_letter": "tsu"
+    },
+    {
+        "letter": "ツ",
+        "letter_name_ipa": "[t͡sɯ]",
+        "letter_sound_ipa": "[t͡sɯ]",
+        "roman_letter": "tsu"
+    },
+    {
+        "letter": "て",
+        "letter_name_ipa": "[te]",
+        "letter_sound_ipa": "[te]",
+        "roman_letter": "te"
+    },
+    {
+        "letter": "テ",
+        "letter_name_ipa": "[te]",
+        "letter_sound_ipa": "[te]",
+        "roman_letter": "te"
+    },
+    {
+        "letter": "と",
+        "letter_name_ipa": "[to]",
+        "letter_sound_ipa": "[to]",
+        "roman_letter": "to"
+    },
+    {
+        "letter": "ト",
+        "letter_name_ipa": "[to]",
+        "letter_sound_ipa": "[to]",
+        "roman_letter": "to"
+    },
+    {
+        "letter": "な",
+        "letter_name_ipa": "[na]",
+        "letter_sound_ipa": "[na]",
+        "roman_letter": "na"
+    },
+    {
+        "letter": "ナ",
+        "letter_name_ipa": "[na]",
+        "letter_sound_ipa": "[na]",
+        "roman_letter": "na"
+    },
+    {
+        "letter": "に",
+        "letter_name_ipa": "[ni]",
+        "letter_sound_ipa": "[ni]",
+        "roman_letter": "ni"
+    },
+    {
+        "letter": "ニ",
+        "letter_name_ipa": "[ni]",
+        "letter_sound_ipa": "[ni]",
+        "roman_letter": "ni"
+    },
+    {
+        "letter": "ぬ",
+        "letter_name_ipa": "[nɯ]",
+        "letter_sound_ipa": "[nɯ]",
+        "roman_letter": "nu"
+    },
+    {
+        "letter": "ヌ",
+        "letter_name_ipa": "[nɯ]",
+        "letter_sound_ipa": "[nɯ]",
+        "roman_letter": "nu"
+    },
+    {
+        "letter": "ね",
+        "letter_name_ipa": "[ne]",
+        "letter_sound_ipa": "[ne]",
+        "roman_letter": "ne"
+    },
+    {
+        "letter": "ネ",
+        "letter_name_ipa": "[ne]",
+        "letter_sound_ipa": "[ne]",
+        "roman_letter": "ne"
+    },
+    {
+        "letter": "の",
+        "letter_name_ipa": "[no]",
+        "letter_sound_ipa": "[no]",
+        "roman_letter": "no"
+    },
+    {
+        "letter": "ノ",
+        "letter_name_ipa": "[no]",
+        "letter_sound_ipa": "[no]",
+        "roman_letter": "no"
+    },
+    {
+        "letter": "は",
+        "letter_name_ipa": "[ha]",
+        "letter_sound_ipa": "[ha]",
+        "roman_letter": "ha"
+    },
+    {
+        "letter": "ハ",
+        "letter_name_ipa": "[ha]",
+        "letter_sound_ipa": "[ha]",
+        "roman_letter": "ha"
+    },
+    {
+        "letter": "ひ",
+        "letter_name_ipa": "[çi]",
+        "letter_sound_ipa": "[çi]",
+        "roman_letter": "hi"
+    },
+    {
+        "letter": "ヒ",
+        "letter_name_ipa": "[çi]",
+        "letter_sound_ipa": "[çi]",
+        "roman_letter": "hi"
+    },
+    {
+        "letter": "ふ",
+        "letter_name_ipa": "[ɸɯ]",
+        "letter_sound_ipa": "[ɸɯ]",
+        "roman_letter": "fu"
+    },
+    {
+        "letter": "フ",
+        "letter_name_ipa": "[ɸɯ]",
+        "letter_sound_ipa": "[ɸɯ]",
+        "roman_letter": "fu"
+    },
+    {
+        "letter": "へ",
+        "letter_name_ipa": "[he]",
+        "letter_sound_ipa": "[he]",
+        "roman_letter": "he"
+    },
+    {
+        "letter": "ヘ",
+        "letter_name_ipa": "[he]",
+        "letter_sound_ipa": "[he]",
+        "roman_letter": "he"
+    },
+    {
+        "letter": "ほ",
+        "letter_name_ipa": "[ho]",
+        "letter_sound_ipa": "[ho]",
+        "roman_letter": "ho"
+    },
+    {
+        "letter": "ホ",
+        "letter_name_ipa": "[ho]",
+        "letter_sound_ipa": "[ho]",
+        "roman_letter": "ho"
+    },
+    {
+        "letter": "ま",
+        "letter_name_ipa": "[ma]",
+        "letter_sound_ipa": "[ma]",
+        "roman_letter": "ma"
+    },
+    {
+        "letter": "マ",
+        "letter_name_ipa": "[ma]",
+        "letter_sound_ipa": "[ma]",
+        "roman_letter": "ma"
+    },
+    {
+        "letter": "み",
+        "letter_name_ipa": "[mi]",
+        "letter_sound_ipa": "[mi]",
+        "roman_letter": "mi"
+    },
+    {
+        "letter": "ミ",
+        "letter_name_ipa": "[mi]",
+        "letter_sound_ipa": "[mi]",
+        "roman_letter": "mi"
+    },
+    {
+        "letter": "む",
+        "letter_name_ipa": "[mɯ]",
+        "letter_sound_ipa": "[mɯ]",
+        "roman_letter": "mu"
+    },
+    {
+        "letter": "ム",
+        "letter_name_ipa": "[mɯ]",
+        "letter_sound_ipa": "[mɯ]",
+        "roman_letter": "mu"
+    },
+    {
+        "letter": "め",
+        "letter_name_ipa": "[me]",
+        "letter_sound_ipa": "[me]",
+        "roman_letter": "me"
+    },
+    {
+        "letter": "メ",
+        "letter_name_ipa": "[me]",
+        "letter_sound_ipa": "[me]",
+        "roman_letter": "me"
+    },
+    {
+        "letter": "も",
+        "letter_name_ipa": "[mo]",
+        "letter_sound_ipa": "[mo]",
+        "roman_letter": "mo"
+    },
+    {
+        "letter": "モ",
+        "letter_name_ipa": "[mo]",
+        "letter_sound_ipa": "[mo]",
+        "roman_letter": "mo"
+    },
+    {
+        "letter": "や",
+        "letter_name_ipa": "[ja]",
+        "letter_sound_ipa": "[ja]",
+        "roman_letter": "ya"
+    },
+    {
+        "letter": "ヤ",
+        "letter_name_ipa": "[ja]",
+        "letter_sound_ipa": "[ja]",
+        "roman_letter": "ya"
+    },
+    {
+        "letter": "ゆ",
+        "letter_name_ipa": "[jɯ]",
+        "letter_sound_ipa": "[jɯ]",
+        "roman_letter": "yu"
+    },
+    {
+        "letter": "ユ",
+        "letter_name_ipa": "[jɯ]",
+        "letter_sound_ipa": "[jɯ]",
+        "roman_letter": "yu"
+    },
+    {
+        "letter": "よ",
+        "letter_name_ipa": "[jo]",
+        "letter_sound_ipa": "[jo]",
+        "roman_letter": "yo"
+    },
+    {
+        "letter": "ヨ",
+        "letter_name_ipa": "[jo]",
+        "letter_sound_ipa": "[jo]",
+        "roman_letter": "yo"
+    },
+    {
+        "letter": "ら",
+        "letter_name_ipa": "[ɾa]",
+        "letter_sound_ipa": "[ɾa]",
+        "roman_letter": "ra"
+    },
+    {
+        "letter": "ラ",
+        "letter_name_ipa": "[ɾa]",
+        "letter_sound_ipa": "[ɾa]",
+        "roman_letter": "ra"
+    },
+    {
+        "letter": "り",
+        "letter_name_ipa": "[ɾi]",
+        "letter_sound_ipa": "[ɾi]",
+        "roman_letter": "ri"
+    },
+    {
+        "letter": "リ",
+        "letter_name_ipa": "[ɾi]",
+        "letter_sound_ipa": "[ɾi]",
+        "roman_letter": "ri"
+    },
+    {
+        "letter": "る",
+        "letter_name_ipa": "[ɾɯ]",
+        "letter_sound_ipa": "[ɾɯ]",
+        "roman_letter": "ru"
+    },
+    {
+        "letter": "ル",
+        "letter_name_ipa": "[ɾɯ]",
+        "letter_sound_ipa": "[ɾɯ]",
+        "roman_letter": "ru"
+    },
+    {
+        "letter": "れ",
+        "letter_name_ipa": "[ɾe]",
+        "letter_sound_ipa": "[ɾe]",
+        "roman_letter": "re"
+    },
+    {
+        "letter": "レ",
+        "letter_name_ipa": "[ɾe]",
+        "letter_sound_ipa": "[ɾe]",
+        "roman_letter": "re"
+    },
+    {
+        "letter": "ろ",
+        "letter_name_ipa": "[ɾo]",
+        "letter_sound_ipa": "[ɾo]",
+        "roman_letter": "ro"
+    },
+    {
+        "letter": "ロ",
+        "letter_name_ipa": "[ɾo]",
+        "letter_sound_ipa": "[ɾo]",
+        "roman_letter": "ro"
+    },
+    {
+        "letter": "わ",
+        "letter_name_ipa": "[wa]",
+        "letter_sound_ipa": "[wa]",
+        "roman_letter": "wa"
+    },
+    {
+        "letter": "ワ",
+        "letter_name_ipa": "[wa]",
+        "letter_sound_ipa": "[wa]",
+        "roman_letter": "wa"
+    },
+    {
+        "letter": "を",
+        "letter_name_ipa": "[o]",
+        "letter_sound_ipa": "[o]",
+        "roman_letter": "wo"
+    },
+    {
+        "letter": "ヲ",
+        "letter_name_ipa": "[o]",
+        "letter_sound_ipa": "[o]",
+        "roman_letter": "wo"
+    },
+    {
+        "letter": "ん",
+        "letter_name_ipa": "[n]",
+        "letter_sound_ipa": "[n], [m], [ŋ]",
+        "roman_letter": "n"
+    },
+    {
+        "letter": "ン",
+        "letter_name_ipa": "[n]",
+        "letter_sound_ipa": "[n], [m], [ŋ]",
+        "roman_letter": "n"
+    }
+]

@@ -8,7 +8,10 @@ const IMAGES = {
     autoplay: '/images/autoplay_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
     autopause: '/images/autopause_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
     speed_1x: '/images/1x_mobiledata_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
-    play_arrow: '/images/play_arrow_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg'
+    play_arrow: '/images/play_arrow_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
+    close: '/images/close_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
+    refresh: '/images/refresh_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
+    more_horiz: '/images/more_horiz_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
 }
 
 export default IMAGES;
