@@ -40,6 +40,24 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
     }, [videoRef, videoUrl]);
 
     useEffect(() => {
+        const handleKeyDownEvent = (e: globalThis.KeyboardEvent) => {
+            if (e.key === 'n') {
+                next();
+            } else if (e.key === 'p') {
+                previous();
+            } else if (e.key === ' ') {
+                togglePlayPause();
+            } else if (e.key === 'r') {
+                restart();
+            } else if (e.key === 'a') {
+                ; handleAutoPauseToggle();
+            }
+        }
+        document.addEventListener('keydown', handleKeyDownEvent);
+        return () => document.removeEventListener('keydown', handleKeyDownEvent)
+    });
+
+    useEffect(() => {
         const cb = () => {
             if (ready.current.all()) {
                 if (!parsedSrtRef.current) {
@@ -139,22 +157,8 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
         }
     }
 
-    const handleKeyDownEvent = (e: KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'n') {
-            next();
-        } else if (e.key === 'p') {
-            previous();
-        } else if (e.key === ' ') {
-            togglePlayPause();
-        } else if (e.key === 'r') {
-            restart();
-        } else if (e.key === 'a') {
-            ; handleAutoPauseToggle();
-        }
-    }
-
     return (
-        <div className="w-full flex flex-col" onKeyDown={handleKeyDownEvent}>
+        <div className="w-full flex flex-col">
             <video className="bg-gray-200" ref={videoRef} onTimeUpdate={timeUpdate}></video>
             <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
             <div className="buttons flex mt-2 gap-2 flex-wrap">
