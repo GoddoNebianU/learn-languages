@@ -29,13 +29,15 @@ function TextCard({
                 <div className="max-h-26 text-3xl overflow-y-auto">{item.text}</div>
                 <div className="max-h-16 overflow-y-auto text-xl text-gray-600 whitespace-nowrap overflow-x-auto">{item.ipa}</div>
             </div>
-            <IconClick
-                src={IMAGES.delete}
-                alt="delete"
-                onClick={onDelClick}
-                className="place-self-center"
-                size={42}>
-            </IconClick>
+            <div className="flex justify-center items-center border-gray-300 border-l-2 m-2">
+                <IconClick
+                    src={IMAGES.delete}
+                    alt="delete"
+                    onClick={onDelClick}
+                    className="place-self-center"
+                    size={42}>
+                </IconClick>
+            </div>
         </div>
     );
 }
