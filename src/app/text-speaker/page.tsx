@@ -275,8 +275,8 @@ export default function Home() {
                 } alt="autoplayorpause"
                 ></IconClick>
                 <IconClick size={45} onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
-                    src={IMAGES.more_horiz}
-                    alt="more"
+                    src={IMAGES.speed}
+                    alt="speed"
                     className={`${showSpeedAdjust ? 'bg-gray-200' : ''}`}></IconClick>
                 <IconClick size={45} onClick={save}
                     src={IMAGES.save}
