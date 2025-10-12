@@ -1,6 +1,5 @@
 'use client';
 
-import Button from "@/components/Button";
 import { getTextSpeakerData, setTextSpeakerData } from "@/utils";
 import { useState } from "react";
 import z from "zod";
@@ -25,7 +24,7 @@ function TextCard({
         handleDel(item);
     }
     return (
-        <div className="p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8" onClick={onUseClick}>
+        <div className="hover:cursor-pointer p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8" onClick={onUseClick}>
             <div className="col-span-7">
                 <div className="max-h-26 text-3xl overflow-y-auto">{item.text}</div>
                 <div className="max-h-16 overflow-y-auto text-xl text-gray-600 whitespace-nowrap overflow-x-auto">{item.ipa}</div>

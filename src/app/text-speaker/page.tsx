@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTextSpeakerData, getTTSAudioUrl } from "@/utils";
+import { getTextSpeakerData, getTTSAudioUrl, setTextSpeakerData } from "@/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import SaveList from "./SaveList";
 import { TextSpeakerItemSchema } from "@/interfaces";
@@ -14,7 +14,7 @@ export default function Home() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
     const [showSaveList, setShowSaveList] = useState(false);
-
+    const [saving, setSaving] = useState(false);
     const [ipaEnabled, setIPAEnabled] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [pause, setPause] = useState(true);
@@ -24,7 +24,6 @@ export default function Home() {
     const [ipa, setIPA] = useState<string>('');
     const objurlRef = useRef<string | null>(null);
     const [processing, setProcessing] = useState(false);
-
     const [voicesData, setVoicesData] = useState<{
         locale: string,
         short_name: string
@@ -170,7 +169,10 @@ export default function Home() {
     }
 
     const save = async () => {
+        if (saving) return;
         if (textRef.current.length === 0) return;
+
+        setSaving(true);
 
         try {
             let theLocale = locale;
@@ -198,15 +200,13 @@ export default function Home() {
             const oldIndex = save.findIndex(v => v.text === textRef.current);
             if (oldIndex !== -1) {
                 const oldItem = save[oldIndex];
-                if ((!oldItem.ipa) || (oldItem.ipa !== theIPA)) {
-                    oldItem.ipa = theIPA;
-                    localStorage.setItem('text-speaker', JSON.stringify(save));
-                    return;
-                } else {
-                    return;
+                if (theIPA) {
+                    if ((!oldItem.ipa || (oldItem.ipa !== theIPA))) {
+                        oldItem.ipa = theIPA;
+                        setTextSpeakerData(save);
+                    }
                 }
-            }
-            if (theIPA.length === 0) {
+            } else if (theIPA.length === 0) {
                 save.push({
                     text: textRef.current,
                     locale: theLocale
@@ -218,10 +218,12 @@ export default function Home() {
                     ipa: theIPA
                 });
             }
-            localStorage.setItem('text-speaker', JSON.stringify(save));
+            setTextSpeakerData(save);
         } catch (e) {
             console.error(e);
             setLocale(null);
+        } finally {
+            setSaving(false);
         }
     }
 
@@ -278,7 +280,8 @@ export default function Home() {
                     className={`${showSpeedAdjust ? 'bg-gray-200' : ''}`}></IconClick>
                 <IconClick size={45} onClick={save}
                     src={IMAGES.save}
-                    alt="save"></IconClick>
+                    alt="save"
+                    className={`${saving ? 'bg-gray-200' : ''}`}></IconClick>
                 <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
                     <Button label="生成IPA"
                         selected={ipaEnabled}
