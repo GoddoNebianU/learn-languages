@@ -13,6 +13,7 @@ const IMAGES = {
     refresh: '/images/refresh_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
     more_horiz: '/images/more_horiz_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
     save: '/images/save_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
+    delete: '/images/delete_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg',
 }
 
 export default IMAGES;

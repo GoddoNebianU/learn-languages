@@ -234,7 +234,35 @@ export default function Home() {
             <div className="overflow-auto text-gray-600 h-18">
                 {ipa}
             </div>
-            <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+            <div className="relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+                {showSpeedAdjust && (
+                    <div className="bg-white p-6 rounded-2xl border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center">
+                        <IconClick size={45} onClick={letMeSetSpeed(0.5)}
+                            src={IMAGES.speed_0_5x}
+                            alt="0.5x"
+                            className={speed === 0.5 ? 'bg-gray-200' : ''}
+                        ></IconClick>
+                        <IconClick size={45} onClick={letMeSetSpeed(0.7)}
+                            src={IMAGES.speed_0_7x}
+                            alt="0.7x"
+                            className={speed === 0.7 ? 'bg-gray-200' : ''}
+                        ></IconClick>
+                        <IconClick size={45} onClick={letMeSetSpeed(1)}
+                            src={IMAGES.speed_1x}
+                            alt="1x"
+                            className={speed === 1 ? 'bg-gray-200' : ''}
+                        ></IconClick>
+                        <IconClick size={45} onClick={letMeSetSpeed(1.2)}
+                            src={IMAGES.speed_1_2_x}
+                            alt="1.2x"
+                            className={speed === 1.2 ? 'bg-gray-200' : ''}
+                        ></IconClick>
+                        <IconClick size={45} onClick={letMeSetSpeed(1.5)}
+                            src={IMAGES.speed_1_5x}
+                            alt="1.5x"
+                            className={speed === 1.5 ? 'bg-gray-200' : ''}
+                        ></IconClick>
+                    </div>)}
                 <IconClick size={45} onClick={speak} src={
                     pause ? IMAGES.play_arrow : IMAGES.pause
                 } alt="playorpause" className={`${processing ? 'bg-gray-200' : ''}`}></IconClick>
@@ -246,7 +274,8 @@ export default function Home() {
                 ></IconClick>
                 <IconClick size={45} onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
                     src={IMAGES.more_horiz}
-                    alt="more"></IconClick>
+                    alt="more"
+                    className={`${showSpeedAdjust ? 'bg-gray-200' : ''}`}></IconClick>
                 <IconClick size={45} onClick={save}
                     src={IMAGES.save}
                     alt="save"></IconClick>
@@ -259,37 +288,6 @@ export default function Home() {
                         onClick={() => { setShowSaveList(!showSaveList) }}
                         selected={showSaveList}>
                     </Button>
-                </div>
-                <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
-                    {
-                        showSpeedAdjust ? (<>
-                            <IconClick size={45} onClick={letMeSetSpeed(0.5)}
-                                src={IMAGES.speed_0_5x}
-                                alt="0.5x"
-                                className={speed === 0.5 ? 'bg-gray-200' : ''}
-                            ></IconClick>
-                            <IconClick size={45} onClick={letMeSetSpeed(0.7)}
-                                src={IMAGES.speed_0_7x}
-                                alt="0.7x"
-                                className={speed === 0.7 ? 'bg-gray-200' : ''}
-                            ></IconClick>
-                            <IconClick size={45} onClick={letMeSetSpeed(1)}
-                                src={IMAGES.speed_1x}
-                                alt="1x"
-                                className={speed === 1 ? 'bg-gray-200' : ''}
-                            ></IconClick>
-                            <IconClick size={45} onClick={letMeSetSpeed(1.2)}
-                                src={IMAGES.speed_1_2_x}
-                                alt="1.2x"
-                                className={speed === 1.2 ? 'bg-gray-200' : ''}
-                            ></IconClick>
-                            <IconClick size={45} onClick={letMeSetSpeed(1.5)}
-                                src={IMAGES.speed_1_5x}
-                                alt="1.5x"
-                                className={speed === 1.5 ? 'bg-gray-200' : ''}
-                            ></IconClick>
-                        </>) : <></>
-                    }
                 </div>
             </div>
         </div>

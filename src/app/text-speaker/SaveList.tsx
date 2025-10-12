@@ -5,6 +5,8 @@ import { getTextSpeakerData, setTextSpeakerData } from "@/utils";
 import { useState } from "react";
 import z from "zod";
 import { TextSpeakerItemSchema } from "@/interfaces";
+import IconClick from "@/components/IconClick";
+import IMAGES from "@/config/images";
 
 interface TextCardProps {
     item: z.infer<typeof TextSpeakerItemSchema>;
@@ -23,13 +25,18 @@ function TextCard({
         handleDel(item);
     }
     return (
-        <div className="p-2 border-b-1 border-gray-200 m-2 grid grid-cols-8">
-            <div className="col-span-6">
-                <div className="text-3xl">{item.text.length > 80 ? item.text.slice(0, 80) + '...' : item.text}</div>
-                <div className="text-xl text-gray-600">{item.ipa ? (item.ipa.length > 160 ? item.ipa.slice(0, 160) + '...' : item.ipa) : ''}</div>
+        <div className="p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8" onClick={onUseClick}>
+            <div className="col-span-7">
+                <div className="max-h-26 text-3xl overflow-y-auto">{item.text}</div>
+                <div className="max-h-16 overflow-y-auto text-xl text-gray-600 whitespace-nowrap overflow-x-auto">{item.ipa}</div>
             </div>
-            <Button label="use" className="h-8 col-span-1" onClick={onUseClick}></Button>
-            <Button label="del" className="h-8 col-span-1" onClick={onDelClick}></Button>
+            <IconClick
+                src={IMAGES.delete}
+                alt="delete"
+                onClick={onDelClick}
+                className="place-self-center"
+                size={42}>
+            </IconClick>
         </div>
     );
 }
@@ -62,8 +69,20 @@ export default function SaveList({
     }
     if (show) return (
         <div className="my-4 p-2 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl">
-            <Button label="刷新" className="m-1" onClick={refresh}></Button>
-            <Button label="删光" className="m-1" onClick={handleDeleteAll}></Button>
+            <div className="flex flex-row justify-center gap-8 items-center">
+                <IconClick
+                    src={IMAGES.refresh}
+                    alt="refresh"
+                    onClick={refresh}
+                    size={48}
+                    className=""></IconClick>
+                <IconClick
+                    src={IMAGES.delete}
+                    alt="delete"
+                    onClick={handleDeleteAll}
+                    size={48}
+                    className=""></IconClick>
+            </div>
             <ul>
                 {data.map(v =>
                     <TextCard item={v} key={crypto.randomUUID()} handleUse={handleUse} handleDel={handleDel}></TextCard>
