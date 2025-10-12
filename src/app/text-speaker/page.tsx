@@ -4,18 +4,22 @@ import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSAudioUrl } from "@/utils";
+import { getTextSpeakerData, getTTSAudioUrl } from "@/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import SaveList from "./SaveList";
+import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
 
 export default function Home() {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
+    const [showSaveList, setShowSaveList] = useState(false);
+
     const [ipaEnabled, setIPAEnabled] = useState(false);
     const [speed, setSpeed] = useState(1);
     const [pause, setPause] = useState(true);
     const [autopause, setAutopause] = useState(true);
     const textRef = useRef('');
-    // const localeRef = useRef<string | null>(null);
     const [locale, setLocale] = useState<string | null>(null);
     const [ipa, setIPA] = useState<string>('');
     const objurlRef = useRef<string | null>(null);
@@ -87,15 +91,19 @@ export default function Home() {
                     playAudio(objurlRef.current);
                 } else {
                     // 第一次播放
-                    console.log('downloading text info');
-                    const params = new URLSearchParams({
-                        text: textRef.current.slice(0, 30)
-                    });
                     try {
-                        const textinfo = await (await fetch(`/api/locale?${params}`)).json();
-                        setLocale(textinfo.locale);
+                        let theLocale = locale;
+                        if (!theLocale) {
+                            console.log('downloading text info');
+                            const params = new URLSearchParams({
+                                text: textRef.current.slice(0, 30)
+                            });
+                            const textinfo = await (await fetch(`/api/locale?${params}`)).json();
+                            setLocale(textinfo.locale);
+                            theLocale = textinfo.locale as string;
+                        }
 
-                        const voice = voicesData.find(v => v.locale.startsWith(textinfo.locale));
+                        const voice = voicesData.find(v => v.locale.startsWith(theLocale));
                         if (!voice) throw 'Voice not found.';
 
                         objurlRef.current = await getTTSAudioUrl(
@@ -150,66 +158,78 @@ export default function Home() {
         }
     }
 
-    const TextSpeakerItemSchema = z.object({
-        text: z.string(),
-        ipa: z.string().optional(),
-        locale: z.string()
-    });
-    const TextSpeakerArraySchema = z.array(TextSpeakerItemSchema);
+    const handleUseItem = (item: z.infer<typeof TextSpeakerItemSchema>) => {
+        if (textareaRef.current) textareaRef.current.value = item.text;
+        textRef.current = item.text;
+        setLocale(item.locale);
+        setIPA(item.ipa || '');
+        if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
+        objurlRef.current = null;
+        stopAudio();
+        setPause(true);
+    }
 
-    const save = () => {
-        if (!locale) return;
+    const save = async () => {
+        if (textRef.current.length === 0) return;
 
-        const getTextSpeakerData = () => {
-            try {
-                const item = localStorage.getItem('text-speaker');
+        try {
+            let theLocale = locale;
+            if (!theLocale) {
+                console.log('downloading text info');
+                const params = new URLSearchParams({
+                    text: textRef.current.slice(0, 30)
+                });
+                const textinfo = await (await fetch(`/api/locale?${params}`)).json();
+                setLocale(textinfo.locale);
+                theLocale = textinfo.locale as string;
+            }
 
-                if (!item) return [];
+            let theIPA = ipa;
+            if (ipa.length === 0 && ipaEnabled) {
+                const params = new URLSearchParams({
+                    text: textRef.current
+                });
+                const tmp = await (await fetch(`/api/ipa?${params}`)).json();
+                setIPA(tmp.ipa);
+                theIPA = tmp.ipa;
+            }
 
-                const rawData = JSON.parse(item);
-                const result = TextSpeakerArraySchema.safeParse(rawData);
-
-                if (result.success) {
-                    return result.data;
+            const save = getTextSpeakerData();
+            const oldIndex = save.findIndex(v => v.text === textRef.current);
+            if (oldIndex !== -1) {
+                const oldItem = save[oldIndex];
+                if ((!oldItem.ipa) || (oldItem.ipa !== theIPA)) {
+                    oldItem.ipa = theIPA;
+                    localStorage.setItem('text-speaker', JSON.stringify(save));
+                    return;
                 } else {
-                    console.error('Invalid data structure in localStorage:', result.error);
-                    return [];
+                    return;
                 }
-            } catch (e) {
-                console.error('Failed to parse text-speaker data:', e);
-                return [];
             }
-        }
-
-        const save = getTextSpeakerData();
-        const oldIndex = save.findIndex(v => v.text === textRef.current);
-        if (oldIndex !== -1) {
-            const oldItem = save[oldIndex];
-            if ((ipa && !oldItem.ipa) || (ipa && oldItem.ipa !== ipa)) {
-                oldItem.ipa = ipa;
-                localStorage.setItem('text-speaker', JSON.stringify(save));
-                return;
+            if (theIPA.length === 0) {
+                save.push({
+                    text: textRef.current,
+                    locale: theLocale
+                });
+            } else {
+                save.push({
+                    text: textRef.current,
+                    locale: theLocale,
+                    ipa: theIPA
+                });
             }
+            localStorage.setItem('text-speaker', JSON.stringify(save));
+        } catch (e) {
+            console.error(e);
+            setLocale(null);
         }
-        if (ipa.length === 0) {
-            save.push({
-                text: textRef.current,
-                locale: locale
-            });
-        } else {
-            save.push({
-                text: textRef.current,
-                locale: locale,
-                ipa: ipa
-            });
-        }
-        localStorage.setItem('text-speaker', JSON.stringify(save));
     }
 
     return (<>
         <div className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl">
             <textarea className="text-2xl resize-none focus:outline-0 min-h-64 w-full"
-                onChange={handleInputChange}>
+                onChange={handleInputChange}
+                ref={textareaRef}>
             </textarea>
             <div className="overflow-auto text-gray-600 h-18">
                 {ipa}
@@ -224,24 +244,20 @@ export default function Home() {
                     autopause ? IMAGES.autoplay : IMAGES.autopause
                 } alt="autoplayorpause"
                 ></IconClick>
-                <span>{localStorage.getItem('text-speaker')}</span>
                 <IconClick size={45} onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
                     src={IMAGES.more_horiz}
                     alt="more"></IconClick>
-                {locale ? (<IconClick size={45} onClick={save}
+                <IconClick size={45} onClick={save}
                     src={IMAGES.save}
-                    alt="save"></IconClick>) : (<></>)}
+                    alt="save"></IconClick>
                 <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
-
                     <Button label="生成IPA"
                         selected={ipaEnabled}
                         onClick={() => setIPAEnabled(!ipaEnabled)}>
                     </Button>
-                    <Button label="删除所有保存项"
-                        onClick={() => localStorage.setItem('text-speaker', '[]')}>
-                    </Button>
                     <Button label="查看保存项"
-                        onClick={}>
+                        onClick={() => { setShowSaveList(!showSaveList) }}
+                        selected={showSaveList}>
                     </Button>
                 </div>
                 <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
@@ -276,6 +292,7 @@ export default function Home() {
                     }
                 </div>
             </div>
-        </div >
+        </div>
+        <SaveList show={showSaveList} handleUse={handleUseItem}></SaveList>
     </>);
 }

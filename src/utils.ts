@@ -1,5 +1,7 @@
 import { EdgeTTS, ProsodyOptions } from "edge-tts-universal/browser";
 import { env } from "process";
+import { TextSpeakerArraySchema } from "./interfaces";
+import z from "zod";
 
 export function inspect(word: string) {
     const goto = (url: string) => {
@@ -50,3 +52,27 @@ export async function getTTSAudioUrl(text: string, short_name: string, options: 
         throw e;
     }
 }
+export const getTextSpeakerData = () => {
+    try {
+        const item = localStorage.getItem('text-speaker');
+
+        if (!item) return [];
+
+        const rawData = JSON.parse(item);
+        const result = TextSpeakerArraySchema.safeParse(rawData);
+
+        if (result.success) {
+            return result.data;
+        } else {
+            console.error('Invalid data structure in localStorage:', result.error);
+            return [];
+        }
+    } catch (e) {
+        console.error('Failed to parse text-speaker data:', e);
+        return [];
+    }
+};
+export const setTextSpeakerData = (data: z.infer<typeof TextSpeakerArraySchema>) => {
+    if (!localStorage) return;
+    localStorage.setItem('text-speaker', JSON.stringify(data));
+};

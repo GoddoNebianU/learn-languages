@@ -1,3 +1,4 @@
+import z from "zod";
 
 export interface Word {
   word: string;
@@ -10,4 +11,10 @@ export interface Word {
     roman_letter?: string;
 }
 export type SupportedAlphabets = 'japanese' | 'english' | 'esperanto' | 'uyghur';
+export const TextSpeakerItemSchema = z.object({
+    text: z.string(),
+    ipa: z.string().optional(),
+    locale: z.string()
+});
+export const TextSpeakerArraySchema = z.array(TextSpeakerItemSchema);
 
