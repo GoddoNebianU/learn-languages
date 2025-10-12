@@ -228,7 +228,7 @@ export default function Home() {
     }
 
     return (<>
-        <div className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl">
+        <div className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl" style={{ fontFamily: 'Times New Roman, serif' }}>
             <textarea className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b"
                 onChange={handleInputChange}
                 ref={textareaRef}>

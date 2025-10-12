@@ -69,7 +69,7 @@ export default function SaveList({
         }
     }
     if (show) return (
-        <div className="my-4 p-2 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl">
+        <div className="my-4 p-2 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl" style={{ fontFamily: 'Times New Roman, serif' }}>
             <div className="flex flex-row justify-center gap-8 items-center">
                 <IconClick
                     src={IMAGES.refresh}
