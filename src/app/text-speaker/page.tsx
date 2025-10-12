@@ -229,14 +229,16 @@ export default function Home() {
 
     return (<>
         <div className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl">
-            <textarea className="text-2xl resize-none focus:outline-0 min-h-64 w-full"
+            <textarea className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b"
                 onChange={handleInputChange}
                 ref={textareaRef}>
             </textarea>
-            <div className="overflow-auto text-gray-600 h-18">
-                {ipa}
-            </div>
-            <div className="relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+            {
+                ipa.length !== 0 && (<div className="overflow-auto text-gray-600 h-18 border-gray-200 border-b">
+                    {ipa}
+                </div>) || (<div className="h-18"></div>)
+            }
+            <div className="mt-8 relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
                 {showSpeedAdjust && (
                     <div className="bg-white p-6 rounded-2xl border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center">
                         <IconClick size={45} onClick={letMeSetSpeed(0.5)}
