@@ -40,6 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-deploy.sh
-learn-languages.tar.gz
-src/app/test
+.env
