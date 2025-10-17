@@ -4,6 +4,8 @@ import "./globals.css";
 import type { Viewport } from 'next'
 import Link from "next/link";
 import Image from "next/image";
+import { ModalStackContainer } from "rc-modal-sheet";
+import { motion } from "motion/react";
 
 export const viewport: Viewport = {
   width: 'device-width',

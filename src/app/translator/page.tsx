@@ -234,7 +234,7 @@ export default function Home() {
       </div>
 
       <div className="button-area w-screen flex justify-center items-center">
-        <button onClick={translate} className={`text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${translating ? 'bg-gray-200' : 'bg-white hover:bg-gray-200 hover:cursor-pointer'}`}>
+        <button onClick={translate} className={`duration-150 ease-in text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${translating ? 'bg-gray-200' : 'bg-white hover:bg-gray-200 hover:cursor-pointer'}`}>
           {translating ? 'translating...' : 'translate'}
         </button>
       </div>
