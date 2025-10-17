@@ -24,9 +24,9 @@ function TextCard({
         handleDel(item);
     }
     return (
-        <div className="hover:cursor-pointer p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
+        <div className="p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
             <div className="col-span-7" onClick={onUseClick}>
-                <div className="max-h-26 text-3xl overflow-y-auto">{item.text}</div>
+                <div className="max-h-26 hover:cursor-pointer text-3xl overflow-y-auto">{item.text}</div>
                 <div className="max-h-16 overflow-y-auto text-xl text-gray-600 whitespace-nowrap overflow-x-auto">{item.ipa}</div>
             </div>
             <div className="flex justify-center items-center border-gray-300 border-l-2 m-2">
