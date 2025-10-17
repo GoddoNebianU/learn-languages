@@ -24,8 +24,8 @@ function TextCard({
         handleDel(item);
     }
     return (
-        <div className="hover:cursor-pointer p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8" onClick={onUseClick}>
-            <div className="col-span-7">
+        <div className="hover:cursor-pointer p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
+            <div className="col-span-7" onClick={onUseClick}>
                 <div className="max-h-26 text-3xl overflow-y-auto">{item.text}</div>
                 <div className="max-h-16 overflow-y-auto text-xl text-gray-600 whitespace-nowrap overflow-x-auto">{item.ipa}</div>
             </div>
@@ -54,9 +54,10 @@ export default function SaveList({
     const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
         const current_data = getTextSpeakerData();
         current_data.splice(
-            current_data.findIndex(v => v.text === item.text)
+            current_data.findIndex(v => v.text === item.text), 1
         );
         setTextSpeakerData(current_data);
+        refresh();
     }
     const refresh = () => {
         setData(getTextSpeakerData());
