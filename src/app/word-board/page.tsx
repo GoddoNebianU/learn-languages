@@ -3,7 +3,7 @@ import WordBoard from "@/app/word-board/WordBoard";
 import Button from "../../components/Button";
 import { KeyboardEvent, useRef, useState } from "react";
 import { Word } from "@/interfaces";
-import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/constants";
+import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/config/word-board-config";
 import { inspect } from "@/utils";
 
 export default function Home() {
