@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import { Letter, SupportedAlphabets } from "@/interfaces";
 import { useEffect, useState } from "react";
 import MemoryCard from "./MemoryCard";
+import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
     const [chosenAlphabet, setChosenAlphabet] = useState<SupportedAlphabets | null>(null);
@@ -43,7 +44,8 @@ export default function Home() {
         }
     }, [loadingState]);
 
-    if (!chosenAlphabet) return (
+    if (!chosenAlphabet) return (<>
+        <Navbar></Navbar>
         <div className="border border-gray-200 m-4 mt-4 flex flex-col justify-center items-center p-4 rounded-2xl gap-2">
             <span className="text-2xl md:text-3xl">请选择您想学习的字符</span>
             <div className="flex gap-1 flex-wrap">
@@ -52,7 +54,9 @@ export default function Home() {
                 <Button label="维吾尔字母" onClick={() => setChosenAlphabet('uyghur')}></Button>
                 <Button label="世界语字母" onClick={() => setChosenAlphabet('esperanto')}></Button>
             </div>
-        </div>);
+        </div>
+    </>
+    );
     if (loadingState === 'loading') {
         return '加载中...';
     }
@@ -60,11 +64,14 @@ export default function Home() {
         return '加载失败，请重试';
     }
     if (loadingState === 'success' && alphabetData[chosenAlphabet]) {
-        return (<MemoryCard
-            language={chosenAlphabet}
-            alphabet={alphabetData[chosenAlphabet]}
-            setChosenAlphabet={setChosenAlphabet}>
-        </MemoryCard>);
+        return (<>
+            <Navbar></Navbar>
+            <MemoryCard
+                language={chosenAlphabet}
+                alphabet={alphabetData[chosenAlphabet]}
+                setChosenAlphabet={setChosenAlphabet}>
+            </MemoryCard>
+        </>);
     }
     return null;
 }

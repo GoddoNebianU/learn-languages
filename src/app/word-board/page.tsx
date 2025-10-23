@@ -5,6 +5,7 @@ import { KeyboardEvent, useRef, useState } from "react";
 import { Word } from "@/interfaces";
 import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/config/word-board-config";
 import { inspect } from "@/utils";
+import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -139,21 +140,25 @@ export default function Home() {
   //   inputRef.current.value = '';
   // }
   return (
-    <div className="flex w-screen h-screen justify-center items-center">
-      <div onKeyDown={handleKeyDown} className="p-5 bg-gray-200 rounded shadow-2xl">
-        <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
-        <div className="flex justify-center rounded mt-3 gap-1">
-          <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
-          <Button label="插入" onClick={insertWord}></Button>
-          <Button label="删除" onClick={deleteWord}></Button>
-          <Button label="搜索" onClick={searchWord}></Button>
-          <Button label="导入" onClick={importWords}></Button>
-          <Button label="导出" onClick={exportWords}></Button>
-          <Button label="删光" onClick={deleteAll}></Button>
-          {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
+    <>
+      <Navbar></Navbar>
+      <div className="flex w-screen h-screen justify-center items-center">
+        <div onKeyDown={handleKeyDown} className="p-5 bg-gray-200 rounded shadow-2xl">
+          <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
+          <div className="flex justify-center rounded mt-3 gap-1">
+            <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
+            <Button label="插入" onClick={insertWord}></Button>
+            <Button label="删除" onClick={deleteWord}></Button>
+            <Button label="搜索" onClick={searchWord}></Button>
+            <Button label="导入" onClick={importWords}></Button>
+            <Button label="导出" onClick={exportWords}></Button>
+            <Button label="删光" onClick={deleteAll}></Button>
+            {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
+          </div>
+          <input type="file" ref={inputFileRef} className="hidden" accept="application/json" onChange={handleFileChange}></input>
         </div>
-        <input type="file" ref={inputFileRef} className="hidden" accept="application/json" onChange={handleFileChange}></input>
       </div>
-    </div>
+    </>
+
   );
 }

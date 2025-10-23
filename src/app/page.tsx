@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
 
 function TopArea() {
@@ -91,6 +92,7 @@ function Explore() {
 export default function Home() {
   return (
     <>
+      <Navbar></Navbar>
       <TopArea></TopArea>
       <Fortune></Fortune>
       <Explore></Explore>

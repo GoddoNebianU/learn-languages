@@ -9,6 +9,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import SaveList from "./SaveList";
 import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
+import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -228,6 +229,7 @@ export default function Home() {
     }
 
     return (<>
+        <Navbar></Navbar>
         <div className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl" style={{ fontFamily: 'Times New Roman, serif' }}>
             <textarea className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b"
                 onChange={handleInputChange}
