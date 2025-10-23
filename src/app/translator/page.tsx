@@ -8,7 +8,7 @@ import IMAGES from "@/config/images";
 import { getTTSAudioUrl } from "@/utils";
 import { Navbar } from "@/components/Navbar";
 
-export default function Home() {
+export default function Translator() {
   const [ipaEnabled, setIPAEnabled] = useState(true);
   const [voicesData, setVoicesData] = useState<{
     locale: string,

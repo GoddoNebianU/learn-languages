@@ -5,7 +5,7 @@ import UploadArea from "./UploadArea";
 import VideoPanel from "./VideoPlayer/VideoPanel";
 import { Navbar } from "@/components/Navbar";
 
-export default function Home() {
+export default function SrtPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [videoUrl, setVideoUrl] = useState<string | null>(null);

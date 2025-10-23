@@ -11,7 +11,7 @@ import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
 import { Navbar } from "@/components/Navbar";
 
-export default function Home() {
+export default function TextSpeaker() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
     const [showSaveList, setShowSaveList] = useState(false);

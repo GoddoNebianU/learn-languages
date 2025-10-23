@@ -4,7 +4,7 @@ import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/config/word-
 import { Word } from "@/interfaces";
 import { Dispatch, SetStateAction } from "react";
 
-export default function WordBoard(
+export default function TheBoard(
     { words, selectWord }: {
         words: [
             {

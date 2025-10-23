@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import MemoryCard from "./MemoryCard";
 import { Navbar } from "@/components/Navbar";
 
-export default function Home() {
+export default function Alphabet() {
     const [chosenAlphabet, setChosenAlphabet] = useState<SupportedAlphabets | null>(null);
     const [alphabetData, setAlphabetData] = useState<Record<SupportedAlphabets, Letter[] | null>>({
         japanese: null,

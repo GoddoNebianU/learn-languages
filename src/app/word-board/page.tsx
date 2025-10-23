@@ -1,5 +1,5 @@
 'use client';
-import WordBoard from "@/app/word-board/WordBoard";
+import TheBoard from "@/app/word-board/TheBoard";
 import Button from "../../components/Button";
 import { KeyboardEvent, useRef, useState } from "react";
 import { Word } from "@/interfaces";
@@ -7,7 +7,7 @@ import { BOARD_WIDTH, TEXT_WIDTH, BOARD_HEIGHT, TEXT_SIZE } from "@/config/word-
 import { inspect } from "@/utils";
 import { Navbar } from "@/components/Navbar";
 
-export default function Home() {
+export default function WordBoard() {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const initialWords =
@@ -144,7 +144,7 @@ export default function Home() {
       <Navbar></Navbar>
       <div className="flex w-screen h-screen justify-center items-center">
         <div onKeyDown={handleKeyDown} className="p-5 bg-gray-200 rounded shadow-2xl">
-          <WordBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
+          <TheBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
           <div className="flex justify-center rounded mt-3 gap-1">
             <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
             <Button label="插入" onClick={insertWord}></Button>
