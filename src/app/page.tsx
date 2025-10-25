@@ -92,7 +92,6 @@ function Explore() {
 export default function Home() {
   return (
     <>
-    hello
       <Navbar></Navbar>
       <TopArea></TopArea>
       <Fortune></Fortune>
