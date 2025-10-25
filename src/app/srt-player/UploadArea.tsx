@@ -45,8 +45,8 @@ export default function UploadArea(
   }
   return (
     <div className="w-full flex flex-col gap-2 m-2">
-      <Button label="上传视频" onClick={uploadVideo} />
-      <Button label="上传字幕" onClick={uploadSRT} />
+      <Button onClick={uploadVideo}>上传视频</Button>
+      <Button onClick={uploadSRT}>上传字幕</Button>
       <input type="file" className="hidden" ref={inputRef} />
     </div >
   )

@@ -162,11 +162,11 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>((
             <video className="bg-gray-200" ref={videoRef} onTimeUpdate={timeUpdate}></video>
             <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
             <div className="buttons flex mt-2 gap-2 flex-wrap">
-                <Button label={isPlaying ? '暂停' : '播放'} onClick={togglePlayPause}></Button>
-                <Button label="上句" onClick={previous}></Button>
-                <Button label="下句" onClick={next}></Button>
-                <Button label="句首" onClick={restart}></Button>
-                <Button label={`自动暂停(${autoPause ? '是' : '否'})`} onClick={handleAutoPauseToggle}></Button>
+                <Button onClick={togglePlayPause}>{isPlaying ? '暂停' : '播放'}</Button>
+                <Button onClick={previous}>上句</Button>
+                <Button onClick={next}>下句</Button>
+                <Button onClick={restart}>句首</Button>
+                <Button onClick={handleAutoPauseToggle}>{`自动暂停(${autoPause ? '是' : '否'})`}</Button>
             </div>
             <input className="seekbar" type="range" min={0} max={srtLength} onChange={handleSeek} step={1} value={progress}></input>
             <span>{spanText}</span>

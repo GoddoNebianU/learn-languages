@@ -34,7 +34,7 @@ export default function MemoryCard(
     }
     return (
         <div className="w-full flex justify-center items-center" onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => e.preventDefault()}>
-            <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-2xl shadow border-gray-200 border flex justify-center items-center">
+            {/* <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-2xl shadow border-gray-200 border flex justify-center items-center">
                 <div className="w-full flex justify-end items-center">
                     <IconClick size={32} alt="close" src={IMAGES.close} onClick={() => setChosenAlphabet(null)}></IconClick>
                 </div>
@@ -52,7 +52,7 @@ export default function MemoryCard(
                         </>) : (<></>)
                     }
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
