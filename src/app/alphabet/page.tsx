@@ -49,10 +49,18 @@ export default function Alphabet() {
         <div className="border border-gray-200 m-4 mt-4 flex flex-col justify-center items-center p-4 rounded-2xl gap-2">
             <span className="text-2xl md:text-3xl">请选择您想学习的字符</span>
             <div className="flex gap-1 flex-wrap">
-                <Button label="日语假名" onClick={() => setChosenAlphabet('japanese')}></Button>
-                <Button label="英文字母" onClick={() => setChosenAlphabet('english')}></Button>
-                <Button label="维吾尔字母" onClick={() => setChosenAlphabet('uyghur')}></Button>
-                <Button label="世界语字母" onClick={() => setChosenAlphabet('esperanto')}></Button>
+                <Button onClick={() => setChosenAlphabet('japanese')}>
+                    日语假名
+                </Button>
+                <Button onClick={() => setChosenAlphabet('english')}>
+                    英文字母
+                </Button>
+                <Button onClick={() => setChosenAlphabet('uyghur')}>
+                    维吾尔字母
+                </Button>
+                <Button onClick={() => setChosenAlphabet('esperanto')}>
+                    世界语字母
+                </Button>
             </div>
         </div>
     </>

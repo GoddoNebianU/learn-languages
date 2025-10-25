@@ -206,7 +206,7 @@ export default function Translator() {
           </div>
           <div className="option1 w-full flex flex-row justify-between items-center">
             <span>detect language</span>
-            <Button label="generate ipa" selected={ipaEnabled} onClick={() => setIPAEnabled(!ipaEnabled)}></Button>
+            <Button selected={ipaEnabled} onClick={() => setIPAEnabled(!ipaEnabled)}>generate ipa</Button>
           </div>
         </div>
         <div className="card2 w-full md:w-1/2 flex flex-col-reverse gap-2">
@@ -227,10 +227,10 @@ export default function Translator() {
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
             <span>translate into</span>
-            <Button onClick={() => { setTargetLang('English') }} label="English" selected={targetLang === 'English'}></Button>
-            <Button onClick={() => { setTargetLang('Italian') }} label="Italian" selected={targetLang === 'Italian'}></Button>
-            <Button onClick={() => { setTargetLang('Japanese') }} label="Japanese" selected={targetLang === 'Japanese'}></Button>
-            <Button onClick={inputLanguage} label={'Other' + (tl.includes(targetLang) ? '' : ': ' + targetLang)} selected={!(tl.includes(targetLang))}></Button>
+            <Button onClick={() => { setTargetLang('English') }} selected={targetLang === 'English'}>English</Button>
+            <Button onClick={() => { setTargetLang('Italian') }} selected={targetLang === 'Italian'}>Italian</Button>
+            <Button onClick={() => { setTargetLang('Japanese') }} selected={targetLang === 'Japanese'}>Japanese</Button>
+            <Button onClick={inputLanguage} selected={!(tl.includes(targetLang))}>{'Other' + (tl.includes(targetLang) ? '' : ': ' + targetLang)}</Button>
           </div>
         </div>
       </div>

@@ -287,13 +287,15 @@ export default function TextSpeaker() {
                     alt="save"
                     className={`${saving ? 'bg-gray-200' : ''}`}></IconClick>
                 <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
-                    <Button label="生成IPA"
+                    <Button
                         selected={ipaEnabled}
                         onClick={() => setIPAEnabled(!ipaEnabled)}>
+                        生成IPA
                     </Button>
-                    <Button label="查看保存项"
+                    <Button
                         onClick={() => { setShowSaveList(!showSaveList) }}
                         selected={showSaveList}>
+                        查看保存项
                     </Button>
                 </div>
             </div>

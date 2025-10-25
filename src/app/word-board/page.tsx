@@ -147,12 +147,12 @@ export default function WordBoard() {
           <TheBoard selectWord={selectWord} words={words as [Word]} setWords={setWords} />
           <div className="flex justify-center rounded mt-3 gap-1">
             <input ref={inputRef} placeholder="word to operate" type="text" className="focus:outline-none border-b-2 border-black" />
-            <Button label="插入" onClick={insertWord}></Button>
-            <Button label="删除" onClick={deleteWord}></Button>
-            <Button label="搜索" onClick={searchWord}></Button>
-            <Button label="导入" onClick={importWords}></Button>
-            <Button label="导出" onClick={exportWords}></Button>
-            <Button label="删光" onClick={deleteAll}></Button>
+            <Button onClick={insertWord}>插入</Button>
+            <Button onClick={deleteWord}>删除</Button>
+            <Button onClick={searchWord}>搜索</Button>
+            <Button onClick={importWords}>导入</Button>
+            <Button onClick={exportWords}>导出</Button>
+            <Button onClick={deleteAll}>删光</Button>
             {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
           </div>
           <input type="file" ref={inputFileRef} className="hidden" accept="application/json" onChange={handleFileChange}></input>
