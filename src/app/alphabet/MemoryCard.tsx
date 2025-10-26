@@ -2,16 +2,14 @@ import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/interfaces";
-import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useState } from "react";
 
 export default function MemoryCard(
     {
         alphabet,
-        language,
         setChosenAlphabet
     }: {
         alphabet: Letter[],
-        language: string,
         setChosenAlphabet: Dispatch<SetStateAction<SupportedAlphabets | null>>
     }
 ) {
@@ -34,7 +32,7 @@ export default function MemoryCard(
     }
     return (
         <div className="w-full flex justify-center items-center" onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => e.preventDefault()}>
-            {/* <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-2xl shadow border-gray-200 border flex justify-center items-center">
+            <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-2xl shadow border-gray-200 border flex justify-center items-center">
                 <div className="w-full flex justify-end items-center">
                     <IconClick size={32} alt="close" src={IMAGES.close} onClick={() => setChosenAlphabet(null)}></IconClick>
                 </div>
@@ -47,12 +45,12 @@ export default function MemoryCard(
                     <IconClick size={48} alt="more" src={IMAGES.more_horiz} onClick={() => setMore(!more)}></IconClick>
                     {
                         more ? (<>
-                            <Button className="w-20" label={letterDisplay ? '隐藏字母' : '显示字母'} onClick={() => { setLetterDisplay(!letterDisplay) }}></Button>
-                            <Button className="w-20" label={ipaDisplay ? '隐藏IPA' : '显示IPA'} onClick={() => { setIPADisplay(!ipaDisplay) }}></Button>
+                            <Button className="w-20" onClick={() => { setLetterDisplay(!letterDisplay) }}>{letterDisplay ? '隐藏字母' : '显示字母'}</Button>
+                            <Button className="w-20" onClick={() => { setIPADisplay(!ipaDisplay) }}>{ipaDisplay ? '隐藏IPA' : '显示IPA'}</Button>
                         </>) : (<></>)
                     }
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 }

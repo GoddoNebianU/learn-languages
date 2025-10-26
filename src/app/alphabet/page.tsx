@@ -75,7 +75,6 @@ export default function Alphabet() {
         return (<>
             <Navbar></Navbar>
             <MemoryCard
-                language={chosenAlphabet}
                 alphabet={alphabetData[chosenAlphabet]}
                 setChosenAlphabet={setChosenAlphabet}>
             </MemoryCard>

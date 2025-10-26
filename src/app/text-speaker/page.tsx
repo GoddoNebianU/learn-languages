@@ -10,6 +10,7 @@ import SaveList from "./SaveList";
 import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
 import { Navbar } from "@/components/Navbar";
+import { VOICES } from "@/config/locales";
 
 export default function TextSpeaker() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -25,19 +26,7 @@ export default function TextSpeaker() {
     const [ipa, setIPA] = useState<string>('');
     const objurlRef = useRef<string | null>(null);
     const [processing, setProcessing] = useState(false);
-    const [voicesData, setVoicesData] = useState<{
-        locale: string,
-        short_name: string
-    }[] | null>(null);
-    const [loading, setLoading] = useState(true);
     const { playAudio, stopAudio, audioRef } = useAudioPlayer();
-    useEffect(() => {
-        fetch('/list_of_voices.json')
-            .then(res => res.json())
-            .then(setVoicesData)
-            .catch(() => setVoicesData(null))
-            .finally(() => setLoading(false));
-    }, []);
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
@@ -55,11 +44,6 @@ export default function TextSpeaker() {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [audioRef, autopause]);
-
-
-    if (loading) return <div>加载中...</div>;
-    if (!voicesData) return <div>加载失败</div>;
-
 
     const speak = async () => {
         if (processing) return;
@@ -103,7 +87,7 @@ export default function TextSpeaker() {
                             theLocale = textinfo.locale as string;
                         }
 
-                        const voice = voicesData.find(v => v.locale.startsWith(theLocale));
+                        const voice = VOICES.find(v => v.locale.startsWith(theLocale));
                         if (!voice) throw 'Voice not found.';
 
                         objurlRef.current = await getTTSAudioUrl(

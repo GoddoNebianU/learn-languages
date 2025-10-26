@@ -7,15 +7,11 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import IMAGES from "@/config/images";
 import { getTTSAudioUrl } from "@/utils";
 import { Navbar } from "@/components/Navbar";
+import { VOICES } from "@/config/locales";
 
 export default function Translator() {
   const [ipaEnabled, setIPAEnabled] = useState(true);
-  const [voicesData, setVoicesData] = useState<{
-    locale: string,
-    short_name: string
-  }[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [targetLang, setTargetLang] = useState('Italian');
+  const [targetLang, setTargetLang] = useState('Chinese');
 
   const [sourceText, setSourceText] = useState('');
   const [targetText, setTargetText] = useState('');
@@ -23,21 +19,10 @@ export default function Translator() {
   const [targetIPA, setTargetIPA] = useState('');
   const [sourceLocale, setSourceLocale] = useState<string | null>(null);
   const [targetLocale, setTargetLocale] = useState<string | null>(null);
-
   const [translating, setTranslating] = useState(false);
   const { playAudio } = useAudioPlayer();
 
-  useEffect(() => {
-    fetch('/list_of_voices.json')
-      .then(res => res.json())
-      .then(setVoicesData)
-      .catch(() => setVoicesData(null))
-      .finally(() => setLoading(false));
-  }, []);
-  if (loading) return <div>加载中...</div>;
-  if (!voicesData) return <div>加载失败</div>;
-
-  const tl = ['English', 'Italian', 'Japanese'];
+  const tl = ['Chinese', 'English', 'Italian'];
 
   const inputLanguage = () => {
     const lang = prompt('Input a language.')?.trim();
@@ -136,7 +121,7 @@ export default function Translator() {
         const info = await res.json();
         setSourceLocale(info.locale);
 
-        const voice = voicesData.find(v => v.locale.startsWith(info.locale));
+        const voice = VOICES.find(v => v.locale.startsWith(info.locale));
         if (!voice) {
           return;
         }
@@ -150,7 +135,7 @@ export default function Translator() {
         return;
       }
     } else {
-      const voice = voicesData.find(v => v.locale.startsWith(sourceLocale!));
+      const voice = VOICES.find(v => v.locale.startsWith(sourceLocale!));
       if (!voice) {
         return;
       }
@@ -178,7 +163,7 @@ export default function Translator() {
         })
     }
 
-    const voice = voicesData.find(v => v.locale.startsWith(targetLocale!));
+    const voice = VOICES.find(v => v.locale.startsWith(targetLocale!));
     if (!voice) return;
 
     const url = await getTTSAudioUrl(targetText, voice.short_name);
@@ -227,9 +212,9 @@ export default function Translator() {
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
             <span>translate into</span>
+            <Button onClick={() => { setTargetLang('Chinese') }} selected={targetLang === 'Chinese'}>Chinese</Button>
             <Button onClick={() => { setTargetLang('English') }} selected={targetLang === 'English'}>English</Button>
             <Button onClick={() => { setTargetLang('Italian') }} selected={targetLang === 'Italian'}>Italian</Button>
-            <Button onClick={() => { setTargetLang('Japanese') }} selected={targetLang === 'Japanese'}>Japanese</Button>
             <Button onClick={inputLanguage} selected={!(tl.includes(targetLang))}>{'Other' + (tl.includes(targetLang) ? '' : ': ' + targetLang)}</Button>
           </div>
         </div>

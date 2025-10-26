@@ -1,144 +1,1212 @@
-const locales: string[] = [
-  "af-ZA",
-  "sq-AL",
-  "am-ET",
-  "ar-DZ",
-  "ar-BH",
-  "ar-EG",
-  "ar-IQ",
-  "ar-JO",
-  "ar-KW",
-  "ar-LB",
-  "ar-LY",
-  "ar-MA",
-  "ar-OM",
-  "ar-QA",
-  "ar-SA",
-  "ar-SY",
-  "ar-TN",
-  "ar-AE",
-  "ar-YE",
-  "az-AZ",
-  "bn-BD",
-  "bn-IN",
-  "bs-BA",
-  "bg-BG",
-  "my-MM",
-  "ca-ES",
-  "zh-HK",
-  "zh-CN",
-  "zh-CN-liaoning",
-  "zh-TW",
-  "zh-CN-shaanxi",
-  "hr-HR",
-  "cs-CZ",
-  "da-DK",
-  "nl-BE",
-  "nl-NL",
-  "en-AU",
-  "en-CA",
-  "en-HK",
-  "en-IN",
-  "en-IE",
-  "en-KE",
-  "en-NZ",
-  "en-NG",
-  "en-PH",
-  "en-SG",
-  "en-ZA",
-  "en-TZ",
-  "en-GB",
-  "en-US",
-  "et-EE",
-  "fil-PH",
-  "fi-FI",
-  "fr-BE",
-  "fr-CA",
-  "fr-FR",
-  "fr-CH",
-  "gl-ES",
-  "ka-GE",
-  "de-AT",
-  "de-DE",
-  "de-CH",
-  "el-GR",
-  "gu-IN",
-  "he-IL",
-  "hi-IN",
-  "hu-HU",
-  "is-IS",
-  "id-ID",
-  "ga-IE",
-  "it-IT",
-  "ja-JP",
-  "jv-ID",
-  "kn-IN",
-  "kk-KZ",
-  "km-KH",
-  "ko-KR",
-  "lo-LA",
-  "lv-LV",
-  "lt-LT",
-  "mk-MK",
-  "ms-MY",
-  "ml-IN",
-  "mt-MT",
-  "mr-IN",
-  "mn-MN",
-  "ne-NP",
-  "nb-NO",
-  "ps-AF",
-  "fa-IR",
-  "pl-PL",
-  "pt-BR",
-  "pt-PT",
-  "ro-RO",
-  "ru-RU",
-  "sr-RS",
-  "si-LK",
-  "sk-SK",
-  "sl-SI",
-  "so-SO",
-  "es-AR",
-  "es-BO",
-  "es-CL",
-  "es-CO",
-  "es-CR",
-  "es-CU",
-  "es-DO",
-  "es-EC",
-  "es-SV",
-  "es-GQ",
-  "es-GT",
-  "es-HN",
-  "es-MX",
-  "es-NI",
-  "es-PA",
-  "es-PY",
-  "es-PE",
-  "es-PR",
-  "es-ES",
-  "es-US",
-  "es-UY",
-  "es-VE",
-  "su-ID",
-  "sw-KE",
-  "sw-TZ",
-  "sv-SE",
-  "ta-IN",
-  "ta-MY",
-  "ta-SG",
-  "ta-LK",
-  "te-IN",
-  "th-TH",
-  "tr-TR",
-  "uk-UA",
-  "ur-IN",
-  "ur-PK",
-  "uz-UZ",
-  "vi-VN",
-  "cy-GB",
-  "zu-ZA"
+const VOICES = [
+  {
+    locale: "af-ZA",
+    short_name: "af-ZA-AdriNeural"
+  },
+  {
+    locale: "af-ZA",
+    short_name: "af-ZA-WillemNeural"
+  },
+  {
+    locale: "sq-AL",
+    short_name: "sq-AL-AnilaNeural"
+  },
+  {
+    locale: "sq-AL",
+    short_name: "sq-AL-IlirNeural"
+  },
+  {
+    locale: "am-ET",
+    short_name: "am-ET-AmehaNeural"
+  },
+  {
+    locale: "am-ET",
+    short_name: "am-ET-MekdesNeural"
+  },
+  {
+    locale: "ar-DZ",
+    short_name: "ar-DZ-AminaNeural"
+  },
+  {
+    locale: "ar-DZ",
+    short_name: "ar-DZ-IsmaelNeural"
+  },
+  {
+    locale: "ar-BH",
+    short_name: "ar-BH-AliNeural"
+  },
+  {
+    locale: "ar-BH",
+    short_name: "ar-BH-LailaNeural"
+  },
+  {
+    locale: "ar-EG",
+    short_name: "ar-EG-SalmaNeural"
+  },
+  {
+    locale: "ar-EG",
+    short_name: "ar-EG-ShakirNeural"
+  },
+  {
+    locale: "ar-IQ",
+    short_name: "ar-IQ-BasselNeural"
+  },
+  {
+    locale: "ar-IQ",
+    short_name: "ar-IQ-RanaNeural"
+  },
+  {
+    locale: "ar-JO",
+    short_name: "ar-JO-SanaNeural"
+  },
+  {
+    locale: "ar-JO",
+    short_name: "ar-JO-TaimNeural"
+  },
+  {
+    locale: "ar-KW",
+    short_name: "ar-KW-FahedNeural"
+  },
+  {
+    locale: "ar-KW",
+    short_name: "ar-KW-NouraNeural"
+  },
+  {
+    locale: "ar-LB",
+    short_name: "ar-LB-LaylaNeural"
+  },
+  {
+    locale: "ar-LB",
+    short_name: "ar-LB-RamiNeural"
+  },
+  {
+    locale: "ar-LY",
+    short_name: "ar-LY-ImanNeural"
+  },
+  {
+    locale: "ar-LY",
+    short_name: "ar-LY-OmarNeural"
+  },
+  {
+    locale: "ar-MA",
+    short_name: "ar-MA-JamalNeural"
+  },
+  {
+    locale: "ar-MA",
+    short_name: "ar-MA-MounaNeural"
+  },
+  {
+    locale: "ar-OM",
+    short_name: "ar-OM-AbdullahNeural"
+  },
+  {
+    locale: "ar-OM",
+    short_name: "ar-OM-AyshaNeural"
+  },
+  {
+    locale: "ar-QA",
+    short_name: "ar-QA-AmalNeural"
+  },
+  {
+    locale: "ar-QA",
+    short_name: "ar-QA-MoazNeural"
+  },
+  {
+    locale: "ar-SA",
+    short_name: "ar-SA-HamedNeural"
+  },
+  {
+    locale: "ar-SA",
+    short_name: "ar-SA-ZariyahNeural"
+  },
+  {
+    locale: "ar-SY",
+    short_name: "ar-SY-AmanyNeural"
+  },
+  {
+    locale: "ar-SY",
+    short_name: "ar-SY-LaithNeural"
+  },
+  {
+    locale: "ar-TN",
+    short_name: "ar-TN-HediNeural"
+  },
+  {
+    locale: "ar-TN",
+    short_name: "ar-TN-ReemNeural"
+  },
+  {
+    locale: "ar-AE",
+    short_name: "ar-AE-FatimaNeural"
+  },
+  {
+    locale: "ar-AE",
+    short_name: "ar-AE-HamdanNeural"
+  },
+  {
+    locale: "ar-YE",
+    short_name: "ar-YE-MaryamNeural"
+  },
+  {
+    locale: "ar-YE",
+    short_name: "ar-YE-SalehNeural"
+  },
+  {
+    locale: "az-AZ",
+    short_name: "az-AZ-BabekNeural"
+  },
+  {
+    locale: "az-AZ",
+    short_name: "az-AZ-BanuNeural"
+  },
+  {
+    locale: "bn-BD",
+    short_name: "bn-BD-NabanitaNeural"
+  },
+  {
+    locale: "bn-BD",
+    short_name: "bn-BD-PradeepNeural"
+  },
+  {
+    locale: "bn-IN",
+    short_name: "bn-IN-BashkarNeural"
+  },
+  {
+    locale: "bn-IN",
+    short_name: "bn-IN-TanishaaNeural"
+  },
+  {
+    locale: "bs-BA",
+    short_name: "bs-BA-GoranNeural"
+  },
+  {
+    locale: "bs-BA",
+    short_name: "bs-BA-VesnaNeural"
+  },
+  {
+    locale: "bg-BG",
+    short_name: "bg-BG-BorislavNeural"
+  },
+  {
+    locale: "bg-BG",
+    short_name: "bg-BG-KalinaNeural"
+  },
+  {
+    locale: "my-MM",
+    short_name: "my-MM-NilarNeural"
+  },
+  {
+    locale: "my-MM",
+    short_name: "my-MM-ThihaNeural"
+  },
+  {
+    locale: "ca-ES",
+    short_name: "ca-ES-EnricNeural"
+  },
+  {
+    locale: "ca-ES",
+    short_name: "ca-ES-JoanaNeural"
+  },
+  {
+    locale: "zh-HK",
+    short_name: "zh-HK-HiuGaaiNeural"
+  },
+  {
+    locale: "zh-HK",
+    short_name: "zh-HK-HiuMaanNeural"
+  },
+  {
+    locale: "zh-HK",
+    short_name: "zh-HK-WanLungNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-XiaoxiaoNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-XiaoyiNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-YunjianNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-YunxiNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-YunxiaNeural"
+  },
+  {
+    locale: "zh-CN",
+    short_name: "zh-CN-YunyangNeural"
+  },
+  {
+    locale: "zh-CN-liaoning",
+    short_name: "zh-CN-liaoning-XiaobeiNeural"
+  },
+  {
+    locale: "zh-TW",
+    short_name: "zh-TW-HsiaoChenNeural"
+  },
+  {
+    locale: "zh-TW",
+    short_name: "zh-TW-YunJheNeural"
+  },
+  {
+    locale: "zh-TW",
+    short_name: "zh-TW-HsiaoYuNeural"
+  },
+  {
+    locale: "zh-CN-shaanxi",
+    short_name: "zh-CN-shaanxi-XiaoniNeural"
+  },
+  {
+    locale: "hr-HR",
+    short_name: "hr-HR-GabrijelaNeural"
+  },
+  {
+    locale: "hr-HR",
+    short_name: "hr-HR-SreckoNeural"
+  },
+  {
+    locale: "cs-CZ",
+    short_name: "cs-CZ-AntoninNeural"
+  },
+  {
+    locale: "cs-CZ",
+    short_name: "cs-CZ-VlastaNeural"
+  },
+  {
+    locale: "da-DK",
+    short_name: "da-DK-ChristelNeural"
+  },
+  {
+    locale: "da-DK",
+    short_name: "da-DK-JeppeNeural"
+  },
+  {
+    locale: "nl-BE",
+    short_name: "nl-BE-ArnaudNeural"
+  },
+  {
+    locale: "nl-BE",
+    short_name: "nl-BE-DenaNeural"
+  },
+  {
+    locale: "nl-NL",
+    short_name: "nl-NL-ColetteNeural"
+  },
+  {
+    locale: "nl-NL",
+    short_name: "nl-NL-FennaNeural"
+  },
+  {
+    locale: "nl-NL",
+    short_name: "nl-NL-MaartenNeural"
+  },
+  {
+    locale: "en-AU",
+    short_name: "en-AU-NatashaNeural"
+  },
+  {
+    locale: "en-AU",
+    short_name: "en-AU-WilliamNeural"
+  },
+  {
+    locale: "en-CA",
+    short_name: "en-CA-ClaraNeural"
+  },
+  {
+    locale: "en-CA",
+    short_name: "en-CA-LiamNeural"
+  },
+  {
+    locale: "en-HK",
+    short_name: "en-HK-SamNeural"
+  },
+  {
+    locale: "en-HK",
+    short_name: "en-HK-YanNeural"
+  },
+  {
+    locale: "en-IN",
+    short_name: "en-IN-NeerjaNeural"
+  },
+  {
+    locale: "en-IN",
+    short_name: "en-IN-PrabhatNeural"
+  },
+  {
+    locale: "en-IE",
+    short_name: "en-IE-ConnorNeural"
+  },
+  {
+    locale: "en-IE",
+    short_name: "en-IE-EmilyNeural"
+  },
+  {
+    locale: "en-KE",
+    short_name: "en-KE-AsiliaNeural"
+  },
+  {
+    locale: "en-KE",
+    short_name: "en-KE-ChilembaNeural"
+  },
+  {
+    locale: "en-NZ",
+    short_name: "en-NZ-MitchellNeural"
+  },
+  {
+    locale: "en-NZ",
+    short_name: "en-NZ-MollyNeural"
+  },
+  {
+    locale: "en-NG",
+    short_name: "en-NG-AbeoNeural"
+  },
+  {
+    locale: "en-NG",
+    short_name: "en-NG-EzinneNeural"
+  },
+  {
+    locale: "en-PH",
+    short_name: "en-PH-JamesNeural"
+  },
+  {
+    locale: "en-PH",
+    short_name: "en-PH-RosaNeural"
+  },
+  {
+    locale: "en-SG",
+    short_name: "en-SG-LunaNeural"
+  },
+  {
+    locale: "en-SG",
+    short_name: "en-SG-WayneNeural"
+  },
+  {
+    locale: "en-ZA",
+    short_name: "en-ZA-LeahNeural"
+  },
+  {
+    locale: "en-ZA",
+    short_name: "en-ZA-LukeNeural"
+  },
+  {
+    locale: "en-TZ",
+    short_name: "en-TZ-ElimuNeural"
+  },
+  {
+    locale: "en-TZ",
+    short_name: "en-TZ-ImaniNeural"
+  },
+  {
+    locale: "en-GB",
+    short_name: "en-GB-LibbyNeural"
+  },
+  {
+    locale: "en-GB",
+    short_name: "en-GB-MaisieNeural"
+  },
+  {
+    locale: "en-GB",
+    short_name: "en-GB-RyanNeural"
+  },
+  {
+    locale: "en-GB",
+    short_name: "en-GB-SoniaNeural"
+  },
+  {
+    locale: "en-GB",
+    short_name: "en-GB-ThomasNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-AriaNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-AnaNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-ChristopherNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-EricNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-GuyNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-JennyNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-MichelleNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-RogerNeural"
+  },
+  {
+    locale: "en-US",
+    short_name: "en-US-SteffanNeural"
+  },
+  {
+    locale: "et-EE",
+    short_name: "et-EE-AnuNeural"
+  },
+  {
+    locale: "et-EE",
+    short_name: "et-EE-KertNeural"
+  },
+  {
+    locale: "fil-PH",
+    short_name: "fil-PH-AngeloNeural"
+  },
+  {
+    locale: "fil-PH",
+    short_name: "fil-PH-BlessicaNeural"
+  },
+  {
+    locale: "fi-FI",
+    short_name: "fi-FI-HarriNeural"
+  },
+  {
+    locale: "fi-FI",
+    short_name: "fi-FI-NooraNeural"
+  },
+  {
+    locale: "fr-BE",
+    short_name: "fr-BE-CharlineNeural"
+  },
+  {
+    locale: "fr-BE",
+    short_name: "fr-BE-GerardNeural"
+  },
+  {
+    locale: "fr-CA",
+    short_name: "fr-CA-AntoineNeural"
+  },
+  {
+    locale: "fr-CA",
+    short_name: "fr-CA-JeanNeural"
+  },
+  {
+    locale: "fr-CA",
+    short_name: "fr-CA-SylvieNeural"
+  },
+  {
+    locale: "fr-FR",
+    short_name: "fr-FR-DeniseNeural"
+  },
+  {
+    locale: "fr-FR",
+    short_name: "fr-FR-EloiseNeural"
+  },
+  {
+    locale: "fr-FR",
+    short_name: "fr-FR-HenriNeural"
+  },
+  {
+    locale: "fr-CH",
+    short_name: "fr-CH-ArianeNeural"
+  },
+  {
+    locale: "fr-CH",
+    short_name: "fr-CH-FabriceNeural"
+  },
+  {
+    locale: "gl-ES",
+    short_name: "gl-ES-RoiNeural"
+  },
+  {
+    locale: "gl-ES",
+    short_name: "gl-ES-SabelaNeural"
+  },
+  {
+    locale: "ka-GE",
+    short_name: "ka-GE-EkaNeural"
+  },
+  {
+    locale: "ka-GE",
+    short_name: "ka-GE-GiorgiNeural"
+  },
+  {
+    locale: "de-AT",
+    short_name: "de-AT-IngridNeural"
+  },
+  {
+    locale: "de-AT",
+    short_name: "de-AT-JonasNeural"
+  },
+  {
+    locale: "de-DE",
+    short_name: "de-DE-AmalaNeural"
+  },
+  {
+    locale: "de-DE",
+    short_name: "de-DE-ConradNeural"
+  },
+  {
+    locale: "de-DE",
+    short_name: "de-DE-KatjaNeural"
+  },
+  {
+    locale: "de-DE",
+    short_name: "de-DE-KillianNeural"
+  },
+  {
+    locale: "de-CH",
+    short_name: "de-CH-JanNeural"
+  },
+  {
+    locale: "de-CH",
+    short_name: "de-CH-LeniNeural"
+  },
+  {
+    locale: "el-GR",
+    short_name: "el-GR-AthinaNeural"
+  },
+  {
+    locale: "el-GR",
+    short_name: "el-GR-NestorasNeural"
+  },
+  {
+    locale: "gu-IN",
+    short_name: "gu-IN-DhwaniNeural"
+  },
+  {
+    locale: "gu-IN",
+    short_name: "gu-IN-NiranjanNeural"
+  },
+  {
+    locale: "he-IL",
+    short_name: "he-IL-AvriNeural"
+  },
+  {
+    locale: "he-IL",
+    short_name: "he-IL-HilaNeural"
+  },
+  {
+    locale: "hi-IN",
+    short_name: "hi-IN-MadhurNeural"
+  },
+  {
+    locale: "hi-IN",
+    short_name: "hi-IN-SwaraNeural"
+  },
+  {
+    locale: "hu-HU",
+    short_name: "hu-HU-NoemiNeural"
+  },
+  {
+    locale: "hu-HU",
+    short_name: "hu-HU-TamasNeural"
+  },
+  {
+    locale: "is-IS",
+    short_name: "is-IS-GudrunNeural"
+  },
+  {
+    locale: "is-IS",
+    short_name: "is-IS-GunnarNeural"
+  },
+  {
+    locale: "id-ID",
+    short_name: "id-ID-ArdiNeural"
+  },
+  {
+    locale: "id-ID",
+    short_name: "id-ID-GadisNeural"
+  },
+  {
+    locale: "ga-IE",
+    short_name: "ga-IE-ColmNeural"
+  },
+  {
+    locale: "ga-IE",
+    short_name: "ga-IE-OrlaNeural"
+  },
+  {
+    locale: "it-IT",
+    short_name: "it-IT-DiegoNeural"
+  },
+  {
+    locale: "it-IT",
+    short_name: "it-IT-ElsaNeural"
+  },
+  {
+    locale: "it-IT",
+    short_name: "it-IT-IsabellaNeural"
+  },
+  {
+    locale: "ja-JP",
+    short_name: "ja-JP-KeitaNeural"
+  },
+  {
+    locale: "ja-JP",
+    short_name: "ja-JP-NanamiNeural"
+  },
+  {
+    locale: "jv-ID",
+    short_name: "jv-ID-DimasNeural"
+  },
+  {
+    locale: "jv-ID",
+    short_name: "jv-ID-SitiNeural"
+  },
+  {
+    locale: "kn-IN",
+    short_name: "kn-IN-GaganNeural"
+  },
+  {
+    locale: "kn-IN",
+    short_name: "kn-IN-SapnaNeural"
+  },
+  {
+    locale: "kk-KZ",
+    short_name: "kk-KZ-AigulNeural"
+  },
+  {
+    locale: "kk-KZ",
+    short_name: "kk-KZ-DauletNeural"
+  },
+  {
+    locale: "km-KH",
+    short_name: "km-KH-PisethNeural"
+  },
+  {
+    locale: "km-KH",
+    short_name: "km-KH-SreymomNeural"
+  },
+  {
+    locale: "ko-KR",
+    short_name: "ko-KR-InJoonNeural"
+  },
+  {
+    locale: "ko-KR",
+    short_name: "ko-KR-SunHiNeural"
+  },
+  {
+    locale: "lo-LA",
+    short_name: "lo-LA-ChanthavongNeural"
+  },
+  {
+    locale: "lo-LA",
+    short_name: "lo-LA-KeomanyNeural"
+  },
+  {
+    locale: "lv-LV",
+    short_name: "lv-LV-EveritaNeural"
+  },
+  {
+    locale: "lv-LV",
+    short_name: "lv-LV-NilsNeural"
+  },
+  {
+    locale: "lt-LT",
+    short_name: "lt-LT-LeonasNeural"
+  },
+  {
+    locale: "lt-LT",
+    short_name: "lt-LT-OnaNeural"
+  },
+  {
+    locale: "mk-MK",
+    short_name: "mk-MK-AleksandarNeural"
+  },
+  {
+    locale: "mk-MK",
+    short_name: "mk-MK-MarijaNeural"
+  },
+  {
+    locale: "ms-MY",
+    short_name: "ms-MY-OsmanNeural"
+  },
+  {
+    locale: "ms-MY",
+    short_name: "ms-MY-YasminNeural"
+  },
+  {
+    locale: "ml-IN",
+    short_name: "ml-IN-MidhunNeural"
+  },
+  {
+    locale: "ml-IN",
+    short_name: "ml-IN-SobhanaNeural"
+  },
+  {
+    locale: "mt-MT",
+    short_name: "mt-MT-GraceNeural"
+  },
+  {
+    locale: "mt-MT",
+    short_name: "mt-MT-JosephNeural"
+  },
+  {
+    locale: "mr-IN",
+    short_name: "mr-IN-AarohiNeural"
+  },
+  {
+    locale: "mr-IN",
+    short_name: "mr-IN-ManoharNeural"
+  },
+  {
+    locale: "mn-MN",
+    short_name: "mn-MN-BataaNeural"
+  },
+  {
+    locale: "mn-MN",
+    short_name: "mn-MN-YesuiNeural"
+  },
+  {
+    locale: "ne-NP",
+    short_name: "ne-NP-HemkalaNeural"
+  },
+  {
+    locale: "ne-NP",
+    short_name: "ne-NP-SagarNeural"
+  },
+  {
+    locale: "nb-NO",
+    short_name: "nb-NO-FinnNeural"
+  },
+  {
+    locale: "nb-NO",
+    short_name: "nb-NO-PernilleNeural"
+  },
+  {
+    locale: "ps-AF",
+    short_name: "ps-AF-GulNawazNeural"
+  },
+  {
+    locale: "ps-AF",
+    short_name: "ps-AF-LatifaNeural"
+  },
+  {
+    locale: "fa-IR",
+    short_name: "fa-IR-DilaraNeural"
+  },
+  {
+    locale: "fa-IR",
+    short_name: "fa-IR-FaridNeural"
+  },
+  {
+    locale: "pl-PL",
+    short_name: "pl-PL-MarekNeural"
+  },
+  {
+    locale: "pl-PL",
+    short_name: "pl-PL-ZofiaNeural"
+  },
+  {
+    locale: "pt-BR",
+    short_name: "pt-BR-AntonioNeural"
+  },
+  {
+    locale: "pt-BR",
+    short_name: "pt-BR-FranciscaNeural"
+  },
+  {
+    locale: "pt-PT",
+    short_name: "pt-PT-DuarteNeural"
+  },
+  {
+    locale: "pt-PT",
+    short_name: "pt-PT-RaquelNeural"
+  },
+  {
+    locale: "ro-RO",
+    short_name: "ro-RO-AlinaNeural"
+  },
+  {
+    locale: "ro-RO",
+    short_name: "ro-RO-EmilNeural"
+  },
+  {
+    locale: "ru-RU",
+    short_name: "ru-RU-DmitryNeural"
+  },
+  {
+    locale: "ru-RU",
+    short_name: "ru-RU-SvetlanaNeural"
+  },
+  {
+    locale: "sr-RS",
+    short_name: "sr-RS-NicholasNeural"
+  },
+  {
+    locale: "sr-RS",
+    short_name: "sr-RS-SophieNeural"
+  },
+  {
+    locale: "si-LK",
+    short_name: "si-LK-SameeraNeural"
+  },
+  {
+    locale: "si-LK",
+    short_name: "si-LK-ThiliniNeural"
+  },
+  {
+    locale: "sk-SK",
+    short_name: "sk-SK-LukasNeural"
+  },
+  {
+    locale: "sk-SK",
+    short_name: "sk-SK-ViktoriaNeural"
+  },
+  {
+    locale: "sl-SI",
+    short_name: "sl-SI-PetraNeural"
+  },
+  {
+    locale: "sl-SI",
+    short_name: "sl-SI-RokNeural"
+  },
+  {
+    locale: "so-SO",
+    short_name: "so-SO-MuuseNeural"
+  },
+  {
+    locale: "so-SO",
+    short_name: "so-SO-UbaxNeural"
+  },
+  {
+    locale: "es-AR",
+    short_name: "es-AR-ElenaNeural"
+  },
+  {
+    locale: "es-AR",
+    short_name: "es-AR-TomasNeural"
+  },
+  {
+    locale: "es-BO",
+    short_name: "es-BO-MarceloNeural"
+  },
+  {
+    locale: "es-BO",
+    short_name: "es-BO-SofiaNeural"
+  },
+  {
+    locale: "es-CL",
+    short_name: "es-CL-CatalinaNeural"
+  },
+  {
+    locale: "es-CL",
+    short_name: "es-CL-LorenzoNeural"
+  },
+  {
+    locale: "es-CO",
+    short_name: "es-CO-GonzaloNeural"
+  },
+  {
+    locale: "es-CO",
+    short_name: "es-CO-SalomeNeural"
+  },
+  {
+    locale: "es-CR",
+    short_name: "es-CR-JuanNeural"
+  },
+  {
+    locale: "es-CR",
+    short_name: "es-CR-MariaNeural"
+  },
+  {
+    locale: "es-CU",
+    short_name: "es-CU-BelkysNeural"
+  },
+  {
+    locale: "es-CU",
+    short_name: "es-CU-ManuelNeural"
+  },
+  {
+    locale: "es-DO",
+    short_name: "es-DO-EmilioNeural"
+  },
+  {
+    locale: "es-DO",
+    short_name: "es-DO-RamonaNeural"
+  },
+  {
+    locale: "es-EC",
+    short_name: "es-EC-AndreaNeural"
+  },
+  {
+    locale: "es-EC",
+    short_name: "es-EC-LuisNeural"
+  },
+  {
+    locale: "es-SV",
+    short_name: "es-SV-LorenaNeural"
+  },
+  {
+    locale: "es-SV",
+    short_name: "es-SV-RodrigoNeural"
+  },
+  {
+    locale: "es-GQ",
+    short_name: "es-GQ-JavierNeural"
+  },
+  {
+    locale: "es-GQ",
+    short_name: "es-GQ-TeresaNeural"
+  },
+  {
+    locale: "es-GT",
+    short_name: "es-GT-AndresNeural"
+  },
+  {
+    locale: "es-GT",
+    short_name: "es-GT-MartaNeural"
+  },
+  {
+    locale: "es-HN",
+    short_name: "es-HN-CarlosNeural"
+  },
+  {
+    locale: "es-HN",
+    short_name: "es-HN-KarlaNeural"
+  },
+  {
+    locale: "es-MX",
+    short_name: "es-MX-DaliaNeural"
+  },
+  {
+    locale: "es-MX",
+    short_name: "es-MX-JorgeNeural"
+  },
+  {
+    locale: "es-MX",
+    short_name: "es-MX-LorenzoEsCLNeural"
+  },
+  {
+    locale: "es-NI",
+    short_name: "es-NI-FedericoNeural"
+  },
+  {
+    locale: "es-NI",
+    short_name: "es-NI-YolandaNeural"
+  },
+  {
+    locale: "es-PA",
+    short_name: "es-PA-MargaritaNeural"
+  },
+  {
+    locale: "es-PA",
+    short_name: "es-PA-RobertoNeural"
+  },
+  {
+    locale: "es-PY",
+    short_name: "es-PY-MarioNeural"
+  },
+  {
+    locale: "es-PY",
+    short_name: "es-PY-TaniaNeural"
+  },
+  {
+    locale: "es-PE",
+    short_name: "es-PE-AlexNeural"
+  },
+  {
+    locale: "es-PE",
+    short_name: "es-PE-CamilaNeural"
+  },
+  {
+    locale: "es-PR",
+    short_name: "es-PR-KarinaNeural"
+  },
+  {
+    locale: "es-PR",
+    short_name: "es-PR-VictorNeural"
+  },
+  {
+    locale: "es-ES",
+    short_name: "es-ES-AlvaroNeural"
+  },
+  {
+    locale: "es-ES",
+    short_name: "es-ES-ElviraNeural"
+  },
+  {
+    locale: "es-ES",
+    short_name: "es-ES-ManuelEsCUNeural"
+  },
+  {
+    locale: "es-US",
+    short_name: "es-US-AlonsoNeural"
+  },
+  {
+    locale: "es-US",
+    short_name: "es-US-PalomaNeural"
+  },
+  {
+    locale: "es-UY",
+    short_name: "es-UY-MateoNeural"
+  },
+  {
+    locale: "es-UY",
+    short_name: "es-UY-ValentinaNeural"
+  },
+  {
+    locale: "es-VE",
+    short_name: "es-VE-PaolaNeural"
+  },
+  {
+    locale: "es-VE",
+    short_name: "es-VE-SebastianNeural"
+  },
+  {
+    locale: "su-ID",
+    short_name: "su-ID-JajangNeural"
+  },
+  {
+    locale: "su-ID",
+    short_name: "su-ID-TutiNeural"
+  },
+  {
+    locale: "sw-KE",
+    short_name: "sw-KE-RafikiNeural"
+  },
+  {
+    locale: "sw-KE",
+    short_name: "sw-KE-ZuriNeural"
+  },
+  {
+    locale: "sw-TZ",
+    short_name: "sw-TZ-DaudiNeural"
+  },
+  {
+    locale: "sw-TZ",
+    short_name: "sw-TZ-RehemaNeural"
+  },
+  {
+    locale: "sv-SE",
+    short_name: "sv-SE-MattiasNeural"
+  },
+  {
+    locale: "sv-SE",
+    short_name: "sv-SE-SofieNeural"
+  },
+  {
+    locale: "ta-IN",
+    short_name: "ta-IN-PallaviNeural"
+  },
+  {
+    locale: "ta-IN",
+    short_name: "ta-IN-ValluvarNeural"
+  },
+  {
+    locale: "ta-MY",
+    short_name: "ta-MY-KaniNeural"
+  },
+  {
+    locale: "ta-MY",
+    short_name: "ta-MY-SuryaNeural"
+  },
+  {
+    locale: "ta-SG",
+    short_name: "ta-SG-AnbuNeural"
+  },
+  {
+    locale: "ta-SG",
+    short_name: "ta-SG-VenbaNeural"
+  },
+  {
+    locale: "ta-LK",
+    short_name: "ta-LK-KumarNeural"
+  },
+  {
+    locale: "ta-LK",
+    short_name: "ta-LK-SaranyaNeural"
+  },
+  {
+    locale: "te-IN",
+    short_name: "te-IN-MohanNeural"
+  },
+  {
+    locale: "te-IN",
+    short_name: "te-IN-ShrutiNeural"
+  },
+  {
+    locale: "th-TH",
+    short_name: "th-TH-NiwatNeural"
+  },
+  {
+    locale: "th-TH",
+    short_name: "th-TH-PremwadeeNeural"
+  },
+  {
+    locale: "tr-TR",
+    short_name: "tr-TR-AhmetNeural"
+  },
+  {
+    locale: "tr-TR",
+    short_name: "tr-TR-EmelNeural"
+  },
+  {
+    locale: "uk-UA",
+    short_name: "uk-UA-OstapNeural"
+  },
+  {
+    locale: "uk-UA",
+    short_name: "uk-UA-PolinaNeural"
+  },
+  {
+    locale: "ur-IN",
+    short_name: "ur-IN-GulNeural"
+  },
+  {
+    locale: "ur-IN",
+    short_name: "ur-IN-SalmanNeural"
+  },
+  {
+    locale: "ur-PK",
+    short_name: "ur-PK-AsadNeural"
+  },
+  {
+    locale: "ur-PK",
+    short_name: "ur-PK-UzmaNeural"
+  },
+  {
+    locale: "uz-UZ",
+    short_name: "uz-UZ-MadinaNeural"
+  },
+  {
+    locale: "uz-UZ",
+    short_name: "uz-UZ-SardorNeural"
+  },
+  {
+    locale: "vi-VN",
+    short_name: "vi-VN-HoaiMyNeural"
+  },
+  {
+    locale: "vi-VN",
+    short_name: "vi-VN-NamMinhNeural"
+  },
+  {
+    locale: "cy-GB",
+    short_name: "cy-GB-AledNeural"
+  },
+  {
+    locale: "cy-GB",
+    short_name: "cy-GB-NiaNeural"
+  },
+  {
+    locale: "zu-ZA",
+    short_name: "zu-ZA-ThandoNeural"
+  },
+  {
+    locale: "zu-ZA",
+    short_name: "zu-ZA-ThembaNeural"
+  }
 ];
 
-export default locales;
+export { VOICES };
