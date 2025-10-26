@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Button from "@/components/Button";
 import IconClick from "@/components/IconClick";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";

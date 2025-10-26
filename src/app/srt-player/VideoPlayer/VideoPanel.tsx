@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useEffect, KeyboardEvent, useCallback } from "react";
+import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import SubtitleDisplay from "./SubtitleDisplay";
 import Button from "@/components/Button";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";

@@ -1,5 +1,5 @@
 import Button from "@/components/Button";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export default function UploadArea(
   {
@@ -12,9 +12,6 @@ export default function UploadArea(
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [SrtFile, setSrtFile] = useState<File | null>(null);
-
   const uploadVideo = () => {
     const input = inputRef.current;
     if (input) {
@@ -23,7 +20,6 @@ export default function UploadArea(
       input.onchange = () => {
         const file = input.files?.[0];
         if (file) {
-          setVideoFile(file);
           setVideoUrl(URL.createObjectURL(file));
         }
       };
@@ -37,7 +33,6 @@ export default function UploadArea(
       input.onchange = () => {
         const file = input.files?.[0];
         if (file) {
-          setSrtFile(file);
           setSrtUrl(URL.createObjectURL(file));
         }
       };
