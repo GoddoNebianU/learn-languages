@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import MyButton from "@/components/MyButton";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/interfaces";
@@ -73,22 +73,22 @@ export default function MemoryCard({
           ></IconClick>
           {more ? (
             <>
-              <Button
+              <MyButton
                 className="w-20"
                 onClick={() => {
                   setLetterDisplay(!letterDisplay);
                 }}
               >
                 {letterDisplay ? "隐藏字母" : "显示字母"}
-              </Button>
-              <Button
+              </MyButton>
+              <MyButton
                 className="w-20"
                 onClick={() => {
                   setIPADisplay(!ipaDisplay);
                 }}
               >
                 {ipaDisplay ? "隐藏IPA" : "显示IPA"}
-              </Button>
+              </MyButton>
             </>
           ) : (
             <></>

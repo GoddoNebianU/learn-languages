@@ -1209,4 +1209,12 @@ const VOICES = [
   },
 ];
 
-export { VOICES };
+const LOCALES = Array.from(
+  new Set(
+    VOICES.map((v) => v.locale)
+      .filter((v) => v.length === 5)
+      .toSorted(),
+  ),
+);
+
+export { VOICES, LOCALES };

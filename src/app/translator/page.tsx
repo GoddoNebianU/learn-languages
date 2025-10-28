@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-import Button from "@/components/Button";
+import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import IMAGES from "@/config/images";
@@ -208,12 +208,12 @@ export default function Translator() {
           </div>
           <div className="option1 w-full flex flex-row justify-between items-center">
             <span>detect language</span>
-            <Button
+            <LightButton
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
               generate ipa
-            </Button>
+            </LightButton>
           </div>
         </div>
         <div className="card2 w-full md:w-1/2 flex flex-col-reverse gap-2">
@@ -240,33 +240,33 @@ export default function Translator() {
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
             <span>translate into</span>
-            <Button
+            <LightButton
               onClick={() => {
                 setTargetLang("Chinese");
               }}
               selected={targetLang === "Chinese"}
             >
               Chinese
-            </Button>
-            <Button
+            </LightButton>
+            <LightButton
               onClick={() => {
                 setTargetLang("English");
               }}
               selected={targetLang === "English"}
             >
               English
-            </Button>
-            <Button
+            </LightButton>
+            <LightButton
               onClick={() => {
                 setTargetLang("Italian");
               }}
               selected={targetLang === "Italian"}
             >
               Italian
-            </Button>
-            <Button onClick={inputLanguage} selected={!tl.includes(targetLang)}>
+            </LightButton>
+            <LightButton onClick={inputLanguage} selected={!tl.includes(targetLang)}>
               {"Other" + (tl.includes(targetLang) ? "" : ": " + targetLang)}
-            </Button>
+            </LightButton>
           </div>
         </div>
       </div>

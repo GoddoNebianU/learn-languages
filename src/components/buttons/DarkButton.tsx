@@ -1,4 +1,6 @@
-export default function Button({
+import PlainButton from "./PlainButton";
+
+export default function DarkButton({
   onClick,
   className,
   selected,
@@ -10,11 +12,11 @@ export default function Button({
   children?: React.ReactNode;
 }) {
   return (
-    <button
+    <PlainButton
       onClick={onClick}
-      className={`px-2 py-1 rounded shadow-2xs font-bold hover:bg-gray-300 hover:cursor-pointer ${selected ? "bg-gray-300" : "bg-white"} ${className}`}
+      className={`hover:bg-gray-600 text-white ${selected ? "bg-gray-600" : "bg-gray-800"} ${className}`}
     >
       {children}
-    </button>
+    </PlainButton>
   );
 }

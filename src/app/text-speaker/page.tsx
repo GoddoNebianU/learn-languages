@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/Button";
+import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -313,20 +313,20 @@ export default function TextSpeaker() {
             className={`${saving ? "bg-gray-200" : ""}`}
           ></IconClick>
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
-            <Button
+            <LightButton
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
               生成IPA
-            </Button>
-            <Button
+            </LightButton>
+            <LightButton
               onClick={() => {
                 setShowSaveList(!showSaveList);
               }}
               selected={showSaveList}
             >
               查看保存项
-            </Button>
+            </LightButton>
           </div>
         </div>
       </div>

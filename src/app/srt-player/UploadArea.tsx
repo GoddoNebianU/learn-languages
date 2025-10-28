@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import LightButton from "@/components/buttons/LightButton";
 import { useRef } from "react";
 
 export default function UploadArea({
@@ -38,8 +38,8 @@ export default function UploadArea({
   };
   return (
     <div className="w-full flex flex-col gap-2 m-2">
-      <Button onClick={uploadVideo}>上传视频</Button>
-      <Button onClick={uploadSRT}>上传字幕</Button>
+      <LightButton onClick={uploadVideo}>上传视频</LightButton>
+      <LightButton onClick={uploadSRT}>上传字幕</LightButton>
       <input type="file" className="hidden" ref={inputRef} />
     </div>
   );

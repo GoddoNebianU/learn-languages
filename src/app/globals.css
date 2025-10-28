@@ -28,5 +28,3 @@ body {
 .code-block {
     font-family: var(--font-geist-mono), monospace;
 }
-
-@source '../../node_modules/rc-modal-sheet/**/*.js';

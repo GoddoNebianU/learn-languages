@@ -1,6 +1,6 @@
 "use client";
 import TheBoard from "@/app/word-board/TheBoard";
-import Button from "../../components/Button";
+import LightButton from "../../components/buttons/LightButton";
 import { KeyboardEvent, useRef, useState } from "react";
 import { Word } from "@/interfaces";
 import {
@@ -165,12 +165,12 @@ export default function WordBoard() {
               type="text"
               className="focus:outline-none border-b-2 border-black"
             />
-            <Button onClick={insertWord}>插入</Button>
-            <Button onClick={deleteWord}>删除</Button>
-            <Button onClick={searchWord}>搜索</Button>
-            <Button onClick={importWords}>导入</Button>
-            <Button onClick={exportWords}>导出</Button>
-            <Button onClick={deleteAll}>删光</Button>
+            <LightButton onClick={insertWord}>插入</LightButton>
+            <LightButton onClick={deleteWord}>删除</LightButton>
+            <LightButton onClick={searchWord}>搜索</LightButton>
+            <LightButton onClick={importWords}>导入</LightButton>
+            <LightButton onClick={exportWords}>导出</LightButton>
+            <LightButton onClick={deleteAll}>删光</LightButton>
             {/* <Button label="朗读" onClick={readWordAloud}></Button> */}
           </div>
           <input

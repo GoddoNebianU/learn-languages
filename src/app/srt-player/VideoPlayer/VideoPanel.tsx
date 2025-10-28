@@ -1,6 +1,6 @@
 import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import SubtitleDisplay from "./SubtitleDisplay";
-import Button from "@/components/Button";
+import LightButton from "@/components/buttons/LightButton";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
 
 type VideoPanelProps = {
@@ -184,15 +184,15 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
         ></video>
         <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
         <div className="buttons flex mt-2 gap-2 flex-wrap">
-          <Button onClick={togglePlayPause}>
+          <LightButton onClick={togglePlayPause}>
             {isPlaying ? "暂停" : "播放"}
-          </Button>
-          <Button onClick={previous}>上句</Button>
-          <Button onClick={next}>下句</Button>
-          <Button onClick={restart}>句首</Button>
-          <Button
+          </LightButton>
+          <LightButton onClick={previous}>上句</LightButton>
+          <LightButton onClick={next}>下句</LightButton>
+          <LightButton onClick={restart}>句首</LightButton>
+          <LightButton
             onClick={handleAutoPauseToggle}
-          >{`自动暂停(${autoPause ? "是" : "否"})`}</Button>
+          >{`自动暂停(${autoPause ? "是" : "否"})`}</LightButton>
         </div>
         <input
           className="seekbar"
