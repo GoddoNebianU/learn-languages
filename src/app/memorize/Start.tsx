@@ -1,6 +1,4 @@
 import LightButton from "@/components/buttons/LightButton";
-import ACard from "@/components/cards/ACard";
-import BCard from "@/components/cards/BCard";
 import Window from "@/components/Window";
 import { WordData } from "./page";
 import { Dispatch, SetStateAction, useState } from "react";
