@@ -22,3 +22,19 @@ export const TextSpeakerItemSchema = z.object({
   locale: z.string(),
 });
 export const TextSpeakerArraySchema = z.array(TextSpeakerItemSchema);
+
+export const WordDataSchema = z.object({
+  locales: z.tuple([z.string(), z.string()])
+    .refine(([first, second]) => first !== second, {
+      message: "Locales must be different"
+    }),
+  wordPairs: z.array(z.tuple([z.string(), z.string()]))
+    .min(1, "At least one word pair is required")
+    .refine((pairs) => {
+      return pairs.every(([first, second]) => first.trim() !== '' && second.trim() !== '');
+    }, {
+      message: "Word pairs cannot contain empty strings"
+    })
+});
+
+export type WordData = z.infer<typeof WordDataSchema>;

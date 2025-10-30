@@ -1,11 +1,11 @@
 import LightButton from "@/components/buttons/LightButton";
 import ACard from "@/components/cards/ACard";
 import BCard from "@/components/cards/BCard";
-import Window from "@/components/Window";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import DarkButton from "@/components/buttons/DarkButton";
-import { WordData } from "./page";
+import { WordData } from "@/interfaces";
 import Choose from "./Choose";
+import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
 
 interface Props {
   setPage: Dispatch<SetStateAction<"start" | "main" | "edit">>;
@@ -14,6 +14,7 @@ interface Props {
 }
 
 export default function Edit({ setPage, wordData, setWordData }: Props) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [localeKey, setLocaleKey] = useState<0 | 1>(0);
   const [editPage, setEditPage] = useState<"choose" | "edit">("edit");
   const convertIntoWordData = (text: string) => {
@@ -33,44 +34,46 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
       locales: [...wordData.locales],
       wordPairs: t2,
     };
-    setWordData(new_data);
+    return new_data;
   };
-  const convertFromWordData = () => {
+  const convertFromWordData = (wdata: WordData) => {
     let result = "";
-    for (const pair of wordData.wordPairs) {
+    for (const pair of wdata.wordPairs) {
       result += `${pair[0]}, ${pair[1]}\n`;
     }
     return result;
   };
-  let input = convertFromWordData();
+  let input = convertFromWordData(wordData);
   const handleSave = () => {
-    convertIntoWordData(input);
+    const newWordData = convertIntoWordData(input);
+    setWordData(newWordData);
+    if (textareaRef.current)
+      textareaRef.current.value = convertFromWordData(newWordData);
   };
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     input = e.target.value;
   };
   if (editPage === "edit")
     return (
-      <Window>
+      <NavbarCenterWrapper className="bg-gray-100">
         <ACard className="flex flex-col">
           <textarea
-            className="flex-1 text-gray-800 font-serif text-2xl border-gray-200 border rounded-2xl w-full resize-none outline-0 p-2"
+            ref={textareaRef}
+            className="flex-1 text-gray-800 font-mono md:text-2xl border-gray-200 border rounded-2xl w-full resize-none outline-0 p-2"
             defaultValue={input}
             onChange={handleChange}
           ></textarea>
           <div className="w-full flex items-center justify-center">
             <BCard className="flex gap-2 justify-center items-center w-fit">
-              <LightButton onClick={() => setPage("main")}>
-                Back
-              </LightButton>
-              <LightButton onClick={handleSave}>Save Text</LightButton>
+              <LightButton onClick={() => setPage("main")}>Back</LightButton>
+              <LightButton onClick={handleSave}>Save Pairs</LightButton>
               <DarkButton
                 onClick={() => {
                   setLocaleKey(0);
                   setEditPage("choose");
                 }}
               >
-                Choose Locale 1
+                Locale 1
               </DarkButton>
               <DarkButton
                 onClick={() => {
@@ -78,12 +81,12 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
                   setEditPage("choose");
                 }}
               >
-                Choose Locale 2
+                Locale 2
               </DarkButton>
             </BCard>
           </div>
         </ACard>
-      </Window>
+      </NavbarCenterWrapper>
     );
   if (editPage === "choose")
     return (

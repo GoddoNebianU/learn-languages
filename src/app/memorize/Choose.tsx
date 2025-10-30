@@ -1,10 +1,10 @@
 import LightButton from "@/components/buttons/LightButton";
 import ACard from "@/components/cards/ACard";
 import BCard from "@/components/cards/BCard";
-import Window from "@/components/Window";
 import { LOCALES } from "@/config/locales";
 import { Dispatch, SetStateAction, useState } from "react";
-import { WordData } from "./page";
+import { WordData } from "@/interfaces";
+import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
 
 interface Props {
   setEditPage: Dispatch<SetStateAction<"choose" | "edit">>;
@@ -37,13 +37,13 @@ export default function Choose({
   };
 
   return (
-    <Window>
+    <NavbarCenterWrapper className="bg-gray-100">
       <ACard className="flex flex-col">
-        <div className="overflow-y-auto flex-1 border border-gray-200 rounded-2xl p-2 grid grid-cols-6 gap-2">
+        <div className="overflow-y-auto flex-1 border border-gray-200 rounded-2xl p-2 grid grid-cols-4 md:grid-cols-6 md:gap-2">
           {LOCALES.map((locale, index) => (
             <LightButton
               key={index}
-              className="w-26"
+              className="md:w-26 w-18"
               selected={locale === chosenLocale}
               onClick={() => setChosenLocale(locale)}
             >
@@ -53,13 +53,11 @@ export default function Choose({
         </div>
         <div className="w-full flex items-center justify-center">
           <BCard className="flex gap-2 justify-center items-center w-fit">
-            <LightButton onClick={handleChooseClick}>choose</LightButton>
-            <LightButton onClick={() => setEditPage("edit")}>
-              Back
-            </LightButton>
+            <LightButton onClick={handleChooseClick}>Choose</LightButton>
+            <LightButton onClick={() => setEditPage("edit")}>Back</LightButton>
           </BCard>
         </div>
       </ACard>
-    </Window>
+    </NavbarCenterWrapper>
   );
 }

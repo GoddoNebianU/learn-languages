@@ -64,9 +64,15 @@ function LinkGrid() {
       ></LinkArea>
       <LinkArea
         href="/alphabet"
-        name="记忆字母表"
+        name="背字母"
         description="从字母表开始新语言的学习"
         color="#dd7486"
+      ></LinkArea>
+      <LinkArea
+        href="/memorize"
+        name="背单词"
+        description="语言A到语言B，语言B到语言A，支持听写"
+        color="#cc9988"
       ></LinkArea>
       <LinkArea
         href="#"
