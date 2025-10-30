@@ -62,6 +62,7 @@ export async function getTTSAudioUrl(
 }
 export const getTextSpeakerData = () => {
   try {
+    if (!localStorage) return [];
     const item = localStorage.getItem("text-speaker");
 
     if (!item) return [];

@@ -30,7 +30,7 @@ export default function TextSpeaker() {
   const [ipa, setIPA] = useState<string>("");
   const objurlRef = useRef<string | null>(null);
   const [processing, setProcessing] = useState(false);
-  const { playAudio, stopAudio, audioRef } = useAudioPlayer();
+  const { play, stop, load, audioRef } = useAudioPlayer();
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -39,7 +39,8 @@ export default function TextSpeaker() {
       if (autopause) {
         setPause(true);
       } else {
-        playAudio(objurlRef.current!);
+        load(objurlRef.current!);
+        play();
       }
     };
     audio.addEventListener("ended", handleEnded);
@@ -77,7 +78,8 @@ export default function TextSpeaker() {
 
         if (objurlRef.current) {
           // 之前有播放
-          playAudio(objurlRef.current);
+          load(objurlRef.current);
+          play();
         } else {
           // 第一次播放
           try {
@@ -112,7 +114,8 @@ export default function TextSpeaker() {
                   };
               })(),
             );
-            playAudio(objurlRef.current);
+            load(objurlRef.current);
+            play();
           } catch (e) {
             console.error(e);
 
@@ -126,7 +129,7 @@ export default function TextSpeaker() {
     } else {
       // 如果在读就暂停
       setPause(true);
-      stopAudio();
+      stop();
     }
 
     setProcessing(false);
@@ -138,7 +141,7 @@ export default function TextSpeaker() {
     setIPA("");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
-    stopAudio();
+    stop();
     setPause(true);
   };
 
@@ -147,7 +150,7 @@ export default function TextSpeaker() {
       setSpeed(new_speed);
       if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
       objurlRef.current = null;
-      stopAudio();
+      stop();
       setPause(true);
     };
   };
@@ -159,7 +162,7 @@ export default function TextSpeaker() {
     setIPA(item.ipa || "");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
-    stopAudio();
+    stop();
     setPause(true);
   };
 
@@ -291,7 +294,7 @@ export default function TextSpeaker() {
             onClick={() => {
               setAutopause(!autopause);
               if (objurlRef) {
-                stopAudio();
+                stop();
               }
               setPause(true);
             }}

@@ -20,7 +20,7 @@ export default function Translator() {
   const [sourceLocale, setSourceLocale] = useState<string | null>(null);
   const [targetLocale, setTargetLocale] = useState<string | null>(null);
   const [translating, setTranslating] = useState(false);
-  const { playAudio } = useAudioPlayer();
+  const { play, load } = useAudioPlayer();
 
   const tl = ["Chinese", "English", "Italian"];
 
@@ -132,7 +132,8 @@ export default function Translator() {
         }
 
         const url = await getTTSAudioUrl(sourceText, voice.short_name);
-        await playAudio(url);
+        await load(url);
+        await play();
         URL.revokeObjectURL(url);
       } catch (e) {
         console.error(e);
@@ -146,7 +147,8 @@ export default function Translator() {
       }
 
       const url = await getTTSAudioUrl(sourceText, voice.short_name);
-      await playAudio(url);
+      await load(url);
+      await play();
       URL.revokeObjectURL(url);
     }
   };
@@ -173,7 +175,8 @@ export default function Translator() {
     if (!voice) return;
 
     const url = await getTTSAudioUrl(targetText, voice.short_name);
-    await playAudio(url);
+    await load(url);
+    await play();
     URL.revokeObjectURL(url);
   };
 
@@ -264,7 +267,10 @@ export default function Translator() {
             >
               Italian
             </LightButton>
-            <LightButton onClick={inputLanguage} selected={!tl.includes(targetLang)}>
+            <LightButton
+              onClick={inputLanguage}
+              selected={!tl.includes(targetLang)}
+            >
               {"Other" + (tl.includes(targetLang) ? "" : ": " + targetLang)}
             </LightButton>
           </div>

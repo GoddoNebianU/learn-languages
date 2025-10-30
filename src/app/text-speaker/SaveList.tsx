@@ -20,7 +20,7 @@ function TextCard({ item, handleUse, handleDel }: TextCardProps) {
     handleDel(item);
   };
   return (
-    <div className="p-2 border-b-1 border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
+    <div className="p-2 border-b border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
       <div className="col-span-7" onClick={onUseClick}>
         <div className="max-h-26 hover:cursor-pointer text-3xl overflow-y-auto">
           {item.text}
@@ -70,7 +70,7 @@ export default function SaveList({ show = false, handleUse }: SaveListProps) {
   if (show)
     return (
       <div
-        className="my-4 p-2 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl"
+        className="my-4 p-2 mx-4 md:mx-32 border border-gray-200 rounded-2xl"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         <div className="flex flex-row justify-center gap-8 items-center">
