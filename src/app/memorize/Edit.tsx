@@ -51,6 +51,9 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
     setWordData(newWordData);
     if (textareaRef.current)
       textareaRef.current.value = convertFromWordData(newWordData);
+    if(localStorage) {
+      localStorage.setItem("wordData", JSON.stringify(newWordData));
+    }
   };
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     input = e.target.value;

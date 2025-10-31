@@ -5,6 +5,6 @@
   "total": "总计有{total}个单词对",
   "start": "开始",
   "import": "导入",
-  "save": "保存",
+  "export": "导出",
   "edit": "编辑"
 }

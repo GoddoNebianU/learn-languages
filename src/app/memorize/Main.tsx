@@ -61,7 +61,7 @@ export default function Main({
               {t("start")}
             </LightButton>
             <LightButton onClick={handleLoad}>{t("import")}</LightButton>
-            <LightButton onClick={handleSave}>{t("save")}</LightButton>
+            <LightButton onClick={handleSave}>{t("export")}</LightButton>
             <LightButton onClick={() => setPage("edit")}>
               {t("edit")}
             </LightButton>

@@ -5,6 +5,6 @@
   "total": "There are {total} word pairs in total",
   "start": "Start",
   "import": "Import",
-  "save": "Save",
+  "export": "Export",
   "edit": "Edit"
 }

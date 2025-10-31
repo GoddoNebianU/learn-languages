@@ -4,29 +4,30 @@ import { useState } from "react";
 import Main from "./Main";
 import Edit from "./Edit";
 import Start from "./Start";
-import { WordData } from "@/interfaces";
+import { WordData, WordDataSchema } from "@/interfaces";
+
+const getLocalWordData = (): WordData => {
+  const data = localStorage.getItem("wordData");
+  if (!data) return {
+    locales: ['en-US', 'zh-CN'],
+    wordPairs: []
+  };
+  try {
+    const parsedData = JSON.parse(data);
+    const parsedData2 = WordDataSchema.parse(parsedData);
+    return parsedData2;
+  } catch (error) {
+    console.error(error);
+    return {
+      locales: ['en-US', 'zh-CN'],
+      wordPairs: []
+    };
+  }
+}
 
 export default function Memorize() {
   const [page, setPage] = useState<"start" | "main" | "edit">("main");
-  const [wordData, setWordData] = useState<WordData>({
-    locales: ["en-US", "zh-CN"],
-    wordPairs: [
-      ["hello", "你好"],
-      ["world", "世界"],
-      ["brutal", "残酷的"],
-      ["apple", "苹果"],
-      ["banana", "香蕉"],
-      ["orange", "橙子"],
-      ["grape", "葡萄"],
-      ["San Francisco", "旧金山"],
-      ["New York", "纽约"],
-      ["Los Angeles", "洛杉矶"],
-      // ['A Very Very Very Very Very Very Very Long Word', '一个很长很长很长很长很长很长很长很长很长很长的单词']
-      ["Chicago", "芝加哥"],
-      ["Tokyo", "东京"],
-      ["Paris", "巴黎"]
-    ],
-  });
+  const [wordData, setWordData] = useState<WordData>(getLocalWordData());
   if (page === "main")
     return (
       <Main
