@@ -20,7 +20,7 @@ export default function IconClick({
     <>
       <div
         onClick={onClick}
-        className={`${disableOnHoverBgChange ? "" : "hover:bg-gray-200"}hover:cursor-pointer rounded-3xl w-[${size}px] h-[${size}px] flex justify-center items-center ${className}`}
+        className={`${disableOnHoverBgChange ? "" : "hover:bg-gray-200"} hover:cursor-pointer rounded-3xl w-[${size}px] h-[${size}px] flex justify-center items-center ${className}`}
       >
         <Image src={src} width={size - 5} height={size - 5} alt={alt}></Image>
       </div>
