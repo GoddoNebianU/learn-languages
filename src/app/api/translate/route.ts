@@ -7,7 +7,7 @@ async function translate(text: string, target_lang: string) {
     {
       role: "user",
       content: `
-请推断以下文本的语言、locale，并翻译到目标语言[${target_lang}]，同样需要locale信息，以JSON格式返回
+请推断以下文本的locale，并翻译到目标语言${target_lang}，同样需要locale信息，以JSON格式返回
 [${text}]
 结果如：
 {
