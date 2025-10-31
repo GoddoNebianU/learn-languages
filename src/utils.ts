@@ -20,7 +20,7 @@ export function urlGoto(url: string) {
 const API_KEY = env.ZHIPU_API_KEY;
 export async function callZhipuAPI(
   messages: { role: string; content: string }[],
-  model = "glm-4.5-flash",
+  model = "glm-4.6",
 ) {
   const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
