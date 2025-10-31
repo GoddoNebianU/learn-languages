@@ -97,7 +97,7 @@ function Explore() {
   return (
     <div className="bg-[#bbbbbb] w-full flex justify-center items-center flex-col h-52">
       <span className="text-[100px] text-white">探索网站</span>
-      <div className="w-0 h-0 border-l-[40px] border-r-[40px] border-t-[30px] border-l-transparent border-r-transparent border-t-white"></div>
+      <div className="w-0 h-0 border-l-40 border-r-40 border-t-30 border-l-transparent border-r-transparent border-t-white"></div>
     </div>
   );
 }
