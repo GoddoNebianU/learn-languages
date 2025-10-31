@@ -187,8 +187,11 @@ export default function Translator() {
       <Navbar></Navbar>
       <div className="w-screen flex flex-col md:flex-row md:justify-between gap-2 p-2">
         <div className="card1 w-full md:w-1/2 flex flex-col-reverse gap-2">
-          <div className="textarea1 border-1 border-gray-200 rounded-2xl w-full h-64 p-2">
+          <div className="textarea1 border border-gray-200 rounded-2xl w-full h-64 p-2">
             <textarea
+              onKeyDown={(e) => {
+                if (e.ctrlKey && e.key === "Enter") translate();
+              }}
               onChange={handleInputChange}
               className="resize-none h-8/12 w-full focus:outline-0"
             ></textarea>
