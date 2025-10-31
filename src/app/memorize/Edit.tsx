@@ -60,6 +60,9 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
       <NavbarCenterWrapper className="bg-gray-100">
         <ACard className="flex flex-col">
           <textarea
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.ctrlKey) handleSave();
+            }}
             ref={textareaRef}
             className="flex-1 text-gray-800 font-mono md:text-2xl border-gray-200 border rounded-2xl w-full resize-none outline-0 p-2"
             defaultValue={input}
