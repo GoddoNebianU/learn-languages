@@ -5,6 +5,7 @@ import { WordData, WordDataSchema } from "@/interfaces";
 import { Dispatch, SetStateAction } from "react";
 import useFileUpload from "@/hooks/useFileUpload";
 import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+import { useTranslations } from "next-intl";
 
 interface Props {
   wordData: WordData;
@@ -17,6 +18,7 @@ export default function Main({
   setWordData,
   setPage: setPage,
 }: Props) {
+  const t = useTranslations("memorize.main");
   const { upload, inputRef } = useFileUpload(async (file) => {
     try {
       const obj = JSON.parse(await file.text());
@@ -44,21 +46,25 @@ export default function Main({
     <NavbarCenterWrapper className="bg-gray-100">
       <ACard className="flex-col flex">
         <h1 className="text-center font-extrabold text-4xl text-gray-800 m-2 mb-4">
-          Memorize
+          {t("title")}
         </h1>
         <div className="flex-1 font-serif text-2xl w-full h-full text-gray-800">
           <BCard>
-            <p>locale 1 {wordData.locales[0]}</p>
-            <p>locale 2 {wordData.locales[1]}</p>
-            <p>total {wordData.wordPairs.length} word pairs</p>
+            <p>{t("locale1", { locale: wordData.locales[0] })}</p>
+            <p>{t("locale2", { locale: wordData.locales[1] })}</p>
+            <p>{t("total", { total: wordData.wordPairs.length })}</p>
           </BCard>
         </div>
         <div className="w-full flex items-center justify-center">
           <BCard className="flex gap-2 justify-center items-center w-fit">
-            <LightButton onClick={() => setPage("start")}>开始</LightButton>
-            <LightButton onClick={handleLoad}>导入</LightButton>
-            <LightButton onClick={handleSave}>保存</LightButton>
-            <LightButton onClick={() => setPage("edit")}>编辑</LightButton>
+            <LightButton onClick={() => setPage("start")}>
+              {t("start")}
+            </LightButton>
+            <LightButton onClick={handleLoad}>{t("import")}</LightButton>
+            <LightButton onClick={handleSave}>{t("save")}</LightButton>
+            <LightButton onClick={() => setPage("edit")}>
+              {t("edit")}
+            </LightButton>
           </BCard>
         </div>
       </ACard>

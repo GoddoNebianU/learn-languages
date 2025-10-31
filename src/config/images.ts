@@ -15,6 +15,8 @@ const IMAGES = {
   save: "/images/save_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg",
   delete: "/images/delete_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg",
   speed: "/images/speed_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg",
+  language_black: "/images/language_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg",
+  language_white: "/images/language_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg",
 };
 
 export default IMAGES;

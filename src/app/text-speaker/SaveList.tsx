@@ -6,6 +6,7 @@ import z from "zod";
 import { TextSpeakerItemSchema } from "@/interfaces";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
+import { useTranslations } from "next-intl";
 
 interface TextCardProps {
   item: z.infer<typeof TextSpeakerItemSchema>;
@@ -47,6 +48,7 @@ interface SaveListProps {
   handleUse: (item: z.infer<typeof TextSpeakerItemSchema>) => void;
 }
 export default function SaveList({ show = false, handleUse }: SaveListProps) {
+  const t = useTranslations("text-speaker");
   const [data, setData] = useState(getTextSpeakerData());
   const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     const current_data = getTextSpeakerData();
@@ -61,7 +63,7 @@ export default function SaveList({ show = false, handleUse }: SaveListProps) {
     setData(getTextSpeakerData());
   };
   const handleDeleteAll = () => {
-    const yesorno = prompt("确定删光吗？(Y/N)")?.trim();
+    const yesorno = prompt(t("confirmDeleteAll"))?.trim();
     if (yesorno && (yesorno === "Y" || yesorno === "y")) {
       setTextSpeakerData([]);
       refresh();

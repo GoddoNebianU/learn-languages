@@ -2,6 +2,7 @@ import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import SubtitleDisplay from "./SubtitleDisplay";
 import LightButton from "@/components/buttons/LightButton";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
+import { useTranslations } from "next-intl";
 
 type VideoPanelProps = {
   videoUrl: string | null;
@@ -10,6 +11,7 @@ type VideoPanelProps = {
 
 const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
   ({ videoUrl, srtUrl }, videoRef) => {
+    const t = useTranslations("srt-player");
     videoRef = videoRef as React.RefObject<HTMLVideoElement>;
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [srtLength, setSrtLength] = useState<number>(0);
@@ -185,14 +187,14 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
         <SubtitleDisplay subtitle={subtitle}></SubtitleDisplay>
         <div className="buttons flex mt-2 gap-2 flex-wrap">
           <LightButton onClick={togglePlayPause}>
-            {isPlaying ? "暂停" : "播放"}
+            {isPlaying ? t("pause") : t("play")}
           </LightButton>
-          <LightButton onClick={previous}>上句</LightButton>
-          <LightButton onClick={next}>下句</LightButton>
-          <LightButton onClick={restart}>句首</LightButton>
-          <LightButton
-            onClick={handleAutoPauseToggle}
-          >{`自动暂停(${autoPause ? "是" : "否"})`}</LightButton>
+          <LightButton onClick={previous}>{t("previous")}</LightButton>
+          <LightButton onClick={next}>{t("next")}</LightButton>
+          <LightButton onClick={restart}>{t("restart")}</LightButton>
+          <LightButton onClick={handleAutoPauseToggle}>
+            {t("autoPause", { enabled: autoPause ? "Yes" : "No" })}
+          </LightButton>
         </div>
         <input
           className="seekbar"

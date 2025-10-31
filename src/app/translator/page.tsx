@@ -8,8 +8,10 @@ import IMAGES from "@/config/images";
 import { getTTSAudioUrl } from "@/utils";
 import { Navbar } from "@/components/Navbar";
 import { VOICES } from "@/config/locales";
+import { useTranslations } from "next-intl";
 
 export default function Translator() {
+  const t = useTranslations("translator");
   const [ipaEnabled, setIPAEnabled] = useState(true);
   const [targetLang, setTargetLang] = useState("Chinese");
 
@@ -25,7 +27,7 @@ export default function Translator() {
   const tl = ["Chinese", "English", "Italian"];
 
   const inputLanguage = () => {
-    const lang = prompt("Input a language.")?.trim();
+    const lang = prompt(t("inputLanguage"))?.trim();
     if (lang) {
       setTargetLang(lang);
     }
@@ -210,12 +212,12 @@ export default function Translator() {
             </div>
           </div>
           <div className="option1 w-full flex flex-row justify-between items-center">
-            <span>detect language</span>
+            <span>{t("detectLanguage")}</span>
             <LightButton
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
-              generate ipa
+              {t("generateIPA")}
             </LightButton>
           </div>
         </div>
@@ -242,14 +244,14 @@ export default function Translator() {
             </div>
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
-            <span>translate into</span>
+            <span>{t("translateInto")}</span>
             <LightButton
               onClick={() => {
                 setTargetLang("Chinese");
               }}
               selected={targetLang === "Chinese"}
             >
-              Chinese
+              {t("chinese")}
             </LightButton>
             <LightButton
               onClick={() => {
@@ -257,7 +259,7 @@ export default function Translator() {
               }}
               selected={targetLang === "English"}
             >
-              English
+              {t("english")}
             </LightButton>
             <LightButton
               onClick={() => {
@@ -265,13 +267,13 @@ export default function Translator() {
               }}
               selected={targetLang === "Italian"}
             >
-              Italian
+              {t("italian")}
             </LightButton>
             <LightButton
               onClick={inputLanguage}
               selected={!tl.includes(targetLang)}
             >
-              {"Other" + (tl.includes(targetLang) ? "" : ": " + targetLang)}
+              {t("other") + (tl.includes(targetLang) ? "" : ": " + targetLang)}
             </LightButton>
           </div>
         </div>
@@ -282,7 +284,7 @@ export default function Translator() {
           onClick={translate}
           className={`duration-150 ease-in text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${translating ? "bg-gray-200" : "bg-white hover:bg-gray-200 hover:cursor-pointer"}`}
         >
-          {translating ? "translating..." : "translate"}
+          {translating ? t("translating") : t("translate")}
         </button>
       </div>
     </>

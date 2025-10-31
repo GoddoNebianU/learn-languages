@@ -5,6 +5,7 @@ import { LOCALES } from "@/config/locales";
 import { Dispatch, SetStateAction, useState } from "react";
 import { WordData } from "@/interfaces";
 import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+import { useTranslations } from "next-intl";
 
 interface Props {
   setEditPage: Dispatch<SetStateAction<"choose" | "edit">>;
@@ -19,6 +20,7 @@ export default function Choose({
   setWordData,
   localeKey,
 }: Props) {
+  const t = useTranslations("memorize.choose");
   const [chosenLocale, setChosenLocale] = useState<
     (typeof LOCALES)[number] | null
   >(null);
@@ -53,8 +55,10 @@ export default function Choose({
         </div>
         <div className="w-full flex items-center justify-center">
           <BCard className="flex gap-2 justify-center items-center w-fit">
-            <LightButton onClick={handleChooseClick}>Choose</LightButton>
-            <LightButton onClick={() => setEditPage("edit")}>Back</LightButton>
+            <LightButton onClick={handleChooseClick}>{t("choose")}</LightButton>
+            <LightButton onClick={() => setEditPage("edit")}>
+              {t("back")}
+            </LightButton>
           </BCard>
         </div>
       </ACard>

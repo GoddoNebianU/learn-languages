@@ -6,6 +6,7 @@ import DarkButton from "@/components/buttons/DarkButton";
 import { WordData } from "@/interfaces";
 import Choose from "./Choose";
 import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+import { useTranslations } from "next-intl";
 
 interface Props {
   setPage: Dispatch<SetStateAction<"start" | "main" | "edit">>;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function Edit({ setPage, wordData, setWordData }: Props) {
+  const t = useTranslations("memorize.edit");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [localeKey, setLocaleKey] = useState<0 | 1>(0);
   const [editPage, setEditPage] = useState<"choose" | "edit">("edit");
@@ -65,15 +67,17 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
           ></textarea>
           <div className="w-full flex items-center justify-center">
             <BCard className="flex gap-2 justify-center items-center w-fit">
-              <LightButton onClick={() => setPage("main")}>Back</LightButton>
-              <LightButton onClick={handleSave}>Save Pairs</LightButton>
+              <LightButton onClick={() => setPage("main")}>
+                {t("back")}
+              </LightButton>
+              <LightButton onClick={handleSave}>{t("save")}</LightButton>
               <DarkButton
                 onClick={() => {
                   setLocaleKey(0);
                   setEditPage("choose");
                 }}
               >
-                Locale 1
+                {t("locale1")}
               </DarkButton>
               <DarkButton
                 onClick={() => {
@@ -81,7 +85,7 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
                   setEditPage("choose");
                 }}
               >
-                Locale 2
+                {t("locale2")}
               </DarkButton>
             </BCard>
           </div>

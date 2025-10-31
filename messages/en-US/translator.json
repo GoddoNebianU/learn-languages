@@ -1,0 +1,12 @@
+{
+  "detectLanguage": "detect language",
+  "generateIPA": "generate ipa",
+  "translateInto": "translate into",
+  "chinese": "Chinese",
+  "english": "English",
+  "italian": "Italian",
+  "other": "Other",
+  "translating": "translating...",
+  "translate": "translate",
+  "inputLanguage": "Input a language."
+}

@@ -15,8 +15,10 @@ import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
 import { Navbar } from "@/components/Navbar";
 import { VOICES } from "@/config/locales";
+import { useTranslations } from "next-intl";
 
 export default function TextSpeaker() {
+  const t = useTranslations("text-speaker");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
   const [showSaveList, setShowSaveList] = useState(false);
@@ -320,7 +322,7 @@ export default function TextSpeaker() {
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
-              生成IPA
+              {t("generateIPA")}
             </LightButton>
             <LightButton
               onClick={() => {
@@ -328,7 +330,7 @@ export default function TextSpeaker() {
               }}
               selected={showSaveList}
             >
-              查看保存项
+              {t("viewSavedItems")}
             </LightButton>
           </div>
         </div>

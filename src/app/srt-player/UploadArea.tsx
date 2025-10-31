@@ -1,5 +1,6 @@
 import LightButton from "@/components/buttons/LightButton";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 
 export default function UploadArea({
   setVideoUrl,
@@ -8,6 +9,7 @@ export default function UploadArea({
   setVideoUrl: (url: string | null) => void;
   setSrtUrl: (url: string | null) => void;
 }) {
+  const t = useTranslations("srt-player");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const uploadVideo = () => {
@@ -38,8 +40,8 @@ export default function UploadArea({
   };
   return (
     <div className="w-full flex flex-col gap-2 m-2">
-      <LightButton onClick={uploadVideo}>上传视频</LightButton>
-      <LightButton onClick={uploadSRT}>上传字幕</LightButton>
+      <LightButton onClick={uploadVideo}>{t("uploadVideo")}</LightButton>
+      <LightButton onClick={uploadSRT}>{t("uploadSubtitle")}</LightButton>
       <input type="file" className="hidden" ref={inputRef} />
     </div>
   );

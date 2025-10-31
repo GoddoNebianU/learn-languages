@@ -1,0 +1,10 @@
+{
+  "title": "Memorize",
+  "locale1": "Your selected locale 1 is {locale}",
+  "locale2": "Your selected locale 2 is {locale}",
+  "total": "There are {total} word pairs in total",
+  "start": "Start",
+  "import": "Import",
+  "save": "Save",
+  "edit": "Edit"
+}

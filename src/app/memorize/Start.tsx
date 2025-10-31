@@ -5,6 +5,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/utils";
 import { VOICES } from "@/config/locales";
 import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+import { useTranslations } from "next-intl";
 
 interface WordBoardProps {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ interface Props {
   setPage: Dispatch<SetStateAction<"start" | "main" | "edit">>;
 }
 export default function Start({ wordData, setPage }: Props) {
+  const t = useTranslations("memorize.start");
   const [display, setDisplay] = useState<"ask" | "show">("ask");
   const [wordPair, setWordPair] = useState(
     wordData.wordPairs[Math.floor(Math.random() * wordData.wordPairs.length)],
@@ -71,23 +73,25 @@ export default function Start({ wordData, setPage }: Props) {
         <div className="w-full flex items-center justify-center">
           <div className="flex gap-2 justify-center items-center w-fit font-mono flex-wrap">
             {display === "ask" ? (
-              <LightButton onClick={show}>Show</LightButton>
+              <LightButton onClick={show}>{t("show")}</LightButton>
             ) : (
-              <LightButton onClick={next}>Next</LightButton>
+              <LightButton onClick={next}>{t("next")}</LightButton>
             )}
             <LightButton
               onClick={() => setReverse(!reverse)}
               selected={reverse}
             >
-              Reverse
+              {t("reverse")}
             </LightButton>
             <LightButton
               onClick={() => setDictation(!dictation)}
               selected={dictation}
             >
-              Dictation
+              {t("dictation")}
             </LightButton>
-            <LightButton onClick={() => setPage("main")}>Exit</LightButton>
+            <LightButton onClick={() => setPage("main")}>
+              {t("back")}
+            </LightButton>
           </div>
         </div>
       </div>

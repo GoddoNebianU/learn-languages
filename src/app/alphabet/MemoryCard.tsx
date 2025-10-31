@@ -9,6 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslations } from "next-intl";
 
 export default function MemoryCard({
   alphabet,
@@ -17,6 +18,7 @@ export default function MemoryCard({
   alphabet: Letter[];
   setChosenAlphabet: Dispatch<SetStateAction<SupportedAlphabets | null>>;
 }) {
+  const t = useTranslations("alphabet");
   const [index, setIndex] = useState(
     Math.floor(Math.random() * alphabet.length),
   );
@@ -79,7 +81,7 @@ export default function MemoryCard({
                   setLetterDisplay(!letterDisplay);
                 }}
               >
-                {letterDisplay ? "隐藏字母" : "显示字母"}
+                {letterDisplay ? t("hideLetter") : t("showLetter")}
               </LightButton>
               <LightButton
                 className="w-20"
@@ -87,7 +89,7 @@ export default function MemoryCard({
                   setIPADisplay(!ipaDisplay);
                 }}
               >
-                {ipaDisplay ? "隐藏IPA" : "显示IPA"}
+                {ipaDisplay ? t("hideIPA") : t("showIPA")}
               </LightButton>
             </>
           ) : (

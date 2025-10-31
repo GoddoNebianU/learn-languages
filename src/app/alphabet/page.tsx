@@ -5,8 +5,10 @@ import { Letter, SupportedAlphabets } from "@/interfaces";
 import { useEffect, useState } from "react";
 import MemoryCard from "./MemoryCard";
 import { Navbar } from "@/components/Navbar";
+import { useTranslations } from "next-intl";
 
 export default function Alphabet() {
+  const t = useTranslations("alphabet");
   const [chosenAlphabet, setChosenAlphabet] =
     useState<SupportedAlphabets | null>(null);
   const [alphabetData, setAlphabetData] = useState<
@@ -58,29 +60,29 @@ export default function Alphabet() {
       <>
         <Navbar></Navbar>
         <div className="border border-gray-200 m-4 mt-4 flex flex-col justify-center items-center p-4 rounded-2xl gap-2">
-          <span className="text-2xl md:text-3xl">请选择您想学习的字符</span>
+          <span className="text-2xl md:text-3xl">{t("chooseCharacters")}</span>
           <div className="flex gap-1 flex-wrap">
             <LightButton onClick={() => setChosenAlphabet("japanese")}>
-              日语假名
+              {t("japanese")}
             </LightButton>
             <LightButton onClick={() => setChosenAlphabet("english")}>
-              英文字母
+              {t("english")}
             </LightButton>
             <LightButton onClick={() => setChosenAlphabet("uyghur")}>
-              维吾尔字母
+              {t("uyghur")}
             </LightButton>
             <LightButton onClick={() => setChosenAlphabet("esperanto")}>
-              世界语字母
+              {t("esperanto")}
             </LightButton>
           </div>
         </div>
       </>
     );
   if (loadingState === "loading") {
-    return "加载中...";
+    return t("loading");
   }
   if (loadingState === "error") {
-    return "加载失败，请重试";
+    return t("loadFailed");
   }
   if (loadingState === "success" && alphabetData[chosenAlphabet]) {
     return (
