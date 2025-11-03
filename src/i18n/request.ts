@@ -43,7 +43,7 @@ export default getRequestConfig(async () => {
     return locale;
   })();
 
-  const messagesPath = join(process.cwd(), "messages", locale);
+  const messagesPath = join(process.cwd(), "public/messages", locale);
   const messages = loadMessagesFromDir(messagesPath);
 
   return {

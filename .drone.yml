@@ -7,36 +7,15 @@ platform:
   os: linux
   arch: amd64
 
-volumes:
-  - name: debian-dist
-    host:
-      path: /home/debian/dist
-
 steps:
   - name: build
-    image: node:23-alpine
-    commands:
-      - npm ci
-      - npm run build
-
-  - name: package
-    image: node:23-alpine
-    environment:
-      ZHIPU_API_KEY:
-        from_secret: zhipu_api_key
-    commands:
-      - apk add zip
-      - mkdir -p .next/standalone/.next
-      - cp -r public .next/standalone
-      - cp -r .next/static .next/standalone/.next
-      - cd .next/standalone
-      - echo "$ZHIPU_API_KEY" > zhipu_api_key.txt
-      - rm -f /dist/learn-languages.zip
-      - zip -r /dist/learn-languages.zip .
-    volumes:
-      - name: debian-dist
-        path: /dist
-
+    image: plugins/docker
+    settings:
+      repo: learn-languages
+      tags:
+        - latest
+      dry_run: true
+  
   - name: deploy
     image: appleboy/drone-ssh
     settings:
@@ -48,24 +27,8 @@ steps:
         from_secret: ssh_password
       port: 22
       script:
-        - cd ~/
-        - rm -rf learn-languages
-        - mkdir learn-languages
-        - unzip -d learn-languages dist/learn-languages.zip
-        - cd learn-languages
-        - npm i
-        - |
-          if pm2 list | grep -q learn-languages; then
-            echo "进程 learn-languages 已在pm2中运行，正在重启..."
-            ZHIPU_API_KEY=`cat zhipu_api_key.txt` PORT=3030 pm2 restart "learn-languages"
-          else
-            echo "进程 learn-languages 未在pm2中运行，正在启动..."
-            ZHIPU_API_KEY=`cat zhipu_api_key.txt` PORT=3030 pm2 start "./server.js" --name "learn-languages"
-          fi
-        - pm2 save
-        - cd ~/
-        - rm -rf dist
-        - mkdir dist
+        - cd ~/docker/learn-languages
+        - docker-compose restart || docker-compose up -d
       debug: true
 
 trigger:
