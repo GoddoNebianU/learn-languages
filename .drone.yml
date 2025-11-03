@@ -11,11 +11,15 @@ steps:
   - name: build
     image: plugins/docker
     settings:
-      repo: learn-languages
+      username:
+         from_secret: docker_username
+      password:
+         from_secret: docker_password
+      repo: registry.edian-studio.com/learn-languages
+      registry: registry.edian-studio.com
       tags:
         - latest
-      dry_run: true
-  
+
   - name: deploy
     image: appleboy/drone-ssh
     settings:
@@ -28,7 +32,7 @@ steps:
       port: 22
       script:
         - cd ~/docker/learn-languages
-        - docker-compose restart || docker-compose up -d
+        - docker-compose up -d
       debug: true
 
 trigger:
