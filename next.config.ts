@@ -3,7 +3,17 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   /* config options here */
   output: "standalone",
-  allowedDevOrigins: ["192.168.3.65", "192.168.3.66"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "/u/**",
+      },
+    ],
+  },
+  // allowedDevOrigins: ["192.168.3.65", "192.168.3.66"],
 };
 
 const withNextIntl = createNextIntlPlugin();

@@ -1,6 +1,5 @@
 import { EdgeTTS, ProsodyOptions } from "edge-tts-universal/browser";
 import { env } from "process";
-import { TextSpeakerArraySchema } from "./interfaces";
 import z from "zod";
 import { NextResponse } from "next/server";
 
@@ -60,33 +59,43 @@ export async function getTTSAudioUrl(
     throw e;
   }
 }
-export const getTextSpeakerData = () => {
-  try {
-    if (!localStorage) return [];
-    const item = localStorage.getItem("text-speaker");
 
-    if (!item) return [];
-
-    const rawData = JSON.parse(item);
-    const result = TextSpeakerArraySchema.safeParse(rawData);
-
-    if (result.success) {
-      return result.data;
-    } else {
-      console.error("Invalid data structure in localStorage:", result.error);
-      return [];
-    }
-  } catch (e) {
-    console.error("Failed to parse text-speaker data:", e);
-    return [];
-  }
-};
-export const setTextSpeakerData = (
-  data: z.infer<typeof TextSpeakerArraySchema>,
+export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
+  key: string,
+  schema: T,
 ) => {
-  if (!localStorage) return;
-  localStorage.setItem("text-speaker", JSON.stringify(data));
+  return {
+    get: (): z.infer<T> => {
+      try {
+        if (!localStorage) return [];
+        const item = localStorage.getItem(key);
+
+        if (!item) return [];
+
+        const rawData = JSON.parse(item) as z.infer<T>;
+        const result = schema.safeParse(rawData);
+
+        if (result.success) {
+          return result.data;
+        } else {
+          console.error(
+            "Invalid data structure in localStorage:",
+            result.error,
+          );
+          return [];
+        }
+      } catch (e) {
+        console.error(`Failed to parse ${key} data:`, e);
+        return [];
+      }
+    },
+    set: (data: z.infer<T>) => {
+      if (!localStorage) return;
+      localStorage.setItem(key, JSON.stringify(data));
+    },
+  };
 };
+
 export function handleAPIError(error: unknown, message: string) {
   console.error(message, error);
   return NextResponse.json(
@@ -94,3 +103,24 @@ export function handleAPIError(error: unknown, message: string) {
     { status: 500 },
   );
 }
+
+
+export const letsFetch = (
+  url: string,
+  onSuccess: (message: string) => void,
+  onError: (message: string) => void,
+  onFinally: () => void,
+) => {
+  return fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        onSuccess(data.message);
+      } else if (data.status === "error") {
+        onError(data.message);
+      } else {
+        onError("Unknown error");
+      }
+    })
+    .finally(onFinally);
+};

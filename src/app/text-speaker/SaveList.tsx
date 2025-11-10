@@ -1,9 +1,9 @@
 "use client";
 
-import { getTextSpeakerData, setTextSpeakerData } from "@/utils";
+import { getLocalStorageOperator } from "@/utils";
 import { useState } from "react";
 import z from "zod";
-import { TextSpeakerItemSchema } from "@/interfaces";
+import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/interfaces";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useTranslations } from "next-intl";
@@ -49,23 +49,27 @@ interface SaveListProps {
 }
 export default function SaveList({ show = false, handleUse }: SaveListProps) {
   const t = useTranslations("text-speaker");
-  const [data, setData] = useState(getTextSpeakerData());
+  const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
+    typeof TextSpeakerArraySchema
+  >("text-speaker", TextSpeakerArraySchema);
+  const [data, setData] = useState(getFromLocalStorage());
   const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
-    const current_data = getTextSpeakerData();
+    const current_data = getFromLocalStorage();
+
     current_data.splice(
       current_data.findIndex((v) => v.text === item.text),
       1,
     );
-    setTextSpeakerData(current_data);
+    setIntoLocalStorage(current_data);
     refresh();
   };
   const refresh = () => {
-    setData(getTextSpeakerData());
+    setData(getFromLocalStorage());
   };
   const handleDeleteAll = () => {
     const yesorno = prompt(t("confirmDeleteAll"))?.trim();
     if (yesorno && (yesorno === "Y" || yesorno === "y")) {
-      setTextSpeakerData([]);
+      setIntoLocalStorage([]);
       refresh();
     }
   };

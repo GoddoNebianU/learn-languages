@@ -1,293 +1,253 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
-import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import IMAGES from "@/config/images";
-import { getTTSAudioUrl } from "@/utils";
-import { Navbar } from "@/components/Navbar";
 import { VOICES } from "@/config/locales";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { TranslationHistorySchema } from "@/interfaces";
+import { tlsoPush, tlso } from "@/lib/localStorageOperators";
+import { getTTSAudioUrl } from "@/lib/tts";
+import { letsFetch } from "@/utils";
 import { useTranslations } from "next-intl";
+import { useRef, useState } from "react";
+import z from "zod";
 
-export default function Translator() {
+export default function TranslatorPage() {
   const t = useTranslations("translator");
-  const [ipaEnabled, setIPAEnabled] = useState(true);
-  const [targetLang, setTargetLang] = useState("Chinese");
+  
+  const taref = useRef<HTMLTextAreaElement>(null);
+  const [lang, setLang] = useState<string>("chinese");
+  const [tresult, setTresult] = useState<string>("");
+  const [genIpa, setGenIpa] = useState(true);
+  const [ipaTexts, setIpaTexts] = useState(["", ""]);
+  const [processing, setProcessing] = useState(false);
+  const { load, play } = useAudioPlayer();
 
-  const [sourceText, setSourceText] = useState("");
-  const [targetText, setTargetText] = useState("");
-  const [sourceIPA, setSourceIPA] = useState("");
-  const [targetIPA, setTargetIPA] = useState("");
-  const [sourceLocale, setSourceLocale] = useState<string | null>(null);
-  const [targetLocale, setTargetLocale] = useState<string | null>(null);
-  const [translating, setTranslating] = useState(false);
-  const { play, load } = useAudioPlayer();
+  const lastTTS = useRef({
+    text: "",
+    url: "",
+  });
 
-  const tl = ["Chinese", "English", "Italian"];
-
-  const inputLanguage = () => {
-    const lang = prompt(t("inputLanguage"))?.trim();
-    if (lang) {
-      setTargetLang(lang);
-    }
-  };
-
-  const translate = () => {
-    if (translating) return;
-    if (sourceText.length === 0) return;
-
-    setTranslating(true);
-
-    setTargetText("");
-    setSourceLocale(null);
-    setTargetLocale(null);
-    setSourceIPA("");
-    setTargetIPA("");
-
-    const params = new URLSearchParams({
-      text: sourceText,
-      target: targetLang,
-    });
-    fetch(`/api/translate?${params}`)
-      .then((res) => res.json())
-      .then((obj) => {
-        setSourceLocale(obj.source_locale);
-        setTargetLocale(obj.target_locale);
-        setTargetText(obj.target_text);
-
-        if (ipaEnabled) {
-          const params = new URLSearchParams({
-            text: sourceText,
-          });
-          fetch(`/api/ipa?${params}`)
-            .then((res) => res.json())
-            .then((data) => {
-              setSourceIPA(data.ipa);
-            })
-            .catch((e) => {
-              console.error(e);
-              setSourceIPA("");
-            });
-          const params2 = new URLSearchParams({
-            text: obj.target_text,
-          });
-          fetch(`/api/ipa?${params2}`)
-            .then((res) => res.json())
-            .then((data) => {
-              setTargetIPA(data.ipa);
-            })
-            .catch((e) => {
-              console.error(e);
-              setTargetIPA("");
-            });
-        }
-      })
-      .catch((r) => {
-        console.error(r);
-        setSourceLocale("");
-        setTargetLocale("");
-        setTargetText("");
-      })
-      .finally(() => setTranslating(false));
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setSourceText(e.target.value.trim());
-    setTargetText("");
-    setSourceLocale(null);
-    setTargetLocale(null);
-    setSourceIPA("");
-    setTargetIPA("");
-  };
-
-  const readSource = async () => {
-    if (sourceText.length === 0) return;
-
-    if (sourceIPA.length === 0 && ipaEnabled) {
-      const params = new URLSearchParams({
-        text: sourceText,
-      });
-      fetch(`/api/ipa?${params}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setSourceIPA(data.ipa);
-        })
-        .catch((e) => {
-          console.error(e);
-          setSourceIPA("");
-        });
-    }
-
-    if (!sourceLocale) {
-      try {
-        const params = new URLSearchParams({
-          text: sourceText.slice(0, 30),
-        });
-        const res = await fetch(`/api/locale?${params}`);
-        const info = await res.json();
-        setSourceLocale(info.locale);
-
-        const voice = VOICES.find((v) => v.locale.startsWith(info.locale));
-        if (!voice) {
-          return;
-        }
-
-        const url = await getTTSAudioUrl(sourceText, voice.short_name);
-        await load(url);
-        await play();
-        URL.revokeObjectURL(url);
-      } catch (e) {
-        console.error(e);
-        setSourceLocale(null);
-        return;
-      }
-    } else {
-      const voice = VOICES.find((v) => v.locale.startsWith(sourceLocale!));
-      if (!voice) {
-        return;
-      }
-
-      const url = await getTTSAudioUrl(sourceText, voice.short_name);
+  const tts = async (text: string, locale: string) => {
+    if (lastTTS.current.text !== text) {
+      const url = await getTTSAudioUrl(
+        text,
+        VOICES.find((v) => v.locale === locale)!.short_name,
+      );
       await load(url);
-      await play();
-      URL.revokeObjectURL(url);
+      lastTTS.current.text = text;
+      lastTTS.current.url = url;
     }
+    play();
   };
 
-  const readTarget = async () => {
-    if (targetText.length === 0) return;
+  const translate = async () => {
+    if (processing) return;
+    setProcessing(true);
 
-    if (targetIPA.length === 0 && ipaEnabled) {
-      const params = new URLSearchParams({
-        text: targetText,
-      });
-      fetch(`/api/ipa?${params}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setTargetIPA(data.ipa);
-        })
-        .catch((e) => {
-          console.error(e);
-          setTargetIPA("");
-        });
-    }
+    if (!taref.current) return;
+    const text = taref.current.value;
 
-    const voice = VOICES.find((v) => v.locale.startsWith(targetLocale!));
-    if (!voice) return;
+    const newItem: {
+      text1: string | null;
+      text2: string | null;
+      locale1: string | null;
+      locale2: string | null;
+    } = {
+      text1: text,
+      text2: null,
+      locale1: null,
+      locale2: null,
+    };
 
-    const url = await getTTSAudioUrl(targetText, voice.short_name);
-    await load(url);
-    await play();
-    URL.revokeObjectURL(url);
+    const checkUpdateLocalStorage = (item: typeof newItem) => {
+      if (item.text1 && item.text2 && item.locale1 && item.locale2) {
+        tlsoPush(item as z.infer<typeof TranslationHistorySchema>);
+      }
+    };
+    const innerStates = {
+      text2: false,
+      ipa1: !genIpa,
+      ipa2: !genIpa,
+    };
+    const checkUpdateProcessStates = () => {
+      if (innerStates.ipa1 && innerStates.ipa2 && innerStates.text2)
+        setProcessing(false);
+    };
+    const updateState = (stateName: keyof typeof innerStates) => () => {
+      innerStates[stateName] = true;
+      checkUpdateLocalStorage(newItem);
+      checkUpdateProcessStates();
+    };
+
+    // Fetch locale for text1
+    letsFetch(
+      `/api/v1/locale?text=${encodeURIComponent(text)}`,
+      (locale: string) => {
+        newItem.locale1 = locale;
+      },
+      console.log,
+      () => {},
+    );
+
+    if (genIpa)
+      // Fetch IPA for text1
+      letsFetch(
+        `/api/v1/ipa?text=${encodeURIComponent(text)}`,
+        (ipa: string) => setIpaTexts((prev) => [ipa, prev[1]]),
+        console.log,
+        updateState("ipa1"),
+      );
+    // Fetch translation for text2
+    letsFetch(
+      `/api/v1/translate?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`,
+      (text2) => {
+        setTresult(text2);
+        newItem.text2 = text2;
+        if (genIpa)
+          // Fetch IPA for text2
+          letsFetch(
+            `/api/v1/ipa?text=${encodeURIComponent(text2)}`,
+            (ipa: string) => setIpaTexts((prev) => [prev[0], ipa]),
+            console.log,
+            updateState("ipa2"),
+          );
+        // Fetch locale for text2
+        letsFetch(
+          `/api/v1/locale?text=${encodeURIComponent(text2)}`,
+          (locale: string) => {
+            newItem.locale2 = locale;
+          },
+          console.log,
+          () => {},
+        );
+      },
+      console.log,
+      updateState("text2"),
+    );
   };
 
   return (
     <>
-      <Navbar></Navbar>
+      {/* TCard Component */}
       <div className="w-screen flex flex-col md:flex-row md:justify-between gap-2 p-2">
-        <div className="card1 w-full md:w-1/2 flex flex-col-reverse gap-2">
-          <div className="textarea1 border border-gray-200 rounded-2xl w-full h-64 p-2">
+        {/* Card Component - Left Side */}
+        <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
+          {/* ICard1 Component */}
+          <div className="border border-gray-200 rounded-2xl w-full h-64 p-2">
             <textarea
+              className="resize-none h-8/12 w-full focus:outline-0"
+              ref={taref}
               onKeyDown={(e) => {
                 if (e.ctrlKey && e.key === "Enter") translate();
               }}
-              onChange={handleInputChange}
-              className="resize-none h-8/12 w-full focus:outline-0"
             ></textarea>
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
-              {sourceIPA}
+              {ipaTexts[0]}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick
-                onClick={async () => {
-                  if (sourceText.length !== 0)
-                    await navigator.clipboard.writeText(sourceText);
-                }}
                 src={IMAGES.copy_all}
                 alt="copy"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(
+                    taref.current?.value || "",
+                  );
+                }}
               ></IconClick>
               <IconClick
-                onClick={readSource}
                 src={IMAGES.play_arrow}
                 alt="play"
+                onClick={() => {
+                  const t = taref.current?.value;
+                  if (!t) return;
+                  tts(t, tlso.get().find((v) => v.text1 === t)?.locale1 || "");
+                }}
               ></IconClick>
             </div>
           </div>
           <div className="option1 w-full flex flex-row justify-between items-center">
             <span>{t("detectLanguage")}</span>
             <LightButton
-              selected={ipaEnabled}
-              onClick={() => setIPAEnabled(!ipaEnabled)}
+              selected={genIpa}
+              onClick={() => setGenIpa((prev) => !prev)}
             >
               {t("generateIPA")}
             </LightButton>
           </div>
         </div>
-        <div className="card2 w-full md:w-1/2 flex flex-col-reverse gap-2">
-          <div className="textarea2 bg-gray-100 rounded-2xl w-full h-64 p-2">
-            <div className="h-8/12 w-full">{targetText}</div>
+
+        {/* Card Component - Right Side */}
+        <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
+          {/* ICard2 Component */}
+          <div className="bg-gray-100 rounded-2xl w-full h-64 p-2">
+            <div className="h-8/12 w-full">{tresult}</div>
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
-              {targetIPA}
+              {ipaTexts[1]}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick
-                onClick={async () => {
-                  if (targetText.length !== 0)
-                    await navigator.clipboard.writeText(targetText);
-                }}
                 src={IMAGES.copy_all}
                 alt="copy"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(tresult);
+                }}
               ></IconClick>
               <IconClick
-                onClick={readTarget}
                 src={IMAGES.play_arrow}
                 alt="play"
+                onClick={() => {
+                  tts(
+                    tresult,
+                    tlso.get().find((v) => v.text2 === tresult)?.locale2 || "",
+                  );
+                }}
               ></IconClick>
             </div>
           </div>
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
             <span>{t("translateInto")}</span>
             <LightButton
-              onClick={() => {
-                setTargetLang("Chinese");
-              }}
-              selected={targetLang === "Chinese"}
+              selected={lang === "chinese"}
+              onClick={() => setLang("chinese")}
             >
               {t("chinese")}
             </LightButton>
             <LightButton
-              onClick={() => {
-                setTargetLang("English");
-              }}
-              selected={targetLang === "English"}
+              selected={lang === "english"}
+              onClick={() => setLang("english")}
             >
               {t("english")}
             </LightButton>
             <LightButton
-              onClick={() => {
-                setTargetLang("Italian");
-              }}
-              selected={targetLang === "Italian"}
+              selected={lang === "italian"}
+              onClick={() => setLang("italian")}
             >
               {t("italian")}
             </LightButton>
             <LightButton
-              onClick={inputLanguage}
-              selected={!tl.includes(targetLang)}
+              selected={!["chinese", "english", "italian"].includes(lang)}
+              onClick={() => {
+                const newLang = prompt("Enter language");
+                if (newLang) {
+                  setLang(newLang);
+                }
+              }}
             >
-              {t("other") + (tl.includes(targetLang) ? "" : ": " + targetLang)}
+              {t("other")}
             </LightButton>
           </div>
         </div>
       </div>
 
-      <div className="button-area w-screen flex justify-center items-center">
+      {/* TranslateButton Component */}
+      <div className="w-screen flex justify-center items-center">
         <button
+          className={`duration-150 ease-in text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${processing ? "bg-gray-200" : "bg-white hover:bg-gray-200 hover:cursor-pointer"}`}
           onClick={translate}
-          className={`duration-150 ease-in text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${translating ? "bg-gray-200" : "bg-white hover:bg-gray-200 hover:cursor-pointer"}`}
         >
-          {translating ? t("translating") : t("translate")}
+          {t("translate")}
         </button>
       </div>
     </>

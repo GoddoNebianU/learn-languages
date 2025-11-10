@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/utils";
 import { VOICES } from "@/config/locales";
-import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+
 import { useTranslations } from "next-intl";
 
 interface WordBoardProps {
@@ -49,7 +49,7 @@ export default function Start({ wordData, setPage }: Props) {
       ).then(play);
   };
   return (
-    <NavbarCenterWrapper className="bg-gray-100">
+    <div className="w-screen flex justify-center items-center">
       <div className="flex-col flex items-center h-96">
         <div className="flex-1 w-[95dvw] md:w-fit p-4 gap-4 flex flex-col overflow-x-auto">
           {dictation ? (
@@ -95,6 +95,6 @@ export default function Start({ wordData, setPage }: Props) {
           </div>
         </div>
       </div>
-    </NavbarCenterWrapper>
+    </div>
   );
 }

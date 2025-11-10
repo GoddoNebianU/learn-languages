@@ -4,7 +4,7 @@ import BCard from "@/components/cards/BCard";
 import { LOCALES } from "@/config/locales";
 import { Dispatch, SetStateAction, useState } from "react";
 import { WordData } from "@/interfaces";
-import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+
 import { useTranslations } from "next-intl";
 
 interface Props {
@@ -39,7 +39,7 @@ export default function Choose({
   };
 
   return (
-    <NavbarCenterWrapper className="bg-gray-100">
+    <div className="w-screen flex justify-center items-center">
       <ACard className="flex flex-col">
         <div className="overflow-y-auto flex-1 border border-gray-200 rounded-2xl p-2 grid grid-cols-4 md:grid-cols-6 md:gap-2">
           {LOCALES.map((locale, index) => (
@@ -62,6 +62,6 @@ export default function Choose({
           </BCard>
         </div>
       </ACard>
-    </NavbarCenterWrapper>
+    </div>
   );
 }

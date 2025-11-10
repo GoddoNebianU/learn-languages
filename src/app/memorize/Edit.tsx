@@ -5,7 +5,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import DarkButton from "@/components/buttons/DarkButton";
 import { WordData } from "@/interfaces";
 import Choose from "./Choose";
-import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
+
 import { useTranslations } from "next-intl";
 
 interface Props {
@@ -51,7 +51,7 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
     setWordData(newWordData);
     if (textareaRef.current)
       textareaRef.current.value = convertFromWordData(newWordData);
-    if(localStorage) {
+    if (localStorage) {
       localStorage.setItem("wordData", JSON.stringify(newWordData));
     }
   };
@@ -60,7 +60,7 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
   };
   if (editPage === "edit")
     return (
-      <NavbarCenterWrapper className="bg-gray-100">
+      <div className="w-screen flex justify-center items-center">
         <ACard className="flex flex-col">
           <textarea
             onKeyDown={(e) => {
@@ -96,7 +96,7 @@ export default function Edit({ setPage, wordData, setWordData }: Props) {
             </BCard>
           </div>
         </ACard>
-      </NavbarCenterWrapper>
+      </div>
     );
   if (editPage === "choose")
     return (

@@ -25,7 +25,7 @@ const getLocalWordData = (): WordData => {
   }
 }
 
-export default function Memorize() {
+export default function MemorizePage() {
   const [page, setPage] = useState<"start" | "main" | "edit">("main");
   const [wordData, setWordData] = useState<WordData>(getLocalWordData());
   if (page === "main")

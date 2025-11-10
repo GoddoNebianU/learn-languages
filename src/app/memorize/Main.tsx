@@ -4,7 +4,6 @@ import BCard from "@/components/cards/BCard";
 import { WordData, WordDataSchema } from "@/interfaces";
 import { Dispatch, SetStateAction } from "react";
 import useFileUpload from "@/hooks/useFileUpload";
-import NavbarCenterWrapper from "@/components/NavbarCenterWrapper";
 import { useTranslations } from "next-intl";
 
 interface Props {
@@ -43,7 +42,7 @@ export default function Main({
     URL.revokeObjectURL(url);
   };
   return (
-    <NavbarCenterWrapper className="bg-gray-100">
+    <div className="w-screen flex justify-center items-center">
       <ACard className="flex-col flex">
         <h1 className="text-center font-extrabold text-4xl text-gray-800 m-2 mb-4">
           {t("title")}
@@ -69,6 +68,6 @@ export default function Main({
         </div>
       </ACard>
       <input type="file" hidden ref={inputRef}></input>
-    </NavbarCenterWrapper>
+    </div>
   );
 }

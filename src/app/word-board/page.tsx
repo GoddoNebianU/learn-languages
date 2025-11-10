@@ -10,9 +10,8 @@ import {
   TEXT_SIZE,
 } from "@/config/word-board-config";
 import { inspect } from "@/utils";
-import { Navbar } from "@/components/Navbar";
 
-export default function WordBoard() {
+export default function WordBoardPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const initialWords = [
@@ -147,7 +146,6 @@ export default function WordBoard() {
   // }
   return (
     <>
-      <Navbar></Navbar>
       <div className="flex w-screen h-screen justify-center items-center">
         <div
           onKeyDown={handleKeyDown}

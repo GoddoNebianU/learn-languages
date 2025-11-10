@@ -4,20 +4,16 @@ import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import {
-  getTextSpeakerData,
-  getTTSAudioUrl,
-  setTextSpeakerData,
-} from "@/utils";
+import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/interfaces";
+import { getLocalStorageOperator, getTTSAudioUrl } from "@/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import SaveList from "./SaveList";
-import { TextSpeakerItemSchema } from "@/interfaces";
 import z from "zod";
-import { Navbar } from "@/components/Navbar";
+import SaveList from "./SaveList";
+
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 
-export default function TextSpeaker() {
+export default function TextSpeakerPage() {
   const t = useTranslations("text-speaker");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
@@ -33,6 +29,11 @@ export default function TextSpeaker() {
   const objurlRef = useRef<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const { play, stop, load, audioRef } = useAudioPlayer();
+
+  const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
+    typeof TextSpeakerArraySchema
+  >("text-speaker", TextSpeakerArraySchema);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -196,14 +197,14 @@ export default function TextSpeaker() {
         theIPA = tmp.ipa;
       }
 
-      const save = getTextSpeakerData();
+      const save = getFromLocalStorage();
       const oldIndex = save.findIndex((v) => v.text === textRef.current);
       if (oldIndex !== -1) {
         const oldItem = save[oldIndex];
         if (theIPA) {
           if (!oldItem.ipa || oldItem.ipa !== theIPA) {
             oldItem.ipa = theIPA;
-            setTextSpeakerData(save);
+            setIntoLocalStorage(save);
           }
         }
       } else if (theIPA.length === 0) {
@@ -218,7 +219,7 @@ export default function TextSpeaker() {
           ipa: theIPA,
         });
       }
-      setTextSpeakerData(save);
+      setIntoLocalStorage(save);
     } catch (e) {
       console.error(e);
       setLocale(null);
@@ -229,9 +230,8 @@ export default function TextSpeaker() {
 
   return (
     <>
-      <Navbar></Navbar>
       <div
-        className="my-4 p-4 mx-4 md:mx-32 border-1 border-gray-200 rounded-2xl"
+        className="my-4 p-4 mx-4 md:mx-32 border border-gray-200 rounded-2xl"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         <textarea

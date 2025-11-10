@@ -7,11 +7,18 @@ import IconClick from "./IconClick";
 import IMAGES from "@/config/images";
 import { useState } from "react";
 import LightButton from "./buttons/LightButton";
+import { useSession } from "next-auth/react";
 
-function MyLink({ href, label }: { href: string; label: string }) {
+function MyLink({
+  href,
+  children,
+}: {
+  href: string;
+  children?: React.ReactNode;
+}) {
   return (
     <Link className="font-bold" href={href}>
-      {label}
+      {children}
     </Link>
   );
 }
@@ -25,6 +32,7 @@ export function Navbar() {
     document.cookie = `locale=${locale}`;
     window.location.reload();
   };
+  const session = useSession();
   return (
     <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
       <Link href={"/"} className="text-xl flex">
@@ -64,11 +72,17 @@ export function Navbar() {
             onClick={handleLanguageClick}
           ></IconClick>
         </div>
-        <MyLink href="/changelog.txt" label={t("about")}></MyLink>
-        <MyLink
-          href="https://github.com/GoddoNebianU/learn-languages"
-          label={t("sourceCode")}
-        ></MyLink>
+        {session?.status === "authenticated" ? (
+          <div className="flex gap-2">
+            <MyLink href="/profile">{t("profile")}</MyLink>
+          </div>
+        ) : (
+          <MyLink href="/login">{t("login")}</MyLink>
+        )}
+        <MyLink href="/changelog.txt">{t("about")}</MyLink>
+        <MyLink href="https://github.com/GoddoNebianU/learn-languages">
+          {t("sourceCode")}
+        </MyLink>
       </div>
     </div>
   );

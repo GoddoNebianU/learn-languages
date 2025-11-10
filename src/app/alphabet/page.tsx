@@ -4,7 +4,7 @@ import LightButton from "@/components/buttons/LightButton";
 import { Letter, SupportedAlphabets } from "@/interfaces";
 import { useEffect, useState } from "react";
 import MemoryCard from "./MemoryCard";
-import { Navbar } from "@/components/Navbar";
+
 import { useTranslations } from "next-intl";
 
 export default function Alphabet() {
@@ -58,7 +58,6 @@ export default function Alphabet() {
   if (!chosenAlphabet)
     return (
       <>
-        <Navbar></Navbar>
         <div className="border border-gray-200 m-4 mt-4 flex flex-col justify-center items-center p-4 rounded-2xl gap-2">
           <span className="text-2xl md:text-3xl">{t("chooseCharacters")}</span>
           <div className="flex gap-1 flex-wrap">
@@ -87,7 +86,6 @@ export default function Alphabet() {
   if (loadingState === "success" && alphabetData[chosenAlphabet]) {
     return (
       <>
-        <Navbar></Navbar>
         <MemoryCard
           alphabet={alphabetData[chosenAlphabet]}
           setChosenAlphabet={setChosenAlphabet}

@@ -1,8 +1,7 @@
-import { Navbar } from "@/components/Navbar";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   const t = useTranslations("home");
   function TopArea() {
     return (
@@ -101,7 +100,6 @@ export default function Home() {
   }
   return (
     <>
-      <Navbar></Navbar>
       <TopArea></TopArea>
       <Fortune></Fortune>
       <Explore></Explore>

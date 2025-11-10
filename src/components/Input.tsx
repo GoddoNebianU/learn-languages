@@ -3,6 +3,7 @@ interface Props {
   placeholder?: string;
   type?: string;
   className?: string;
+  name?: string;
 }
 
 export default function Input({
@@ -10,6 +11,7 @@ export default function Input({
   placeholder = "",
   type = "text",
   className = "",
+  name = "",
 }: Props) {
   return (
     <input
@@ -17,6 +19,7 @@ export default function Input({
       placeholder={placeholder}
       type={type}
       className={`block focus:outline-none border-b-2 border-gray-600 ${className}`}
+      name={name}
     />
   );
 }

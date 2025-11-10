@@ -3,16 +3,14 @@
 import { KeyboardEvent, useRef, useState } from "react";
 import UploadArea from "./UploadArea";
 import VideoPanel from "./VideoPlayer/VideoPanel";
-import { Navbar } from "@/components/Navbar";
 
-export default function SrtPlayer() {
+export default function SrtPlayerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [srtUrl, setSrtUrl] = useState<string | null>(null);
   return (
     <>
-      <Navbar></Navbar>
       <div
         className="flex w-screen pt-8 items-center justify-center"
         onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => e.preventDefault()}

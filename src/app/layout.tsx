@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import SessionWrapper from "@/lib/SessionWrapper";
+import { Navbar } from "@/components/Navbar";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -19,12 +21,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
-      </body>
-    </html>
+    <SessionWrapper>
+      <html lang="en">
+        <body className={`antialiased`}>
+          <NextIntlClientProvider>
+            <Navbar></Navbar>
+            {children}
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    </SessionWrapper>
   );
 }
