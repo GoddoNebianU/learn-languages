@@ -35,17 +35,20 @@ export function Navbar() {
   const session = useSession();
   return (
     <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
-      <Link href={"/"} className="text-xl flex">
-        <Image
-          src={"/favicon.ico"}
-          alt="logo"
-          width="32"
-          height="32"
-          className="rounded-4xl"
-        ></Image>
-        <span className="font-bold">{t("title")}</span>
-      </Link>
-      <div className="flex gap-4 text-xl">
+      <div className="flex gap-4 text-xl justify-center items-center">
+        <Link href={"/"} className="text-xl flex border-b">
+          <Image
+            src={"/favicon.ico"}
+            alt="logo"
+            width="32"
+            height="32"
+            className="rounded-4xl"
+          ></Image>
+          <span className="font-bold text-pink-200">{t("title")}</span>
+        </Link>
+        <MyLink href="/folders">{t("folders")}</MyLink>
+      </div>
+      <div className="flex gap-4 text-xl justify-center items-center">
         <div className="relative">
           {showLanguageMenu && (
             <div>

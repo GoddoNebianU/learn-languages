@@ -36,19 +36,7 @@ export default function MePage() {
         <p>{session.data?.user?.name}</p>
         <p>Email: {session.data?.user?.email}</p>
         <DarkButton onClick={signOut}>Logout</DarkButton>
-        <LightButton
-          onClick={() => {
-            fetch("/api/folders", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ name: "New Folder" }),
-            }).then(async (res) => console.log(await res.json()));
-          }}
-        >
-          POST
-        </LightButton>
+        
       </ACard>
     </Center>
   );

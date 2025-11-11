@@ -1,7 +1,8 @@
 {
-  "title": "LL",
+  "title": "learn-languages",
   "about": "About",
   "sourceCode": "GitHub",
   "login": "Login",
-  "profile": "Profile"
+  "profile": "Profile",
+  "folders": "Folders"
 }
