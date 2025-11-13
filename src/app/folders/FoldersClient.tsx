@@ -1,16 +1,15 @@
 "use client";
 
-import DarkButton from "@/components/buttons/DarkButton";
-import LightButton from "@/components/buttons/LightButton";
-import ACard from "@/components/cards/ACard";
-import { Center } from "@/components/Center";
+import { ChevronRight, Folder, FolderPlus, Trash2 } from "lucide-react";
 import {
   createFolder,
   deleteFolderById,
   getFoldersWithTextPairsCountByOwner,
 } from "@/lib/controllers/FolderController";
 import { useEffect, useState } from "react";
-import InFolder from "./InFolder";
+import InFolder from "./[folder_id]/InFolder";
+import { Center } from "@/components/Center";
+import { useRouter } from "next/navigation";
 
 interface Folder {
   id: number;
@@ -26,26 +25,46 @@ interface FolderProps {
 
 const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
   return (
-    <div className="flex flex-row items-center justify-center border">
-      <div className="flex-1">
-        <div>ID: {folder.id}</div>
-        <div>Name: {folder.name}</div>
-        <div>Text Pairs Count: {folder.text_pairs_count}</div>
+    <div
+      className="flex justify-between items-center group p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+      onClick={openCallback}
+    >
+      <div className="flex items-center gap-3 flex-1">
+        <div className="w-10 h-10 rounded-lg bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
+          <Folder></Folder>
+        </div>
+
+        <div className="flex-1">
+          <h3 className="font-medium text-gray-900">{folder.name}</h3>
+          <p className="text-sm text-gray-500">
+            {folder.text_pairs_count} items
+          </p>
+        </div>
+
+        <div className="text-xs text-gray-400">#{folder.id}</div>
       </div>
-      <DarkButton className="w-fit h-fit m-2" onClick={openCallback}>
-        open
-      </DarkButton>
-      <DarkButton className="w-fit h-fit m-2" onClick={deleteCallback}>
-        delete
-      </DarkButton>
+
+      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteCallback();
+          }}
+          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+        >
+          <Trash2 size={16} />
+        </button>
+        <ChevronRight size={18} className="text-gray-400" />
+      </div>
     </div>
   );
 };
 
 export default function FoldersClient({ username }: { username: string }) {
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [page, setPage] = useState<"folders" | "in folder">("folders");
   const [folderId, setFolderId] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     getFoldersWithTextPairsCountByOwner(username).then((folders) => {
@@ -54,50 +73,76 @@ export default function FoldersClient({ username }: { username: string }) {
   }, [username]);
 
   const updateFolders = async () => {
-    const updatedFolders = await getFoldersWithTextPairsCountByOwner(username);
-    setFolders(updatedFolders as Folder[]);
+    setLoading(true);
+    try {
+      const updatedFolders =
+        await getFoldersWithTextPairsCountByOwner(username);
+      setFolders(updatedFolders as Folder[]);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  if (page === "folders")
     return (
       <Center>
-        <ACard className="flex flex-col">
-          <h1 className="text-4xl font-extrabold text-center">Your Folders</h1>
-          <LightButton
-            className="w-fit"
+        <div className="w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
+          <div className="mb-6">
+            <h1 className="text-2xl font-light text-gray-900">Folders</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Manage your collections
+            </p>
+          </div>
+
+          <button
             onClick={async () => {
               const folderName = prompt("Enter folder name:");
               if (!folderName) return;
-              await createFolder(folderName, username);
-              await updateFolders();
+              setLoading(true);
+              try {
+                await createFolder(folderName, username);
+                await updateFolders();
+              } finally {
+                setLoading(false);
+              }
             }}
+            disabled={loading}
+            className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
           >
-            Create Folder
-          </LightButton>
-          <div className="overflow-y-auto">
-            {folders.map((folder) => (
-              <FolderCard
-                key={folder.id}
-                folder={folder}
-                deleteCallback={() => {
-                  const confirm = prompt(
-                    "Input folder's name to delete this folder.",
-                  );
-                  if (confirm === folder.name) {
-                    deleteFolderById(folder.id).then(updateFolders);
-                  }
-                }}
-                openCallback={() => {
-                  setFolderId(folder.id);
-                  setPage("in folder");
-                }}
-              />
-            ))}
+            <FolderPlus size={18} />
+            <span>{loading ? "Creating..." : "New Folder"}</span>
+          </button>
+
+          <div className="mt-4">
+            {folders.length === 0 ? (
+              <div className="text-center py-12 text-gray-400">
+                <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gray-100 flex items-center justify-center">
+                  <FolderPlus size={24} className="text-gray-400" />
+                </div>
+                <p className="text-sm">No folders yet</p>
+              </div>
+            ) : (
+              <div className="rounded-xl border border-gray-200 overflow-hidden">
+                {folders.map((folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    folder={folder}
+                    deleteCallback={() => {
+                      const confirm = prompt(
+                        `Type "${folder.name}" to delete:`,
+                      );
+                      if (confirm === folder.name) {
+                        deleteFolderById(folder.id).then(updateFolders);
+                      }
+                    }}
+                    openCallback={() => {
+                      setFolderId(folder.id);
+                      router.push(`/folders/${folder.id}`);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        </ACard>
+        </div>
       </Center>
     );
-  else if (page === "in folder") {
-    return <InFolder username={username} folderId={folderId} />;
-  }
 }

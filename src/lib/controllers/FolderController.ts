@@ -21,6 +21,17 @@ export async function getFoldersByOwner(owner: string) {
   }
 }
 
+export async function getOwnerByFolderId(id: number) {
+  try {
+    const owner = await pool.query("SELECT owner FROM folders WHERE id = $1", [
+      id,
+    ]);
+    return owner.rows[0].owner;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export async function getFoldersWithTextPairsCountByOwner(owner: string) {
   try {
     const folders = await pool.query(
