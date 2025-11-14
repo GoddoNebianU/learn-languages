@@ -4,7 +4,7 @@ import { useState } from "react";
 import Main from "./Main";
 import Edit from "./Edit";
 import Start from "./Start";
-import { WordData, WordDataSchema } from "@/interfaces";
+import { WordData, WordDataSchema } from "@/lib/interfaces";
 
 const getLocalWordData = (): WordData => {
   const data = localStorage.getItem("wordData");

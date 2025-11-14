@@ -4,6 +4,7 @@ interface Props {
   type?: string;
   className?: string;
   name?: string;
+  defaultValue?: string;
 }
 
 export default function Input({
@@ -12,6 +13,7 @@ export default function Input({
   type = "text",
   className = "",
   name = "",
+  defaultValue = "",
 }: Props) {
   return (
     <input
@@ -20,6 +22,7 @@ export default function Input({
       type={type}
       className={`block focus:outline-none border-b-2 border-gray-600 ${className}`}
       name={name}
+      defaultValue={defaultValue}
     />
   );
 }

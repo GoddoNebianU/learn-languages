@@ -46,3 +46,4 @@ next-env.d.ts
 build.sh
 
 test.ts
+/generated/prisma

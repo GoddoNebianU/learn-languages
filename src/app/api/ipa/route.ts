@@ -1,4 +1,4 @@
-import { callZhipuAPI, handleAPIError } from "@/utils";
+import { callZhipuAPI, handleAPIError } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getIPA(text: string) {

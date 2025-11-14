@@ -1,17 +1,17 @@
-import PlainButton from "./PlainButton";
+import PlainButton, { ButtonType } from "../buttons/PlainButton";
 
 export default function LightButton({
   onClick,
   className,
   selected,
   children,
-  type = "button"
+  type = "button",
 }: {
   onClick?: () => void;
   className?: string;
   selected?: boolean;
   children?: React.ReactNode;
-  type?: string;
+  type?: ButtonType;
 }) {
   return (
     <PlainButton

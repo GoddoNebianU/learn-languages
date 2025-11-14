@@ -6,7 +6,7 @@ import {
   BOARD_HEIGHT,
   TEXT_SIZE,
 } from "@/config/word-board-config";
-import { Word } from "@/interfaces";
+import { Word } from "@/lib/interfaces";
 import { Dispatch, SetStateAction } from "react";
 
 export default function TheBoard({

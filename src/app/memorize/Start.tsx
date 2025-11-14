@@ -1,8 +1,8 @@
 import LightButton from "@/components/buttons/LightButton";
-import { WordData } from "@/interfaces";
+import { WordData } from "@/lib/interfaces";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSAudioUrl } from "@/utils";
+import { getTTSAudioUrl } from "@/lib/utils";
 import { VOICES } from "@/config/locales";
 
 import { useTranslations } from "next-intl";

@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model text_pair {
+  id         Int       @id(map: "text_pairs_pkey") @default(autoincrement())
+  locale1    String    @db.VarChar(10)
+  locale2    String    @db.VarChar(10)
+  text1      String
+  text2      String
+  folder_id  Int
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  folders    folder    @relation(fields: [folder_id], references: [id], onDelete: Cascade, map: "fk_text_pairs_folder")
+}
+
+model folder {
+  id         Int         @id(map: "folders_pkey") @default(autoincrement())
+  name       String
+  owner      String
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?   @default(now()) @db.Timestamptz(6)
+  text_pair  text_pair[]
+}

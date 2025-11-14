@@ -1,9 +1,12 @@
 "use client";
 
-import { getLocalStorageOperator } from "@/utils";
+import { getLocalStorageOperator } from "@/lib/utils";
 import { useState } from "react";
 import z from "zod";
-import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/interfaces";
+import {
+  TextSpeakerArraySchema,
+  TextSpeakerItemSchema,
+} from "@/lib/interfaces";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useTranslations } from "next-intl";
@@ -49,9 +52,11 @@ interface SaveListProps {
 }
 export default function SaveList({ show = false, handleUse }: SaveListProps) {
   const t = useTranslations("text-speaker");
-  const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
-    typeof TextSpeakerArraySchema
-  >("text-speaker", TextSpeakerArraySchema);
+  const { get: getFromLocalStorage, set: setIntoLocalStorage } =
+    getLocalStorageOperator<typeof TextSpeakerArraySchema>(
+      "text-speaker",
+      TextSpeakerArraySchema,
+    );
   const [data, setData] = useState(getFromLocalStorage());
   const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     const current_data = getFromLocalStorage();

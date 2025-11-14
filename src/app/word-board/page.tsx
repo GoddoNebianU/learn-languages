@@ -2,14 +2,14 @@
 import TheBoard from "@/app/word-board/TheBoard";
 import LightButton from "../../components/buttons/LightButton";
 import { KeyboardEvent, useRef, useState } from "react";
-import { Word } from "@/interfaces";
+import { Word } from "@/lib/interfaces";
 import {
   BOARD_WIDTH,
   TEXT_WIDTH,
   BOARD_HEIGHT,
   TEXT_SIZE,
 } from "@/config/word-board-config";
-import { inspect } from "@/utils";
+import { inspect } from "@/lib/utils";
 
 export default function WordBoardPage() {
   const inputRef = useRef<HTMLInputElement>(null);

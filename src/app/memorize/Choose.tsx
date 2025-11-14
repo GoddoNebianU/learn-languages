@@ -3,7 +3,7 @@ import ACard from "@/components/cards/ACard";
 import BCard from "@/components/cards/BCard";
 import { LOCALES } from "@/config/locales";
 import { Dispatch, SetStateAction, useState } from "react";
-import { WordData } from "@/interfaces";
+import { WordData } from "@/lib/interfaces";
 
 import { useTranslations } from "next-intl";
 

@@ -1,4 +1,4 @@
-import PlainButton from "./PlainButton";
+import PlainButton, { ButtonType } from "./PlainButton";
 
 export default function DarkButton({
   onClick,
@@ -11,7 +11,7 @@ export default function DarkButton({
   className?: string;
   selected?: boolean;
   children?: React.ReactNode;
-  type?: string;
+  type?: ButtonType;
 }) {
   return (
     <PlainButton

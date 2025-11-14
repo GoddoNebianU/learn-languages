@@ -1,7 +1,7 @@
 import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
-import { Letter, SupportedAlphabets } from "@/interfaces";
+import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
   Dispatch,
   KeyboardEvent,

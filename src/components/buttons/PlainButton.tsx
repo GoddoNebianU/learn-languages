@@ -1,3 +1,5 @@
+export type ButtonType =  "button" | "submit" | "reset" | undefined;
+
 export default function PlainButton({
   onClick,
   className,
@@ -7,7 +9,7 @@ export default function PlainButton({
   onClick?: () => void;
   className?: string;
   children?: React.ReactNode;
-  type?: "button" | "submit" | "reset" | undefined;
+    type?: ButtonType;
 }) {
   return (
     <button

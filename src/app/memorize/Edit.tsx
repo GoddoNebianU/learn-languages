@@ -3,7 +3,7 @@ import ACard from "@/components/cards/ACard";
 import BCard from "@/components/cards/BCard";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import DarkButton from "@/components/buttons/DarkButton";
-import { WordData } from "@/interfaces";
+import { WordData } from "@/lib/interfaces";
 import Choose from "./Choose";
 
 import { useTranslations } from "next-intl";

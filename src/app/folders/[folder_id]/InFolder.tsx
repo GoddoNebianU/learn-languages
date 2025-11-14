@@ -1,36 +1,22 @@
 "use client";
 
-import { ArrowLeft, Plus, Volume2, Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit, Plus, Trash2, X } from "lucide-react";
 import { Center } from "@/components/Center";
-import { createTextPair, getTextPairsByFolderId } from "@/lib/controllers/TextPairController";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Container from "@/components/cards/Container";
+import {
+  createTextPair,
+  deleteTextPairById,
+  getTextPairsByFolderId,
+  updateTextPairById,
+} from "@/lib/services/textPairService";
+import AddTextPairModal from "./AddTextPairModal";
+import TextPairCard from "./TextPairCard";
+import UpdateTextPairModal from "./UpdateTextPairModal";
+import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 
-interface AddTextPairModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAdd: (textPair: TextPair) => void;
-}
-
-const AddTextPairModal = ({
-  isOpen,
-  onClose,
-  onAdd,
-}: AddTextPairModalProps) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-        <h2 className="text-xl font-light mb-4">Add New Vocabulary</h2>
-        {/* 表单内容 */}
-      </div>
-    </div>
-  );
-};
-
-interface TextPair {
+export interface TextPair {
   id: number;
   text1: string;
   text2: string;
@@ -38,58 +24,10 @@ interface TextPair {
   locale2: string;
 }
 
-interface TextPairCardProps {
-  textPair: TextPair;
-}
-
-const TextPairCard = ({ textPair }: TextPairCardProps) => {
-  return (
-    <div className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.locale1.toUpperCase()}
-            </span>
-            <span>→</span>
-            <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.locale2.toUpperCase()}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1 opacity-0 hover:opacity-100 transition-opacity">
-            <button className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-md transition-colors">
-              <Volume2 size={14} />
-            </button>
-            <button className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors">
-              <Edit size={14} />
-            </button>
-            <button className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
-              <Trash2 size={14} />
-            </button>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <div>
-            <div className="text-sm text-gray-500 mb-1">{textPair.locale1}</div>
-            <div className="text-gray-900">{textPair.text1}</div>
-          </div>
-
-          <div>
-            <div className="text-sm text-gray-500 mb-1">{textPair.locale2}</div>
-            <div className="text-gray-900">{textPair.text2}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function InFolder({ folderId }: { folderId: number }) {
   const [textPairs, setTextPairs] = useState<TextPair[]>([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [openAddModal, setAddModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -104,9 +42,20 @@ export default function InFolder({ folderId }: { folderId: number }) {
         setLoading(false);
       }
     };
-
     fetchTextPairs();
   }, [folderId]);
+
+  const refreshTextPairs = async () => {
+    setLoading(true);
+    try {
+      const data = await getTextPairsByFolderId(folderId);
+      setTextPairs(data as TextPair[]);
+    } catch (error) {
+      console.error("Failed to fetch text pairs:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Center>
@@ -122,7 +71,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-light text-gray-900">Vocabulary</h1>
+              <h1 className="text-2xl font-light text-gray-900">Text Pairs</h1>
               <p className="text-sm text-gray-500 mt-1">
                 {textPairs.length} items
               </p>
@@ -131,42 +80,64 @@ export default function InFolder({ folderId }: { folderId: number }) {
             <button
               className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               onClick={() => {
-                setOpen(true);
+                setAddModal(true);
               }}
             >
-              <Plus size={18} className="text-gray-600" />
+              <Plus size={18} className="text-gray-600 hover:cursor-pointer" />
             </button>
           </div>
         </div>
 
-        <div className="rounded-xl border border-gray-200 overflow-hidden">
+        <div className="max-h-96 overflow-y-auto rounded-xl border border-gray-200 overflow-hidden">
           {loading ? (
             <div className="p-8 text-center">
               <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-gray-500">Loading vocabulary...</p>
+              <p className="text-sm text-gray-500">Loading text pairs...</p>
             </div>
           ) : textPairs.length === 0 ? (
             <div className="p-12 text-center">
-              <p className="text-sm text-gray-500 mb-2">No vocabulary items</p>
+              <p className="text-sm text-gray-500 mb-2">No text pair items</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {textPairs.map((textPair) => (
-                <TextPairCard key={textPair.id} textPair={textPair} />
+                <TextPairCard
+                  key={textPair.id}
+                  textPair={textPair}
+                  onDel={() => {
+                    deleteTextPairById(textPair.id);
+                    refreshTextPairs();
+                  }}
+                  refreshTextPairs={refreshTextPairs}
+                />
               ))}
             </div>
           )}
         </div>
       </Container>
       <AddTextPairModal
-        isOpen={open}
-        onClose={function (): void {
-          throw new Error("Function not implemented.");
+        isOpen={openAddModal}
+        onClose={() => setAddModal(false)}
+        onAdd={async (
+          text1: string,
+          text2: string,
+          locale1: string,
+          locale2: string,
+        ) => {
+          await createTextPair({
+            text1: text1,
+            text2: text2,
+            locale1: locale1,
+            locale2: locale2,
+            folders: {
+              connect: {
+                id: folderId,
+              },
+            },
+          });
+          refreshTextPairs();
         }}
-        onAdd={function (textPair: TextPair): void {
-          throw new Error("Function not implemented.");
-        }}
-      ></AddTextPairModal>
+      />
     </Center>
   );
 }

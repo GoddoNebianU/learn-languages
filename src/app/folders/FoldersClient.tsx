@@ -1,24 +1,18 @@
 "use client";
 
 import { ChevronRight, Folder, FolderPlus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Center } from "@/components/Center";
+import { useRouter } from "next/navigation";
+import { folder } from "../../../generated/prisma/browser";
 import {
   createFolder,
   deleteFolderById,
-  getFoldersWithTextPairsCountByOwner,
-} from "@/lib/controllers/FolderController";
-import { useEffect, useState } from "react";
-import InFolder from "./[folder_id]/InFolder";
-import { Center } from "@/components/Center";
-import { useRouter } from "next/navigation";
-
-interface Folder {
-  id: number;
-  name: string;
-  text_pairs_count: number;
-}
+  getFoldersByOwner,
+} from "@/lib/services/folderService";
 
 interface FolderProps {
-  folder: Folder;
+  folder: folder;
   deleteCallback: () => void;
   openCallback: () => void;
 }
@@ -36,9 +30,7 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
 
         <div className="flex-1">
           <h3 className="font-medium text-gray-900">{folder.name}</h3>
-          <p className="text-sm text-gray-500">
-            {folder.text_pairs_count} items
-          </p>
+          {/*<p className="text-sm text-gray-500">{} items</p>*/}
         </div>
 
         <div className="text-xs text-gray-400">#{folder.id}</div>
@@ -61,88 +53,84 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
 };
 
 export default function FoldersClient({ username }: { username: string }) {
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [folderId, setFolderId] = useState<number>(0);
+  const [folders, setFolders] = useState<folder[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    getFoldersWithTextPairsCountByOwner(username).then((folders) => {
-      setFolders(folders as Folder[]);
+    getFoldersByOwner(username).then((folders) => {
+      setFolders(folders);
     });
   }, [username]);
 
   const updateFolders = async () => {
     setLoading(true);
     try {
-      const updatedFolders =
-        await getFoldersWithTextPairsCountByOwner(username);
-      setFolders(updatedFolders as Folder[]);
+      const updatedFolders = await getFoldersByOwner(username);
+      setFolders(updatedFolders);
     } finally {
       setLoading(false);
     }
   };
-    return (
-      <Center>
-        <div className="w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
-          <div className="mb-6">
-            <h1 className="text-2xl font-light text-gray-900">Folders</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage your collections
-            </p>
-          </div>
-
-          <button
-            onClick={async () => {
-              const folderName = prompt("Enter folder name:");
-              if (!folderName) return;
-              setLoading(true);
-              try {
-                await createFolder(folderName, username);
-                await updateFolders();
-              } finally {
-                setLoading(false);
-              }
-            }}
-            disabled={loading}
-            className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
-          >
-            <FolderPlus size={18} />
-            <span>{loading ? "Creating..." : "New Folder"}</span>
-          </button>
-
-          <div className="mt-4">
-            {folders.length === 0 ? (
-              <div className="text-center py-12 text-gray-400">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <FolderPlus size={24} className="text-gray-400" />
-                </div>
-                <p className="text-sm">No folders yet</p>
-              </div>
-            ) : (
-              <div className="rounded-xl border border-gray-200 overflow-hidden">
-                {folders.map((folder) => (
-                  <FolderCard
-                    key={folder.id}
-                    folder={folder}
-                    deleteCallback={() => {
-                      const confirm = prompt(
-                        `Type "${folder.name}" to delete:`,
-                      );
-                      if (confirm === folder.name) {
-                        deleteFolderById(folder.id).then(updateFolders);
-                      }
-                    }}
-                    openCallback={() => {
-                      setFolderId(folder.id);
-                      router.push(`/folders/${folder.id}`);
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+  return (
+    <Center>
+      <div className="w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-light text-gray-900">Folders</h1>
+          <p className="text-sm text-gray-500 mt-1">Manage your collections</p>
         </div>
-      </Center>
-    );
+
+        <button
+          onClick={async () => {
+            const folderName = prompt("Enter folder name:");
+            if (!folderName) return;
+            setLoading(true);
+            try {
+              await createFolder({
+                name: folderName,
+                owner: username,
+              });
+              await updateFolders();
+            } finally {
+              setLoading(false);
+            }
+          }}
+          disabled={loading}
+          className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
+        >
+          <FolderPlus size={18} />
+          <span>{loading ? "Creating..." : "New Folder"}</span>
+        </button>
+
+        <div className="mt-4 max-h-96 overflow-y-auto">
+          {folders.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gray-100 flex items-center justify-center">
+                <FolderPlus size={24} className="text-gray-400" />
+              </div>
+              <p className="text-sm">No folders yet</p>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-gray-200 overflow-hidden">
+              {folders.map((folder) => (
+                <FolderCard
+                  key={folder.id}
+                  folder={folder}
+                  deleteCallback={() => {
+                    const confirm = prompt(`Type "${folder.name}" to delete:`);
+                    if (confirm === folder.name) {
+                      deleteFolderById(folder.id).then(updateFolders);
+                    }
+                  }}
+                  openCallback={() => {
+                    router.push(`/folders/${folder.id}`);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </Center>
+  );
 }

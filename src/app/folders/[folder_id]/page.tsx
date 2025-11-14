@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import InFolder from "./InFolder";
-import { getOwnerByFolderId } from "@/lib/controllers/FolderController";
+import { getOwnerByFolderId } from "@/lib/services/folderService";
 export default async function FoldersPage({
   params,
 }: {
@@ -9,9 +9,13 @@ export default async function FoldersPage({
 }) {
   const session = await getServerSession();
   const { folder_id } = await params;
+  const id = Number(folder_id);
+  if (!id) {
+    redirect("/folders");
+  }
   if (!session?.user?.name) redirect(`/login`);
-  if ((await getOwnerByFolderId(folder_id)) !== session.user.name) {
+  if ((await getOwnerByFolderId(id)) !== session.user.name) {
     return "you are not the owner of this folder";
   }
-  return <InFolder folderId={folder_id} />;
+  return <InFolder folderId={id} />;
 }

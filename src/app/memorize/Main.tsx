@@ -1,7 +1,7 @@
 import LightButton from "@/components/buttons/LightButton";
 import ACard from "@/components/cards/ACard";
 import BCard from "@/components/cards/BCard";
-import { WordData, WordDataSchema } from "@/interfaces";
+import { WordData, WordDataSchema } from "@/lib/interfaces";
 import { Dispatch, SetStateAction } from "react";
 import useFileUpload from "@/hooks/useFileUpload";
 import { useTranslations } from "next-intl";

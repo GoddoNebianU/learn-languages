@@ -1,4 +1,4 @@
-import { callZhipuAPI } from "@/utils";
+import { callZhipuAPI } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getLocale(text: string) {

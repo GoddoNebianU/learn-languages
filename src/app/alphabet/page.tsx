@@ -1,7 +1,7 @@
 "use client";
 
 import LightButton from "@/components/buttons/LightButton";
-import { Letter, SupportedAlphabets } from "@/interfaces";
+import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { useEffect, useState } from "react";
 import MemoryCard from "./MemoryCard";
 
