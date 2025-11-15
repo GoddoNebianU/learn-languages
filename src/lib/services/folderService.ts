@@ -1,6 +1,10 @@
 "use server";
 
-import { folderCreateInput, folderUpdateInput } from "../../../generated/prisma/models";
+import { folder } from "../../../generated/prisma/client";
+import {
+  folderCreateInput,
+  folderUpdateInput,
+} from "../../../generated/prisma/models";
 import prisma from "../db";
 
 export async function getFoldersByOwner(owner: string) {
@@ -10,6 +14,26 @@ export async function getFoldersByOwner(owner: string) {
     },
   });
   return folders;
+}
+
+export async function getFoldersWithTotalPairsByOwner(owner: string) {
+  const folders = await prisma.folder.findMany({
+    where: {
+      owner: owner
+    },
+    include: {
+      text_pair: {
+        select: {
+          id: true
+        }
+      }
+    }
+  });
+
+  return folders.map(folder => ({
+    ...folder,
+    total_pairs: folder.text_pair.length
+  }));
 }
 
 export async function createFolder(folder: folderCreateInput) {

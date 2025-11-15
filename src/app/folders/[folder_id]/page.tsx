@@ -13,7 +13,7 @@ export default async function FoldersPage({
   if (!id) {
     redirect("/folders");
   }
-  if (!session?.user?.name) redirect(`/login`);
+  if (!session?.user?.name) redirect(`/login?redirect=/folders/${id}`);
   if ((await getOwnerByFolderId(id)) !== session.user.name) {
     return "you are not the owner of this folder";
   }

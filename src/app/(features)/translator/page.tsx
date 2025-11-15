@@ -1,6 +1,7 @@
 "use client";
 
 import LightButton from "@/components/buttons/LightButton";
+import Container from "@/components/cards/Container";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { VOICES } from "@/config/locales";
@@ -15,7 +16,7 @@ import z from "zod";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
-  
+
   const taref = useRef<HTMLTextAreaElement>(null);
   const [lang, setLang] = useState<string>("chinese");
   const [tresult, setTresult] = useState<string>("");
@@ -23,6 +24,9 @@ export default function TranslatorPage() {
   const [ipaTexts, setIpaTexts] = useState(["", ""]);
   const [processing, setProcessing] = useState(false);
   const { load, play } = useAudioPlayer();
+  const [history, setHistory] = useState<
+    z.infer<typeof TranslationHistorySchema>[]
+  >(tlso.get());
 
   const lastTTS = useRef({
     text: "",
@@ -64,6 +68,7 @@ export default function TranslatorPage() {
     const checkUpdateLocalStorage = (item: typeof newItem) => {
       if (item.text1 && item.text2 && item.locale1 && item.locale2) {
         tlsoPush(item as z.infer<typeof TranslationHistorySchema>);
+        setHistory(tlso.get());
       }
     };
     const innerStates = {
@@ -250,6 +255,18 @@ export default function TranslatorPage() {
           {t("translate")}
         </button>
       </div>
+      {history.length > 0 && (
+        <Container className="m-6 flex flex-col p-6">
+          <h1 className="text-2xl font-light">History</h1>
+          <ul className="list-disc list-inside">
+            {history.map((item, index) => (
+              <li key={index}>
+                <span className="font-bold">{item.text1}</span> - {item.text2}
+              </li>
+            ))}
+          </ul>
+        </Container>
+      )}
     </>
   );
 }

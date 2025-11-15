@@ -8,20 +8,8 @@ import IMAGES from "@/config/images";
 import { useState } from "react";
 import LightButton from "./buttons/LightButton";
 import { useSession } from "next-auth/react";
+import { Folder, Home } from "lucide-react";
 
-function MyLink({
-  href,
-  children,
-}: {
-  href: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <Link className="font-bold" href={href}>
-      {children}
-    </Link>
-  );
-}
 export function Navbar() {
   const t = useTranslations("navbar");
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -35,20 +23,24 @@ export function Navbar() {
   const session = useSession();
   return (
     <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
-      <div className="flex gap-4 text-xl justify-center items-center">
-        <Link href={"/"} className="text-xl flex border-b">
+      <Link href={"/"} className="text-xl border-b hidden md:block">
+        {t("title")}
+      </Link>
+      <Link className="block md:hidden" href={"/"}>
+        <Home />
+      </Link>
+      <div className="flex gap-4 text-xl justify-center items-center flex-wrap">
+        <Link
+          className="md:hidden block"
+          href="https://github.com/GoddoNebianU/learn-languages"
+        >
           <Image
-            src={"/favicon.ico"}
-            alt="logo"
-            width="32"
-            height="32"
-            className="rounded-4xl"
-          ></Image>
-          <span className="font-bold text-pink-200">{t("title")}</span>
+            src={IMAGES.github_mark_white}
+            alt="GitHub"
+            width={24}
+            height={24}
+          />
         </Link>
-        <MyLink href="/folders">{t("folders")}</MyLink>
-      </div>
-      <div className="flex gap-4 text-xl justify-center items-center">
         <div className="relative">
           {showLanguageMenu && (
             <div>
@@ -75,17 +67,26 @@ export function Navbar() {
             onClick={handleLanguageClick}
           ></IconClick>
         </div>
+        <Link href="/folders" className="md:block hidden">
+          {t("folders")}
+        </Link>
+        <Link href="/folders" className="md:hidden block">
+          <Folder />
+        </Link>
         {session?.status === "authenticated" ? (
           <div className="flex gap-2">
-            <MyLink href="/profile">{t("profile")}</MyLink>
+            <Link href="/profile">{t("profile")}</Link>
           </div>
         ) : (
-          <MyLink href="/login">{t("login")}</MyLink>
+          <Link href="/login">{t("login")}</Link>
         )}
-        <MyLink href="/changelog.txt">{t("about")}</MyLink>
-        <MyLink href="https://github.com/GoddoNebianU/learn-languages">
+        <Link href="/changelog.txt">{t("about")}</Link>
+        <Link
+          className="hidden md:block"
+          href="https://github.com/GoddoNebianU/learn-languages"
+        >
           {t("sourceCode")}
-        </MyLink>
+        </Link>
       </div>
     </div>
   );

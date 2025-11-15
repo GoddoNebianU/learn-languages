@@ -1,6 +1,6 @@
 "use client";
-import TheBoard from "@/app/word-board/TheBoard";
-import LightButton from "../../components/buttons/LightButton";
+import TheBoard from "@/app/(features)/word-board/TheBoard";
+import LightButton from "../../../components/buttons/LightButton";
 import { KeyboardEvent, useRef, useState } from "react";
 import { Word } from "@/lib/interfaces";
 import {

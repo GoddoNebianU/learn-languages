@@ -124,3 +124,7 @@ export const letsFetch = (
     })
     .finally(onFinally);
 };
+
+export function isNonNegativeInteger(str: string): boolean {
+  return /^\d+$/.test(str);
+}

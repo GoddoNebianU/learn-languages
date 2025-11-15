@@ -1,6 +1,11 @@
 "use client";
 
-import { ChevronRight, Folder, FolderPlus, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  Folder,
+  FolderPlus,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Center } from "@/components/Center";
 import { useRouter } from "next/navigation";

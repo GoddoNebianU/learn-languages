@@ -3,7 +3,7 @@
 import { ArrowLeft, Edit, Plus, Trash2, X } from "lucide-react";
 import { Center } from "@/components/Center";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Container from "@/components/cards/Container";
 import {
   createTextPair,
@@ -15,6 +15,7 @@ import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import UpdateTextPairModal from "./UpdateTextPairModal";
 import { text_pairUpdateInput } from "../../../../generated/prisma/models";
+import LightButton from "@/components/buttons/LightButton";
 
 export interface TextPair {
   id: number;
@@ -77,14 +78,26 @@ export default function InFolder({ folderId }: { folderId: number }) {
               </p>
             </div>
 
-            <button
-              className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              onClick={() => {
-                setAddModal(true);
-              }}
-            >
-              <Plus size={18} className="text-gray-600 hover:cursor-pointer" />
-            </button>
+            <div className="flex items-center gap-2">
+              <LightButton
+                onClick={() => {
+                  redirect(`/memorize?folder_id=${folderId}`);
+                }}
+              >
+                Memorize
+              </LightButton>
+              <button
+                className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  setAddModal(true);
+                }}
+              >
+                <Plus
+                  size={18}
+                  className="text-gray-600 hover:cursor-pointer"
+                />
+              </button>
+            </div>
           </div>
         </div>
 
