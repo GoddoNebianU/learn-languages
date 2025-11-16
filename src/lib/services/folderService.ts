@@ -1,6 +1,5 @@
 "use server";
 
-import { folder } from "../../../generated/prisma/client";
 import {
   folderCreateInput,
   folderUpdateInput,

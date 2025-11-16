@@ -4,6 +4,7 @@ import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import SessionWrapper from "@/lib/SessionWrapper";
 import { Navbar } from "@/components/Navbar";
+import { Toaster } from "sonner";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -27,6 +28,7 @@ export default async function RootLayout({
           <NextIntlClientProvider>
             <Navbar></Navbar>
             {children}
+            <Toaster />
           </NextIntlClientProvider>
         </body>
       </html>

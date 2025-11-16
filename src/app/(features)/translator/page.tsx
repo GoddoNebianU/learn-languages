@@ -1,7 +1,6 @@
 "use client";
 
 import LightButton from "@/components/buttons/LightButton";
-import Container from "@/components/cards/Container";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { VOICES } from "@/config/locales";
@@ -9,10 +8,12 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { tlsoPush, tlso } from "@/lib/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/tts";
-import { letsFetch } from "@/lib/utils";
+import { letsFetch, shallowEqual } from "@/lib/utils";
+import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import z from "zod";
+import AddToFolder from "./AddToFolder";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -27,6 +28,10 @@ export default function TranslatorPage() {
   const [history, setHistory] = useState<
     z.infer<typeof TranslationHistorySchema>[]
   >(tlso.get());
+  const [showAddToFolder, setShowAddToFolder] = useState(false);
+  const [addToFolderItem, setAddToFolderItem] = useState<z.infer<
+    typeof TranslationHistorySchema
+  > | null>(null);
 
   const lastTTS = useRef({
     text: "",
@@ -67,8 +72,7 @@ export default function TranslatorPage() {
 
     const checkUpdateLocalStorage = (item: typeof newItem) => {
       if (item.text1 && item.text2 && item.locale1 && item.locale2) {
-        tlsoPush(item as z.infer<typeof TranslationHistorySchema>);
-        setHistory(tlso.get());
+        setHistory(tlsoPush(item as z.infer<typeof TranslationHistorySchema>));
       }
     };
     const innerStates = {
@@ -187,11 +191,11 @@ export default function TranslatorPage() {
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
           {/* ICard2 Component */}
           <div className="bg-gray-100 rounded-2xl w-full h-64 p-2">
-            <div className="h-8/12 w-full">{tresult}</div>
-            <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
+            <div className="h-2/3 w-full overflow-y-auto">{tresult}</div>
+            <div className="ipa w-full h-1/6 overflow-y-auto text-gray-600">
               {ipaTexts[1]}
             </div>
-            <div className="h-2/12 w-full flex justify-end items-center">
+            <div className="h-1/6 w-full flex justify-end items-center">
               <IconClick
                 src={IMAGES.copy_all}
                 alt="copy"
@@ -256,16 +260,47 @@ export default function TranslatorPage() {
         </button>
       </div>
       {history.length > 0 && (
-        <Container className="m-6 flex flex-col p-6">
+        <div className="m-6 flex flex-col items-center">
           <h1 className="text-2xl font-light">History</h1>
-          <ul className="list-disc list-inside">
+          <div className="border border-gray-200 rounded-2xl m-4">
             {history.map((item, index) => (
-              <li key={index}>
-                <span className="font-bold">{item.text1}</span> - {item.text2}
-              </li>
+              <div key={index}>
+                <div className="border-b border-gray-200 p-2 group hover:bg-gray-50 flex gap-2 flex-row justify-between items-start">
+                  <div className="flex-1 flex flex-col">
+                    <p className="text-sm font-light">{item.text1}</p>
+                    <p className="text-sm font-light">{item.text2}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setShowAddToFolder(true);
+                        setAddToFolderItem(item);
+                      }}
+                      className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
+                    >
+                      <Plus />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setHistory(
+                          tlso.set(
+                            tlso.get().filter((v) => !shallowEqual(v, item)),
+                          ) || [],
+                        );
+                      }}
+                      className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
+                    >
+                      <Trash />
+                    </button>
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
-        </Container>
+          </div>
+          {showAddToFolder && (
+            <AddToFolder setShow={setShowAddToFolder} item={addToFolderItem!} />
+          )}
+        </div>
       )}
     </>
   );

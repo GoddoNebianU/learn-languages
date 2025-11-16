@@ -3,10 +3,9 @@
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import DarkButton from "@/components/buttons/DarkButton";
 import { useEffect } from "react";
-import ACard from "@/components/cards/ACard";
 import { Center } from "@/components/Center";
+import Container from "@/components/cards/Container";
 import LightButton from "@/components/buttons/LightButton";
 
 export default function MePage() {
@@ -22,7 +21,7 @@ export default function MePage() {
 
   return (
     <Center>
-      <ACard>
+      <Container className="p-6">
         <h1>My Profile</h1>
         {(session.data?.user?.image as string) && (
           <Image
@@ -35,9 +34,8 @@ export default function MePage() {
         )}
         <p>{session.data?.user?.name}</p>
         <p>Email: {session.data?.user?.email}</p>
-        <DarkButton onClick={signOut}>Logout</DarkButton>
-        
-      </ACard>
+        <LightButton onClick={signOut}>Logout</LightButton>
+      </Container>
     </Center>
   );
 }

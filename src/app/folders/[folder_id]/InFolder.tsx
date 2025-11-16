@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Edit, Plus, Trash2, X } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Center } from "@/components/Center";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
@@ -9,12 +9,9 @@ import {
   createTextPair,
   deleteTextPairById,
   getTextPairsByFolderId,
-  updateTextPairById,
 } from "@/lib/services/textPairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
-import UpdateTextPairModal from "./UpdateTextPairModal";
-import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 import LightButton from "@/components/buttons/LightButton";
 
 export interface TextPair {

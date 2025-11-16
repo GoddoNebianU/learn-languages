@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  Folder,
-  FolderPlus,
-  Trash2,
-} from "lucide-react";
+import { ChevronRight, Folder, FolderPlus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Center } from "@/components/Center";
 import { useRouter } from "next/navigation";
@@ -13,11 +8,11 @@ import { folder } from "../../../generated/prisma/browser";
 import {
   createFolder,
   deleteFolderById,
-  getFoldersByOwner,
+  getFoldersWithTotalPairsByOwner,
 } from "@/lib/services/folderService";
 
 interface FolderProps {
-  folder: folder;
+  folder: folder & { total_pairs: number };
   deleteCallback: () => void;
   openCallback: () => void;
 }
@@ -34,14 +29,16 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
         </div>
 
         <div className="flex-1">
-          <h3 className="font-medium text-gray-900">{folder.name}</h3>
+          <h3 className="font-medium text-gray-900">
+            {folder.id}. {folder.name} ({folder.total_pairs})
+          </h3>
           {/*<p className="text-sm text-gray-500">{} items</p>*/}
         </div>
 
         <div className="text-xs text-gray-400">#{folder.id}</div>
       </div>
 
-      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -58,12 +55,14 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
 };
 
 export default function FoldersClient({ username }: { username: string }) {
-  const [folders, setFolders] = useState<folder[]>([]);
+  const [folders, setFolders] = useState<(folder & { total_pairs: number })[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    getFoldersByOwner(username).then((folders) => {
+    getFoldersWithTotalPairsByOwner(username).then((folders) => {
       setFolders(folders);
     });
   }, [username]);
@@ -71,7 +70,7 @@ export default function FoldersClient({ username }: { username: string }) {
   const updateFolders = async () => {
     setLoading(true);
     try {
-      const updatedFolders = await getFoldersByOwner(username);
+      const updatedFolders = await getFoldersWithTotalPairsByOwner(username);
       setFolders(updatedFolders);
     } finally {
       setLoading(false);

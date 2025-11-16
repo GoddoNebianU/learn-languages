@@ -2,7 +2,7 @@ import { format } from "util";
 
 async function callZhipuAPI(
   messages: { role: string; content: string }[],
-  model = "glm-4.6",
+  model = process.env.ZHIPU_MODEL_NAME,
 ) {
   const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
@@ -54,10 +54,7 @@ export async function simpleGetLLMAnswer(
   return Response.json({
     status: "success",
     message: await getLLMAnswer(
-      format(
-        prompt,
-        ...args.map((v) => searchParams.get(v)),
-      ),
+      format(prompt, ...args.map((v) => searchParams.get(v))),
     ),
   });
 }

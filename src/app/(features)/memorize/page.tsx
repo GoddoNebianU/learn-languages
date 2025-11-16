@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import {
-  getFoldersByOwner,
   getFoldersWithTotalPairsByOwner,
   getOwnerByFolderId,
 } from "@/lib/services/folderService";

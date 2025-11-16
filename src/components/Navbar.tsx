@@ -8,7 +8,7 @@ import IMAGES from "@/config/images";
 import { useState } from "react";
 import LightButton from "./buttons/LightButton";
 import { useSession } from "next-auth/react";
-import { Folder, Home } from "lucide-react";
+import { Folder, Home, LoaderCircle } from "lucide-react";
 
 export function Navbar() {
   const t = useTranslations("navbar");
@@ -73,13 +73,15 @@ export function Navbar() {
         <Link href="/folders" className="md:hidden block">
           <Folder />
         </Link>
-        {session?.status === "authenticated" ? (
+        {session?.status === "authenticated" && (
           <div className="flex gap-2">
             <Link href="/profile">{t("profile")}</Link>
           </div>
-        ) : (
+        )}
+        {session?.status === "unauthenticated" && (
           <Link href="/login">{t("login")}</Link>
         )}
+        {session?.status === "loading" && <LoaderCircle />}
         <Link href="/changelog.txt">{t("about")}</Link>
         <Link
           className="hidden md:block"

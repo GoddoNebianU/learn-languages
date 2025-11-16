@@ -36,7 +36,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
                   <Folder />
                   <div className="flex-1 flex gap-2">
                     <span className="group-hover:text-blue-500">
-                      {folder.name}
+                      {folder.id}. {folder.name}
                     </span>
                     <span>({folder.total_pairs})</span>
                   </div>
