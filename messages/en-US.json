@@ -1,0 +1,181 @@
+{
+  "alphabet": {
+    "chooseCharacters": "Please select the characters you want to learn",
+    "japanese": "Japanese Kana",
+    "english": "English Alphabet",
+    "uyghur": "Uyghur Alphabet",
+    "esperanto": "Esperanto Alphabet",
+    "loading": "Loading...",
+    "loadFailed": "Loading failed, please try again",
+    "hideLetter": "Hide Letter",
+    "showLetter": "Show Letter",
+    "hideIPA": "Hide IPA",
+    "showIPA": "Show IPA"
+  },
+  "folders": {
+    "title": "Folders",
+    "subtitle": "Manage your collections",
+    "newFolder": "New Folder",
+    "creating": "Creating...",
+    "noFoldersYet": "No folders yet",
+    "folderInfo": "{id}. {name} ({totalPairs})",
+    "enterFolderName": "Enter folder name:",
+    "confirmDelete": "Type \"{name}\" to delete:",
+    "createFolderSuccess": "Folder created successfully",
+    "deleteFolderSuccess": "Folder deleted successfully",
+    "createFolderError": "Failed to create folder",
+    "deleteFolderError": "Failed to delete folder"
+  },
+  "folder_id": {
+    "unauthorized": "You are not the owner of this folder",
+    "back": "Back",
+    "textPairs": "Text Pairs",
+    "itemsCount": "{count} items",
+    "memorize": "Memorize",
+    "loadingTextPairs": "Loading text pairs...",
+    "noTextPairs": "No text pairs in this folder",
+    "addNewTextPair": "Add New Text Pair",
+    "add": "Add",
+    "updateTextPair": "Update Text Pair",
+    "update": "Update",
+    "text1": "Text 1",
+    "text2": "Text 2",
+    "locale1": "Locale 1",
+    "locale2": "Locale 2",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "home": {
+    "title": "Learn Languages",
+    "description": "Here is a very useful website to help you learn almost every language in the world, including constructed ones.",
+    "explore": "Explore",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— Steve Jobs"
+    },
+    "translator": {
+      "name": "Translator",
+      "description": "Translate to any language and annotate with International Phonetic Alphabet (IPA)"
+    },
+    "textSpeaker": {
+      "name": "Text Speaker",
+      "description": "Recognize and read text aloud, supports loop playback and speed adjustment"
+    },
+    "srtPlayer": {
+      "name": "SRT Video Player",
+      "description": "Play videos sentence by sentence based on SRT subtitle files to mimic native speaker pronunciation"
+    },
+    "alphabet": {
+      "name": "Memorize Alphabet",
+      "description": "Start learning a new language from the alphabet"
+    },
+    "memorize": {
+      "name": "Memorize Words",
+      "description": "Language A to Language B, Language B to Language A, supports dictation"
+    },
+    "moreFeatures": {
+      "name": "More Features",
+      "description": "Under development, stay tuned"
+    }
+  },
+  "login": {
+    "loading": "Loading...",
+    "githubLogin": "GitHub Login"
+  },
+  "memorize": {
+    "choose": {
+      "back": "Back",
+      "choose": "Choose"
+    },
+    "edit": {
+      "back": "Back",
+      "save": "Save Word Pairs",
+      "locale1": "Locale 1",
+      "locale2": "Locale 2"
+    },
+    "folder_selector": {
+      "selectFolder": "Select a folder",
+      "noFolders": "No folders found",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "main": {
+      "title": "Memorize",
+      "locale1": "Your selected locale 1 is {locale}",
+      "locale2": "Your selected locale 2 is {locale}",
+      "total": "There are {total} word pairs in total",
+      "start": "Start",
+      "import": "Import",
+      "export": "Export",
+      "edit": "Edit"
+    },
+    "memorize": {
+      "showAnswer": "Show Answer",
+      "next": "Next",
+      "reverse": "Reverse",
+      "dictation": "Dictation",
+      "noTextPairs": "No text pairs available",
+      "progress": "{current}/{total}"
+    },
+    "page": {
+      "unauthorized": "You are not authorized to access this folder"
+    },
+    "start": {
+      "show": "Show",
+      "reverse": "Reverse",
+      "dictation": "Dictation",
+      "back": "Back",
+      "next": "Next"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "about": "About",
+    "sourceCode": "GitHub",
+    "login": "Login",
+    "profile": "Profile",
+    "folders": "Folders"
+  },
+  "profile": {
+    "myProfile": "My Profile",
+    "email": "Email: {email}",
+    "logout": "Logout"
+  },
+  "srt_player": {
+    "uploadVideo": "Upload Video",
+    "uploadSubtitle": "Upload Subtitle",
+    "pause": "Pause",
+    "play": "Play",
+    "previous": "Previous",
+    "next": "Next",
+    "restart": "Restart",
+    "autoPause": "Auto Pause ({enabled})"
+  },
+  "text_speaker": {
+    "generateIPA": "Generate IPA",
+    "viewSavedItems": "View Saved Items",
+    "confirmDeleteAll": "Are you sure you want to delete everything? (Y/N)"
+  },
+  "translator": {
+    "detectLanguage": "detect language",
+    "generateIPA": "generate ipa",
+    "translateInto": "translate into",
+    "chinese": "Chinese",
+    "english": "English",
+    "italian": "Italian",
+    "other": "Other",
+    "translating": "translating...",
+    "translate": "translate",
+    "inputLanguage": "Input a language.",
+    "history": "History",
+    "enterLanguage": "Enter language",
+    "add_to_folder": {
+      "notAuthenticated": "You are not authenticated",
+      "chooseFolder": "Choose a Folder to Add to",
+      "noFolders": "No folders found",
+      "folderInfo": "{id}. {name}",
+      "close": "Close",
+      "success": "Text pair added to folder",
+      "error": "Failed to add text pair to folder"
+    }
+  }
+}

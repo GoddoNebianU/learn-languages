@@ -4,7 +4,10 @@ import LightButton from "@/components/buttons/LightButton";
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/lib/interfaces";
+import {
+  TextSpeakerArraySchema,
+  TextSpeakerItemSchema,
+} from "@/lib/interfaces";
 import { getLocalStorageOperator, getTTSAudioUrl } from "@/lib/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
@@ -14,7 +17,7 @@ import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 
 export default function TextSpeakerPage() {
-  const t = useTranslations("text-speaker");
+  const t = useTranslations("text_speaker");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showSpeedAdjust, setShowSpeedAdjust] = useState(false);
   const [showSaveList, setShowSaveList] = useState(false);
@@ -30,9 +33,11 @@ export default function TextSpeakerPage() {
   const [processing, setProcessing] = useState(false);
   const { play, stop, load, audioRef } = useAudioPlayer();
 
-  const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
-    typeof TextSpeakerArraySchema
-  >("text-speaker", TextSpeakerArraySchema);
+  const { get: getFromLocalStorage, set: setIntoLocalStorage } =
+    getLocalStorageOperator<typeof TextSpeakerArraySchema>(
+      "text-speaker",
+      TextSpeakerArraySchema,
+    );
 
   useEffect(() => {
     const audio = audioRef.current;

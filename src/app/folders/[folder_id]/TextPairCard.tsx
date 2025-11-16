@@ -4,6 +4,7 @@ import { updateTextPairById } from "@/lib/services/textPairService";
 import { useState } from "react";
 import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 import UpdateTextPairModal from "./UpdateTextPairModal";
+import { useTranslations } from "next-intl";
 
 interface TextPairCardProps {
   textPair: TextPair;
@@ -17,6 +18,7 @@ export default function TextPairCard({
   refreshTextPairs,
 }: TextPairCardProps) {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const t = useTranslations("folder_id");
   return (
     <div className="group border-b border-gray-100 hover:bg-gray-50 transition-colors">
       <div className="p-4">
@@ -35,11 +37,16 @@ export default function TextPairCard({
             <button
               className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
               onClick={() => setOpenUpdateModal(true)}
+              title={t("edit")}
             >
               <Edit size={14} />
             </button>
-            <button className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
-              <Trash2 size={14} onClick={onDel} />
+            <button
+              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+              onClick={onDel}
+              title={t("delete")}
+            >
+              <Trash2 size={14} />
             </button>
           </div>
         </div>

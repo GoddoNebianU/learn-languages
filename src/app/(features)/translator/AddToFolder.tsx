@@ -19,7 +19,7 @@ interface AddToFolderProps {
 const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
   const session = useSession();
   const [folders, setFolders] = useState<folder[]>([]);
-  const t = useTranslations("translator.add-to-folder");
+  const t = useTranslations("translator.add_to_folder");
 
   useEffect(() => {
     const username = session.data!.user!.name as string;

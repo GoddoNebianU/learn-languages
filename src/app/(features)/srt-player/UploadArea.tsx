@@ -9,7 +9,7 @@ export default function UploadArea({
   setVideoUrl: (url: string | null) => void;
   setSrtUrl: (url: string | null) => void;
 }) {
-  const t = useTranslations("srt-player");
+  const t = useTranslations("srt_player");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const uploadVideo = () => {

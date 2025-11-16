@@ -19,7 +19,7 @@ export default function UpdateTextPairModal({
   onUpdate,
   textPair,
 }: UpdateTextPairModalProps) {
-  const t = useTranslations("folders.folder_id");
+  const t = useTranslations("folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
   const input3Ref = useRef<HTMLInputElement>(null);

@@ -1,0 +1,181 @@
+{
+  "alphabet": {
+    "chooseCharacters": "请选择您想学习的字符",
+    "japanese": "日语假名",
+    "english": "英文字母",
+    "uyghur": "维吾尔字母",
+    "esperanto": "世界语字母",
+    "loading": "加载中...",
+    "loadFailed": "加载失败，请重试",
+    "hideLetter": "隐藏字母",
+    "showLetter": "显示字母",
+    "hideIPA": "隐藏IPA",
+    "showIPA": "显示IPA"
+  },
+  "folders": {
+    "title": "文件夹",
+    "subtitle": "管理您的集合",
+    "newFolder": "新建文件夹",
+    "creating": "创建中...",
+    "noFoldersYet": "还没有文件夹",
+    "folderInfo": "{id}. {name} ({totalPairs})",
+    "enterFolderName": "输入文件夹名称：",
+    "confirmDelete": "输入 \"{name}\" 以删除：",
+    "createFolderSuccess": "文件夹创建成功",
+    "deleteFolderSuccess": "文件夹删除成功",
+    "createFolderError": "创建文件夹失败",
+    "deleteFolderError": "删除文件夹失败"
+  },
+  "folder_id": {
+    "unauthorized": "您不是此文件夹的所有者",
+    "back": "返回",
+    "textPairs": "文本对",
+    "itemsCount": "{count} 个项目",
+    "memorize": "记忆",
+    "loadingTextPairs": "加载文本对中...",
+    "noTextPairs": "此文件夹中没有文本对",
+    "addNewTextPair": "添加新文本对",
+    "add": "添加",
+    "updateTextPair": "更新文本对",
+    "update": "更新",
+    "text1": "文本1",
+    "text2": "文本2",
+    "locale1": "语言1",
+    "locale2": "语言2",
+    "edit": "编辑",
+    "delete": "删除"
+  },
+  "home": {
+    "title": "学语言",
+    "description": "这里是一个非常有用的网站，可以帮助您学习世界上几乎每一种语言，包括人造语言。",
+    "explore": "探索网站",
+    "fortune": {
+      "quote": "求知若饥，虚心若愚。",
+      "author": "—— 史蒂夫·乔布斯"
+    },
+    "translator": {
+      "name": "翻译器",
+      "description": "翻译到任何语言，并标注国际音标（IPA）"
+    },
+    "textSpeaker": {
+      "name": "朗读器",
+      "description": "识别并朗读文本，支持循环朗读、朗读速度调节"
+    },
+    "srtPlayer": {
+      "name": "逐句视频播放器",
+      "description": "基于SRT字幕文件，逐句播放视频以模仿母语者的发音"
+    },
+    "alphabet": {
+      "name": "背字母",
+      "description": "从字母表开始新语言的学习"
+    },
+    "memorize": {
+      "name": "背单词",
+      "description": "语言A到语言B，语言B到语言A，支持听写"
+    },
+    "moreFeatures": {
+      "name": "更多功能",
+      "description": "开发中，敬请期待"
+    }
+  },
+  "login": {
+    "loading": "加载中...",
+    "githubLogin": "GitHub登录"
+  },
+  "memorize": {
+    "choose": {
+      "back": "返回",
+      "choose": "选择"
+    },
+    "edit": {
+      "back": "返回",
+      "save": "保存单词对",
+      "locale1": "区域1",
+      "locale2": "区域2"
+    },
+    "folder_selector": {
+      "selectFolder": "选择文件夹",
+      "noFolders": "未找到文件夹",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "main": {
+      "title": "记忆",
+      "locale1": "您选择的区域一是{locale}",
+      "locale2": "您选择的区域二是{locale}",
+      "total": "总计有{total}个单词对",
+      "start": "开始",
+      "import": "导入",
+      "export": "导出",
+      "edit": "编辑"
+    },
+    "memorize": {
+      "showAnswer": "显示答案",
+      "next": "下一个",
+      "reverse": "反向",
+      "dictation": "听写",
+      "noTextPairs": "没有可用的文本对",
+      "progress": "{current}/{total}"
+    },
+    "page": {
+      "unauthorized": "您无权访问该文件夹"
+    },
+    "start": {
+      "show": "显示",
+      "reverse": "反向",
+      "dictation": "听写",
+      "back": "返回",
+      "next": "下个"
+    }
+  },
+  "navbar": {
+    "title": "学语言",
+    "about": "关于",
+    "sourceCode": "源码",
+    "login": "登录",
+    "profile": "个人资料",
+    "folders": "文件夹"
+  },
+  "profile": {
+    "myProfile": "我的个人资料",
+    "email": "邮箱：{email}",
+    "logout": "退出登录"
+  },
+  "srt_player": {
+    "uploadVideo": "上传视频",
+    "uploadSubtitle": "上传字幕",
+    "pause": "暂停",
+    "play": "播放",
+    "previous": "上句",
+    "next": "下句",
+    "restart": "句首",
+    "autoPause": "自动暂停({enabled})"
+  },
+  "text_speaker": {
+    "generateIPA": "生成IPA",
+    "viewSavedItems": "查看保存项",
+    "confirmDeleteAll": "确定删光吗？(Y/N)"
+  },
+  "translator": {
+    "detectLanguage": "检测语言",
+    "generateIPA": "生成国际音标",
+    "translateInto": "翻译为",
+    "chinese": "中文",
+    "english": "英文",
+    "italian": "意大利语",
+    "other": "其他",
+    "translating": "翻译中...",
+    "translate": "翻译",
+    "inputLanguage": "请输入语言。",
+    "history": "历史记录",
+    "enterLanguage": "输入语言",
+    "add_to_folder": {
+      "notAuthenticated": "您未通过身份验证",
+      "chooseFolder": "选择要添加到的文件夹",
+      "noFolders": "未找到文件夹",
+      "folderInfo": "{id}. {name}",
+      "close": "关闭",
+      "success": "文本对已添加到文件夹",
+      "error": "添加文本对到文件夹失败"
+    }
+  }
+}

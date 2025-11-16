@@ -1,8 +1,0 @@
-{
-  "chooseFolder": "选择要添加到的文件夹",
-  "notAuthenticated": "您未登录",
-  "noFoldersFound": "未找到文件夹",
-  "close": "关闭",
-  "addToFolderSuccess": "文本对已添加到文件夹",
-  "addToFolderError": "添加文本对到文件夹失败"
-}

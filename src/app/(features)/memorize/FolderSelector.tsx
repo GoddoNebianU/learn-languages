@@ -12,7 +12,7 @@ interface FolderSelectorProps {
 }
 
 const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
-  const t = useTranslations("memorize/folder-selector");
+  const t = useTranslations("memorize.folder_selector");
   const router = useRouter();
   return (
     <Center>

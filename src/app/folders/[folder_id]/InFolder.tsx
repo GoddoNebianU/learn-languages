@@ -28,7 +28,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
   const router = useRouter();
-  const t = useTranslations("folders.folder_id");
+  const t = useTranslations("folder_id");
 
   useEffect(() => {
     const fetchTextPairs = async () => {

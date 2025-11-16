@@ -11,7 +11,7 @@ type VideoPanelProps = {
 
 const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
   ({ videoUrl, srtUrl }, videoRef) => {
-    const t = useTranslations("srt-player");
+    const t = useTranslations("srt_player");
     videoRef = videoRef as React.RefObject<HTMLVideoElement>;
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [srtLength, setSrtLength] = useState<number>(0);

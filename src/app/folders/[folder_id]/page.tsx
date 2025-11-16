@@ -11,7 +11,7 @@ export default async function FoldersPage({
   const session = await getServerSession();
   const { folder_id } = await params;
   const id = Number(folder_id);
-  const t = await getTranslations("folders.folder_id");
+  const t = await getTranslations("folder_id");
 
   if (!id) {
     redirect("/folders");
