@@ -1,0 +1,8 @@
+{
+  "showAnswer": "Show Answer",
+  "next": "Next",
+  "reverse": "Reverse",
+  "dictation": "Dictation",
+  "noTextPairs": "No text pairs available",
+  "progress": "{index}/{total}"
+}

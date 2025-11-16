@@ -8,5 +8,7 @@
   "other": "Other",
   "translating": "translating...",
   "translate": "translate",
-  "inputLanguage": "Input a language."
+  "inputLanguage": "Input a language.",
+  "history": "History",
+  "enterLanguage": "Enter language"
 }

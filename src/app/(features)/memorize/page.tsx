@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { getTranslations } from "next-intl/server";
 import {
   getFoldersWithTotalPairsByOwner,
   getOwnerByFolderId,
@@ -18,9 +19,14 @@ export default async function MemorizePage({
 }) {
   const session = await getServerSession();
   const username = session?.user?.name;
+  const t = await getTranslations("memorize.page");
 
-  const t = (await searchParams).folder_id;
-  const folder_id = t ? (isNonNegativeInteger(t) ? parseInt(t) : null) : null;
+  const tParam = (await searchParams).folder_id;
+  const folder_id = tParam
+    ? isNonNegativeInteger(tParam)
+      ? parseInt(tParam)
+      : null
+    : null;
 
   if (!username)
     redirect(
@@ -37,7 +43,7 @@ export default async function MemorizePage({
 
   const owner = await getOwnerByFolderId(folder_id);
   if (owner !== username) {
-    return <p>无权访问该文件夹</p>;
+    return <p>{t("unauthorized")}</p>;
   }
 
   return <Memorize textPairs={await getTextPairsByFolderId(folder_id)} />;

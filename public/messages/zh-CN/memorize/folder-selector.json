@@ -1,0 +1,5 @@
+{
+  "title": "选择文件夹",
+  "noFolders": "未找到文件夹",
+  "folderInfo": "{id}. {name} ({count})"
+}

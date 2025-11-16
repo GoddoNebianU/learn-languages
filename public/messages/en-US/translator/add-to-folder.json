@@ -1,0 +1,8 @@
+{
+  "chooseFolder": "Choose a Folder to Add to",
+  "notAuthenticated": "You are not authenticated",
+  "noFoldersFound": "No folders found",
+  "close": "Close",
+  "addToFolderSuccess": "Text pair added to folder",
+  "addToFolderError": "Failed to add text pair to folder"
+}

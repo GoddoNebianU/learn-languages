@@ -10,6 +10,7 @@ import {
   deleteFolderById,
   getFoldersWithTotalPairsByOwner,
 } from "@/lib/services/folderService";
+import { useTranslations } from "next-intl";
 
 interface FolderProps {
   folder: folder & { total_pairs: number };
@@ -18,6 +19,7 @@ interface FolderProps {
 }
 
 const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
+  const t = useTranslations("folders");
   return (
     <div
       className="flex justify-between items-center group p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
@@ -30,7 +32,11 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
 
         <div className="flex-1">
           <h3 className="font-medium text-gray-900">
-            {folder.id}. {folder.name} ({folder.total_pairs})
+            {t("folderInfo", {
+              id: folder.id,
+              name: folder.name,
+              totalPairs: folder.total_pairs,
+            })}
           </h3>
           {/*<p className="text-sm text-gray-500">{} items</p>*/}
         </div>
@@ -55,6 +61,7 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
 };
 
 export default function FoldersClient({ username }: { username: string }) {
+  const t = useTranslations("folders");
   const [folders, setFolders] = useState<(folder & { total_pairs: number })[]>(
     [],
   );
@@ -80,13 +87,13 @@ export default function FoldersClient({ username }: { username: string }) {
     <Center>
       <div className="w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-light text-gray-900">Folders</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage your collections</p>
+          <h1 className="text-2xl font-light text-gray-900">{t("title")}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t("subtitle")}</p>
         </div>
 
         <button
           onClick={async () => {
-            const folderName = prompt("Enter folder name:");
+            const folderName = prompt(t("enterFolderName"));
             if (!folderName) return;
             setLoading(true);
             try {
@@ -103,7 +110,7 @@ export default function FoldersClient({ username }: { username: string }) {
           className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
         >
           <FolderPlus size={18} />
-          <span>{loading ? "Creating..." : "New Folder"}</span>
+          <span>{loading ? t("creating") : t("newFolder")}</span>
         </button>
 
         <div className="mt-4 max-h-96 overflow-y-auto">
@@ -112,7 +119,7 @@ export default function FoldersClient({ username }: { username: string }) {
               <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gray-100 flex items-center justify-center">
                 <FolderPlus size={24} className="text-gray-400" />
               </div>
-              <p className="text-sm">No folders yet</p>
+              <p className="text-sm">{t("noFoldersYet")}</p>
             </div>
           ) : (
             <div className="rounded-xl border border-gray-200 overflow-hidden">
@@ -121,7 +128,9 @@ export default function FoldersClient({ username }: { username: string }) {
                   key={folder.id}
                   folder={folder}
                   deleteCallback={() => {
-                    const confirm = prompt(`Type "${folder.name}" to delete:`);
+                    const confirm = prompt(
+                      t("confirmDelete", { name: folder.name }),
+                    );
                     if (confirm === folder.name) {
                       deleteFolderById(folder.id).then(updateFolders);
                     }

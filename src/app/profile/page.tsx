@@ -7,11 +7,13 @@ import { useEffect } from "react";
 import { Center } from "@/components/Center";
 import Container from "@/components/cards/Container";
 import LightButton from "@/components/buttons/LightButton";
+import { useTranslations } from "next-intl";
 
 export default function MePage() {
   const session = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("profile");
 
   useEffect(() => {
     if (session.status !== "authenticated") {
@@ -22,7 +24,7 @@ export default function MePage() {
   return (
     <Center>
       <Container className="p-6">
-        <h1>My Profile</h1>
+        <h1>{t("myProfile")}</h1>
         {(session.data?.user?.image as string) && (
           <Image
             width={64}
@@ -33,8 +35,8 @@ export default function MePage() {
           ></Image>
         )}
         <p>{session.data?.user?.name}</p>
-        <p>Email: {session.data?.user?.email}</p>
-        <LightButton onClick={signOut}>Logout</LightButton>
+        <p>{t("email", { email: session.data?.user?.email })}</p>
+        <LightButton onClick={signOut}>{t("logout")}</LightButton>
       </Container>
     </Center>
   );

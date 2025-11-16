@@ -238,7 +238,7 @@ export default function TranslatorPage() {
             <LightButton
               selected={!["chinese", "english", "italian"].includes(lang)}
               onClick={() => {
-                const newLang = prompt("Enter language");
+                const newLang = prompt(t("enterLanguage"));
                 if (newLang) {
                   setLang(newLang);
                 }
@@ -261,7 +261,7 @@ export default function TranslatorPage() {
       </div>
       {history.length > 0 && (
         <div className="m-6 flex flex-col items-center">
-          <h1 className="text-2xl font-light">History</h1>
+          <h1 className="text-2xl font-light">{t("history")}</h1>
           <div className="border border-gray-200 rounded-2xl m-4">
             {history.map((item, index) => (
               <div key={index}>

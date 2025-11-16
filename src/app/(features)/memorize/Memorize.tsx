@@ -8,12 +8,14 @@ import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/tts";
 import { VOICES } from "@/config/locales";
+import { useTranslations } from "next-intl";
 
 interface MemorizeProps {
   textPairs: text_pair[];
 }
 
 const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
+  const t = useTranslations("memorize.memorize");
   const [reverse, setReverse] = useState(false);
   const [dictation, setDictation] = useState(false);
   const [index, setIndex] = useState(0);
@@ -27,7 +29,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
           <>
             <div className="h-36 flex flex-col gap-2 justify-start items-center font-serif text-3xl">
               <div className="text-sm text-gray-500">
-                {index + 1}/{textPairs.length}
+                {t("progress", { current: index + 1, total: textPairs.length })}
               </div>
               {dictation ? (
                 show === "question" ? (
@@ -86,7 +88,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                   setShow(show === "question" ? "answer" : "question");
                 }}
               >
-                {show === "question" ? "Show Answer" : "Next"}
+                {show === "question" ? t("showAnswer") : t("next")}
               </LightButton>
               <LightButton
                 onClick={() => {
@@ -94,7 +96,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                 }}
                 selected={reverse}
               >
-                Reverse
+                {t("reverse")}
               </LightButton>
               <LightButton
                 onClick={() => {
@@ -102,11 +104,11 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                 }}
                 selected={dictation}
               >
-                Dictation
+                {t("dictation")}
               </LightButton>
             </div>
           </>
-        )) || <p>No text pairs available</p>}
+        )) || <p>{t("noTextPairs")}</p>}
       </Container>
     </Center>
   );

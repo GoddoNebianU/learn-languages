@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useRef } from "react";
 import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 import { TextPair } from "./InFolder";
+import { useTranslations } from "next-intl";
 
 interface UpdateTextPairModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function UpdateTextPairModal({
   onUpdate,
   textPair,
 }: UpdateTextPairModalProps) {
+  const t = useTranslations("folders.folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
   const input3Ref = useRef<HTMLInputElement>(null);
@@ -65,25 +67,45 @@ export default function UpdateTextPairModal({
       <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
         <div className="flex">
           <h2 className="flex-1 text-xl font-light mb-4 text-center">
-            Update Text Pair
+            {t("updateTextPair")}
           </h2>
           <X onClick={onClose} className="hover:cursor-pointer"></X>
         </div>
         <div>
           <div>
-            text1<Input defaultValue={textPair.text1} ref={input1Ref} className="w-full"></Input>
+            {t("text1")}
+            <Input
+              defaultValue={textPair.text1}
+              ref={input1Ref}
+              className="w-full"
+            ></Input>
           </div>
           <div>
-            text2<Input defaultValue={textPair.text2} ref={input2Ref} className="w-full"></Input>
+            {t("text2")}
+            <Input
+              defaultValue={textPair.text2}
+              ref={input2Ref}
+              className="w-full"
+            ></Input>
           </div>
           <div>
-            locale1<Input defaultValue={textPair.locale1} ref={input3Ref} className="w-full"></Input>
+            {t("locale1")}
+            <Input
+              defaultValue={textPair.locale1}
+              ref={input3Ref}
+              className="w-full"
+            ></Input>
           </div>
           <div>
-            locale2<Input defaultValue={textPair.locale2} ref={input4Ref} className="w-full"></Input>
+            {t("locale2")}
+            <Input
+              defaultValue={textPair.locale2}
+              ref={input4Ref}
+              className="w-full"
+            ></Input>
           </div>
         </div>
-        <LightButton onClick={handleUpdate}>Update</LightButton>
+        <LightButton onClick={handleUpdate}>{t("update")}</LightButton>
       </div>
     </div>
   );

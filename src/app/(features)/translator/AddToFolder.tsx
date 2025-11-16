@@ -9,6 +9,7 @@ import { getFoldersByOwner } from "@/lib/services/folderService";
 import { Folder } from "lucide-react";
 import { createTextPair } from "@/lib/services/textPairService";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface AddToFolderProps {
   item: z.infer<typeof TranslationHistorySchema>;
@@ -18,6 +19,7 @@ interface AddToFolderProps {
 const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
   const session = useSession();
   const [folders, setFolders] = useState<folder[]>([]);
+  const t = useTranslations("translator.add-to-folder");
 
   useEffect(() => {
     const username = session.data!.user!.name as string;
@@ -28,7 +30,7 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
     return (
       <div className="fixed left-0 top-0 z-50 w-screen h-screen bg-black/50 flex justify-center items-center">
         <Container className="p-6">
-          <div>You are not authenticated</div>;
+          <div>{t("notAuthenticated")}</div>
         </Container>
       </div>
     );
@@ -36,7 +38,7 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
   return (
     <div className="fixed left-0 top-0 z-50 w-screen h-screen bg-black/50 flex justify-center items-center">
       <Container className="p-6">
-        <h1>Choose a Folder to Add to</h1>
+        <h1>{t("chooseFolder")}</h1>
         <div className="border border-gray-200 rounded-2xl">
           {(folders.length > 0 &&
             folders.map((folder) => (
@@ -56,20 +58,20 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
                     },
                   })
                     .then(() => {
-                      toast.success("Text pair added to folder");
+                      toast.success(t("success"));
                       setShow(false);
                     })
                     .catch(() => {
-                      toast.error("Failed to add text pair to folder");
+                      toast.error(t("error"));
                     });
                 }}
               >
                 <Folder />
-                {folder.id}. {folder.name}
+                {t("folderInfo", { id: folder.id, name: folder.name })}
               </button>
-            ))) || <div>No folders found</div>}
+            ))) || <div>{t("noFolders")}</div>}
         </div>
-        <LightButton onClick={() => setShow(false)}>Close</LightButton>
+        <LightButton onClick={() => setShow(false)}>{t("close")}</LightButton>
       </Container>
     </div>
   );

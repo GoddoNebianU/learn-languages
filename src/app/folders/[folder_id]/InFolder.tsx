@@ -13,6 +13,8 @@ import {
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import LightButton from "@/components/buttons/LightButton";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export interface TextPair {
   id: number;
@@ -27,6 +29,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
   const router = useRouter();
+  const t = useTranslations("folders.folder_id");
 
   useEffect(() => {
     const fetchTextPairs = async () => {
@@ -64,14 +67,16 @@ export default function InFolder({ folderId }: { folderId: number }) {
             className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-4"
           >
             <ArrowLeft size={16} />
-            <span className="text-sm">Back to folders</span>
+            <span className="text-sm">{t("back")}</span>
           </button>
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-light text-gray-900">Text Pairs</h1>
+              <h1 className="text-2xl font-light text-gray-900">
+                {t("textPairs")}
+              </h1>
               <p className="text-sm text-gray-500 mt-1">
-                {textPairs.length} items
+                {t("itemsCount", { count: textPairs.length })}
               </p>
             </div>
 
@@ -81,7 +86,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
                   redirect(`/memorize?folder_id=${folderId}`);
                 }}
               >
-                Memorize
+                {t("memorize")}
               </LightButton>
               <button
                 className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
@@ -102,11 +107,11 @@ export default function InFolder({ folderId }: { folderId: number }) {
           {loading ? (
             <div className="p-8 text-center">
               <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-gray-500">Loading text pairs...</p>
+              <p className="text-sm text-gray-500">{t("loadingTextPairs")}</p>
             </div>
           ) : textPairs.length === 0 ? (
             <div className="p-12 text-center">
-              <p className="text-sm text-gray-500 mb-2">No text pair items</p>
+              <p className="text-sm text-gray-500 mb-2">{t("noTextPairs")}</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">

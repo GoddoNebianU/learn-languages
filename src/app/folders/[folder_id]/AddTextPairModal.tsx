@@ -2,6 +2,7 @@ import LightButton from "@/components/buttons/LightButton";
 import Input from "@/components/Input";
 import { X } from "lucide-react";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 
 interface AddTextPairModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function AddTextPairModal({
   onClose,
   onAdd,
 }: AddTextPairModalProps) {
+  const t = useTranslations("folders.folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
   const input3Ref = useRef<HTMLInputElement>(null);
@@ -66,25 +68,29 @@ export default function AddTextPairModal({
       <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
         <div className="flex">
           <h2 className="flex-1 text-xl font-light mb-4 text-center">
-            Add New Text Pair
+            {t("addNewTextPair")}
           </h2>
           <X onClick={onClose} className="hover:cursor-pointer"></X>
         </div>
         <div>
           <div>
-            text1<Input ref={input1Ref} className="w-full"></Input>
+            {t("text1")}
+            <Input ref={input1Ref} className="w-full"></Input>
           </div>
           <div>
-            text2<Input ref={input2Ref} className="w-full"></Input>
+            {t("text2")}
+            <Input ref={input2Ref} className="w-full"></Input>
           </div>
           <div>
-            locale1<Input ref={input3Ref} className="w-full"></Input>
+            {t("locale1")}
+            <Input ref={input3Ref} className="w-full"></Input>
           </div>
           <div>
-            locale2<Input ref={input4Ref} className="w-full"></Input>
+            {t("locale2")}
+            <Input ref={input4Ref} className="w-full"></Input>
           </div>
         </div>
-        <LightButton onClick={handleAdd}>Add</LightButton>
+        <LightButton onClick={handleAdd}>{t("add")}</LightButton>
       </div>
     </div>
   );
