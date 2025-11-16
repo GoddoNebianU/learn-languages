@@ -33,7 +33,7 @@ export default function TextPairCard({
             </span>
           </div>
 
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
             <button
               className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
               onClick={() => setOpenUpdateModal(true)}
