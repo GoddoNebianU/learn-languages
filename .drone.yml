@@ -32,6 +32,7 @@ steps:
       port: 22
       script:
         - cd ~/docker/learn-languages
+        - docker pull registry.edian-studio.com/learn-languages:latest
         - docker compose up -d
       debug: true
 
