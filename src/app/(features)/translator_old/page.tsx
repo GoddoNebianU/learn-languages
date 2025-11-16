@@ -8,25 +8,15 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { tlsoPush, tlso } from "@/lib/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/tts";
-import { shallowEqual } from "@/lib/utils";
+import { letsFetch, shallowEqual } from "@/lib/utils";
 import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import z from "zod";
 import AddToFolder from "./AddToFolder";
-import {
-  genIPA,
-  genLocale,
-  genTranslation,
-} from "@/lib/actions/translatorActions";
-import { toast } from "sonner";
-import FolderSelector from "./FolderSelector";
-import { useSession } from "next-auth/react";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
-
-  const session = useSession();
 
   const taref = useRef<HTMLTextAreaElement>(null);
   const [lang, setLang] = useState<string>("chinese");
@@ -42,108 +32,109 @@ export default function TranslatorPage() {
   const [addToFolderItem, setAddToFolderItem] = useState<z.infer<
     typeof TranslationHistorySchema
   > | null>(null);
+
   const lastTTS = useRef({
     text: "",
     url: "",
   });
-  const [autoSave, setAutoSave] = useState(false);
-  const [autoSaveFolderId, setAutoSaveFolderId] = useState<number | null>(null);
 
   const tts = async (text: string, locale: string) => {
     if (lastTTS.current.text !== text) {
-      const shortName = VOICES.find((v) => v.locale === locale)?.short_name;
-      if (!shortName) {
-        toast.error("Voice not found");
-        return;
-      }
-      try {
-        const url = await getTTSAudioUrl(text, shortName);
-        await load(url);
-        lastTTS.current.text = text;
-        lastTTS.current.url = url;
-      } catch (error) {
-        toast.error("Failed to generate audio");
-      }
+      const url = await getTTSAudioUrl(
+        text,
+        VOICES.find((v) => v.locale === locale)!.short_name,
+      );
+      await load(url);
+      lastTTS.current.text = text;
+      lastTTS.current.url = url;
     }
-    await play();
+    play();
   };
 
   const translate = async () => {
-    if (!taref.current) return;
     if (processing) return;
-
     setProcessing(true);
 
-    const text1 = taref.current.value;
+    if (!taref.current) return;
+    const text = taref.current.value;
 
-    const llmres: {
+    const newItem: {
       text1: string | null;
       text2: string | null;
       locale1: string | null;
       locale2: string | null;
-      ipa1: string | null;
-      ipa2: string | null;
     } = {
-      text1: text1,
+      text1: text,
       text2: null,
       locale1: null,
       locale2: null,
-      ipa1: null,
-      ipa2: null,
     };
 
-    let historyUpdated = false;
-
-    // 检查更新历史记录
-    const checkUpdateLocalStorage = () => {
-      if (historyUpdated) return;
-      if (llmres.text1 && llmres.text2 && llmres.locale1 && llmres.locale2) {
-        setHistory(
-          tlsoPush({
-            text1: llmres.text1,
-            text2: llmres.text2,
-            locale1: llmres.locale1,
-            locale2: llmres.locale2,
-          }),
-        );
-        historyUpdated = true;
+    const checkUpdateLocalStorage = (item: typeof newItem) => {
+      if (item.text1 && item.text2 && item.locale1 && item.locale2) {
+        setHistory(tlsoPush(item as z.infer<typeof TranslationHistorySchema>));
       }
     };
-    // 更新局部翻译状态
-    const updateState = (stateName: keyof typeof llmres, value: string) => {
-      llmres[stateName] = value;
-      checkUpdateLocalStorage();
+    const innerStates = {
+      text2: false,
+      ipa1: !genIpa,
+      ipa2: !genIpa,
+    };
+    const checkUpdateProcessStates = () => {
+      if (innerStates.ipa1 && innerStates.ipa2 && innerStates.text2)
+        setProcessing(false);
+    };
+    const updateState = (stateName: keyof typeof innerStates) => () => {
+      innerStates[stateName] = true;
+      checkUpdateLocalStorage(newItem);
+      checkUpdateProcessStates();
     };
 
-    genTranslation(text1, lang)
-      .then(async (text2) => {
-        updateState("text2", text2);
+    // Fetch locale for text1
+    letsFetch(
+      `/api/v1/locale?text=${encodeURIComponent(text)}`,
+      (locale: string) => {
+        newItem.locale1 = locale;
+      },
+      console.log,
+      () => {},
+    );
+
+    if (genIpa)
+      // Fetch IPA for text1
+      letsFetch(
+        `/api/v1/ipa?text=${encodeURIComponent(text)}`,
+        (ipa: string) => setIpaTexts((prev) => [ipa, prev[1]]),
+        console.log,
+        updateState("ipa1"),
+      );
+    // Fetch translation for text2
+    letsFetch(
+      `/api/v1/translate?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`,
+      (text2) => {
         setTresult(text2);
-        // 生成两个locale
-        genLocale(text1).then((locale) => {
-          updateState("locale1", locale);
-        });
-        genLocale(text2).then((locale) => {
-          updateState("locale2", locale);
-        });
-        // 生成俩IPA
-        if (genIpa) {
-          genIPA(text1).then((ipa1) => {
-            setIpaTexts((prev) => [ipa1, prev[1]]);
-            updateState("ipa1", ipa1);
-          });
-          genIPA(text2).then((ipa2) => {
-            setIpaTexts((prev) => [prev[0], ipa2]);
-            updateState("ipa2", ipa2);
-          });
-        }
-      })
-      .catch(() => {
-        toast.error("Translation failed");
-      })
-      .finally(() => {
-        setProcessing(false);
-      });
+        newItem.text2 = text2;
+        if (genIpa)
+          // Fetch IPA for text2
+          letsFetch(
+            `/api/v1/ipa?text=${encodeURIComponent(text2)}`,
+            (ipa: string) => setIpaTexts((prev) => [prev[0], ipa]),
+            console.log,
+            updateState("ipa2"),
+          );
+        // Fetch locale for text2
+        letsFetch(
+          `/api/v1/locale?text=${encodeURIComponent(text2)}`,
+          (locale: string) => {
+            newItem.locale2 = locale;
+          },
+          console.log,
+          () => {},
+        );
+      },
+      console.log,
+      updateState("text2"),
+    );
   };
 
   return (
@@ -268,27 +259,6 @@ export default function TranslatorPage() {
           {t("translate")}
         </button>
       </div>
-
-      {/* AutoSave Component */}
-      <div className="w-screen flex justify-center items-center">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={autoSave}
-            onChange={(e) => {
-              const checked = e.target.checked;
-              if (checked === true && !(session.status === "authenticated")) {
-                toast.warning("Please login to enable auto-save");
-                return;
-              }
-              setAutoSave(checked);
-            }}
-            className="mr-2"
-          />
-          {t("autoSave")}
-        </label>
-      </div>
-
       {history.length > 0 && (
         <div className="m-6 flex flex-col items-center">
           <h1 className="text-2xl font-light">{t("history")}</h1>
@@ -329,13 +299,6 @@ export default function TranslatorPage() {
           </div>
           {showAddToFolder && (
             <AddToFolder setShow={setShowAddToFolder} item={addToFolderItem!} />
-          )}
-          {autoSave && !autoSaveFolderId && (
-            <FolderSelector
-              username={session.data!.user!.name as string}
-              cancel={() => setAutoSave(false)}
-              setSelectedFolderId={(id) => setAutoSaveFolderId(id)}
-            />
           )}
         </div>
       )}

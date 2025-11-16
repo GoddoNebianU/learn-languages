@@ -176,6 +176,7 @@
       "close": "Close",
       "success": "Text pair added to folder",
       "error": "Failed to add text pair to folder"
-    }
+    },
+    "autoSave": "Auto Save"
   }
 }
