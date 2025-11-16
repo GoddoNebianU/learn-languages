@@ -14,7 +14,6 @@ import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import LightButton from "@/components/buttons/LightButton";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 export interface TextPair {
   id: number;

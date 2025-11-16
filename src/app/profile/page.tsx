@@ -35,7 +35,7 @@ export default function MePage() {
           ></Image>
         )}
         <p>{session.data?.user?.name}</p>
-        <p>{t("email", { email: session.data?.user?.email })}</p>
+        <p>{t("email", { email: session.data!.user!.email as string })}</p>
         <LightButton onClick={signOut}>{t("logout")}</LightButton>
       </Container>
     </Center>
