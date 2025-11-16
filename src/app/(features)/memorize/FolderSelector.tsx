@@ -6,6 +6,7 @@ import { Folder } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Center } from "@/components/Center";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 interface FolderSelectorProps {
   folders: (folder & { total_pairs: number })[];
@@ -20,6 +21,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
         {(folders.length === 0 && (
           <h1 className="text-2xl text-gray-900 font-light">
             {t("noFolders")}
+            <Link className="text-blue-900 border-b" href={"/folders"}>folders</Link>
           </h1>
         )) || (
           <>

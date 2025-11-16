@@ -83,11 +83,13 @@ export default function AddTextPairModal({
           </div>
           <div>
             {t("locale1")}
-            <Input ref={input3Ref} className="w-full"></Input>
+            <Input ref={input3Ref} className="w-full"
+             placeholder="en-US"></Input>
           </div>
           <div>
             {t("locale2")}
-            <Input ref={input4Ref} className="w-full"></Input>
+            <Input ref={input4Ref} className="w-full"
+             placeholder="zh-CN"></Input>
           </div>
         </div>
         <LightButton onClick={handleAdd}>{t("add")}</LightButton>
