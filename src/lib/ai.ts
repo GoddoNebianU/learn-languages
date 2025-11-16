@@ -23,7 +23,7 @@ async function callZhipuAPI(
   });
 
   if (!response.ok) {
-    throw new Error(`API 调用失败: ${response.status}`);
+    throw new Error(`API 调用失败: ${response.status} ${response.statusText}`);
   }
 
   return await response.json();

@@ -20,10 +20,13 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
   const session = useSession();
   const [folders, setFolders] = useState<folder[]>([]);
   const t = useTranslations("translator.add_to_folder");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const username = session.data!.user!.name as string;
-    getFoldersByOwner(username).then(setFolders);
+    getFoldersByOwner(username)
+      .then(setFolders)
+      .then(() => setLoading(false));
   }, [session.data]);
 
   if (session.status !== "authenticated") {
@@ -40,36 +43,37 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
       <Container className="p-6">
         <h1>{t("chooseFolder")}</h1>
         <div className="border border-gray-200 rounded-2xl">
-          {(folders.length > 0 &&
-            folders.map((folder) => (
-              <button
-                key={folder.id}
-                className="p-2 flex items-center justify-start hover:bg-gray-50 gap-2 hover:cursor-pointer w-full border-b border-gray-200"
-                onClick={() => {
-                  createTextPair({
-                    text1: item.text1,
-                    text2: item.text2,
-                    locale1: item.locale1,
-                    locale2: item.locale2,
-                    folders: {
-                      connect: {
-                        id: folder.id,
+          {(loading && <span>...</span>) ||
+            (folders.length > 0 &&
+              folders.map((folder) => (
+                <button
+                  key={folder.id}
+                  className="p-2 flex items-center justify-start hover:bg-gray-50 gap-2 hover:cursor-pointer w-full border-b border-gray-200"
+                  onClick={() => {
+                    createTextPair({
+                      text1: item.text1,
+                      text2: item.text2,
+                      locale1: item.locale1,
+                      locale2: item.locale2,
+                      folders: {
+                        connect: {
+                          id: folder.id,
+                        },
                       },
-                    },
-                  })
-                    .then(() => {
-                      toast.success(t("success"));
-                      setShow(false);
                     })
-                    .catch(() => {
-                      toast.error(t("error"));
-                    });
-                }}
-              >
-                <Folder />
-                {t("folderInfo", { id: folder.id, name: folder.name })}
-              </button>
-            ))) || <div>{t("noFolders")}</div>}
+                      .then(() => {
+                        toast.success(t("success"));
+                        setShow(false);
+                      })
+                      .catch(() => {
+                        toast.error(t("error"));
+                      });
+                  }}
+                >
+                  <Folder />
+                  {t("folderInfo", { id: folder.id, name: folder.name })}
+                </button>
+              ))) || <div>{t("noFolders")}</div>}
         </div>
         <LightButton onClick={() => setShow(false)}>{t("close")}</LightButton>
       </Container>

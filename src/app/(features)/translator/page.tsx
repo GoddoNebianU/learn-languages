@@ -263,7 +263,7 @@ export default function TranslatorPage() {
         <div className="m-6 flex flex-col items-center">
           <h1 className="text-2xl font-light">{t("history")}</h1>
           <div className="border border-gray-200 rounded-2xl m-4">
-            {history.map((item, index) => (
+            {history.toReversed().map((item, index) => (
               <div key={index}>
                 <div className="border-b border-gray-200 p-2 group hover:bg-gray-50 flex gap-2 flex-row justify-between items-start">
                   <div className="flex-1 flex flex-col">
