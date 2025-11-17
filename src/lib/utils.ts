@@ -67,8 +67,7 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
   return {
     get: (): z.infer<T> => {
       try {
-        if (!localStorage) return [];
-        const item = localStorage.getItem(key);
+        const item = globalThis.localStorage.getItem(key);
 
         if (!item) return [];
 
@@ -90,8 +89,8 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
       }
     },
     set: (data: z.infer<T>) => {
-      if (!localStorage) return;
-      localStorage.setItem(key, JSON.stringify(data));
+      if (!globalThis.localStorage) return;
+      globalThis.localStorage.setItem(key, JSON.stringify(data));
       return data;
     },
   };

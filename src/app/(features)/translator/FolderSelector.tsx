@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { folder } from "../../../../generated/prisma/browser";
 import { getFoldersByOwner } from "@/lib/services/folderService";
 import LightButton from "@/components/buttons/LightButton";
+import { Folder } from "lucide-react";
 
 interface FolderSelectorProps {
   setSelectedFolderId: (id: number) => void;
@@ -31,11 +32,21 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({
       <Container className="p-6">
         {(loading && <p>Loading...</p>) ||
           (folders.length > 0 && (
-            <ul>
-              {folders.map((folder) => (
-                <li key={folder.id}>{folder.name}</li>
-              ))}
-            </ul>
+            <>
+              <h1>Select a Folder</h1>
+              <div className="m-2 border-gray-200 border rounded-2xl max-h-96 overflow-y-auto">
+                {folders.map((folder) => (
+                  <button
+                    className="p-2 w-full flex hover:bg-gray-50 gap-2"
+                    key={folder.id}
+                    onClick={() => setSelectedFolderId(folder.id)}
+                  >
+                    <Folder />
+                    {folder.id}. {folder.name}
+                  </button>
+                ))}
+              </div>
+            </>
           )) || <p>No folders found</p>}
         <LightButton onClick={cancel}>Cancel</LightButton>
       </Container>

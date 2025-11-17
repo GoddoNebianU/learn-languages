@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { useSession } from "next-auth/react";
+import { createTextPair } from "@/lib/services/textPairService";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -106,6 +107,33 @@ export default function TranslatorPage() {
             locale2: llmres.locale2,
           }),
         );
+        if (autoSave && autoSaveFolderId) {
+          createTextPair({
+            text1: llmres.text1,
+            text2: llmres.text2,
+            locale1: llmres.locale1,
+            locale2: llmres.locale2,
+            folders: {
+              connect: {
+                id: autoSaveFolderId,
+              },
+            },
+          })
+            .then(() => {
+              toast.success(
+                llmres.text1 + "保存到文件夹" + autoSaveFolderId + "成功",
+              );
+            })
+            .catch((error) => {
+              toast.error(
+                llmres.text1 +
+                  "保存到文件夹" +
+                  autoSaveFolderId +
+                  "失败：" +
+                  error.message,
+              );
+            });
+        }
         historyUpdated = true;
       }
     };
@@ -281,11 +309,13 @@ export default function TranslatorPage() {
                 toast.warning("Please login to enable auto-save");
                 return;
               }
+              if (checked === false) setAutoSaveFolderId(null);
               setAutoSave(checked);
             }}
             className="mr-2"
           />
           {t("autoSave")}
+          {autoSaveFolderId ? ` (${autoSaveFolderId})` : ""}
         </label>
       </div>
 
