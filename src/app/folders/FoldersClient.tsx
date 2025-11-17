@@ -9,7 +9,7 @@ import {
   createFolder,
   deleteFolderById,
   getFoldersWithTotalPairsByOwner,
-} from "@/lib/services/folderService";
+} from "@/lib/actions/services/folderService";
 import { useTranslations } from "next-intl";
 
 interface FolderProps {

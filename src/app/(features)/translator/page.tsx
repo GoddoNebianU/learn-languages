@@ -6,9 +6,8 @@ import IMAGES from "@/config/images";
 import { VOICES } from "@/config/locales";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
-import { tlsoPush, tlso } from "@/lib/localStorageOperators";
-import { getTTSAudioUrl } from "@/lib/tts";
-import { shallowEqual } from "@/lib/utils";
+import { tlsoPush, tlso } from "@/lib/browser/localStorageOperators";
+import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
@@ -22,7 +21,8 @@ import {
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { useSession } from "next-auth/react";
-import { createTextPair } from "@/lib/services/textPairService";
+import { createTextPair } from "@/lib/actions/services/textPairService";
+import { shallowEqual } from "@/lib/utils";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -64,6 +64,7 @@ export default function TranslatorPage() {
         lastTTS.current.url = url;
       } catch (error) {
         toast.error("Failed to generate audio");
+        console.error(error);
       }
     }
     await play();

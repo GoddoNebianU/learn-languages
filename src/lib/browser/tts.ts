@@ -1,5 +1,4 @@
-import { ProsodyOptions } from "edge-tts-universal";
-import { EdgeTTS } from "edge-tts-universal/browser";
+import { ProsodyOptions, EdgeTTS } from "edge-tts-universal/browser";
 
 export async function getTTSAudioUrl(
   text: string,

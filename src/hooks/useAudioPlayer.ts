@@ -4,6 +4,7 @@ type AudioPlayerError = Error | null;
 
 export function useAudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [state, setState] = useState({
     isPlaying: false,
     isLoading: false,
@@ -32,7 +33,10 @@ export function useAudioPlayer() {
       setState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
     const handleError = (e: Event) => {
       const target = e.target as HTMLAudioElement;
-      setError(new Error(target.error?.message || "Audio playback error"));
+      // 忽略中止错误，这些是预期的
+      if (target.error?.code !== MediaError.MEDIA_ERR_ABORTED) {
+        setError(new Error(target.error?.message || "Audio playback error"));
+      }
       setState((prev) => ({ ...prev, isLoading: false, isPlaying: false }));
     };
 
@@ -44,6 +48,11 @@ export function useAudioPlayer() {
     audio.addEventListener("error", handleError);
 
     return () => {
+      // 中止所有进行中的操作
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -67,6 +76,10 @@ export function useAudioPlayer() {
       await audioRef.current.play();
       setState((prev) => ({ ...prev, isPlaying: true }));
     } catch (err) {
+      // 忽略中止错误
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
+      }
       const error =
         err instanceof Error ? err : new Error("Failed to play audio");
       setError(error);
@@ -102,7 +115,7 @@ export function useAudioPlayer() {
     if (audioRef.current) {
       const clampedTime = Math.max(
         0,
-        Math.min(audioRef.current.duration, time),
+        Math.min(audioRef.current.duration || 0, time),
       );
       audioRef.current.currentTime = clampedTime;
       setState((prev) => ({ ...prev, currentTime: clampedTime }));
@@ -112,43 +125,109 @@ export function useAudioPlayer() {
   const load = useCallback(async (audioUrl: string) => {
     if (!audioRef.current) return;
 
+    // 中止之前的加载操作
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     try {
       setError(null);
       setState((prev) => ({ ...prev, isLoading: true }));
 
-      // Only load if URL is different
+      // 如果信号已经中止，直接返回
+      if (abortController.signal.aborted) {
+        return;
+      }
+
+      // 重置当前播放状态
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+
+      // Only load if URL is different or we need to force reload
       if (audioRef.current.src !== audioUrl) {
         audioRef.current.src = audioUrl;
-        await new Promise((resolve, reject) => {
-          if (!audioRef.current)
-            return reject(new Error("Audio element not found"));
+        
+        await new Promise<void>((resolve, reject) => {
+          if (!audioRef.current) {
+            reject(new Error("Audio element not found"));
+            return;
+          }
+
+          // 检查是否已经中止
+          if (abortController.signal.aborted) {
+            reject(new DOMException("Aborted", "AbortError"));
+            return;
+          }
 
           const handleCanPlay = () => {
-            audioRef.current?.removeEventListener("canplay", handleCanPlay);
-            audioRef.current?.removeEventListener("error", handleError);
-            resolve(void 0);
+            cleanup();
+            resolve();
           };
 
-          const handleError = () => {
-            audioRef.current?.removeEventListener("canplay", handleCanPlay);
-            audioRef.current?.removeEventListener("error", handleError);
-            reject(new Error("Failed to load audio"));
+          const handleError = (e: Event) => {
+            cleanup();
+            const target = e.target as HTMLAudioElement;
+            // 如果是中止错误，不视为真正的错误
+            if (target.error?.code === MediaError.MEDIA_ERR_ABORTED) {
+              reject(new DOMException("Aborted", "AbortError"));
+            } else {
+              reject(new Error("Failed to load audio"));
+            }
           };
 
-          audioRef.current.addEventListener("canplay", handleCanPlay);
-          audioRef.current.addEventListener("error", handleError);
+          const handleAbort = () => {
+            cleanup();
+            reject(new DOMException("Aborted", "AbortError"));
+          };
+
+          const cleanup = () => {
+            audioRef.current?.removeEventListener("canplay", handleCanPlay);
+            audioRef.current?.removeEventListener("error", handleError);
+            abortController.signal.removeEventListener("abort", handleAbort);
+          };
+
+          audioRef.current.addEventListener("canplay", handleCanPlay, { once: true });
+          audioRef.current.addEventListener("error", handleError, { once: true });
+          abortController.signal.addEventListener("abort", handleAbort, { once: true });
+
+          // 如果音频已经可以播放，立即解析
+          if (audioRef.current.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+            handleCanPlay();
+          }
         });
       }
 
-      setState((prev) => ({ ...prev, isLoading: false }));
+      if (!abortController.signal.aborted) {
+        setState((prev) => ({ ...prev, isLoading: false }));
+      }
     } catch (err) {
+      // 忽略中止错误
+      if (err instanceof DOMException && err.name === "AbortError") {
+        return;
+      }
       const error =
         err instanceof Error ? err : new Error("Failed to load audio");
       setError(error);
       setState((prev) => ({ ...prev, isLoading: false }));
       throw error;
+    } finally {
+      // 清理中止控制器，如果仍然是当前的话
+      if (abortControllerRef.current === abortController) {
+        abortControllerRef.current = null;
+      }
     }
   }, []);
+
+  // 新增：同时加载和播放的便捷方法
+  const playAudio = useCallback(async (audioUrl: string) => {
+    await load(audioUrl);
+    await play();
+  }, [load, play]);
 
   return {
     ...state,
@@ -158,6 +237,7 @@ export function useAudioPlayer() {
     setVolume,
     seek,
     load,
+    playAudio, // 新增的便捷方法
     error,
     audioRef,
   };

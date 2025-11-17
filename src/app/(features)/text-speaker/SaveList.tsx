@@ -1,6 +1,5 @@
 "use client";
 
-import { getLocalStorageOperator } from "@/lib/utils";
 import { useState } from "react";
 import z from "zod";
 import {
@@ -10,6 +9,7 @@ import {
 import IconClick from "@/components/IconClick";
 import IMAGES from "@/config/images";
 import { useTranslations } from "next-intl";
+import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 
 interface TextCardProps {
   item: z.infer<typeof TextSpeakerItemSchema>;

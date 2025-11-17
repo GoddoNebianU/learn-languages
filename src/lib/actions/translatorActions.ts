@@ -1,6 +1,6 @@
 "use server";
 
-import { getLLMAnswer } from "../ai";
+import { getLLMAnswer } from "./ai";
 
 export const genIPA = async (text: string) => {
   return (

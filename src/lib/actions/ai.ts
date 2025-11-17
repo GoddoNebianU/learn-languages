@@ -1,3 +1,5 @@
+"use server";
+
 import { format } from "util";
 
 async function callZhipuAPI(

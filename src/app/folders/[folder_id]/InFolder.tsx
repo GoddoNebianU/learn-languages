@@ -9,7 +9,7 @@ import {
   createTextPair,
   deleteTextPairById,
   getTextPairsByFolderId,
-} from "@/lib/services/textPairService";
+} from "@/lib/actions/services/textPairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import LightButton from "@/components/buttons/LightButton";

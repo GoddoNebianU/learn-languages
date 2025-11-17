@@ -1,6 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import { TextPair } from "./InFolder";
-import { updateTextPairById } from "@/lib/services/textPairService";
+import { updateTextPairById } from "@/lib/actions/services/textPairService";
 import { useState } from "react";
 import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 import UpdateTextPairModal from "./UpdateTextPairModal";

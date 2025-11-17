@@ -6,7 +6,7 @@ import Container from "@/components/cards/Container";
 import { useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSAudioUrl } from "@/lib/tts";
+import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 

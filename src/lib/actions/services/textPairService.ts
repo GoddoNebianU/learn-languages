@@ -3,8 +3,8 @@
 import {
   text_pairCreateInput,
   text_pairUpdateInput,
-} from "../../../generated/prisma/models";
-import prisma from "../db";
+} from "../../../../generated/prisma/models";
+import prisma from "../../db";
 
 export async function createTextPair(data: text_pairCreateInput) {
   await prisma.text_pair.create({

@@ -5,9 +5,9 @@ import { useSession } from "next-auth/react";
 import { Dispatch, useEffect, useState } from "react";
 import z from "zod";
 import { folder } from "../../../../generated/prisma/browser";
-import { getFoldersByOwner } from "@/lib/services/folderService";
+import { getFoldersByOwner } from "@/lib/actions/services/folderService";
 import { Folder } from "lucide-react";
-import { createTextPair } from "@/lib/services/textPairService";
+import { createTextPair } from "@/lib/actions/services/textPairService";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 

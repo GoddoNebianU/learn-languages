@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import InFolder from "./InFolder";
-import { getOwnerByFolderId } from "@/lib/services/folderService";
+import { getOwnerByFolderId } from "@/lib/actions/services/folderService";
 export default async function FoldersPage({
   params,
 }: {

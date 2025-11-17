@@ -6,11 +6,11 @@ import { getTranslations } from "next-intl/server";
 import {
   getFoldersWithTotalPairsByOwner,
   getOwnerByFolderId,
-} from "@/lib/services/folderService";
+} from "@/lib/actions/services/folderService";
 import { isNonNegativeInteger } from "@/lib/utils";
 import FolderSelector from "./FolderSelector";
 import Memorize from "./Memorize";
-import { getTextPairsByFolderId } from "@/lib/services/textPairService";
+import { getTextPairsByFolderId } from "@/lib/actions/services/textPairService";
 
 export default async function MemorizePage({
   searchParams,

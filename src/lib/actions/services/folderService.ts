@@ -3,8 +3,8 @@
 import {
   folderCreateInput,
   folderUpdateInput,
-} from "../../../generated/prisma/models";
-import prisma from "../db";
+} from "../../../../generated/prisma/models";
+import prisma from "../../db";
 
 export async function getFoldersByOwner(owner: string) {
   const folders = await prisma.folder.findMany({

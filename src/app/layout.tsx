@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import SessionWrapper from "@/lib/SessionWrapper";
+import SessionWrapper from "@/components/SessionWrapper";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "sonner";
 

@@ -4,7 +4,7 @@
   "private": true,
   "license": "GPL-3.0-only",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --experimental-https",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint"

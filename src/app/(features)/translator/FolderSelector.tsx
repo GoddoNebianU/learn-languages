@@ -1,7 +1,7 @@
 import Container from "@/components/cards/Container";
 import { useEffect, useState } from "react";
 import { folder } from "../../../../generated/prisma/browser";
-import { getFoldersByOwner } from "@/lib/services/folderService";
+import { getFoldersByOwner } from "@/lib/actions/services/folderService";
 import LightButton from "@/components/buttons/LightButton";
 import { Folder } from "lucide-react";
 

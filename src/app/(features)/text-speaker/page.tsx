@@ -8,13 +8,15 @@ import {
   TextSpeakerArraySchema,
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
-import { getLocalStorageOperator, getTTSAudioUrl } from "@/lib/utils";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
 import SaveList from "./SaveList";
 
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
+import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
+import { getTTSAudioUrl } from "@/lib/browser/tts";
+import { genIPA, genLocale } from "@/lib/actions/translatorActions";
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
@@ -94,14 +96,9 @@ export default function TextSpeakerPage() {
             let theLocale = locale;
             if (!theLocale) {
               console.log("downloading text info");
-              const params = new URLSearchParams({
-                text: textRef.current.slice(0, 30),
-              });
-              const textinfo = await (
-                await fetch(`/api/locale?${params}`)
-              ).json();
-              setLocale(textinfo.locale);
-              theLocale = textinfo.locale as string;
+              const tmp_locale = await genLocale(textRef.current.slice(0, 30));
+              setLocale(tmp_locale);
+              theLocale = tmp_locale;
             }
 
             const voice = VOICES.find((v) => v.locale.startsWith(theLocale));
@@ -184,22 +181,16 @@ export default function TextSpeakerPage() {
       let theLocale = locale;
       if (!theLocale) {
         console.log("downloading text info");
-        const params = new URLSearchParams({
-          text: textRef.current.slice(0, 30),
-        });
-        const textinfo = await (await fetch(`/api/locale?${params}`)).json();
-        setLocale(textinfo.locale);
-        theLocale = textinfo.locale as string;
+        const tmp_locale = await genLocale(textRef.current.slice(0, 30));
+        setLocale(tmp_locale);
+        theLocale = tmp_locale;
       }
 
       let theIPA = ipa;
       if (ipa.length === 0 && ipaEnabled) {
-        const params = new URLSearchParams({
-          text: textRef.current,
-        });
-        const tmp = await (await fetch(`/api/ipa?${params}`)).json();
-        setIPA(tmp.ipa);
-        theIPA = tmp.ipa;
+        const tmp_ipa = await genIPA(textRef.current);
+        setIPA(tmp_ipa);
+        theIPA = tmp_ipa;
       }
 
       const save = getFromLocalStorage();
