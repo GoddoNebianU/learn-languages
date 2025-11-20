@@ -3,7 +3,7 @@
 import { Center } from "@/components/Center";
 import { text_pair } from "../../../../generated/prisma/browser";
 import Container from "@/components/cards/Container";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
@@ -18,18 +18,37 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   const t = useTranslations("memorize.memorize");
   const [reverse, setReverse] = useState(false);
   const [dictation, setDictation] = useState(false);
+  const [disorder, setDisorder] = useState(false);
   const [index, setIndex] = useState(0);
   const [show, setShow] = useState<"question" | "answer">("question");
   const { load, play } = useAudioPlayer();
 
+  const [disorderedTextPairs, setDisorderedTextPairs] = useState<text_pair[]>(
+    [],
+  );
+
+  useEffect(() => {
+    setDisorderedTextPairs(textPairs.toSorted(() => Math.random() - 0.5));
+  }, [textPairs]);
+
+  const getTextPairs = () => {
+    if (disorder) {
+      return disorderedTextPairs;
+    }
+    return textPairs.toSorted((a, b) => a.id - b.id);
+  };
+
   return (
     <Center>
       <Container className="p-6 flex flex-col gap-8 h-96 justify-center items-center">
-        {(textPairs.length > 0 && (
+        {(getTextPairs().length > 0 && (
           <>
             <div className="h-36 flex flex-col gap-2 justify-start items-center font-serif text-3xl">
               <div className="text-sm text-gray-500">
-                {t("progress", { current: index + 1, total: textPairs.length })}
+                {t("progress", {
+                  current: index + 1,
+                  total: getTextPairs().length,
+                })}
               </div>
               {dictation ? (
                 show === "question" ? (
@@ -38,26 +57,28 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                   <>
                     <div>
                       {reverse
-                        ? textPairs[index].text2
-                        : textPairs[index].text1}
+                        ? getTextPairs()[index].text2
+                        : getTextPairs()[index].text1}
                     </div>
                     <div>
                       {reverse
-                        ? textPairs[index].text1
-                        : textPairs[index].text2}
+                        ? getTextPairs()[index].text1
+                        : getTextPairs()[index].text2}
                     </div>
                   </>
                 )
               ) : (
                 <>
                   <div>
-                    {reverse ? textPairs[index].text2 : textPairs[index].text1}
+                    {reverse
+                      ? getTextPairs()[index].text2
+                      : getTextPairs()[index].text1}
                   </div>
                   <div>
                     {show === "answer"
                       ? reverse
-                        ? textPairs[index].text1
-                        : textPairs[index].text2
+                        ? getTextPairs()[index].text1
+                        : getTextPairs()[index].text2
                       : ""}
                   </div>
                 </>
@@ -68,15 +89,15 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                 className="w-32"
                 onClick={async () => {
                   if (show === "answer") {
-                    const newIndex = (index + 1) % textPairs.length;
+                    const newIndex = (index + 1) % getTextPairs().length;
                     setIndex(newIndex);
                     if (dictation)
                       getTTSAudioUrl(
-                        textPairs[newIndex][reverse ? "text2" : "text1"],
+                        getTextPairs()[newIndex][reverse ? "text2" : "text1"],
                         VOICES.find(
                           (v) =>
                             v.locale ===
-                            textPairs[newIndex][
+                            getTextPairs()[newIndex][
                               reverse ? "locale2" : "locale1"
                             ],
                         )!.short_name,
@@ -105,6 +126,14 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                 selected={dictation}
               >
                 {t("dictation")}
+              </LightButton>
+              <LightButton
+                onClick={() => {
+                  setDisorder(!disorder);
+                }}
+                selected={disorder}
+              >
+                {t("disorder")}
               </LightButton>
             </div>
           </>

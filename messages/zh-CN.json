@@ -87,26 +87,10 @@
       "back": "返回",
       "choose": "选择"
     },
-    "edit": {
-      "back": "返回",
-      "save": "保存单词对",
-      "locale1": "区域1",
-      "locale2": "区域2"
-    },
     "folder_selector": {
       "selectFolder": "选择文件夹",
       "noFolders": "未找到文件夹",
       "folderInfo": "{id}. {name} ({count})"
-    },
-    "main": {
-      "title": "记忆",
-      "locale1": "您选择的区域一是{locale}",
-      "locale2": "您选择的区域二是{locale}",
-      "total": "总计有{total}个单词对",
-      "start": "开始",
-      "import": "导入",
-      "export": "导出",
-      "edit": "编辑"
     },
     "memorize": {
       "showAnswer": "显示答案",
@@ -114,17 +98,11 @@
       "reverse": "反向",
       "dictation": "听写",
       "noTextPairs": "没有可用的文本对",
-      "progress": "{current}/{total}"
+      "progress": "{current}/{total}",
+      "disorder": "乱序"
     },
     "page": {
       "unauthorized": "您无权访问该文件夹"
-    },
-    "start": {
-      "show": "显示",
-      "reverse": "反向",
-      "dictation": "听写",
-      "back": "返回",
-      "next": "下个"
     }
   },
   "navbar": {

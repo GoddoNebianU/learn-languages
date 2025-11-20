@@ -83,30 +83,10 @@
     "githubLogin": "GitHub Login"
   },
   "memorize": {
-    "choose": {
-      "back": "Back",
-      "choose": "Choose"
-    },
-    "edit": {
-      "back": "Back",
-      "save": "Save Word Pairs",
-      "locale1": "Locale 1",
-      "locale2": "Locale 2"
-    },
     "folder_selector": {
       "selectFolder": "Select a folder",
       "noFolders": "No folders found",
       "folderInfo": "{id}. {name} ({count})"
-    },
-    "main": {
-      "title": "Memorize",
-      "locale1": "Your selected locale 1 is {locale}",
-      "locale2": "Your selected locale 2 is {locale}",
-      "total": "There are {total} word pairs in total",
-      "start": "Start",
-      "import": "Import",
-      "export": "Export",
-      "edit": "Edit"
     },
     "memorize": {
       "showAnswer": "Show Answer",
@@ -114,17 +94,11 @@
       "reverse": "Reverse",
       "dictation": "Dictation",
       "noTextPairs": "No text pairs available",
-      "progress": "{current}/{total}"
+      "progress": "{current}/{total}",
+      "disorder": "Disorder"
     },
     "page": {
       "unauthorized": "You are not authorized to access this folder"
-    },
-    "start": {
-      "show": "Show",
-      "reverse": "Reverse",
-      "dictation": "Dictation",
-      "back": "Back",
-      "next": "Next"
     }
   },
   "navbar": {
