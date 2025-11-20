@@ -15,23 +15,34 @@ export async function getFoldersByOwner(owner: string) {
   return folders;
 }
 
+export async function renameFolderById(id: number, newName: string) {
+  await prisma.folder.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: newName,
+    },
+  });
+}
+
 export async function getFoldersWithTotalPairsByOwner(owner: string) {
   const folders = await prisma.folder.findMany({
     where: {
-      owner: owner
+      owner: owner,
     },
     include: {
       text_pair: {
         select: {
-          id: true
-        }
-      }
-    }
+          id: true,
+        },
+      },
+    },
   });
 
-  return folders.map(folder => ({
+  return folders.map((folder) => ({
     ...folder,
-    total_pairs: folder.text_pair.length
+    total_pairs: folder.text_pair.length,
   }));
 }
 

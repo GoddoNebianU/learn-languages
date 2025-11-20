@@ -46,14 +46,11 @@ export default function InFolder({ folderId }: { folderId: number }) {
   }, [folderId]);
 
   const refreshTextPairs = async () => {
-    setLoading(true);
     try {
       const data = await getTextPairsByFolderId(folderId);
       setTextPairs(data as TextPair[]);
     } catch (error) {
       console.error("Failed to fetch text pairs:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -114,17 +111,19 @@ export default function InFolder({ folderId }: { folderId: number }) {
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
-              {textPairs.map((textPair) => (
-                <TextPairCard
-                  key={textPair.id}
-                  textPair={textPair}
-                  onDel={() => {
-                    deleteTextPairById(textPair.id);
-                    refreshTextPairs();
-                  }}
-                  refreshTextPairs={refreshTextPairs}
-                />
-              ))}
+              {textPairs
+                .toSorted((a, b) => a.id - b.id)
+                .map((textPair) => (
+                  <TextPairCard
+                    key={textPair.id}
+                    textPair={textPair}
+                    onDel={() => {
+                      deleteTextPairById(textPair.id);
+                      refreshTextPairs();
+                    }}
+                    refreshTextPairs={refreshTextPairs}
+                  />
+                ))}
             </div>
           )}
         </div>

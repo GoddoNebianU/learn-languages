@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronRight, Folder, FolderPlus, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  Folder,
+  FolderPen,
+  FolderPlus,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Center } from "@/components/Center";
 import { useRouter } from "next/navigation";
@@ -9,21 +15,26 @@ import {
   createFolder,
   deleteFolderById,
   getFoldersWithTotalPairsByOwner,
+  renameFolderById,
 } from "@/lib/actions/services/folderService";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 interface FolderProps {
   folder: folder & { total_pairs: number };
-  deleteCallback: () => void;
-  openCallback: () => void;
+  refresh: () => void;
 }
 
-const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
+const FolderCard = ({ folder, refresh }: FolderProps) => {
+  const router = useRouter();
+
   const t = useTranslations("folders");
   return (
     <div
       className="flex justify-between items-center group p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-      onClick={openCallback}
+      onClick={() => {
+        router.push(`/folders/${folder.id}`);
+      }}
     >
       <div className="flex items-center gap-3 flex-1">
         <div className="w-10 h-10 rounded-lg bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
@@ -38,7 +49,6 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
               totalPairs: folder.total_pairs,
             })}
           </h3>
-          {/*<p className="text-sm text-gray-500">{} items</p>*/}
         </div>
 
         <div className="text-xs text-gray-400">#{folder.id}</div>
@@ -48,7 +58,22 @@ const FolderCard = ({ folder, deleteCallback, openCallback }: FolderProps) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            deleteCallback();
+            const newName = prompt("Input a new name.")?.trim();
+            if (newName && newName.length > 0) {
+              renameFolderById(folder.id, newName).then(refresh);
+            }
+          }}
+          className="p-2 text-gray-400 hover:bg-red-50 rounded-lg transition-colors"
+        >
+          <FolderPen size={16} />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            const confirm = prompt(t("confirmDelete", { name: folder.name }));
+            if (confirm === folder.name) {
+              deleteFolderById(folder.id).then(refresh);
+            }
           }}
           className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
         >
@@ -66,21 +91,26 @@ export default function FoldersClient({ username }: { username: string }) {
     [],
   );
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    getFoldersWithTotalPairsByOwner(username).then((folders) => {
-      setFolders(folders);
-    });
+    setLoading(true);
+    getFoldersWithTotalPairsByOwner(username)
+      .then((folders) => {
+        setFolders(folders);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("加载出错，请重试。");
+      });
   }, [username]);
 
   const updateFolders = async () => {
-    setLoading(true);
     try {
       const updatedFolders = await getFoldersWithTotalPairsByOwner(username);
       setFolders(updatedFolders);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   };
   return (
@@ -123,23 +153,15 @@ export default function FoldersClient({ username }: { username: string }) {
             </div>
           ) : (
             <div className="rounded-xl border border-gray-200 overflow-hidden">
-              {folders.map((folder) => (
-                <FolderCard
-                  key={folder.id}
-                  folder={folder}
-                  deleteCallback={() => {
-                    const confirm = prompt(
-                      t("confirmDelete", { name: folder.name }),
-                    );
-                    if (confirm === folder.name) {
-                      deleteFolderById(folder.id).then(updateFolders);
-                    }
-                  }}
-                  openCallback={() => {
-                    router.push(`/folders/${folder.id}`);
-                  }}
-                />
-              ))}
+              {folders
+                .toSorted((a, b) => a.id - b.id)
+                .map((folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    folder={folder}
+                    refresh={updateFolders}
+                  />
+                ))}
             </div>
           )}
         </div>
