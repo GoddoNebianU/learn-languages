@@ -9,6 +9,11 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
+import localFont from "next/font/local";
+
+const myFont = localFont({
+  src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
+});
 
 interface MemorizeProps {
   textPairs: text_pair[];
@@ -43,7 +48,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
       <Container className="p-6 flex flex-col gap-8 h-96 justify-center items-center">
         {(getTextPairs().length > 0 && (
           <>
-            <div className="h-36 flex flex-col gap-2 justify-start items-center font-serif text-3xl">
+            <div className={`h-36 flex flex-col gap-2 justify-start items-center ${myFont.className} text-3xl`}>
               <div className="text-sm text-gray-500">
                 {t("progress", {
                   current: index + 1,
