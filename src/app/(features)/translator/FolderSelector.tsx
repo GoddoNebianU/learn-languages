@@ -23,7 +23,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({
     getFoldersByOwner(username)
       .then(setFolders)
       .then(() => setLoading(false));
-  }, []);
+  }, [username]);
 
   return (
     <div

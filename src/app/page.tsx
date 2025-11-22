@@ -50,11 +50,6 @@ export default function HomePage() {
           description={t("textSpeaker.description")}
           color="#578aad"
         ></LinkArea>
-        {/* <LinkArea
-          href="/word-board"
-          name="词墙"
-          description="将单词固定到一片区域，高效便捷地记忆单词"
-          color="#e9b353"></LinkArea> */}
         <LinkArea
           href="/srt-player"
           name={t("srtPlayer.name")}

@@ -3,7 +3,7 @@
 import { Center } from "@/components/Center";
 import { text_pair } from "../../../../generated/prisma/browser";
 import Container from "@/components/cards/Container";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
