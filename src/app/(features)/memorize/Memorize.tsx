@@ -48,7 +48,9 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
       <Container className="p-6 flex flex-col gap-8 h-96 justify-center items-center">
         {(getTextPairs().length > 0 && (
           <>
-            <div className={`h-36 flex flex-col gap-2 justify-start items-center ${myFont.className} text-3xl`}>
+            <div
+              className={`h-36 flex flex-col gap-2 justify-start items-center ${myFont.className} text-3xl`}
+            >
               <div className="text-sm text-gray-500">
                 {t("progress", {
                   current: index + 1,
@@ -91,7 +93,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
             </div>
             <div className="flex flex-row gap-2 items-center justify-center">
               <LightButton
-                className="w-32"
+                className="w-20"
                 onClick={async () => {
                   if (show === "answer") {
                     const newIndex = (index + 1) % getTextPairs().length;
@@ -114,7 +116,17 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                   setShow(show === "question" ? "answer" : "question");
                 }}
               >
-                {show === "question" ? t("showAnswer") : t("next")}
+                {show === "question" ? t("answer") : t("next")}
+              </LightButton>
+              <LightButton
+                onClick={() => {
+                  setIndex(
+                    (index - 1 + getTextPairs().length) % getTextPairs().length,
+                  );
+                  setShow("question");
+                }}
+              >
+                {t("previous")}
               </LightButton>
               <LightButton
                 onClick={() => {

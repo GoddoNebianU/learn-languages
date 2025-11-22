@@ -89,13 +89,14 @@
       "folderInfo": "{id}. {name} ({count})"
     },
     "memorize": {
-      "showAnswer": "Show Answer",
+      "answer": "Answer",
       "next": "Next",
       "reverse": "Reverse",
       "dictation": "Dictation",
       "noTextPairs": "No text pairs available",
       "progress": "{current}/{total}",
-      "disorder": "Disorder"
+      "disorder": "Disorder",
+      "previous": "Previous"
     },
     "page": {
       "unauthorized": "You are not authorized to access this folder"
