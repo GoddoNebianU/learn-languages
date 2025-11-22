@@ -26,7 +26,7 @@ export default function HomePage() {
       <Link
         href={href}
         style={{ backgroundColor: color }}
-        className={`h-32 md:h-64 flex justify-center items-center`}
+        className={`h-32 md:h-64 flex md:justify-center items-center`}
       >
         <div className="text-white m-8">
           <h1 className="text-4xl">{name}</h1>
