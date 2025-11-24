@@ -10,6 +10,7 @@ import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
+import { isNonNegativeInteger } from "@/lib/utils";
 
 const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
@@ -51,11 +52,22 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
             <div
               className={`h-36 flex flex-col gap-2 justify-start items-center ${myFont.className} text-3xl`}
             >
-              <div className="text-sm text-gray-500">
-                {t("progress", {
-                  current: index + 1,
-                  total: getTextPairs().length,
-                })}
+              <div
+                className="text-sm text-gray-500"
+                onClick={() => {
+                  const newIndex = prompt("Input a index number.")?.trim();
+                  if (
+                    newIndex &&
+                    isNonNegativeInteger(newIndex) &&
+                    parseInt(newIndex) <= textPairs.length &&
+                    parseInt(newIndex) > 0
+                  ) {
+                    setIndex(parseInt(newIndex) - 1);
+                  }
+                }}
+              >
+                {index + 1}
+                {"/" + getTextPairs().length}
               </div>
               {dictation ? (
                 show === "question" ? (
