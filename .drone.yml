@@ -19,6 +19,15 @@ steps:
       registry: registry.edian-studio.com
       tags:
         - latest
+  
+  - name: database migrate
+    image: node:23-alpine
+    environment:
+      DATABASE_URL:
+        from_secret: database_url
+    commands:
+      - npm install prisma
+      - npx prisma migrate deploy
 
   - name: deploy
     image: appleboy/drone-ssh
