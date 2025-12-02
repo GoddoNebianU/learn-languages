@@ -32,7 +32,7 @@ steps:
       port: 22
       script:
         - cd ~/docker/learn-languages
-        - docker compose up -d --pull always
+        - docker compose up -d --pull always --force-recreate
       debug: true
 
 trigger:
