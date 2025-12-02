@@ -66,11 +66,11 @@
       "description": "Play videos sentence by sentence based on SRT subtitle files to mimic native speaker pronunciation"
     },
     "alphabet": {
-      "name": "Memorize Alphabet",
+      "name": "Alphabet",
       "description": "Start learning a new language from the alphabet"
     },
     "memorize": {
-      "name": "Memorize Words",
+      "name": "Memorize",
       "description": "Language A to Language B, Language B to Language A, supports dictation"
     },
     "moreFeatures": {

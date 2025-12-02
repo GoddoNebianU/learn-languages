@@ -62,15 +62,15 @@
       "description": "识别并朗读文本，支持循环朗读、朗读速度调节"
     },
     "srtPlayer": {
-      "name": "逐句视频播放器",
+      "name": "逐句放视频",
       "description": "基于SRT字幕文件，逐句播放视频以模仿母语者的发音"
     },
     "alphabet": {
-      "name": "背字母",
+      "name": "字母表",
       "description": "从字母表开始新语言的学习"
     },
     "memorize": {
-      "name": "背单词",
+      "name": "记忆",
       "description": "语言A到语言B，语言B到语言A，支持听写"
     },
     "moreFeatures": {

@@ -45,130 +45,134 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   };
 
   return (
-    <Center>
-      <Container className="p-6 flex flex-col gap-8 h-96 justify-center items-center">
-        {(getTextPairs().length > 0 && (
-          <>
+    <>
+      {(getTextPairs().length > 0 && (
+        <>
+          <div className="text-center">
             <div
-              className={`h-36 flex flex-col gap-2 justify-start items-center ${myFont.className} text-3xl`}
+              className="text-sm text-gray-500"
+              onClick={() => {
+                const newIndex = prompt("Input a index number.")?.trim();
+                if (
+                  newIndex &&
+                  isNonNegativeInteger(newIndex) &&
+                  parseInt(newIndex) <= textPairs.length &&
+                  parseInt(newIndex) > 0
+                ) {
+                  setIndex(parseInt(newIndex) - 1);
+                }
+              }}
             >
-              <div
-                className="text-sm text-gray-500"
-                onClick={() => {
-                  const newIndex = prompt("Input a index number.")?.trim();
-                  if (
-                    newIndex &&
-                    isNonNegativeInteger(newIndex) &&
-                    parseInt(newIndex) <= textPairs.length &&
-                    parseInt(newIndex) > 0
-                  ) {
-                    setIndex(parseInt(newIndex) - 1);
-                  }
-                }}
-              >
-                {index + 1}
-                {"/" + getTextPairs().length}
-              </div>
-              {dictation ? (
-                show === "question" ? (
-                  ""
-                ) : (
-                  <>
-                    <div>
-                      {reverse
-                        ? getTextPairs()[index].text2
-                        : getTextPairs()[index].text1}
-                    </div>
-                    <div>
-                      {reverse
-                        ? getTextPairs()[index].text1
-                        : getTextPairs()[index].text2}
-                    </div>
-                  </>
-                )
-              ) : (
-                <>
-                  <div>
-                    {reverse
-                      ? getTextPairs()[index].text2
-                      : getTextPairs()[index].text1}
-                  </div>
-                  <div>
-                    {show === "answer"
-                      ? reverse
-                        ? getTextPairs()[index].text1
-                        : getTextPairs()[index].text2
-                      : ""}
-                  </div>
-                </>
-              )}
+              {index + 1}
+              {"/" + getTextPairs().length}
             </div>
-            <div className="flex flex-row gap-2 items-center justify-center">
-              <LightButton
-                className="w-20"
-                onClick={async () => {
-                  if (show === "answer") {
-                    const newIndex = (index + 1) % getTextPairs().length;
-                    setIndex(newIndex);
-                    if (dictation)
-                      getTTSAudioUrl(
-                        getTextPairs()[newIndex][reverse ? "text2" : "text1"],
-                        VOICES.find(
-                          (v) =>
-                            v.locale ===
-                            getTextPairs()[newIndex][
-                              reverse ? "locale2" : "locale1"
-                            ],
-                        )!.short_name,
-                      ).then((url) => {
-                        load(url);
-                        play();
-                      });
-                  }
-                  setShow(show === "question" ? "answer" : "question");
-                }}
-              >
-                {show === "question" ? t("answer") : t("next")}
-              </LightButton>
-              <LightButton
-                onClick={() => {
-                  setIndex(
-                    (index - 1 + getTextPairs().length) % getTextPairs().length,
+            <div className="h-[40dvh] px-16">
+              {(() => {
+                const createText = (text: string) => {
+                  return (
+                    <div className="text-gray-900 text-xl border-y border-y-gray-200 p-4 md:text-3xl h-[20dvh] overflow-y-auto">
+                      {text}
+                    </div>
                   );
-                  setShow("question");
-                }}
-              >
-                {t("previous")}
-              </LightButton>
-              <LightButton
-                onClick={() => {
-                  setReverse(!reverse);
-                }}
-                selected={reverse}
-              >
-                {t("reverse")}
-              </LightButton>
-              <LightButton
-                onClick={() => {
-                  setDictation(!dictation);
-                }}
-                selected={dictation}
-              >
-                {t("dictation")}
-              </LightButton>
-              <LightButton
-                onClick={() => {
-                  setDisorder(!disorder);
-                }}
-                selected={disorder}
-              >
-                {t("disorder")}
-              </LightButton>
+                };
+
+                const [text1, text2] = reverse
+                  ? [getTextPairs()[index].text2, getTextPairs()[index].text1]
+                  : [getTextPairs()[index].text1, getTextPairs()[index].text2];
+
+                if (dictation) {
+                  // dictation
+                  if (show === "question") {
+                    return createText("");
+                  } else {
+                    return (
+                      <>
+                        {createText(text1)}
+                        {createText(text2)}
+                      </>
+                    );
+                  }
+                } else {
+                  // non-dictation
+                  if (show === "question") {
+                    return createText(text1);
+                  } else {
+                    return (
+                      <>
+                        {createText(text1)}
+                        {createText(text2)}
+                      </>
+                    );
+                  }
+                }
+              })()}
             </div>
-          </>
-        )) || <p>{t("noTextPairs")}</p>}
-      </Container>
-    </Center>
+          </div>
+          <div className="flex flex-row gap-2 items-center justify-center flex-wrap">
+            <LightButton
+              className="w-20"
+              onClick={async () => {
+                if (show === "answer") {
+                  const newIndex = (index + 1) % getTextPairs().length;
+                  setIndex(newIndex);
+                  if (dictation)
+                    getTTSAudioUrl(
+                      getTextPairs()[newIndex][reverse ? "text2" : "text1"],
+                      VOICES.find(
+                        (v) =>
+                          v.locale ===
+                          getTextPairs()[newIndex][
+                            reverse ? "locale2" : "locale1"
+                          ],
+                      )!.short_name,
+                    ).then((url) => {
+                      load(url);
+                      play();
+                    });
+                }
+                setShow(show === "question" ? "answer" : "question");
+              }}
+            >
+              {show === "question" ? t("answer") : t("next")}
+            </LightButton>
+            <LightButton
+              onClick={() => {
+                setIndex(
+                  (index - 1 + getTextPairs().length) % getTextPairs().length,
+                );
+                setShow("question");
+              }}
+            >
+              {t("previous")}
+            </LightButton>
+            <LightButton
+              onClick={() => {
+                setReverse(!reverse);
+              }}
+              selected={reverse}
+            >
+              {t("reverse")}
+            </LightButton>
+            <LightButton
+              onClick={() => {
+                setDictation(!dictation);
+              }}
+              selected={dictation}
+            >
+              {t("dictation")}
+            </LightButton>
+            <LightButton
+              onClick={() => {
+                setDisorder(!disorder);
+              }}
+              selected={disorder}
+            >
+              {t("disorder")}
+            </LightButton>
+          </div>
+        </>
+      )) || <p>{t("noTextPairs")}</p>}
+    </>
   );
 };
 

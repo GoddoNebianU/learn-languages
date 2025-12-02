@@ -51,8 +51,16 @@ export default function TextPairCard({
           </div>
         </div>
         <div className="text-gray-900 grid grid-cols-2 gap-4 w-3/4">
-          <div>{textPair.text1}</div>
-          <div>{textPair.text2}</div>
+          <div>
+            {textPair.text1.length > 30
+              ? textPair.text1.substring(0, 30) + "..."
+              : textPair.text1}
+          </div>
+          <div>
+            {textPair.text2.length > 30
+              ? textPair.text2.substring(0, 30) + "..."
+              : textPair.text2}
+          </div>
         </div>
       </div>
       <UpdateTextPairModal

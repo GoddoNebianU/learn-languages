@@ -325,35 +325,36 @@ export default function TranslatorPage() {
           <h1 className="text-2xl font-light">{t("history")}</h1>
           <div className="border border-gray-200 rounded-2xl m-4">
             {history.toReversed().map((item, index) => (
-              <div key={index}>
-                <div className="border-b border-gray-200 p-2 group hover:bg-gray-50 flex gap-2 flex-row justify-between items-start">
-                  <div className="flex-1 flex flex-col">
-                    <p className="text-sm font-light">{item.text1}</p>
-                    <p className="text-sm font-light">{item.text2}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setShowAddToFolder(true);
-                        setAddToFolderItem(item);
-                      }}
-                      className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
-                    >
-                      <Plus />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setHistory(
-                          tlso.set(
-                            tlso.get().filter((v) => !shallowEqual(v, item)),
-                          ) || [],
-                        );
-                      }}
-                      className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
-                    >
-                      <Trash />
-                    </button>
-                  </div>
+              <div
+                key={index}
+                className="border-b border-gray-200 p-2 group hover:bg-gray-50 flex gap-2 flex-row justify-between items-start"
+              >
+                <div className="flex-1 flex flex-col">
+                  <p className="text-sm font-light">{item.text1}</p>
+                  <p className="text-sm font-light">{item.text2}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setShowAddToFolder(true);
+                      setAddToFolderItem(item);
+                    }}
+                    className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
+                  >
+                    <Plus />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setHistory(
+                        tlso.set(
+                          tlso.get().filter((v) => !shallowEqual(v, item)),
+                        ) || [],
+                      );
+                    }}
+                    className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
+                  >
+                    <Trash />
+                  </button>
                 </div>
               </div>
             ))}

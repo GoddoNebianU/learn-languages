@@ -29,8 +29,8 @@ export default function HomePage() {
         className={`h-32 md:h-64 flex md:justify-center items-center`}
       >
         <div className="text-white m-8">
-          <h1 className="text-4xl">{name}</h1>
-          <p className="text-xl">{description}</p>
+          <h1 className="md:text-4xl text-3xl">{name}</h1>
+          <p className="md:text-xl">{description}</p>
         </div>
       </Link>
     );
@@ -87,8 +87,7 @@ export default function HomePage() {
   }
   function Explore() {
     return (
-      <div className="bg-[#bbbbbb] w-full flex justify-center items-center flex-col h-52">
-        <span className="text-[100px] text-white">{t("explore")}</span>
+      <div className="bg-[#bbbbbb] w-full flex justify-center items-center flex-col h-32">
         <div className="w-0 h-0 border-l-40 border-r-40 border-t-30 border-l-transparent border-r-transparent border-t-white"></div>
       </div>
     );
