@@ -21,7 +21,7 @@ steps:
         - latest
   
   - name: database migrate
-    image: node:23-alpine
+    image: node:24-alpine
     environment:
       DATABASE_URL:
         from_secret: database_url
