@@ -26,8 +26,7 @@ steps:
       DATABASE_URL:
         from_secret: database_url
     commands:
-      - npm install -g prisma@7
-      - prisma migrate deploy
+      - npx prisma@7 migrate deploy
 
   - name: deploy
     image: appleboy/drone-ssh

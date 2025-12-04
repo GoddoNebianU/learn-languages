@@ -40,7 +40,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 #     else echo "Lockfile not found." && exit 1; \
 #     fi
 
-RUN DATABASE_URL=postgresql://fake:fake@fake:5432/fake npx prisma generate
+RUN DATABASE_URL=postgresql://fake:fake@fake:5432/fake npx prisma@7 generate
 
 RUN \
     if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
