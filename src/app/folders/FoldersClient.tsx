@@ -2,7 +2,7 @@
 
 import {
   ChevronRight,
-  Folder,
+  Folder as Fd,
   FolderPen,
   FolderPlus,
   Trash2,
@@ -10,18 +10,18 @@ import {
 import { useEffect, useState } from "react";
 import { Center } from "@/components/Center";
 import { useRouter } from "next/navigation";
-import { folder } from "../../../generated/prisma/browser";
+import { Folder } from "../../../generated/prisma/browser";
 import {
   createFolder,
   deleteFolderById,
-  getFoldersWithTotalPairsByOwner,
+  getFoldersWithTotalPairsByUserId,
   renameFolderById,
 } from "@/lib/actions/services/folderService";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 interface FolderProps {
-  folder: folder & { total_pairs: number };
+  folder: Folder & { total: number };
   refresh: () => void;
 }
 
@@ -38,7 +38,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
     >
       <div className="flex items-center gap-3 flex-1">
         <div className="w-10 h-10 rounded-lg bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
-          <Folder></Folder>
+          <Fd></Fd>
         </div>
 
         <div className="flex-1">
@@ -46,7 +46,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
             {t("folderInfo", {
               id: folder.id,
               name: folder.name,
-              totalPairs: folder.total_pairs,
+              totalPairs: folder.total,
             })}
           </h3>
         </div>
@@ -85,16 +85,16 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
   );
 };
 
-export default function FoldersClient({ username }: { username: string }) {
+export default function FoldersClient({ userId }: { userId: number }) {
   const t = useTranslations("folders");
-  const [folders, setFolders] = useState<(folder & { total_pairs: number })[]>(
+  const [folders, setFolders] = useState<(Folder & { total: number })[]>(
     [],
   );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    getFoldersWithTotalPairsByOwner(username)
+    getFoldersWithTotalPairsByUserId(userId)
       .then((folders) => {
         setFolders(folders);
         setLoading(false);
@@ -103,11 +103,11 @@ export default function FoldersClient({ username }: { username: string }) {
         console.error(error);
         toast.error("加载出错，请重试。");
       });
-  }, [username]);
+  }, [userId]);
 
   const updateFolders = async () => {
     try {
-      const updatedFolders = await getFoldersWithTotalPairsByOwner(username);
+      const updatedFolders = await getFoldersWithTotalPairsByUserId(userId);
       setFolders(updatedFolders);
     } catch (error) {
       console.error(error);
@@ -129,7 +129,7 @@ export default function FoldersClient({ username }: { username: string }) {
             try {
               await createFolder({
                 name: folderName,
-                owner: username,
+                user: { connect: { id: userId } },
               });
               await updateFolders();
             } finally {

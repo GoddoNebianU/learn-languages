@@ -1,10 +1,10 @@
 import { Edit, Trash2 } from "lucide-react";
 import { TextPair } from "./InFolder";
-import { updateTextPairById } from "@/lib/actions/services/textPairService";
+import { updatePairById } from "@/lib/actions/services/pairService";
 import { useState } from "react";
-import { text_pairUpdateInput } from "../../../../generated/prisma/models";
 import UpdateTextPairModal from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
+import { PairUpdateInput } from "../../../../generated/prisma/models";
 
 interface TextPairCardProps {
   textPair: TextPair;
@@ -66,8 +66,8 @@ export default function TextPairCard({
       <UpdateTextPairModal
         isOpen={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
-        onUpdate={async (id: number, data: text_pairUpdateInput) => {
-          await updateTextPairById(id, data);
+        onUpdate={async (id: number, data: PairUpdateInput) => {
+          await updatePairById(id, data);
           setOpenUpdateModal(false);
           refreshTextPairs();
         }}

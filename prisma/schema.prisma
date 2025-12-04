@@ -5,27 +5,49 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model text_pair {
-  id         Int       @id(map: "text_pairs_pkey") @default(autoincrement())
-  locale1    String    @db.VarChar(10)
-  locale2    String    @db.VarChar(10)
-  text1      String
-  text2      String
-  folder_id  Int
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  folders    folder    @relation(fields: [folder_id], references: [id], onDelete: Cascade, map: "fk_text_pairs_folder")
+model Pair {
+  id        Int      @id @default(autoincrement())
+  locale1   String   @db.VarChar(10)
+  locale2   String   @db.VarChar(10)
+  text1     String
+  text2     String
+  ipa1      String?
+  ipa2      String?
+  folderId  Int      @map("folder_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@unique([folderId, locale1, locale2, text1])
+  @@index([folderId])
+  @@map("pairs")
 }
 
-model folder {
-  id         Int         @id(map: "folders_pkey") @default(autoincrement())
-  name       String
-  owner      String
-  created_at DateTime?   @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?   @default(now()) @db.Timestamptz(6)
-  text_pair  text_pair[]
+model Folder {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pairs Pair[]
+
+  @@index([userId])
+  @@map("folders")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  folders Folder[]
+
+  @@map("users")
 }

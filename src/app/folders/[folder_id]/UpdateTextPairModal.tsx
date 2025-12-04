@@ -2,7 +2,7 @@ import LightButton from "@/components/buttons/LightButton";
 import Input from "@/components/Input";
 import { X } from "lucide-react";
 import { useRef } from "react";
-import { text_pairUpdateInput } from "../../../../generated/prisma/models";
+import { PairUpdateInput } from "../../../../generated/prisma/models";
 import { TextPair } from "./InFolder";
 import { useTranslations } from "next-intl";
 
@@ -10,7 +10,7 @@ interface UpdateTextPairModalProps {
   isOpen: boolean;
   onClose: () => void;
   textPair: TextPair;
-  onUpdate: (id: number, tp: text_pairUpdateInput) => void;
+  onUpdate: (id: number, tp: PairUpdateInput) => void;
 }
 
 export default function UpdateTextPairModal({

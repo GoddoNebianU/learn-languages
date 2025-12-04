@@ -1,8 +1,5 @@
 "use client";
 
-import { Center } from "@/components/Center";
-import { text_pair } from "../../../../generated/prisma/browser";
-import Container from "@/components/cards/Container";
 import { useEffect, useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -11,13 +8,14 @@ import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
 import { isNonNegativeInteger } from "@/lib/utils";
+import { Pair } from "../../../../generated/prisma/browser";
 
 const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
 interface MemorizeProps {
-  textPairs: text_pair[];
+  textPairs: Pair[];
 }
 
 const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
@@ -29,7 +27,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   const [show, setShow] = useState<"question" | "answer">("question");
   const { load, play } = useAudioPlayer();
 
-  const [disorderedTextPairs, setDisorderedTextPairs] = useState<text_pair[]>(
+  const [disorderedTextPairs, setDisorderedTextPairs] = useState<Pair[]>(
     [],
   );
 
@@ -66,7 +64,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
               {index + 1}
               {"/" + getTextPairs().length}
             </div>
-            <div className="h-[40dvh] px-16">
+            <div className={`h-[40dvh] md:px-16 px-4 ${myFont.className}`}>
               {(() => {
                 const createText = (text: string) => {
                   return (

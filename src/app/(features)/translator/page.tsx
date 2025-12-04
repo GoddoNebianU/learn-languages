@@ -21,7 +21,7 @@ import {
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { useSession } from "next-auth/react";
-import { createTextPair } from "@/lib/actions/services/textPairService";
+import { createPair } from "@/lib/actions/services/pairService";
 import { shallowEqual } from "@/lib/utils";
 
 export default function TranslatorPage() {
@@ -109,12 +109,12 @@ export default function TranslatorPage() {
           }),
         );
         if (autoSave && autoSaveFolderId) {
-          createTextPair({
+          createPair({
             text1: llmres.text1,
             text2: llmres.text2,
             locale1: llmres.locale1,
             locale2: llmres.locale2,
-            folders: {
+            folder: {
               connect: {
                 id: autoSaveFolderId,
               },
@@ -128,10 +128,10 @@ export default function TranslatorPage() {
             .catch((error) => {
               toast.error(
                 llmres.text1 +
-                  "保存到文件夹" +
-                  autoSaveFolderId +
-                  "失败：" +
-                  error.message,
+                "保存到文件夹" +
+                autoSaveFolderId +
+                "失败：" +
+                error.message,
               );
             });
         }
@@ -364,7 +364,7 @@ export default function TranslatorPage() {
           )}
           {autoSave && !autoSaveFolderId && (
             <FolderSelector
-              username={session.data!.user!.name as string}
+              userId={Number(session.data!.user!.id)}
               cancel={() => setAutoSave(false)}
               setSelectedFolderId={(id) => setAutoSaveFolderId(id)}
             />

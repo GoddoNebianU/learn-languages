@@ -1,15 +1,12 @@
 "use server";
 
-import {
-  folderCreateInput,
-  folderUpdateInput,
-} from "../../../../generated/prisma/models";
+import { FolderCreateInput, FolderUpdateInput } from "../../../../generated/prisma/models";
 import prisma from "../../db";
 
-export async function getFoldersByOwner(owner: string) {
+export async function getFoldersByUserId(userId: number) {
   const folders = await prisma.folder.findMany({
     where: {
-      owner: owner,
+      userId: userId,
     },
   });
   return folders;
@@ -26,27 +23,23 @@ export async function renameFolderById(id: number, newName: string) {
   });
 }
 
-export async function getFoldersWithTotalPairsByOwner(owner: string) {
+export async function getFoldersWithTotalPairsByUserId(userId: number) {
   const folders = await prisma.folder.findMany({
-    where: {
-      owner: owner,
-    },
+    where: { userId },
     include: {
-      text_pair: {
-        select: {
-          id: true,
-        },
+      _count: {
+        select: { pairs: true },
       },
     },
   });
 
-  return folders.map((folder) => ({
+  return folders.map(folder => ({
     ...folder,
-    total_pairs: folder.text_pair.length,
+    total: folder._count?.pairs ?? 0,
   }));
 }
 
-export async function createFolder(folder: folderCreateInput) {
+export async function createFolder(folder: FolderCreateInput) {
   await prisma.folder.create({
     data: folder,
   });
@@ -60,7 +53,7 @@ export async function deleteFolderById(id: number) {
   });
 }
 
-export async function updateFolderById(id: number, data: folderUpdateInput) {
+export async function updateFolderById(id: number, data: FolderUpdateInput) {
   await prisma.folder.update({
     where: {
       id: id,
@@ -69,11 +62,11 @@ export async function updateFolderById(id: number, data: folderUpdateInput) {
   });
 }
 
-export async function getOwnerByFolderId(id: number) {
+export async function getUserIdByFolderId(id: number) {
   const folder = await prisma.folder.findUnique({
     where: {
       id: id,
     },
   });
-  return folder?.owner;
+  return folder?.userId;
 }

@@ -4,10 +4,10 @@ import { TranslationHistorySchema } from "@/lib/interfaces";
 import { useSession } from "next-auth/react";
 import { Dispatch, useEffect, useState } from "react";
 import z from "zod";
-import { folder } from "../../../../generated/prisma/browser";
-import { getFoldersByOwner } from "@/lib/actions/services/folderService";
-import { Folder } from "lucide-react";
-import { createTextPair } from "@/lib/actions/services/textPairService";
+import { Folder } from "../../../../generated/prisma/browser";
+import { getFoldersByUserId } from "@/lib/actions/services/folderService";
+import { Folder as Fd } from "lucide-react";
+import { createPair } from "@/lib/actions/services/pairService";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
@@ -18,13 +18,13 @@ interface AddToFolderProps {
 
 const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
   const session = useSession();
-  const [folders, setFolders] = useState<folder[]>([]);
+  const [folders, setFolders] = useState<Folder[]>([]);
   const t = useTranslations("translator.add_to_folder");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const username = session.data!.user!.name as string;
-    getFoldersByOwner(username)
+    const userId = Number(session.data!.user!.id);
+    getFoldersByUserId(userId)
       .then(setFolders)
       .then(() => setLoading(false));
   }, [session.data]);
@@ -50,12 +50,12 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
                   key={folder.id}
                   className="p-2 flex items-center justify-start hover:bg-gray-50 gap-2 hover:cursor-pointer w-full border-b border-gray-200"
                   onClick={() => {
-                    createTextPair({
+                    createPair({
                       text1: item.text1,
                       text2: item.text2,
                       locale1: item.locale1,
                       locale2: item.locale2,
-                      folders: {
+                      folder: {
                         connect: {
                           id: folder.id,
                         },
@@ -70,7 +70,7 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
                       });
                   }}
                 >
-                  <Folder />
+                  <Fd />
                   {t("folderInfo", { id: folder.id, name: folder.name })}
                 </button>
               ))) || <div>{t("noFolders")}</div>}

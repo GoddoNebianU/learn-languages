@@ -1,8 +1,8 @@
+import { auth } from "@/auth";
 import FoldersClient from "./FoldersClient";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 export default async function FoldersPage() {
-  const session = await getServerSession();
-  if (!session?.user?.name) redirect(`/login?redirect=/folders`);
-  return <FoldersClient username={session.user.name} />;
+  const session = await auth();
+  if (!session?.user?.id) redirect(`/login?redirect=/folders`);
+  return <FoldersClient userId={Number(session.user.id)} />;
 }

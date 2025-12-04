@@ -1,15 +1,15 @@
 "use client";
 
 import Container from "@/components/cards/Container";
-import { folder } from "../../../../generated/prisma/client";
-import { Folder } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Center } from "@/components/Center";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { Folder } from "../../../../generated/prisma/browser";
+import { Folder as Fd } from "lucide-react";
 
 interface FolderSelectorProps {
-  folders: (folder & { total_pairs: number })[];
+  folders: (Folder & { total: number })[];
 }
 
 const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
@@ -41,13 +41,13 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
                     }
                     className="flex flex-row justify-center items-center group p-2 gap-2 hover:cursor-pointer hover:bg-gray-50"
                   >
-                    <Folder />
+                    <Fd />
                     <div className="flex-1 flex gap-2">
                       <span className="group-hover:text-blue-500">
                         {t("folderInfo", {
                           id: folder.id,
                           name: folder.name,
-                          count: folder.total_pairs,
+                          count: folder.total,
                         })}
                       </span>
                     </div>

@@ -1,24 +1,23 @@
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
 import { getTranslations } from "next-intl/server";
 import InFolder from "./InFolder";
-import { getOwnerByFolderId } from "@/lib/actions/services/folderService";
+import { getUserIdByFolderId } from "@/lib/actions/services/folderService";
+import { auth } from "@/auth";
 export default async function FoldersPage({
   params,
 }: {
   params: Promise<{ folder_id: number }>;
 }) {
-  const session = await getServerSession();
+  const session = await auth();
   const { folder_id } = await params;
-  const id = Number(folder_id);
   const t = await getTranslations("folder_id");
 
-  if (!id) {
+  if (!folder_id) {
     redirect("/folders");
   }
-  if (!session?.user?.name) redirect(`/login?redirect=/folders/${id}`);
-  if ((await getOwnerByFolderId(id)) !== session.user.name) {
+  if (!session?.user?.id) redirect(`/login?redirect=/folders/${folder_id}`);
+  if ((await getUserIdByFolderId(Number(folder_id))) !== Number(session.user.id)) {
     return <p>{t("unauthorized")}</p>;
   }
-  return <InFolder folderId={id} />;
+  return <InFolder folderId={Number(folder_id)} />;
 }

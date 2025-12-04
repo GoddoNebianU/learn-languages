@@ -1,29 +1,29 @@
 import Container from "@/components/cards/Container";
 import { useEffect, useState } from "react";
-import { folder } from "../../../../generated/prisma/browser";
-import { getFoldersByOwner } from "@/lib/actions/services/folderService";
+import { Folder } from "../../../../generated/prisma/browser";
+import { getFoldersByUserId } from "@/lib/actions/services/folderService";
 import LightButton from "@/components/buttons/LightButton";
-import { Folder } from "lucide-react";
+import { Folder as Fd } from "lucide-react";
 
 interface FolderSelectorProps {
   setSelectedFolderId: (id: number) => void;
-  username: string;
+  userId: number;
   cancel: () => void;
 }
 
 const FolderSelector: React.FC<FolderSelectorProps> = ({
   setSelectedFolderId,
-  username,
+  userId,
   cancel,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [folders, setFolders] = useState<folder[]>([]);
+  const [folders, setFolders] = useState<Folder[]>([]);
 
   useEffect(() => {
-    getFoldersByOwner(username)
+    getFoldersByUserId(userId)
       .then(setFolders)
       .then(() => setLoading(false));
-  }, [username]);
+  }, [userId]);
 
   return (
     <div
@@ -41,7 +41,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({
                     key={folder.id}
                     onClick={() => setSelectedFolderId(folder.id)}
                   >
-                    <Folder />
+                    <Fd />
                     {folder.id}. {folder.name}
                   </button>
                 ))}

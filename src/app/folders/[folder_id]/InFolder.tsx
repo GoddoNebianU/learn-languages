@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 import Container from "@/components/cards/Container";
 import {
-  createTextPair,
-  deleteTextPairById,
-  getTextPairsByFolderId,
-} from "@/lib/actions/services/textPairService";
+  createPair,
+  deletePairById,
+  getPairsByFolderId,
+} from "@/lib/actions/services/pairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import LightButton from "@/components/buttons/LightButton";
@@ -34,7 +34,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
     const fetchTextPairs = async () => {
       setLoading(true);
       try {
-        const data = await getTextPairsByFolderId(folderId);
+        const data = await getPairsByFolderId(folderId);
         setTextPairs(data as TextPair[]);
       } catch (error) {
         console.error("Failed to fetch text pairs:", error);
@@ -47,7 +47,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
 
   const refreshTextPairs = async () => {
     try {
-      const data = await getTextPairsByFolderId(folderId);
+      const data = await getPairsByFolderId(folderId);
       setTextPairs(data as TextPair[]);
     } catch (error) {
       console.error("Failed to fetch text pairs:", error);
@@ -118,7 +118,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
                     key={textPair.id}
                     textPair={textPair}
                     onDel={() => {
-                      deleteTextPairById(textPair.id);
+                      deletePairById(textPair.id);
                       refreshTextPairs();
                     }}
                     refreshTextPairs={refreshTextPairs}
@@ -137,12 +137,12 @@ export default function InFolder({ folderId }: { folderId: number }) {
           locale1: string,
           locale2: string,
         ) => {
-          await createTextPair({
+          await createPair({
             text1: text1,
             text2: text2,
             locale1: locale1,
             locale2: locale2,
-            folders: {
+            folder: {
               connect: {
                 id: folderId,
               },
