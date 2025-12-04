@@ -21,13 +21,12 @@ steps:
         - latest
   
   - name: database migrate
-    image: node:24-alpine
+    image: node:24
     environment:
       DATABASE_URL:
         from_secret: database_url
     commands:
-      - npm i -g prisma@7 @prisma/config@7
-      - prisma migrate deploy
+      - npx prisma@7 migrate deploy
 
   - name: deploy
     image: appleboy/drone-ssh
