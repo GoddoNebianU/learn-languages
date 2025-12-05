@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 
 type AudioPlayerError = Error | null;
 
@@ -68,7 +68,7 @@ export function useAudioPlayer() {
     };
   }, []);
 
-  const play = useCallback(async () => {
+  const play = async () => {
     if (!audioRef.current) return;
 
     try {
@@ -86,32 +86,32 @@ export function useAudioPlayer() {
       setState((prev) => ({ ...prev, isPlaying: false }));
       throw error;
     }
-  }, []);
+  }
 
-  const pause = useCallback(() => {
+  const pause = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       setState((prev) => ({ ...prev, isPlaying: false }));
     }
-  }, []);
+  }
 
-  const stop = useCallback(() => {
+  const stop = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       setState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
     }
-  }, []);
+  }
 
-  const setVolume = useCallback((volume: number) => {
+  const setVolume = (volume: number) => {
     if (audioRef.current) {
       const clampedVolume = Math.max(0, Math.min(1, volume));
       audioRef.current.volume = clampedVolume;
       setState((prev) => ({ ...prev, volume: clampedVolume }));
     }
-  }, []);
+  }
 
-  const seek = useCallback((time: number) => {
+  const seek = (time: number) => {
     if (audioRef.current) {
       const clampedTime = Math.max(
         0,
@@ -120,9 +120,9 @@ export function useAudioPlayer() {
       audioRef.current.currentTime = clampedTime;
       setState((prev) => ({ ...prev, currentTime: clampedTime }));
     }
-  }, []);
+  }
 
-  const load = useCallback(async (audioUrl: string) => {
+  const load = async (audioUrl: string) => {
     if (!audioRef.current) return;
 
     // 中止之前的加载操作
@@ -151,7 +151,7 @@ export function useAudioPlayer() {
       // Only load if URL is different or we need to force reload
       if (audioRef.current.src !== audioUrl) {
         audioRef.current.src = audioUrl;
-        
+
         await new Promise<void>((resolve, reject) => {
           if (!audioRef.current) {
             reject(new Error("Audio element not found"));
@@ -221,13 +221,13 @@ export function useAudioPlayer() {
         abortControllerRef.current = null;
       }
     }
-  }, []);
+  }
 
-  // 新增：同时加载和播放的便捷方法
-  const playAudio = useCallback(async (audioUrl: string) => {
+  // 同时加载和播放的便捷方法
+  const playAudio = async (audioUrl: string) => {
     await load(audioUrl);
     await play();
-  }, [load, play]);
+  }
 
   return {
     ...state,
@@ -237,7 +237,7 @@ export function useAudioPlayer() {
     setVolume,
     seek,
     load,
-    playAudio, // 新增的便捷方法
+    playAudio,
     error,
     audioRef,
   };
