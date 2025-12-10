@@ -17,7 +17,7 @@ export default async function FoldersPage({
     redirect("/folders");
   }
   if (!session) redirect(`/login?redirect=/folders/${folder_id}`);
-  if ((await getUserIdByFolderId(folder_id)) !== session.user.id) {
+  if ((await getUserIdByFolderId(Number(folder_id))) !== session.user.id) {
     return <p>{t("unauthorized")}</p>;
   }
   return <InFolder folderId={Number(folder_id)} />;
