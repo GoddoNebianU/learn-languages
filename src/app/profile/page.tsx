@@ -1,43 +1,40 @@
-"use client";
-
-import { signOut, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useEffect } from "react";
 import { Center } from "@/components/Center";
 import Container from "@/components/cards/Container";
-import LightButton from "@/components/buttons/LightButton";
-import { useTranslations } from "next-intl";
+import { auth } from "@/auth";
+import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import LogoutButton from "./LogoutButton";
 
-export default function MePage() {
-  const session = useSession();
-  const router = useRouter();
-  const pathname = usePathname();
-  const t = useTranslations("profile");
+export default async function ProfilePage() {
+  const t = await getTranslations("profile");
 
-  useEffect(() => {
-    if (session.status !== "authenticated") {
-      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-    }
-  }, [session.status, router, pathname]);
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session) {
+    redirect("/signin?redirect=/profile");
+  }
+
+  console.log(JSON.stringify(session, null, 2));
 
   return (
     <Center>
       <Container className="p-6">
         <h1>{t("myProfile")}</h1>
-        {(session.data?.user?.image as string) && (
+        {(session.user.image) && (
           <Image
             width={64}
             height={64}
             alt="User Avatar"
-            src={session.data?.user?.image as string}
+            src={session.user.image as string}
             className="rounded-4xl"
           ></Image>
         )}
-        <p>{session.data?.user?.name}</p>
-        <p>{t("email", { email: session.data!.user!.email as string })}</p>
-        <LightButton onClick={signOut}>{t("logout")}</LightButton>
+        <p>{session.user.name}</p>
+        <p>{t("email", { email: session.user.email })}</p>
+        <LogoutButton />
       </Container>
     </Center>
   );
-}
+};

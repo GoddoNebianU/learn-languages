@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LightButton from "@/components/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
-import { isNonNegativeInteger } from "@/lib/utils";
+import { isNonNegativeInteger, SeededRandom } from "@/lib/utils";
 import { Pair } from "../../../../generated/prisma/browser";
 
 const myFont = localFont({
@@ -27,20 +27,16 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   const [show, setShow] = useState<"question" | "answer">("question");
   const { load, play } = useAudioPlayer();
 
-  const [disorderedTextPairs, setDisorderedTextPairs] = useState<Pair[]>(
-    [],
-  );
+  if (textPairs.length === 0) {
+    return <p>{t("noTextPairs")}</p>;
+  }
 
-  useEffect(() => {
-    setDisorderedTextPairs(textPairs.toSorted(() => Math.random() - 0.5));
-  }, [textPairs]);
+  const rng = new SeededRandom(textPairs[0].folderId);
+  const disorderedTextPairs = textPairs.toSorted(() => rng.next() - 0.5);
 
-  const getTextPairs = () => {
-    if (disorder) {
-      return disorderedTextPairs;
-    }
-    return textPairs.toSorted((a, b) => a.id - b.id);
-  };
+  textPairs.sort((a, b) => a.id - b.id);
+
+  const getTextPairs = () => disorder ? disorderedTextPairs : textPairs;
 
   return (
     <>
@@ -120,7 +116,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
                         (v) =>
                           v.locale ===
                           getTextPairs()[newIndex][
-                            reverse ? "locale2" : "locale1"
+                          reverse ? "locale2" : "locale1"
                           ],
                       )!.short_name,
                     ).then((url) => {

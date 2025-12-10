@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import SessionWrapper from "@/components/SessionWrapper";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "sonner";
 
@@ -22,16 +21,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionWrapper>
-      <html lang="en">
-        <body className={`antialiased`}>
-          <NextIntlClientProvider>
-            <Navbar></Navbar>
-            {children}
-            <Toaster />
-          </NextIntlClientProvider>
-        </body>
-      </html>
-    </SessionWrapper>
+    <html lang="en">
+      <body className={`antialiased`}>
+        <NextIntlClientProvider>
+          <Navbar></Navbar>
+          {children}
+          <Toaster />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

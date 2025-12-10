@@ -1,30 +1,20 @@
-import NextAuth from "next-auth";
-import GitHub from "next-auth/providers/github";
-import { createUserIfNotExists, getUserIdByEmail } from "./lib/actions/services/userService";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
+import prisma from "./lib/db";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-    providers: [
-        GitHub({
-            clientId: process.env.GITHUB_CLIENT_ID!,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-        }),
-    ],
-
-    callbacks: {
-        async signIn({ user }) {
-            if (!user.email) return false;
-            await createUserIfNotExists(user.email, user.name);
-            return true
-        },
-        async session({ session }) {
-            if (session.user?.email) {
-                const userId = await getUserIdByEmail(session.user.email);
-
-                if (userId) {
-                    session.user.id = userId.toString();
-                }
-            }
-            return session;
+export const auth = betterAuth({
+    database: prismaAdapter(prisma, {
+        provider: "postgresql"
+    }),
+    emailAndPassword: {
+        enabled: true
+    },
+    socialProviders: {
+        github: {
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string
         },
     },
+    plugins: [nextCookies()]
 });

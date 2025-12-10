@@ -16,7 +16,7 @@ import {
   deleteFolderById,
   getFoldersWithTotalPairsByUserId,
   renameFolderById,
-} from "@/lib/actions/services/folderService";
+} from "@/lib/server/services/folderService";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -85,7 +85,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
   );
 };
 
-export default function FoldersClient({ userId }: { userId: number }) {
+export default function FoldersClient({ userId }: { userId: string }) {
   const t = useTranslations("folders");
   const [folders, setFolders] = useState<(Folder & { total: number })[]>(
     [],

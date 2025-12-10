@@ -3,7 +3,7 @@
 import { FolderCreateInput, FolderUpdateInput } from "../../../../generated/prisma/models";
 import prisma from "../../db";
 
-export async function getFoldersByUserId(userId: number) {
+export async function getFoldersByUserId(userId: string) {
   const folders = await prisma.folder.findMany({
     where: {
       userId: userId,
@@ -23,7 +23,7 @@ export async function renameFolderById(id: number, newName: string) {
   });
 }
 
-export async function getFoldersWithTotalPairsByUserId(userId: number) {
+export async function getFoldersWithTotalPairsByUserId(userId: string) {
   const folders = await prisma.folder.findMany({
     where: { userId },
     include: {

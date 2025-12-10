@@ -1,26 +1,18 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import IconClick from "./IconClick";
 import IMAGES from "@/config/images";
-import { useState } from "react";
-import LightButton from "./buttons/LightButton";
-import { useSession } from "next-auth/react";
-import { Folder, Home, LoaderCircle } from "lucide-react";
+import { Folder, Home } from "lucide-react";
+import LanguageSettings from "./LanguageSettings";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
-export function Navbar() {
-  const t = useTranslations("navbar");
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
-  const handleLanguageClick = () => {
-    setShowLanguageMenu((prev) => !prev);
-  };
-  const setLocale = async (locale: string) => {
-    document.cookie = `locale=${locale}`;
-    window.location.reload();
-  };
-  const session = useSession();
+export async function Navbar() {
+  const t = await getTranslations("navbar");
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
   return (
     <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
       <Link href={"/"} className="text-xl border-b hidden md:block">
@@ -41,47 +33,21 @@ export function Navbar() {
             height={24}
           />
         </Link>
-        <div className="relative">
-          {showLanguageMenu && (
-            <div>
-              <div className="absolute top-10 right-0 rounded-md shadow-md flex flex-col gap-2">
-                <LightButton
-                  className="w-full"
-                  onClick={() => setLocale("en-US")}
-                >
-                  English
-                </LightButton>
-                <LightButton
-                  className="w-full"
-                  onClick={() => setLocale("zh-CN")}
-                >
-                  中文
-                </LightButton>
-              </div>
-            </div>
-          )}
-          <IconClick
-            src={IMAGES.language_white}
-            alt="language"
-            disableOnHoverBgChange={true}
-            onClick={handleLanguageClick}
-          ></IconClick>
-        </div>
+        <LanguageSettings />
         <Link href="/folders" className="md:block hidden">
           {t("folders")}
         </Link>
         <Link href="/folders" className="md:hidden block">
           <Folder />
         </Link>
-        {session?.status === "authenticated" && (
-          <div className="flex gap-2">
-            <Link href="/profile">{t("profile")}</Link>
-          </div>
-        )}
-        {session?.status === "unauthenticated" && (
-          <Link href="/login">{t("login")}</Link>
-        )}
-        {session?.status === "loading" && <LoaderCircle />}
+        {
+          (() => {
+            return session &&
+              <Link href="/profile">{t("profile")}</Link>
+              || <Link href="/signin">{t("sign_in")}</Link>;
+
+          })()
+        }
         <Link href="/changelog.txt">{t("about")}</Link>
         <Link
           className="hidden md:block"

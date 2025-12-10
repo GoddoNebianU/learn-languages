@@ -1,6 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import { TextPair } from "./InFolder";
-import { updatePairById } from "@/lib/actions/services/pairService";
+import { updatePairById } from "@/lib/server/services/pairService";
 import { useState } from "react";
 import UpdateTextPairModal from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";

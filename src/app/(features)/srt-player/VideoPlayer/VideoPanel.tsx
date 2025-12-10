@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useEffect } from "react";
+import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import SubtitleDisplay from "./SubtitleDisplay";
 import LightButton from "@/components/buttons/LightButton";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
@@ -20,7 +20,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
     const [spanText, setSpanText] = useState<string>("");
     const [subtitle, setSubtitle] = useState<string>("");
     const parsedSrtRef = useRef<
-      { start: number; end: number; text: string }[] | null
+      { start: number; end: number; text: string; }[] | null
     >(null);
     const rafldRef = useRef<number>(0);
     const ready = useRef({
@@ -31,7 +31,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
       },
     });
 
-    const togglePlayPause = () => {
+    const togglePlayPause = useCallback(() => {
       if (!videoUrl) return;
 
       const video = videoRef.current;
@@ -42,7 +42,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
         video.pause();
       }
       setIsPlaying(!video.paused);
-    }
+    }, [videoRef, videoUrl]);
 
     useEffect(() => {
       const handleKeyDownEvent = (e: globalThis.KeyboardEvent) => {

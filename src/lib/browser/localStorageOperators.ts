@@ -16,7 +16,7 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
       try {
         const item = globalThis.localStorage.getItem(key);
 
-        if (!item) return [];
+        if (!item) return [] as z.infer<T>;
 
         const rawData = JSON.parse(item) as z.infer<T>;
         const result = schema.safeParse(rawData);
@@ -28,11 +28,11 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
             "Invalid data structure in localStorage:",
             result.error,
           );
-          return [];
+          return [] as z.infer<T>;
         }
       } catch (e) {
         console.error(`Failed to parse ${key} data:`, e);
-        return [];
+        return [] as z.infer<T>;
       }
     },
     set: (data: z.infer<T>) => {

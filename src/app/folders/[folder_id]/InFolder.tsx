@@ -9,7 +9,7 @@ import {
   createPair,
   deletePairById,
   getPairsByFolderId,
-} from "@/lib/actions/services/pairService";
+} from "@/lib/server/services/pairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import LightButton from "@/components/buttons/LightButton";

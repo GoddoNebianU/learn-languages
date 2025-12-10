@@ -17,17 +17,15 @@ import {
   genIPA,
   genLocale,
   genTranslation,
-} from "@/lib/actions/translatorActions";
+} from "@/lib/server/translatorActions";
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
-import { useSession } from "next-auth/react";
-import { createPair } from "@/lib/actions/services/pairService";
+import { createPair } from "@/lib/server/services/pairService";
 import { shallowEqual } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
-
-  const session = useSession();
 
   const taref = useRef<HTMLTextAreaElement>(null);
   const [lang, setLang] = useState<string>("chinese");
@@ -49,8 +47,9 @@ export default function TranslatorPage() {
   });
   const [autoSave, setAutoSave] = useState(false);
   const [autoSaveFolderId, setAutoSaveFolderId] = useState<number | null>(null);
+  const { data: session } = authClient.useSession();
 
-  useEffect(()=>{
+  useEffect(() => {
     setHistory(tlso.get());
   }, []);
 
@@ -310,7 +309,7 @@ export default function TranslatorPage() {
             checked={autoSave}
             onChange={(e) => {
               const checked = e.target.checked;
-              if (checked === true && !(session.status === "authenticated")) {
+              if (checked === true && !session) {
                 toast.warning("Please login to enable auto-save");
                 return;
               }
@@ -368,7 +367,7 @@ export default function TranslatorPage() {
           )}
           {autoSave && !autoSaveFolderId && (
             <FolderSelector
-              userId={Number(session.data!.user!.id)}
+              userId={session!.user.id as string}
               cancel={() => setAutoSave(false)}
               setSelectedFolderId={(id) => setAutoSaveFolderId(id)}
             />

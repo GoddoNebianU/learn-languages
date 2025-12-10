@@ -16,7 +16,7 @@ import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
-import { genIPA, genLocale } from "@/lib/actions/translatorActions";
+import { genIPA, genLocale } from "@/lib/server/translatorActions";
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");

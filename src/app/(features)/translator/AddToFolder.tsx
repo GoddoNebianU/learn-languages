@@ -1,15 +1,17 @@
+"use client";
+
 import LightButton from "@/components/buttons/LightButton";
 import Container from "@/components/cards/Container";
 import { TranslationHistorySchema } from "@/lib/interfaces";
-import { useSession } from "next-auth/react";
 import { Dispatch, useEffect, useState } from "react";
 import z from "zod";
 import { Folder } from "../../../../generated/prisma/browser";
-import { getFoldersByUserId } from "@/lib/actions/services/folderService";
+import { getFoldersByUserId } from "@/lib/server/services/folderService";
 import { Folder as Fd } from "lucide-react";
-import { createPair } from "@/lib/actions/services/pairService";
+import { createPair } from "@/lib/server/services/pairService";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { authClient } from "@/lib/auth-client";
 
 interface AddToFolderProps {
   item: z.infer<typeof TranslationHistorySchema>;
@@ -17,19 +19,21 @@ interface AddToFolderProps {
 }
 
 const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
-  const session = useSession();
+  const { data: session } = authClient.useSession();
   const [folders, setFolders] = useState<Folder[]>([]);
   const t = useTranslations("translator.add_to_folder");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userId = Number(session.data!.user!.id);
+    if (!session) return;
+    const userId = session.user.id;
     getFoldersByUserId(userId)
       .then(setFolders)
       .then(() => setLoading(false));
-  }, [session.data]);
+  }, [session]);
 
-  if (session.status !== "authenticated") {
+
+  if (!session) {
     return (
       <div className="fixed left-0 top-0 z-50 w-screen h-screen bg-black/50 flex justify-center items-center">
         <Container className="p-6">

@@ -1,13 +1,13 @@
 import Container from "@/components/cards/Container";
 import { useEffect, useState } from "react";
 import { Folder } from "../../../../generated/prisma/browser";
-import { getFoldersByUserId } from "@/lib/actions/services/folderService";
+import { getFoldersByUserId } from "@/lib/server/services/folderService";
 import LightButton from "@/components/buttons/LightButton";
 import { Folder as Fd } from "lucide-react";
 
 interface FolderSelectorProps {
   setSelectedFolderId: (id: number) => void;
-  userId: number;
+  userId: string;
   cancel: () => void;
 }
 
