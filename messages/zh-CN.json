@@ -10,7 +10,11 @@
     "hideLetter": "隐藏字母",
     "showLetter": "显示字母",
     "hideIPA": "隐藏IPA",
-    "showIPA": "显示IPA"
+    "showIPA": "显示IPA",
+    "roman": "罗马音",
+    "letter": "字母",
+    "random": "随机模式",
+    "randomNext": "随机下一个"
   },
   "folders": {
     "title": "文件夹",
@@ -81,6 +85,30 @@
   "login": {
     "loading": "加载中...",
     "githubLogin": "GitHub登录"
+  },
+  "auth": {
+    "title": "登录",
+    "signIn": "登录",
+    "signUp": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "name": "用户名",
+    "signInButton": "登录",
+    "signUpButton": "注册",
+    "noAccount": "还没有账户？",
+    "hasAccount": "已有账户？",
+    "signInWithGitHub": "使用GitHub登录",
+    "signUpWithGitHub": "使用GitHub注册",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "passwordTooShort": "密码至少需要8个字符",
+    "passwordsNotMatch": "两次输入的密码不匹配",
+    "signInFailed": "登录失败，请检查您的邮箱和密码",
+    "signUpFailed": "注册失败，请稍后再试",
+    "nameRequired": "请输入用户名",
+    "emailRequired": "请输入邮箱",
+    "passwordRequired": "请输入密码",
+    "confirmPasswordRequired": "请确认密码"
   },
   "memorize": {
     "choose": {

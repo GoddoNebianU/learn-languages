@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 
 export const viewport: Viewport = {

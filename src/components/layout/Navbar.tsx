@@ -1,11 +1,11 @@
 import Image from "next/image";
 import IMAGES from "@/config/images";
 import { Folder, Home } from "lucide-react";
-import LanguageSettings from "./LanguageSettings";
+import LanguageSettings from "../LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import GhostButton from "./buttons/GhostButton";
+import GhostButton from "../ui/buttons/GhostButton";
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
@@ -44,7 +44,7 @@ export async function Navbar() {
           (() => {
             return session &&
               <GhostButton href="/profile">{t("profile")}</GhostButton>
-              || <GhostButton href="/signin">{t("sign_in")}</GhostButton>;
+              || <GhostButton href="/auth">{t("sign_in")}</GhostButton>;
 
           })()
         }

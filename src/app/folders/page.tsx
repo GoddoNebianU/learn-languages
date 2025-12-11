@@ -7,6 +7,6 @@ export default async function FoldersPage() {
   const session = await auth.api.getSession(
     { headers: await headers() }
   );
-  if (!session) redirect(`/signin?redirect=/folders`);
+  if (!session) redirect(`/auth?redirect=/folders`);
   return <FoldersClient userId={session.user.id} />;
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import IMAGES from "@/config/images";
-import IconClick from "./IconClick";
+import IconClick from "./ui/buttons/IconClick";
 import { useState } from "react";
-import GhostButton from "./buttons/GhostButton";
+import GhostButton from "./ui/buttons/GhostButton";
 
 export default function LanguageSettings() {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);

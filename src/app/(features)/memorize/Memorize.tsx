@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import LightButton from "@/components/buttons/LightButton";
+import LightButton from "@/components/ui/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";

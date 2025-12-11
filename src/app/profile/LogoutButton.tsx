@@ -1,6 +1,6 @@
 "use client";
 
-import LightButton from "@/components/buttons/LightButton";
+import LightButton from "@/components/ui/buttons/LightButton";
 import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export default function LogoutButton() {
         authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    router.push("/login?redirect=/profile");
+                    router.push("/auth?redirect=/profile");
                 }
             }
         });

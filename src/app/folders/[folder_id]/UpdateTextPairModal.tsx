@@ -1,5 +1,5 @@
-import LightButton from "@/components/buttons/LightButton";
-import Input from "@/components/Input";
+import LightButton from "@/components/ui/buttons/LightButton";
+import Input from "@/components/ui/Input";
 import { X } from "lucide-react";
 import { useRef } from "react";
 import { PairUpdateInput } from "../../../../generated/prisma/models";

@@ -1,4 +1,4 @@
-import LightButton from "@/components/buttons/LightButton";
+import LightButton from "@/components/ui/buttons/LightButton";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 

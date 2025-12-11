@@ -1,48 +1,37 @@
 "use client";
 
-import LightButton from "@/components/buttons/LightButton";
-import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { useEffect, useState } from "react";
-import MemoryCard from "./MemoryCard";
-
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { Letter, SupportedAlphabets } from "@/lib/interfaces";
+import Container from "@/components/ui/Container";
+import LightButton from "@/components/ui/buttons/LightButton";
+import AlphabetCard from "./AlphabetCard";
 
 export default function Alphabet() {
   const t = useTranslations("alphabet");
-  const [chosenAlphabet, setChosenAlphabet] =
-    useState<SupportedAlphabets | null>(null);
-  const [alphabetData, setAlphabetData] = useState<
-    Record<SupportedAlphabets, Letter[] | null>
-  >({
-    japanese: null,
-    english: null,
-    esperanto: null,
-    uyghur: null,
-  });
-  const [loadingState, setLoadingState] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [chosenAlphabet, setChosenAlphabet] = useState<SupportedAlphabets | null>(null);
+  const [alphabetData, setAlphabetData] = useState<Letter[] | null>(null);
+  const [loadingState, setLoadingState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
-    if (chosenAlphabet && !alphabetData[chosenAlphabet]) {
-      setLoadingState("loading");
-
-      fetch("/alphabets/" + chosenAlphabet + ".json")
-        .then((res) => {
+    const loadAlphabetData = async () => {
+      if (chosenAlphabet && !alphabetData) {
+        try {
+          setLoadingState("loading");
+          
+          const res = await fetch("/alphabets/" + chosenAlphabet + ".json");
           if (!res.ok) throw new Error("Network response was not ok");
-          return res.json();
-        })
-        .then((obj) => {
-          setAlphabetData((prev) => ({
-            ...prev,
-            [chosenAlphabet]: obj as Letter[],
-          }));
+          
+          const obj = await res.json();
+          setAlphabetData(obj as Letter[]);
           setLoadingState("success");
-        })
-        .catch(() => {
+        } catch (error) {
           setLoadingState("error");
-        });
-    }
+        }
+      }
+    };
+
+    loadAlphabetData();
   }, [chosenAlphabet, alphabetData]);
 
   useEffect(() => {
@@ -50,48 +39,106 @@ export default function Alphabet() {
       const timer = setTimeout(() => {
         setLoadingState("idle");
         setChosenAlphabet(null);
+        setAlphabetData(null);
       }, 2000);
       return () => clearTimeout(timer);
     }
   }, [loadingState]);
 
-  if (!chosenAlphabet)
+  // 语言选择界面
+  if (!chosenAlphabet) {
     return (
-      <>
-        <div className="border border-gray-200 m-4 mt-4 flex flex-col justify-center items-center p-4 rounded-2xl gap-2">
-          <span className="text-2xl md:text-3xl">{t("chooseCharacters")}</span>
-          <div className="flex gap-1 flex-wrap">
-            <LightButton onClick={() => setChosenAlphabet("japanese")}>
-              {t("japanese")}
+      <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex flex-col items-center justify-center px-4">
+        <Container className="p-8 max-w-2xl w-full text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            {t("chooseCharacters")}
+          </h1>
+          <p className="text-gray-600 mb-8 text-lg">
+            选择一种语言的字母表开始学习
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <LightButton
+              onClick={() => setChosenAlphabet("japanese")}
+              className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            >
+              <div className="flex flex-col items-center">
+                <span className="text-2xl mb-2">あいうえお</span>
+                <span>{t("japanese")}</span>
+              </div>
             </LightButton>
-            <LightButton onClick={() => setChosenAlphabet("english")}>
-              {t("english")}
+            
+            <LightButton
+              onClick={() => setChosenAlphabet("english")}
+              className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            >
+              <div className="flex flex-col items-center">
+                <span className="text-2xl mb-2">ABC</span>
+                <span>{t("english")}</span>
+              </div>
             </LightButton>
-            <LightButton onClick={() => setChosenAlphabet("uyghur")}>
-              {t("uyghur")}
+            
+            <LightButton
+              onClick={() => setChosenAlphabet("uyghur")}
+              className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            >
+              <div className="flex flex-col items-center">
+                <span className="text-2xl mb-2">ئۇيغۇر</span>
+                <span>{t("uyghur")}</span>
+              </div>
             </LightButton>
-            <LightButton onClick={() => setChosenAlphabet("esperanto")}>
-              {t("esperanto")}
+            
+            <LightButton
+              onClick={() => setChosenAlphabet("esperanto")}
+              className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            >
+              <div className="flex flex-col items-center">
+                <span className="text-2xl mb-2">ABCĜĤ</span>
+                <span>{t("esperanto")}</span>
+              </div>
             </LightButton>
           </div>
-        </div>
-      </>
+        </Container>
+      </div>
     );
+  }
+
+  // 加载状态
   if (loadingState === "loading") {
-    return t("loading");
-  }
-  if (loadingState === "error") {
-    return t("loadFailed");
-  }
-  if (loadingState === "success" && alphabetData[chosenAlphabet]) {
     return (
-      <>
-        <MemoryCard
-          alphabet={alphabetData[chosenAlphabet]}
-          setChosenAlphabet={setChosenAlphabet}
-        ></MemoryCard>
-      </>
+      <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center">
+        <Container className="p-8 text-center">
+          <div className="text-2xl text-gray-600">{t("loading")}</div>
+        </Container>
+      </div>
     );
   }
+
+  // 错误状态
+  if (loadingState === "error") {
+    return (
+      <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center">
+        <Container className="p-8 text-center">
+          <div className="text-2xl text-red-600">{t("loadFailed")}</div>
+        </Container>
+      </div>
+    );
+  }
+
+  // 字母卡片界面
+  if (loadingState === "success" && alphabetData) {
+    return (
+      <AlphabetCard
+        alphabet={alphabetData}
+        alphabetType={chosenAlphabet}
+        onBack={() => {
+          setChosenAlphabet(null);
+          setAlphabetData(null);
+          setLoadingState("idle");
+        }}
+      />
+    );
+  }
+
   return null;
 }

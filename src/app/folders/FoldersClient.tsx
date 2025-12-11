@@ -8,7 +8,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Center } from "@/components/Center";
+import { Center } from "@/components/common/Center";
 import { useRouter } from "next/navigation";
 import { Folder } from "../../../generated/prisma/browser";
 import {

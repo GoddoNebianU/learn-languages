@@ -21,7 +21,7 @@ export default async function MemorizePage({
 
   if (!session) {
     redirect(
-      `/login?redirect=/memorize${(await searchParams).folder_id
+      `/auth?redirect=/memorize${(await searchParams).folder_id
         ? `?folder_id=${tParam}`
         : ""
       }`,

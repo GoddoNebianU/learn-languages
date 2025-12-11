@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Center } from "@/components/Center";
-import Container from "@/components/cards/Container";
+import { Center } from "@/components/common/Center";
+import Container from "@/components/ui/Container";
 import { auth } from "@/auth";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect("/signin?redirect=/profile");
+    redirect("/auth?redirect=/profile");
   }
 
   console.log(JSON.stringify(session, null, 2));
@@ -22,7 +22,7 @@ export default async function ProfilePage() {
     <Center>
       <Container className="p-6">
         <h1>{t("myProfile")}</h1>
-        {(session.user.image) && (
+        {session.user.image && (
           <Image
             width={64}
             height={64}
@@ -37,4 +37,4 @@ export default async function ProfilePage() {
       </Container>
     </Center>
   );
-};
+}

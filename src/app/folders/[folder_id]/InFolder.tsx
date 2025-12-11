@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowLeft, Plus } from "lucide-react";
-import { Center } from "@/components/Center";
+import { Center } from "@/components/common/Center";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import Container from "@/components/cards/Container";
+import Container from "@/components/ui/Container";
 import {
   createPair,
   deletePairById,
@@ -12,7 +12,7 @@ import {
 } from "@/lib/server/services/pairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
-import LightButton from "@/components/buttons/LightButton";
+import LightButton from "@/components/ui/buttons/LightButton";
 import { useTranslations } from "next-intl";
 
 export interface TextPair {

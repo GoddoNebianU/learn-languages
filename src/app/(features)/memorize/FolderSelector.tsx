@@ -1,8 +1,8 @@
 "use client";
 
-import Container from "@/components/cards/Container";
+import Container from "@/components/ui/Container";
 import { useRouter } from "next/navigation";
-import { Center } from "@/components/Center";
+import { Center } from "@/components/common/Center";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Folder } from "../../../../generated/prisma/browser";

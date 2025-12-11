@@ -1,5 +1,5 @@
-import LightButton from "@/components/buttons/LightButton";
-import Input from "@/components/Input";
+import LightButton from "@/components/ui/buttons/LightButton";
+import Input from "@/components/ui/Input";
 import { X } from "lucide-react";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -83,13 +83,19 @@ export default function AddTextPairModal({
           </div>
           <div>
             {t("locale1")}
-            <Input ref={input3Ref} className="w-full"
-             placeholder="en-US"></Input>
+            <Input
+              ref={input3Ref}
+              className="w-full"
+              placeholder="en-US"
+            ></Input>
           </div>
           <div>
             {t("locale2")}
-            <Input ref={input4Ref} className="w-full"
-             placeholder="zh-CN"></Input>
+            <Input
+              ref={input4Ref}
+              className="w-full"
+              placeholder="zh-CN"
+            ></Input>
           </div>
         </div>
         <LightButton onClick={handleAdd}>{t("add")}</LightButton>

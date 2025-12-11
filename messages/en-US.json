@@ -10,7 +10,11 @@
     "hideLetter": "Hide Letter",
     "showLetter": "Show Letter",
     "hideIPA": "Hide IPA",
-    "showIPA": "Show IPA"
+    "showIPA": "Show IPA",
+    "roman": "Romanization",
+    "letter": "Letter",
+    "random": "Random Mode",
+    "randomNext": "Random Next"
   },
   "folders": {
     "title": "Folders",
@@ -81,6 +85,30 @@
   "login": {
     "loading": "Loading...",
     "githubLogin": "GitHub Login"
+  },
+  "auth": {
+    "title": "Authentication",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "signInButton": "Sign In",
+    "signUpButton": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signInWithGitHub": "Sign In with GitHub",
+    "signUpWithGitHub": "Sign Up with GitHub",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsNotMatch": "Passwords do not match",
+    "signInFailed": "Sign in failed, please check your email and password",
+    "signUpFailed": "Sign up failed, please try again later",
+    "nameRequired": "Please enter your name",
+    "emailRequired": "Please enter your email",
+    "passwordRequired": "Please enter your password",
+    "confirmPasswordRequired": "Please confirm your password"
   },
   "memorize": {
     "folder_selector": {

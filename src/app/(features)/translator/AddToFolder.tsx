@@ -1,7 +1,7 @@
 "use client";
 
-import LightButton from "@/components/buttons/LightButton";
-import Container from "@/components/cards/Container";
+import LightButton from "@/components/ui/buttons/LightButton";
+import Container from "@/components/ui/Container";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { Dispatch, useEffect, useState } from "react";
 import z from "zod";

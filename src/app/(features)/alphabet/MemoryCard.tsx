@@ -1,11 +1,12 @@
-import LightButton from "@/components/buttons/LightButton";
-import IconClick from "@/components/IconClick";
+import LightButton from "@/components/ui/buttons/LightButton";
+import IconClick from "@/components/ui/buttons/IconClick";
 import IMAGES from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
   Dispatch,
   KeyboardEvent,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -19,12 +20,16 @@ export default function MemoryCard({
   setChosenAlphabet: Dispatch<SetStateAction<SupportedAlphabets | null>>;
 }) {
   const t = useTranslations("alphabet");
-  const [index, setIndex] = useState(
-    Math.floor(Math.random() * alphabet.length),
-  );
+  const [index, setIndex] = useState(() => alphabet.length > 0 ? Math.floor(Math.random() * alphabet.length) : 0);
   const [more, setMore] = useState(false);
   const [ipaDisplay, setIPADisplay] = useState(true);
   const [letterDisplay, setLetterDisplay] = useState(true);
+
+  const refresh = useCallback(() => {
+    if (alphabet.length > 0) {
+      setIndex(Math.floor(Math.random() * alphabet.length));
+    }
+  }, [alphabet.length]);
 
   useEffect(() => {
     const handleKeydown = (e: globalThis.KeyboardEvent) => {
@@ -32,12 +37,9 @@ export default function MemoryCard({
     };
     document.addEventListener("keydown", handleKeydown);
     return () => document.removeEventListener("keydown", handleKeydown);
-  });
+  }, [refresh]);
 
-  const letter = alphabet[index];
-  const refresh = () => {
-    setIndex(Math.floor(Math.random() * alphabet.length));
-  };
+  const letter = alphabet[index] || { letter: "", letter_name_ipa: "", letter_sound_ipa: "" };
   return (
     <div
       className="w-full flex justify-center items-center"

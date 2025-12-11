@@ -1,7 +1,7 @@
 "use client";
 
-import LightButton from "@/components/buttons/LightButton";
-import IconClick from "@/components/IconClick";
+import LightButton from "@/components/ui/buttons/LightButton";
+import IconClick from "@/components/ui/buttons/IconClick";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {
