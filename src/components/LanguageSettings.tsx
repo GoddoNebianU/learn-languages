@@ -4,6 +4,7 @@ import IMAGES from "@/config/images";
 import IconClick from "./IconClick";
 import { useState } from "react";
 import LightButton from "./buttons/LightButton";
+import GhostButton from "./buttons/GhostButton";
 
 export default function LanguageSettings() {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -26,18 +27,18 @@ export default function LanguageSettings() {
                 {showLanguageMenu && (
                     <div>
                         <div className="absolute top-10 right-0 rounded-md shadow-md flex flex-col gap-2">
-                            <LightButton
+                            <GhostButton
                                 className="w-full"
                                 onClick={() => setLocale("en-US")}
                             >
                                 English
-                            </LightButton>
-                            <LightButton
+                            </GhostButton>
+                            <GhostButton
                                 className="w-full"
                                 onClick={() => setLocale("zh-CN")}
                             >
                                 中文
-                            </LightButton>
+                            </GhostButton>
                         </div>
                     </div>
                 )}

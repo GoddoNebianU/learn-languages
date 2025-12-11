@@ -6,6 +6,7 @@ import LanguageSettings from "./LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
+import GhostButton from "./buttons/GhostButton";
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
@@ -15,14 +16,14 @@ export async function Navbar() {
 
   return (
     <div className="flex justify-between items-center w-full h-16 px-8 bg-[#35786f] text-white">
-      <Link href={"/"} className="text-xl border-b hidden md:block">
+      <GhostButton href="/" className="text-xl border-b hidden md:block">
         {t("title")}
-      </Link>
-      <Link className="block md:hidden" href={"/"}>
+      </GhostButton>
+      <GhostButton className="block md:hidden" href={"/"}>
         <Home />
-      </Link>
-      <div className="flex gap-4 text-xl justify-center items-center flex-wrap">
-        <Link
+      </GhostButton>
+      <div className="flex text-xl gap-0.5 justify-center items-center flex-wrap">
+        <GhostButton
           className="md:hidden block"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
@@ -32,29 +33,29 @@ export async function Navbar() {
             width={24}
             height={24}
           />
-        </Link>
+        </GhostButton>
         <LanguageSettings />
-        <Link href="/folders" className="md:block hidden">
+        <GhostButton href="/folders" className="md:block hidden">
           {t("folders")}
-        </Link>
-        <Link href="/folders" className="md:hidden block">
+        </GhostButton>
+        <GhostButton href="/folders" className="md:hidden block">
           <Folder />
-        </Link>
+        </GhostButton>
         {
           (() => {
             return session &&
-              <Link href="/profile">{t("profile")}</Link>
-              || <Link href="/signin">{t("sign_in")}</Link>;
+              <GhostButton href="/profile">{t("profile")}</GhostButton>
+              || <GhostButton href="/signin">{t("sign_in")}</GhostButton>;
 
           })()
         }
-        <Link href="/changelog.txt">{t("about")}</Link>
-        <Link
+        <GhostButton href="/changelog.txt">{t("about")}</GhostButton>
+        <GhostButton
           className="hidden md:block"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           {t("sourceCode")}
-        </Link>
+        </GhostButton>
       </div>
     </div>
   );
