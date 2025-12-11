@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import IMAGES from "@/config/images";
 import { Folder, Home } from "lucide-react";

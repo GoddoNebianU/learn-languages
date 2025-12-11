@@ -3,7 +3,6 @@
 import IMAGES from "@/config/images";
 import IconClick from "./IconClick";
 import { useState } from "react";
-import LightButton from "./buttons/LightButton";
 import GhostButton from "./buttons/GhostButton";
 
 export default function LanguageSettings() {
