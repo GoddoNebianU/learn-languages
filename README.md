@@ -109,7 +109,7 @@ pnpm prisma db push
 
 5. 启动开发服务器
 ```bash
-pnpm dev
+pnpm run dev
 ```
 
 访问 [http://localhost:3000](http://localhost:3000) 查看应用。
