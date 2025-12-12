@@ -108,7 +108,8 @@
     "nameRequired": "Please enter your name",
     "emailRequired": "Please enter your email",
     "passwordRequired": "Please enter your password",
-    "confirmPasswordRequired": "Please confirm your password"
+    "confirmPasswordRequired": "Please confirm your password",
+    "loading": "Loading..."
   },
   "memorize": {
     "folder_selector": {

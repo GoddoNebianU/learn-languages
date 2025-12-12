@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
 import { signInAction, signUpAction, SignUpState } from "@/lib/actions/auth";
 import Container from "@/components/ui/Container";
@@ -16,13 +16,27 @@ interface AuthFormProps {
 export default function AuthForm({ redirectTo }: AuthFormProps) {
   const t = useTranslations("auth");
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [clearSignIn, setClearSignIn] = useState(false);
+  const [clearSignUp, setClearSignUp] = useState(false);
   
   const [signInState, signInActionForm, isSignInPending] = useActionState(
-    async (prevState: SignUpState | undefined, formData: FormData) => signInAction(prevState || {}, formData),
+    async (prevState: SignUpState | undefined, formData: FormData) => {
+      if (clearSignIn) {
+        setClearSignIn(false);
+        return undefined;
+      }
+      return signInAction(prevState || {}, formData);
+    },
     undefined
   );
   const [signUpState, signUpActionForm, isSignUpPending] = useActionState(
-    async (prevState: SignUpState | undefined, formData: FormData) => signUpAction(prevState || {}, formData),
+    async (prevState: SignUpState | undefined, formData: FormData) => {
+      if (clearSignUp) {
+        setClearSignUp(false);
+        return undefined;
+      }
+      return signUpAction(prevState || {}, formData);
+    },
     undefined
   );
 
@@ -64,21 +78,29 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    if (validateForm(formData)) {
-      if (redirectTo) {
-        formData.append("redirectTo", redirectTo);
-      }
-      
-      if (mode === 'signin') {
-        await signInActionForm(formData);
-      } else {
-        await signUpActionForm(formData);
-      }
+    // 基本客户端验证
+    if (!validateForm(formData)) {
+      return;
     }
+    
+    // 添加 redirectTo 到 formData
+    if (redirectTo) {
+      formData.append("redirectTo", redirectTo);
+    }
+    
+    // 使用 startTransition 包装 action 调用
+    startTransition(() => {
+      // 根据模式调用相应的 action
+      if (mode === 'signin') {
+        signInActionForm(formData);
+      } else {
+        signUpActionForm(formData);
+      }
+    });
   };
 
   const handleGitHubSignIn = async () => {
@@ -115,6 +137,9 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">{errors.name}</p>
               )}
+              {currentError?.errors?.username && (
+                <p className="text-red-500 text-sm mt-1">{currentError.errors.username[0]}</p>
+              )}
             </div>
           )}
 
@@ -128,6 +153,9 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
+            {currentError?.errors?.email && (
+              <p className="text-red-500 text-sm mt-1">{currentError.errors.email[0]}</p>
+            )}
           </div>
 
           <div>
@@ -139,6 +167,9 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+            {currentError?.errors?.password && (
+              <p className="text-red-500 text-sm mt-1">{currentError.errors.password[0]}</p>
             )}
           </div>
 
@@ -194,6 +225,12 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             onClick={() => {
               setMode(mode === 'signin' ? 'signup' : 'signin');
               setErrors({});
+              // 清除服务器端错误状态
+              if (mode === 'signin') {
+                setClearSignIn(true);
+              } else {
+                setClearSignUp(true);
+              }
             }}
             className="text-[#35786f] hover:underline"
           >
