@@ -27,13 +27,13 @@ export default function LanguageSettings() {
                     <div>
                         <div className="absolute top-10 right-0 rounded-md shadow-md flex flex-col gap-2">
                             <GhostButton
-                                className="w-full"
+                                className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("en-US")}
                             >
                                 English
                             </GhostButton>
                             <GhostButton
-                                className="w-full"
+                                className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("zh-CN")}
                             >
                                 中文
