@@ -48,7 +48,6 @@ export async function Navbar() {
 
           })()
         }
-        <GhostButton href="/changelog.txt">{t("about")}</GhostButton>
         <GhostButton
           className="hidden md:block"
           href="https://github.com/GoddoNebianU/learn-languages"
