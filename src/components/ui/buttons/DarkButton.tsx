@@ -6,18 +6,21 @@ export default function DarkButton({
   selected,
   children,
   type = "button",
+  disabled
 }: {
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   className?: string;
   selected?: boolean;
   children?: React.ReactNode;
   type?: ButtonType;
+  disabled?: boolean;
 }) {
   return (
     <PlainButton
       onClick={onClick}
-      className={`hover:bg-gray-600 text-white ${selected ? "bg-gray-600" : "bg-gray-800"} ${className}`}
+      className={`hover:bg-gray-100 text-black ${selected ? "bg-gray-100" : "bg-white"} ${className}`}
       type={type}
+      disabled={disabled}
     >
       {children}
     </PlainButton>

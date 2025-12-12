@@ -6,18 +6,21 @@ export default function LightButton({
   selected,
   children,
   type = "button",
+  disabled
 }: {
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   className?: string;
   selected?: boolean;
   children?: React.ReactNode;
   type?: ButtonType;
+  disabled?: boolean;
 }) {
   return (
     <PlainButton
       onClick={onClick}
-      className={`hover:bg-gray-200 text-gray-800 ${selected ? "bg-gray-200" : "bg-white"} ${className}`}
+      className={`hover:bg-gray-100 text-black ${selected ? "bg-gray-100" : "bg-white"} ${className}`}
       type={type}
+      disabled={disabled}
     >
       {children}
     </PlainButton>
