@@ -207,34 +207,15 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
               <ChevronLeft size={24} />
             </button>
 
-            {/* 中间区域：随机按钮或进度条 */}
+            {/* 中间区域：随机按钮 */}
             <div className="flex gap-2 items-center">
-              {isRandomMode ? (
-                // 随机模式：显示随机切换按钮
+              {isRandomMode && (
                 <button
                   onClick={goToRandom}
                   className="px-4 py-2 rounded-full bg-[#35786f] text-white text-sm font-medium hover:bg-[#2d5f58] transition-colors"
                 >
                   {t("randomNext")}
                 </button>
-              ) : (
-                // 顺序模式：显示进度点
-                <div className="flex gap-1 flex-wrap max-w-xs justify-center">
-                  {alphabet.slice(0, 20).map((_, index) => (
-                    <div
-                      key={index}
-                      className={`h-2 rounded-full transition-all ${
-                        index === currentIndex
-                          ? "w-8 bg-[#35786f]"
-                          : "w-2 bg-gray-300"
-                      }`}
-                    />
-                  ))}
-                  {/* 超过20个字母时显示省略号 */}
-                  {alphabet.length > 20 && (
-                    <div className="text-xs text-gray-500 flex items-center">...</div>
-                  )}
-                </div>
               )}
             </div>
 
