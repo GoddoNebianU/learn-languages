@@ -1,4 +1,5 @@
 import { SubtitleEntry } from "../types/subtitle";
+import { logger } from "@/lib/logger";
 
 export function parseSrt(data: string): SubtitleEntry[] {
   const lines = data.split(/\r?\n/);
@@ -93,7 +94,7 @@ export async function loadSubtitle(url: string): Promise<SubtitleEntry[]> {
     const data = await response.text();
     return parseSrt(data);
   } catch (error) {
-    console.error('Failed to load subtitle:', error);
+    logger.error('加载字幕失败', error);
     return [];
   }
 }

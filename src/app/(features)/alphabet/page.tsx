@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import Container from "@/components/ui/Container";
-import LightButton from "@/components/ui/buttons/LightButton";
+import { LightButton } from "@/components/ui/buttons";
 import AlphabetCard from "./AlphabetCard";
 
 export default function Alphabet() {
@@ -50,14 +50,18 @@ export default function Alphabet() {
     return (
       <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex flex-col items-center justify-center px-4">
         <Container className="p-8 max-w-2xl w-full text-center">
+          {/* 页面标题 */}
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             {t("chooseCharacters")}
           </h1>
+          {/* 副标题说明 */}
           <p className="text-gray-600 mb-8 text-lg">
             选择一种语言的字母表开始学习
           </p>
-          
+
+          {/* 语言选择按钮网格 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 日语假名选项 */}
             <LightButton
               onClick={() => setChosenAlphabet("japanese")}
               className="p-6 text-lg font-medium hover:scale-105 transition-transform"
@@ -67,7 +71,8 @@ export default function Alphabet() {
                 <span>{t("japanese")}</span>
               </div>
             </LightButton>
-            
+
+            {/* 英语字母选项 */}
             <LightButton
               onClick={() => setChosenAlphabet("english")}
               className="p-6 text-lg font-medium hover:scale-105 transition-transform"
@@ -77,7 +82,8 @@ export default function Alphabet() {
                 <span>{t("english")}</span>
               </div>
             </LightButton>
-            
+
+            {/* 维吾尔语字母选项 */}
             <LightButton
               onClick={() => setChosenAlphabet("uyghur")}
               className="p-6 text-lg font-medium hover:scale-105 transition-transform"
@@ -87,7 +93,8 @@ export default function Alphabet() {
                 <span>{t("uyghur")}</span>
               </div>
             </LightButton>
-            
+
+            {/* 世界语字母选项 */}
             <LightButton
               onClick={() => setChosenAlphabet("esperanto")}
               className="p-6 text-lg font-medium hover:scale-105 transition-transform"

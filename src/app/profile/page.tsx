@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Center } from "@/components/common/Center";
-import Container from "@/components/ui/Container";
+import PageLayout from "@/components/ui/PageLayout";
+import PageHeader from "@/components/ui/PageHeader";
 import { auth } from "@/auth";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
@@ -16,25 +16,34 @@ export default async function ProfilePage() {
     redirect("/auth?redirect=/profile");
   }
 
-  console.log(JSON.stringify(session, null, 2));
-
   return (
-    <Center>
-      <Container className="p-6">
-        <h1>{t("myProfile")}</h1>
+    <PageLayout>
+      <PageHeader title={t("myProfile")} />
+
+      {/* 用户信息区域 */}
+      <div className="flex flex-col items-center gap-4">
+        {/* 用户头像 */}
         {session.user.image && (
           <Image
-            width={64}
-            height={64}
+            width={80}
+            height={80}
             alt="User Avatar"
             src={session.user.image as string}
-            className="rounded-4xl"
-          ></Image>
+            className="rounded-full"
+          />
         )}
-        <p>{session.user.name}</p>
-        <p>{t("email", { email: session.user.email })}</p>
+
+        {/* 用户名和邮箱 */}
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-800">
+            {session.user.name}
+          </h2>
+          <p className="text-gray-600">{t("email", { email: session.user.email })}</p>
+        </div>
+
+        {/* 登出按钮 */}
         <LogoutButton />
-      </Container>
-    </Center>
+      </div>
+    </PageLayout>
   );
 }

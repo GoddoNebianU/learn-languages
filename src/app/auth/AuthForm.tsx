@@ -5,8 +5,7 @@ import { useTranslations } from "next-intl";
 import { signInAction, signUpAction, SignUpState } from "@/lib/actions/auth";
 import Container from "@/components/ui/Container";
 import Input from "@/components/ui/Input";
-import LightButton from "@/components/ui/buttons/LightButton";
-import DarkButton from "@/components/ui/buttons/DarkButton";
+import { LightButton } from "@/components/ui/buttons";
 import { authClient } from "@/lib/auth-client";
 
 interface AuthFormProps {
@@ -18,7 +17,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [clearSignIn, setClearSignIn] = useState(false);
   const [clearSignUp, setClearSignUp] = useState(false);
-  
+
   const [signInState, signInActionForm, isSignInPending] = useActionState(
     async (prevState: SignUpState | undefined, formData: FormData) => {
       if (clearSignIn) {
@@ -44,7 +43,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
 
   const validateForm = (formData: FormData): boolean => {
     const newErrors: Record<string, string> = {};
-    
+
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
@@ -66,7 +65,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
       if (!name) {
         newErrors.name = t("nameRequired");
       }
-      
+
       if (!confirmPassword) {
         newErrors.confirmPassword = t("confirmPasswordRequired");
       } else if (password !== confirmPassword) {
@@ -81,17 +80,17 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+
     // 基本客户端验证
     if (!validateForm(formData)) {
       return;
     }
-    
+
     // 添加 redirectTo 到 formData
     if (redirectTo) {
       formData.append("redirectTo", redirectTo);
     }
-    
+
     // 使用 startTransition 包装 action 调用
     startTransition(() => {
       // 根据模式调用相应的 action
@@ -115,17 +114,21 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
   return (
     <div className="h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4">
       <Container className="p-8 max-w-md w-full">
+        {/* 页面标题 */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">{t(mode === 'signin' ? 'signIn' : 'signUp')}</h1>
         </div>
 
+        {/* 服务器端错误提示 */}
         {currentError?.message && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
             {currentError.message}
           </div>
         )}
 
+        {/* 登录/注册表单 */}
         <form onSubmit={handleFormSubmit} className="space-y-4">
+          {/* 用户名输入（仅注册模式显示） */}
           {mode === 'signup' && (
             <div>
               <Input
@@ -134,15 +137,18 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
                 placeholder={t("name")}
                 className="w-full px-3 py-2"
               />
+              {/* 客户端验证错误 */}
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">{errors.name}</p>
               )}
+              {/* 服务器端验证错误 */}
               {currentError?.errors?.username && (
                 <p className="text-red-500 text-sm mt-1">{currentError.errors.username[0]}</p>
               )}
             </div>
           )}
 
+          {/* 邮箱输入 */}
           <div>
             <Input
               type="email"
@@ -158,6 +164,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             )}
           </div>
 
+          {/* 密码输入 */}
           <div>
             <Input
               type="password"
@@ -173,6 +180,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             )}
           </div>
 
+          {/* 确认密码输入（仅注册模式显示） */}
           {mode === 'signup' && (
             <div>
               <Input
@@ -187,18 +195,21 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             </div>
           )}
 
-          <DarkButton
+          {/* 提交按钮 */}
+          <LightButton
             type="submit"
             className={`w-full py-2 ${isSignInPending || isSignUpPending ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isSignInPending || isSignUpPending 
-              ? t("loading") 
+            {isSignInPending || isSignUpPending
+              ? t("loading")
               : t(mode === 'signin' ? 'signInButton' : 'signUpButton')
             }
-          </DarkButton>
+          </LightButton>
         </form>
 
+        {/* 第三方登录区域 */}
         <div className="mt-6">
+          {/* 分隔线 */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
@@ -208,6 +219,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             </div>
           </div>
 
+          {/* GitHub 登录按钮 */}
           <LightButton
             onClick={handleGitHubSignIn}
             className="w-full mt-4 py-2 flex items-center justify-center gap-2"
@@ -219,6 +231,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
           </LightButton>
         </div>
 
+        {/* 模式切换链接 */}
         <div className="mt-6 text-center">
           <button
             type="button"
@@ -234,7 +247,7 @@ export default function AuthForm({ redirectTo }: AuthFormProps) {
             }}
             className="text-[#35786f] hover:underline"
           >
-            {mode === 'signin' 
+            {mode === 'signin'
               ? `${t("noAccount")} ${t("signUp")}`
               : `${t("hasAccount")} ${t("signIn")}`
             }

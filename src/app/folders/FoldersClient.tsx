@@ -8,7 +8,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Center } from "@/components/common/Center";
+import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";
 import { Folder } from "../../../generated/prisma/browser";
 import {
@@ -19,6 +19,9 @@ import {
 } from "@/lib/server/services/folderService";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import PageLayout from "@/components/ui/PageLayout";
+import PageHeader from "@/components/ui/PageHeader";
+import CardList from "@/components/ui/CardList";
 
 interface FolderProps {
   folder: Folder & { total: number };
@@ -27,8 +30,8 @@ interface FolderProps {
 
 const FolderCard = ({ folder, refresh }: FolderProps) => {
   const router = useRouter();
-
   const t = useTranslations("folders");
+
   return (
     <div
       className="flex justify-between items-center group p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
@@ -37,24 +40,23 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
       }}
     >
       <div className="flex items-center gap-3 flex-1">
-        <div className="w-10 h-10 rounded-lg bg-linear-to-br from-blue-50 to-blue-100 flex items-center justify-center group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
-          <Fd></Fd>
+        <div className="shrink-0">
+          <Fd className="text-gray-600" size={24} />
         </div>
 
         <div className="flex-1">
-          <h3 className="font-medium text-gray-900">
+          <h3 className="font-medium text-gray-900">{folder.name}</h3>
+          <p className="text-sm text-gray-500">
             {t("folderInfo", {
               id: folder.id,
               name: folder.name,
               totalPairs: folder.total,
             })}
-          </h3>
+          </p>
         </div>
-
-        <div className="text-xs text-gray-400">#{folder.id}</div>
       </div>
 
-      <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-2">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -63,7 +65,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
               renameFolderById(folder.id, newName).then(refresh);
             }
           }}
-          className="p-2 text-gray-400 hover:bg-red-50 rounded-lg transition-colors"
+          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <FolderPen size={16} />
         </button>
@@ -100,7 +102,7 @@ export default function FoldersClient({ userId }: { userId: string }) {
         setLoading(false);
       })
       .catch((error) => {
-        console.error(error);
+        logger.error("加载文件夹失败", error);
         toast.error("加载出错，请重试。");
       });
   }, [userId]);
@@ -110,48 +112,50 @@ export default function FoldersClient({ userId }: { userId: string }) {
       const updatedFolders = await getFoldersWithTotalPairsByUserId(userId);
       setFolders(updatedFolders);
     } catch (error) {
-      console.error(error);
+      logger.error("更新文件夹失败", error);
     }
   };
+
   return (
-    <Center>
-      <div className="w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl p-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-light text-gray-900">{t("title")}</h1>
-          <p className="text-sm text-gray-500 mt-1">{t("subtitle")}</p>
-        </div>
+    <PageLayout>
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-        <button
-          onClick={async () => {
-            const folderName = prompt(t("enterFolderName"));
-            if (!folderName) return;
-            setLoading(true);
-            try {
-              await createFolder({
-                name: folderName,
-                user: { connect: { id: userId } },
-              });
-              await updateFolders();
-            } finally {
-              setLoading(false);
-            }
-          }}
-          disabled={loading}
-          className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
-        >
-          <FolderPlus size={18} />
-          <span>{loading ? t("creating") : t("newFolder")}</span>
-        </button>
+      {/* 新建文件夹按钮 */}
+      <button
+        onClick={async () => {
+          const folderName = prompt(t("enterFolderName"));
+          if (!folderName) return;
+          setLoading(true);
+          try {
+            await createFolder({
+              name: folderName,
+              user: { connect: { id: userId } },
+            });
+            await updateFolders();
+          } finally {
+            setLoading(false);
+          }
+        }}
+        disabled={loading}
+        className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
+      >
+        <FolderPlus size={18} />
+        <span>{loading ? t("creating") : t("newFolder")}</span>
+      </button>
 
-        <div className="mt-4 max-h-96 overflow-y-auto">
+      {/* 文件夹列表 */}
+      <div className="mt-4">
+        <CardList>
           {folders.length === 0 ? (
+            // 空状态
             <div className="text-center py-12 text-gray-400">
-              <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gray-100 flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
                 <FolderPlus size={24} className="text-gray-400" />
               </div>
               <p className="text-sm">{t("noFoldersYet")}</p>
             </div>
           ) : (
+            // 文件夹卡片列表
             <div className="rounded-xl border border-gray-200 overflow-hidden">
               {folders
                 .toSorted((a, b) => a.id - b.id)
@@ -164,8 +168,8 @@ export default function FoldersClient({ userId }: { userId: string }) {
                 ))}
             </div>
           )}
-        </div>
+        </CardList>
       </div>
-    </Center>
+    </PageLayout>
   );
 }

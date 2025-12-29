@@ -6,6 +6,7 @@ import {
 } from "@/lib/interfaces";
 import z from "zod";
 import { shallowEqual } from "../utils";
+import { logger } from "@/lib/logger";
 
 export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
   key: string,
@@ -24,14 +25,14 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
         if (result.success) {
           return result.data;
         } else {
-          console.error(
+          logger.error(
             "Invalid data structure in localStorage:",
             result.error,
           );
           return [] as z.infer<T>;
         }
       } catch (e) {
-        console.error(`Failed to parse ${key} data:`, e);
+        logger.error(`Failed to parse ${key} data:`, e);
         return [] as z.infer<T>;
       }
     },

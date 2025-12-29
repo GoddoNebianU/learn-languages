@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import LightButton from "@/components/ui/buttons/LightButton";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { VOICES } from "@/config/locales";
@@ -28,7 +27,13 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   const { load, play } = useAudioPlayer();
 
   if (textPairs.length === 0) {
-    return <p>{t("noTextPairs")}</p>;
+    return (
+      <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <p className="text-gray-700">{t("noTextPairs")}</p>
+        </div>
+      </div>
+    );
   }
 
   const rng = new SeededRandom(textPairs[0].folderId);
@@ -38,135 +43,160 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
 
   const getTextPairs = () => disorder ? disorderedTextPairs : textPairs;
 
+  const handleIndexClick = () => {
+    const newIndex = prompt("Input a index number.")?.trim();
+    if (
+      newIndex &&
+      isNonNegativeInteger(newIndex) &&
+      parseInt(newIndex) <= textPairs.length &&
+      parseInt(newIndex) > 0
+    ) {
+      setIndex(parseInt(newIndex) - 1);
+    }
+  };
+
+  const handleNext = async () => {
+    if (show === "answer") {
+      const newIndex = (index + 1) % getTextPairs().length;
+      setIndex(newIndex);
+      if (dictation)
+        getTTSAudioUrl(
+          getTextPairs()[newIndex][reverse ? "text2" : "text1"],
+          VOICES.find(
+            (v) =>
+              v.locale ===
+              getTextPairs()[newIndex][
+              reverse ? "locale2" : "locale1"
+              ],
+          )!.short_name,
+        ).then((url) => {
+          load(url);
+          play();
+        });
+    }
+    setShow(show === "question" ? "answer" : "question");
+  };
+
+  const handlePrevious = () => {
+    setIndex(
+      (index - 1 + getTextPairs().length) % getTextPairs().length,
+    );
+    setShow("question");
+  };
+
+  const toggleReverse = () => setReverse(!reverse);
+  const toggleDictation = () => setDictation(!dictation);
+  const toggleDisorder = () => setDisorder(!disorder);
+
+  const createText = (text: string) => {
+    return (
+      <div className="text-gray-900 text-xl md:text-2xl p-6 h-[20dvh] overflow-y-auto text-center">
+        {text}
+      </div>
+    );
+  };
+
+  const [text1, text2] = reverse
+    ? [getTextPairs()[index].text2, getTextPairs()[index].text1]
+    : [getTextPairs()[index].text1, getTextPairs()[index].text2];
+
   return (
-    <>
-      {(getTextPairs().length > 0 && (
-        <>
-          <div className="text-center">
-            <div
-              className="text-sm text-gray-500"
-              onClick={() => {
-                const newIndex = prompt("Input a index number.")?.trim();
-                if (
-                  newIndex &&
-                  isNonNegativeInteger(newIndex) &&
-                  parseInt(newIndex) <= textPairs.length &&
-                  parseInt(newIndex) > 0
-                ) {
-                  setIndex(parseInt(newIndex) - 1);
-                }
-              }}
+    <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-2xl">
+        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+          {/* 进度指示器 */}
+          <div className="flex justify-center mb-4">
+            <button
+              onClick={handleIndexClick}
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
-              {index + 1}
-              {"/" + getTextPairs().length}
-            </div>
-            <div className={`h-[40dvh] md:px-16 px-4 ${myFont.className}`}>
-              {(() => {
-                const createText = (text: string) => {
+              {index + 1} / {getTextPairs().length}
+            </button>
+          </div>
+
+          {/* 文本显示区域 */}
+          <div className={`h-[40dvh] ${myFont.className} mb-4`}>
+            {(() => {
+              if (dictation) {
+                if (show === "question") {
                   return (
-                    <div className="text-gray-900 text-xl border-y border-y-gray-200 p-4 md:text-3xl h-[20dvh] overflow-y-auto">
-                      {text}
+                    <div className="h-full flex items-center justify-center">
+                      <div className="text-gray-400 text-4xl">?</div>
                     </div>
                   );
-                };
-
-                const [text1, text2] = reverse
-                  ? [getTextPairs()[index].text2, getTextPairs()[index].text1]
-                  : [getTextPairs()[index].text1, getTextPairs()[index].text2];
-
-                if (dictation) {
-                  // dictation
-                  if (show === "question") {
-                    return createText("");
-                  } else {
-                    return (
-                      <>
-                        {createText(text1)}
-                        {createText(text2)}
-                      </>
-                    );
-                  }
                 } else {
-                  // non-dictation
-                  if (show === "question") {
-                    return createText(text1);
-                  } else {
-                    return (
-                      <>
-                        {createText(text1)}
-                        {createText(text2)}
-                      </>
-                    );
-                  }
+                  return (
+                    <div className="space-y-2">
+                      {createText(text1)}
+                      <div className="border-t border-gray-200"></div>
+                      {createText(text2)}
+                    </div>
+                  );
                 }
-              })()}
-            </div>
+              } else {
+                if (show === "question") {
+                  return createText(text1);
+                } else {
+                  return (
+                    <div className="space-y-2">
+                      {createText(text1)}
+                      <div className="border-t border-gray-200"></div>
+                      {createText(text2)}
+                    </div>
+                  );
+                }
+              }
+            })()}
           </div>
+
+          {/* 底部按钮 */}
           <div className="flex flex-row gap-2 items-center justify-center flex-wrap">
-            <LightButton
-              className="w-20"
-              onClick={async () => {
-                if (show === "answer") {
-                  const newIndex = (index + 1) % getTextPairs().length;
-                  setIndex(newIndex);
-                  if (dictation)
-                    getTTSAudioUrl(
-                      getTextPairs()[newIndex][reverse ? "text2" : "text1"],
-                      VOICES.find(
-                        (v) =>
-                          v.locale ===
-                          getTextPairs()[newIndex][
-                          reverse ? "locale2" : "locale1"
-                          ],
-                      )!.short_name,
-                    ).then((url) => {
-                      load(url);
-                      play();
-                    });
-                }
-                setShow(show === "question" ? "answer" : "question");
-              }}
+            <button
+              onClick={handleNext}
+              className="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors text-sm"
             >
               {show === "question" ? t("answer") : t("next")}
-            </LightButton>
-            <LightButton
-              onClick={() => {
-                setIndex(
-                  (index - 1 + getTextPairs().length) % getTextPairs().length,
-                );
-                setShow("question");
-              }}
+            </button>
+            <button
+              onClick={handlePrevious}
+              className="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors text-sm"
             >
               {t("previous")}
-            </LightButton>
-            <LightButton
-              onClick={() => {
-                setReverse(!reverse);
-              }}
-              selected={reverse}
+            </button>
+            <button
+              onClick={toggleReverse}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${
+                reverse
+                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
             >
               {t("reverse")}
-            </LightButton>
-            <LightButton
-              onClick={() => {
-                setDictation(!dictation);
-              }}
-              selected={dictation}
+            </button>
+            <button
+              onClick={toggleDictation}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${
+                dictation
+                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
             >
               {t("dictation")}
-            </LightButton>
-            <LightButton
-              onClick={() => {
-                setDisorder(!disorder);
-              }}
-              selected={disorder}
+            </button>
+            <button
+              onClick={toggleDisorder}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${
+                disorder
+                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
             >
               {t("disorder")}
-            </LightButton>
+            </button>
           </div>
-        </>
-      )) || <p>{t("noTextPairs")}</p>}
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 

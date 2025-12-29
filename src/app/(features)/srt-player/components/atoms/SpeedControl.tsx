@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import LightButton from "@/components/ui/buttons/LightButton";
+import { LightButton } from "@/components/ui/buttons";
 import { SpeedControlProps } from "../../types/player";
 import { getPlaybackRateOptions, getPlaybackRateLabel } from "../../utils/timeUtils";
 

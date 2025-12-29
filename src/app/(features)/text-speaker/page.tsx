@@ -1,7 +1,7 @@
 "use client";
 
-import LightButton from "@/components/ui/buttons/LightButton";
-import IconClick from "@/components/ui/buttons/IconClick";
+import { LightButton } from "@/components/ui/buttons";
+import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {
@@ -17,6 +17,8 @@ import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { genIPA, genLocale } from "@/lib/server/translatorActions";
+import { logger } from "@/lib/logger";
+import PageLayout from "@/components/ui/PageLayout";
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
@@ -74,7 +76,7 @@ export default function TextSpeakerPage() {
           setIPA(data.ipa);
         })
         .catch((e) => {
-          console.error(e);
+          logger.error("生成 IPA 失败", e);
           setIPA("");
         });
     }
@@ -95,7 +97,6 @@ export default function TextSpeakerPage() {
           try {
             let theLocale = locale;
             if (!theLocale) {
-              console.log("downloading text info");
               const tmp_locale = await genLocale(textRef.current.slice(0, 30));
               setLocale(tmp_locale);
               theLocale = tmp_locale;
@@ -122,8 +123,7 @@ export default function TextSpeakerPage() {
             load(objurlRef.current);
             play();
           } catch (e) {
-            console.error(e);
-
+            logger.error("播放音频失败", e);
             setPause(true);
             setLocale(null);
 
@@ -180,7 +180,6 @@ export default function TextSpeakerPage() {
     try {
       let theLocale = locale;
       if (!theLocale) {
-        console.log("downloading text info");
         const tmp_locale = await genLocale(textRef.current.slice(0, 30));
         setLocale(tmp_locale);
         theLocale = tmp_locale;
@@ -217,7 +216,7 @@ export default function TextSpeakerPage() {
       }
       setIntoLocalStorage(save);
     } catch (e) {
-      console.error(e);
+      logger.error("保存到本地存储失败", e);
       setLocale(null);
     } finally {
       setSaving(false);
@@ -225,24 +224,30 @@ export default function TextSpeakerPage() {
   };
 
   return (
-    <>
+    <PageLayout className="items-start py-4">
+      {/* 文本输入区域 */}
       <div
-        className="my-4 p-4 mx-4 md:mx-32 border border-gray-200 rounded-2xl"
+        className="border border-gray-200 rounded-2xl"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
+        {/* 文本输入框 */}
         <textarea
-          className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b"
+          className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b p-4"
           onChange={handleInputChange}
           ref={textareaRef}
         ></textarea>
+        {/* IPA 显示区域 */}
         {(ipa.length !== 0 && (
-          <div className="overflow-auto text-gray-600 h-18 border-gray-200 border-b">
+          <div className="overflow-auto text-gray-600 h-18 border-gray-200 border-b px-4">
             {ipa}
           </div>
         )) || <div className="h-18"></div>}
-        <div className="mt-8 relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+
+        {/* 控制按钮区域 */}
+        <div className="p-4 relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+          {/* 速度调节面板 */}
           {showSpeedAdjust && (
-            <div className="bg-white p-6 rounded-2xl border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center">
+            <div className="bg-white p-6 rounded-2xl border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center z-10">
               <IconClick
                 size={45}
                 onClick={letMeSetSpeed(0.5)}
@@ -280,6 +285,7 @@ export default function TextSpeakerPage() {
               ></IconClick>
             </div>
           )}
+          {/* 播放/暂停按钮 */}
           <IconClick
             size={45}
             onClick={speak}
@@ -287,6 +293,7 @@ export default function TextSpeakerPage() {
             alt="playorpause"
             className={`${processing ? "bg-gray-200" : ""}`}
           ></IconClick>
+          {/* 自动暂停按钮 */}
           <IconClick
             size={45}
             onClick={() => {
@@ -299,6 +306,7 @@ export default function TextSpeakerPage() {
             src={autopause ? IMAGES.autoplay : IMAGES.autopause}
             alt="autoplayorpause"
           ></IconClick>
+          {/* 速度调节按钮 */}
           <IconClick
             size={45}
             onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
@@ -306,6 +314,7 @@ export default function TextSpeakerPage() {
             alt="speed"
             className={`${showSpeedAdjust ? "bg-gray-200" : ""}`}
           ></IconClick>
+          {/* 保存按钮 */}
           <IconClick
             size={45}
             onClick={save}
@@ -313,6 +322,7 @@ export default function TextSpeakerPage() {
             alt="save"
             className={`${saving ? "bg-gray-200" : ""}`}
           ></IconClick>
+          {/* 功能开关按钮 */}
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
             <LightButton
               selected={ipaEnabled}
@@ -331,7 +341,12 @@ export default function TextSpeakerPage() {
           </div>
         </div>
       </div>
-      <SaveList show={showSaveList} handleUse={handleUseItem}></SaveList>
-    </>
+      {/* 保存列表 */}
+      {showSaveList && (
+        <div className="mt-4 border border-gray-200 rounded-2xl overflow-hidden">
+          <SaveList show={showSaveList} handleUse={handleUseItem}></SaveList>
+        </div>
+      )}
+    </PageLayout>
   );
 }

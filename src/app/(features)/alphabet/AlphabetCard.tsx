@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import IconClick from "@/components/ui/buttons/IconClick";
+import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -99,7 +99,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
   return (
     <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-2xl">
-        {/* 返回按钮 */}
+        {/* 右上角返回按钮 */}
         <div className="flex justify-end mb-4">
           <IconClick
             size={32}
@@ -110,13 +110,15 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
           />
         </div>
 
-        {/* 主卡片 */}
+        {/* 白色主卡片容器 */}
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-          {/* 进度指示器 */}
+          {/* 顶部进度指示器和显示选项按钮 */}
           <div className="flex justify-between items-center mb-6">
+            {/* 当前字母进度 */}
             <span className="text-sm text-gray-500">
               {currentIndex + 1} / {alphabet.length}
             </span>
+            {/* 显示选项切换按钮组 */}
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => setShowLetter(!showLetter)}
@@ -128,6 +130,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
               >
                 {t("letter")}
               </button>
+              {/* IPA 音标显示切换 */}
               <button
                 onClick={() => setShowIPA(!showIPA)}
                 className={`px-3 py-1 rounded-full text-sm transition-colors ${
@@ -138,6 +141,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
               >
                 IPA
               </button>
+              {/* 罗马音显示切换（仅日语显示） */}
               {hasRomanization && (
                 <button
                   onClick={() => setShowRoman(!showRoman)}
@@ -150,6 +154,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
                   {t("roman")}
                 </button>
               )}
+              {/* 随机模式切换 */}
               <button
                 onClick={() => setIsRandomMode(!isRandomMode)}
                 className={`px-3 py-1 rounded-full text-sm transition-colors ${
@@ -163,8 +168,9 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
             </div>
           </div>
 
-          {/* 字母显示区域 */}
+          {/* 字母主要内容显示区域 */}
           <div className="text-center mb-8">
+            {/* 字母本身（可隐藏） */}
             {showLetter ? (
               <div className="text-6xl md:text-8xl font-bold text-gray-800 mb-4">
                 {currentLetter.letter}
@@ -174,13 +180,15 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
                 <span className="text-2xl md:text-3xl text-gray-400">?</span>
               </div>
             )}
-            
+
+            {/* IPA 音标显示 */}
             {showIPA && (
               <div className="text-2xl md:text-3xl text-gray-600 mb-2">
                 {currentLetter.letter_sound_ipa}
               </div>
             )}
-            
+
+            {/* 罗马音显示（日语） */}
             {showRoman && hasRomanization && currentLetter.roman_letter && (
               <div className="text-lg md:text-xl text-gray-500">
                 {currentLetter.roman_letter}
@@ -188,8 +196,9 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
             )}
           </div>
 
-          {/* 导航控制 */}
+          {/* 底部导航控制区域 */}
           <div className="flex justify-between items-center">
+            {/* 上一个按钮 */}
             <button
               onClick={goToPrevious}
               className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -198,8 +207,10 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
               <ChevronLeft size={24} />
             </button>
 
+            {/* 中间区域：随机按钮或进度条 */}
             <div className="flex gap-2 items-center">
               {isRandomMode ? (
+                // 随机模式：显示随机切换按钮
                 <button
                   onClick={goToRandom}
                   className="px-4 py-2 rounded-full bg-[#35786f] text-white text-sm font-medium hover:bg-[#2d5f58] transition-colors"
@@ -207,6 +218,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
                   {t("randomNext")}
                 </button>
               ) : (
+                // 顺序模式：显示进度点
                 <div className="flex gap-1 flex-wrap max-w-xs justify-center">
                   {alphabet.slice(0, 20).map((_, index) => (
                     <div
@@ -218,6 +230,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
                       }`}
                     />
                   ))}
+                  {/* 超过20个字母时显示省略号 */}
                   {alphabet.length > 20 && (
                     <div className="text-xs text-gray-500 flex items-center">...</div>
                   )}
@@ -225,6 +238,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
               )}
             </div>
 
+            {/* 下一个按钮 */}
             <button
               onClick={goToNext}
               className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -235,7 +249,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
           </div>
         </div>
 
-        {/* 操作提示 */}
+        {/* 底部操作提示文字 */}
         <div className="text-center mt-6 text-white text-sm">
           <p>
             {isRandomMode
@@ -246,7 +260,7 @@ export default function AlphabetCard({ alphabet, alphabetType, onBack }: Alphabe
         </div>
       </div>
 
-      {/* 触摸事件处理 */}
+      {/* 全屏触摸事件监听层（用于滑动切换） */}
       <div
         className="absolute inset-0 pointer-events-none"
         onTouchStart={onTouchStart}

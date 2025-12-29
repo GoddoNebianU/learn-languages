@@ -24,11 +24,7 @@
     "noFoldersYet": "No folders yet",
     "folderInfo": "{id}. {name} ({totalPairs})",
     "enterFolderName": "Enter folder name:",
-    "confirmDelete": "Type \"{name}\" to delete:",
-    "createFolderSuccess": "Folder created successfully",
-    "deleteFolderSuccess": "Folder deleted successfully",
-    "createFolderError": "Failed to create folder",
-    "deleteFolderError": "Failed to delete folder"
+    "confirmDelete": "Type \"{name}\" to delete:"
   },
   "folder_id": {
     "unauthorized": "You are not the owner of this folder",
@@ -82,10 +78,6 @@
       "description": "Under development, stay tuned"
     }
   },
-  "login": {
-    "loading": "Loading...",
-    "githubLogin": "GitHub Login"
-  },
   "auth": {
     "title": "Authentication",
     "signIn": "Sign In",
@@ -93,18 +85,11 @@
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "name": "Name",
-    "signInButton": "Sign In",
-    "signUpButton": "Sign Up",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
-    "signInWithGitHub": "Sign In with GitHub",
-    "signUpWithGitHub": "Sign Up with GitHub",
     "invalidEmail": "Please enter a valid email address",
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordsNotMatch": "Passwords do not match",
-    "signInFailed": "Sign in failed, please check your email and password",
-    "signUpFailed": "Sign up failed, please try again later",
     "nameRequired": "Please enter your name",
     "emailRequired": "Please enter your email",
     "passwordRequired": "Please enter your password",
@@ -151,18 +136,6 @@
     "next": "Next",
     "restart": "Restart",
     "autoPause": "Auto Pause ({enabled})",
-    "playbackSpeed": "Playback Speed",
-    "subtitleSettings": "Subtitle Settings",
-    "fontSize": "Font Size",
-    "backgroundColor": "Background Color",
-    "textColor": "Text Color",
-    "fontFamily": "Font Family",
-    "opacity": "Opacity",
-    "position": "Position",
-    "top": "Top",
-    "center": "Center",
-    "bottom": "Bottom",
-    "keyboardShortcuts": "Keyboard Shortcuts",
     "uploadVideoAndSubtitle": "Please upload video and subtitle files",
     "uploadVideoFile": "Please upload video file",
     "uploadSubtitleFile": "Please upload subtitle file",
@@ -177,16 +150,7 @@
     "on": "On",
     "off": "Off",
     "videoUploadFailed": "Video upload failed",
-    "subtitleUploadFailed": "Subtitle upload failed",
-    "subtitleLoadSuccess": "Subtitle file loaded successfully",
-    "subtitleLoadFailed": "Subtitle file loading failed",
-    "shortcuts": {
-      "playPause": "Play/Pause",
-      "next": "Next",
-      "previous": "Previous",
-      "restart": "Restart",
-      "autoPause": "Toggle Auto Pause"
-    }
+    "subtitleUploadFailed": "Subtitle upload failed"
   },
   "text_speaker": {
     "generateIPA": "Generate IPA",

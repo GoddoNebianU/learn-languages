@@ -14,7 +14,7 @@ import SubtitleArea from "./components/compounds/SubtitleArea";
 import ControlBar from "./components/compounds/ControlBar";
 import UploadZone from "./components/compounds/UploadZone";
 import SeekBar from "./components/atoms/SeekBar";
-import DarkButton from "@/components/ui/buttons/DarkButton";
+import { LightButton } from "@/components/ui/buttons";
 
 export default function SrtPlayerPage() {
   const t = useTranslations("home");
@@ -182,13 +182,13 @@ export default function SrtPlayerPage() {
                           </p>
                         </div>
                       </div>
-                      <DarkButton
+                      <LightButton
                         onClick={state.video.url ? undefined : handleVideoUpload}
                         disabled={!!state.video.url}
                         className="px-2 py-1 text-xs"
                       >
                         {state.video.url ? srtT("uploaded") : srtT("upload")}
-                      </DarkButton>
+                      </LightButton>
                     </div>
                   </div>
 
@@ -206,13 +206,13 @@ export default function SrtPlayerPage() {
                           </p>
                         </div>
                       </div>
-                      <DarkButton
+                      <LightButton
                         onClick={state.subtitle.url ? undefined : handleSubtitleUpload}
                         disabled={!!state.subtitle.url}
                         className="px-2 py-1 text-xs"
                       >
                         {state.subtitle.url ? srtT("uploaded") : srtT("upload")}
-                      </DarkButton>
+                      </LightButton>
                     </div>
                   </div>
                 </div>

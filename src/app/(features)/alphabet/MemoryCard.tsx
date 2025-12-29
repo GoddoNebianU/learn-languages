@@ -1,5 +1,5 @@
-import LightButton from "@/components/ui/buttons/LightButton";
-import IconClick from "@/components/ui/buttons/IconClick";
+import { LightButton } from "@/components/ui/buttons";
+import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {

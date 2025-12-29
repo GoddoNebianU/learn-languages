@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Video, FileText } from "lucide-react";
-import DarkButton from "@/components/ui/buttons/DarkButton";
+import { LightButton } from "@/components/ui/buttons";
 import { FileUploadProps } from "../../types/controls";
 import { useFileUpload } from "../../hooks/useFileUpload";
 
@@ -26,21 +26,21 @@ export default function UploadZone({ onVideoUpload, onSubtitleUpload, className 
 
   return (
     <div className={`flex gap-3 ${className || ''}`}>
-      <DarkButton
+      <LightButton
         onClick={handleVideoUpload}
         className="flex-1 py-2 px-3 text-sm"
       >
         <Video className="w-4 h-4 mr-2" />
         {t("uploadVideo")}
-      </DarkButton>
+      </LightButton>
       
-      <DarkButton
+      <LightButton
         onClick={handleSubtitleUpload}
         className="flex-1 py-2 px-3 text-sm"
       >
         <FileText className="w-4 h-4 mr-2" />
         {t("uploadSubtitle")}
-      </DarkButton>
+      </LightButton>
     </div>
   );
 }

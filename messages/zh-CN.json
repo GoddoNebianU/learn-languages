@@ -24,11 +24,7 @@
     "noFoldersYet": "还没有文件夹",
     "folderInfo": "{id}. {name} ({totalPairs})",
     "enterFolderName": "输入文件夹名称：",
-    "confirmDelete": "输入 \"{name}\" 以删除：",
-    "createFolderSuccess": "文件夹创建成功",
-    "deleteFolderSuccess": "文件夹删除成功",
-    "createFolderError": "创建文件夹失败",
-    "deleteFolderError": "删除文件夹失败"
+    "confirmDelete": "输入 \"{name}\" 以删除："
   },
   "folder_id": {
     "unauthorized": "您不是此文件夹的所有者",
@@ -82,10 +78,6 @@
       "description": "开发中，敬请期待"
     }
   },
-  "login": {
-    "loading": "加载中...",
-    "githubLogin": "GitHub登录"
-  },
   "auth": {
     "title": "登录",
     "signIn": "登录",
@@ -93,28 +85,18 @@
     "email": "邮箱",
     "password": "密码",
     "confirmPassword": "确认密码",
-    "name": "用户名",
-    "signInButton": "登录",
-    "signUpButton": "注册",
     "noAccount": "还没有账户？",
     "hasAccount": "已有账户？",
-    "signInWithGitHub": "使用GitHub登录",
-    "signUpWithGitHub": "使用GitHub注册",
     "invalidEmail": "请输入有效的邮箱地址",
     "passwordTooShort": "密码至少需要8个字符",
     "passwordsNotMatch": "两次输入的密码不匹配",
-    "signInFailed": "登录失败，请检查您的邮箱和密码",
-    "signUpFailed": "注册失败，请稍后再试",
     "nameRequired": "请输入用户名",
     "emailRequired": "请输入邮箱",
     "passwordRequired": "请输入密码",
-    "confirmPasswordRequired": "请确认密码"
+    "confirmPasswordRequired": "请确认密码",
+    "loading": "加载中..."
   },
   "memorize": {
-    "choose": {
-      "back": "返回",
-      "choose": "选择"
-    },
     "folder_selector": {
       "selectFolder": "选择文件夹",
       "noFolders": "未找到文件夹",
@@ -155,18 +137,6 @@
     "next": "下句",
     "restart": "句首",
     "autoPause": "自动暂停({enabled})",
-    "playbackSpeed": "播放速度",
-    "subtitleSettings": "字幕设置",
-    "fontSize": "字体大小",
-    "backgroundColor": "背景颜色",
-    "textColor": "文字颜色",
-    "fontFamily": "字体",
-    "opacity": "透明度",
-    "position": "位置",
-    "top": "顶部",
-    "center": "居中",
-    "bottom": "底部",
-    "keyboardShortcuts": "键盘快捷键",
     "uploadVideoAndSubtitle": "请上传视频和字幕文件",
     "uploadVideoFile": "请上传视频文件",
     "uploadSubtitleFile": "请上传字幕文件",
@@ -180,16 +150,7 @@
     "on": "开",
     "off": "关",
     "videoUploadFailed": "视频上传失败",
-    "subtitleUploadFailed": "字幕上传失败",
-    "subtitleLoadSuccess": "字幕文件加载成功",
-    "subtitleLoadFailed": "字幕文件加载失败",
-    "shortcuts": {
-      "playPause": "播放/暂停",
-      "next": "下一句",
-      "previous": "上一句",
-      "restart": "句首",
-      "autoPause": "切换自动暂停"
-    }
+    "subtitleUploadFailed": "字幕上传失败"
   },
   "text_speaker": {
     "generateIPA": "生成IPA",

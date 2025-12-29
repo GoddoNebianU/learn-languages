@@ -1,13 +1,14 @@
 "use client";
 
-import LightButton from "@/components/ui/buttons/LightButton";
-import IconClick from "@/components/ui/buttons/IconClick";
+import { LightButton } from "@/components/ui/buttons";
+import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
 import { VOICES } from "@/config/locales";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { tlsoPush, tlso } from "@/lib/browser/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
+import { logger } from "@/lib/logger";
 import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
@@ -67,7 +68,7 @@ export default function TranslatorPage() {
         lastTTS.current.url = url;
       } catch (error) {
         toast.error("Failed to generate audio");
-        console.error(error);
+        logger.error("生成音频失败", error);
       }
     }
     await play();

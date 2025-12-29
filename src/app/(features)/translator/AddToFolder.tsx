@@ -1,6 +1,6 @@
 "use client";
 
-import LightButton from "@/components/ui/buttons/LightButton";
+import { LightButton } from "@/components/ui/buttons";
 import Container from "@/components/ui/Container";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { Dispatch, useEffect, useState } from "react";

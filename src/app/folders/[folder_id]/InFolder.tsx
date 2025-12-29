@@ -1,10 +1,8 @@
 "use client";
 
 import { ArrowLeft, Plus } from "lucide-react";
-import { Center } from "@/components/common/Center";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import Container from "@/components/ui/Container";
 import {
   createPair,
   deletePairById,
@@ -12,8 +10,12 @@ import {
 } from "@/lib/server/services/pairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
-import LightButton from "@/components/ui/buttons/LightButton";
 import { useTranslations } from "next-intl";
+import PageLayout from "@/components/ui/PageLayout";
+import { GreenButton } from "@/components/ui/buttons";
+import { logger } from "@/lib/logger";
+import { IconButton } from "@/components/ui/buttons";
+import CardList from "@/components/ui/CardList";
 
 export interface TextPair {
   id: number;
@@ -37,7 +39,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
         const data = await getPairsByFolderId(folderId);
         setTextPairs(data as TextPair[]);
       } catch (error) {
-        console.error("Failed to fetch text pairs:", error);
+        logger.error("获取文本对失败", error);
       } finally {
         setLoading(false);
       }
@@ -50,84 +52,88 @@ export default function InFolder({ folderId }: { folderId: number }) {
       const data = await getPairsByFolderId(folderId);
       setTextPairs(data as TextPair[]);
     } catch (error) {
-      console.error("Failed to fetch text pairs:", error);
+      logger.error("获取文本对失败", error);
     }
   };
 
   return (
-    <Center>
-      <Container className="p-6">
-        <div className="mb-6">
-          <button
-            onClick={router.back}
-            className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-4"
-          >
-            <ArrowLeft size={16} />
-            <span className="text-sm">{t("back")}</span>
-          </button>
+    <PageLayout>
+      {/* 顶部导航和标题栏 */}
+      <div className="mb-6">
+        {/* 返回按钮 */}
+        <button
+          onClick={router.back}
+          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-4"
+        >
+          <ArrowLeft size={16} />
+          <span className="text-sm">{t("back")}</span>
+        </button>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-light text-gray-900">
-                {t("textPairs")}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                {t("itemsCount", { count: textPairs.length })}
-              </p>
-            </div>
+        {/* 页面标题和操作按钮 */}
+        <div className="flex items-center justify-between">
+          {/* 标题区域 */}
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
+              {t("textPairs")}
+            </h1>
+            <p className="text-sm text-gray-500">
+              {t("itemsCount", { count: textPairs.length })}
+            </p>
+          </div>
 
-            <div className="flex items-center gap-2">
-              <LightButton
-                onClick={() => {
-                  redirect(`/memorize?folder_id=${folderId}`);
-                }}
-              >
-                {t("memorize")}
-              </LightButton>
-              <button
-                className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  setAddModal(true);
-                }}
-              >
-                <Plus
-                  size={18}
-                  className="text-gray-600 hover:cursor-pointer"
-                />
-              </button>
-            </div>
+          {/* 操作按钮区域 */}
+          <div className="flex items-center gap-2">
+            <GreenButton
+              onClick={() => {
+                redirect(`/memorize?folder_id=${folderId}`);
+              }}
+            >
+              {t("memorize")}
+            </GreenButton>
+            <IconButton
+              onClick={() => {
+                setAddModal(true);
+              }}
+              icon={<Plus size={18} className="text-gray-700" />}
+            />
           </div>
         </div>
+      </div>
 
-        <div className="max-h-96 overflow-y-auto rounded-xl border border-gray-200 overflow-hidden">
-          {loading ? (
-            <div className="p-8 text-center">
-              <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-gray-500">{t("loadingTextPairs")}</p>
-            </div>
-          ) : textPairs.length === 0 ? (
-            <div className="p-12 text-center">
-              <p className="text-sm text-gray-500 mb-2">{t("noTextPairs")}</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-100">
-              {textPairs
-                .toSorted((a, b) => a.id - b.id)
-                .map((textPair) => (
-                  <TextPairCard
-                    key={textPair.id}
-                    textPair={textPair}
-                    onDel={() => {
-                      deletePairById(textPair.id);
-                      refreshTextPairs();
-                    }}
-                    refreshTextPairs={refreshTextPairs}
-                  />
-                ))}
-            </div>
-          )}
-        </div>
-      </Container>
+      {/* 文本对列表 */}
+      <CardList>
+        {loading ? (
+          // 加载状态
+          <div className="p-8 text-center">
+            <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+            <p className="text-sm text-gray-500">{t("loadingTextPairs")}</p>
+          </div>
+        ) : textPairs.length === 0 ? (
+          // 空状态
+          <div className="p-12 text-center">
+            <p className="text-sm text-gray-500 mb-2">{t("noTextPairs")}</p>
+          </div>
+        ) : (
+          // 文本对卡片列表
+          <div className="divide-y divide-gray-100">
+            {textPairs
+              .toSorted((a, b) => a.id - b.id)
+              .map((textPair) => (
+                <TextPairCard
+                  key={textPair.id}
+                  textPair={textPair}
+                  onDel={() => {
+                    deletePairById(textPair.id);
+                    refreshTextPairs();
+                  }}
+                  refreshTextPairs={refreshTextPairs}
+                />
+              ))}
+          </div>
+        )}
+      </CardList>
+
+      {/* 添加文本对模态框 */}
       <AddTextPairModal
         isOpen={openAddModal}
         onClose={() => setAddModal(false)}
@@ -151,6 +157,6 @@ export default function InFolder({ folderId }: { folderId: number }) {
           refreshTextPairs();
         }}
       />
-    </Center>
+    </PageLayout>
   );
 }

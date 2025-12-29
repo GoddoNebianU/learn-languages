@@ -2,7 +2,7 @@ import Container from "@/components/ui/Container";
 import { useEffect, useState } from "react";
 import { Folder } from "../../../../generated/prisma/browser";
 import { getFoldersByUserId } from "@/lib/server/services/folderService";
-import LightButton from "@/components/ui/buttons/LightButton";
+import { LightButton } from "@/components/ui/buttons";
 import { Folder as Fd } from "lucide-react";
 
 interface FolderSelectorProps {

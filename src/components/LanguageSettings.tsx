@@ -1,9 +1,8 @@
 "use client";
 
 import IMAGES from "@/config/images";
-import IconClick from "./ui/buttons/IconClick";
+import { IconClick, GhostButton } from "./ui/buttons";
 import { useState } from "react";
-import GhostButton from "./ui/buttons/GhostButton";
 
 export default function LanguageSettings() {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -21,6 +20,7 @@ export default function LanguageSettings() {
                 alt="language"
                 disableOnHoverBgChange={true}
                 onClick={handleLanguageClick}
+                size={40}
             ></IconClick>
             <div className="relative">
                 {showLanguageMenu && (

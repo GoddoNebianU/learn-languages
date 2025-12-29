@@ -1,7 +1,8 @@
-import LightButton from "@/components/ui/buttons/LightButton";
+import { LightButton } from "@/components/ui/buttons";
 import Input from "@/components/ui/Input";
+import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { PairUpdateInput } from "../../../../generated/prisma/models";
 import { TextPair } from "./InFolder";
 import { useTranslations } from "next-intl";
@@ -22,23 +23,23 @@ export default function UpdateTextPairModal({
   const t = useTranslations("folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
-  const input3Ref = useRef<HTMLInputElement>(null);
-  const input4Ref = useRef<HTMLInputElement>(null);
+  const [locale1, setLocale1] = useState(textPair.locale1);
+  const [locale2, setLocale2] = useState(textPair.locale2);
+
   if (!isOpen) return null;
 
   const handleUpdate = () => {
     if (
       !input1Ref.current?.value ||
       !input2Ref.current?.value ||
-      !input3Ref.current?.value ||
-      !input4Ref.current?.value
+      !locale1 ||
+      !locale2
     )
       return;
 
     const text1 = input1Ref.current.value;
     const text2 = input2Ref.current.value;
-    const locale1 = input3Ref.current.value;
-    const locale2 = input4Ref.current.value;
+
     if (
       typeof text1 === "string" &&
       typeof text2 === "string" &&
@@ -50,8 +51,6 @@ export default function UpdateTextPairModal({
       locale2.trim() !== ""
     ) {
       onUpdate(textPair.id, { text1, text2, locale1, locale2 });
-      input1Ref.current.value = "";
-      input2Ref.current.value = "";
     }
   };
   return (
@@ -90,19 +89,11 @@ export default function UpdateTextPairModal({
           </div>
           <div>
             {t("locale1")}
-            <Input
-              defaultValue={textPair.locale1}
-              ref={input3Ref}
-              className="w-full"
-            ></Input>
+            <LocaleSelector value={locale1} onChange={setLocale1} />
           </div>
           <div>
             {t("locale2")}
-            <Input
-              defaultValue={textPair.locale2}
-              ref={input4Ref}
-              className="w-full"
-            ></Input>
+            <LocaleSelector value={locale2} onChange={setLocale2} />
           </div>
         </div>
         <LightButton onClick={handleUpdate}>{t("update")}</LightButton>
