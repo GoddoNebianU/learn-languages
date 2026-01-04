@@ -11,7 +11,7 @@ import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { logger } from "@/lib/logger";
 import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import z from "zod";
 import AddToFolder from "./AddToFolder";
 import {
@@ -35,9 +35,7 @@ export default function TranslatorPage() {
   const [ipaTexts, setIpaTexts] = useState(["", ""]);
   const [processing, setProcessing] = useState(false);
   const { load, play } = useAudioPlayer();
-  const [history, setHistory] = useState<
-    z.infer<typeof TranslationHistorySchema>[]
-  >([]);
+  const [history, setHistory] = useState<z.infer<typeof TranslationHistorySchema>[]>(() => tlso.get());
   const [showAddToFolder, setShowAddToFolder] = useState(false);
   const [addToFolderItem, setAddToFolderItem] = useState<z.infer<
     typeof TranslationHistorySchema
@@ -49,10 +47,6 @@ export default function TranslatorPage() {
   const [autoSave, setAutoSave] = useState(false);
   const [autoSaveFolderId, setAutoSaveFolderId] = useState<number | null>(null);
   const { data: session } = authClient.useSession();
-
-  useEffect(() => {
-    setHistory(tlso.get());
-  }, []);
 
   const tts = async (text: string, locale: string) => {
     if (lastTTS.current.text !== text) {

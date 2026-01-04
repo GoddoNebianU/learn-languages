@@ -22,7 +22,7 @@
     "newFolder": "新建文件夹",
     "creating": "创建中...",
     "noFoldersYet": "还没有文件夹",
-    "folderInfo": "{id}. {name} ({totalPairs})",
+    "folderInfo": "ID: {id} • {totalPairs} 个文本对",
     "enterFolderName": "输入文件夹名称：",
     "confirmDelete": "输入 \"{name}\" 以删除："
   },

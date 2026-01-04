@@ -22,7 +22,7 @@
     "newFolder": "New Folder",
     "creating": "Creating...",
     "noFoldersYet": "No folders yet",
-    "folderInfo": "{id}. {name} ({totalPairs})",
+    "folderInfo": "ID: {id} • {totalPairs} pairs",
     "enterFolderName": "Enter folder name:",
     "confirmDelete": "Type \"{name}\" to delete:"
   },
