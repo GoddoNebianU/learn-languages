@@ -46,6 +46,7 @@ next-env.d.ts
 build.sh
 
 test.ts
+test.js
 /generated/prisma
 
 certificates
