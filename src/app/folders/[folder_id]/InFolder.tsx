@@ -21,8 +21,8 @@ export interface TextPair {
   id: number;
   text1: string;
   text2: string;
-  locale1: string;
-  locale2: string;
+  language1: string;
+  language2: string;
 }
 
 export default function InFolder({ folderId }: { folderId: number }) {
@@ -146,8 +146,8 @@ export default function InFolder({ folderId }: { folderId: number }) {
           await createPair({
             text1: text1,
             text2: text2,
-            locale1: locale1,
-            locale2: locale2,
+            language1: locale1,
+            language2: locale2,
             folder: {
               connect: {
                 id: folderId,

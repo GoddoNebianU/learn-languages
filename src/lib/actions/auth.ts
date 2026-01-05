@@ -5,19 +5,19 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export interface SignUpFormData {
-  username: string;
-  email: string;
-  password: string;
+    username: string;
+    email: string;
+    password: string;
 }
 
 export interface SignUpState {
-  success?: boolean;
-  message?: string;
-  errors?: {
-    username?: string[];
-    email?: string[];
-    password?: string[];
-  };
+    success?: boolean;
+    message?: string;
+    errors?: {
+        username?: string[];
+        email?: string[];
+        password?: string[];
+    };
 }
 
 export async function signUpAction(prevState: SignUpState, formData: FormData) {
@@ -111,6 +111,9 @@ export async function signInAction(prevState: SignUpState, formData: FormData) {
 
         redirect(redirectTo || "/");
     } catch (error) {
+        if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
+            throw error;
+        }
         return {
             success: false,
             message: "登录失败，请检查您的邮箱和密码"

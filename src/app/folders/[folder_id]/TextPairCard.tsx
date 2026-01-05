@@ -25,11 +25,11 @@ export default function TextPairCard({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.locale1.toUpperCase()}
+              {textPair.language1.toUpperCase()}
             </span>
             <span>→</span>
             <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.locale2.toUpperCase()}
+              {textPair.language2.toUpperCase()}
             </span>
           </div>
 

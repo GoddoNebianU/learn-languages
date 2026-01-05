@@ -23,8 +23,8 @@ export default function UpdateTextPairModal({
   const t = useTranslations("folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
-  const [locale1, setLocale1] = useState(textPair.locale1);
-  const [locale2, setLocale2] = useState(textPair.locale2);
+  const [locale1, setLocale1] = useState(textPair.language1);
+  const [locale2, setLocale2] = useState(textPair.language2);
 
   if (!isOpen) return null;
 

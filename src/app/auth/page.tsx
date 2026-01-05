@@ -5,7 +5,7 @@ import AuthForm from "./AuthForm";
 
 export default async function AuthPage(
     props: {
-        searchParams: Promise<{ [key: string]: string | string[] | undefined; }>
+        searchParams: Promise<{ [key: string]: string | string[] | undefined; }>;
     }
 ) {
     const searchParams = await props.searchParams;

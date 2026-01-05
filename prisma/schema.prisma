@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -8,50 +7,18 @@ datasource db {
   provider = "postgresql"
 }
 
-model Pair {
-  id        Int      @id @default(autoincrement())
-  locale1   String   @db.VarChar(10)
-  locale2   String   @db.VarChar(10)
-  text1     String
-  text2     String
-  ipa1      String?
-  ipa2      String?
-  folderId  Int      @map("folder_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
-
-  @@unique([folderId, locale1, locale2, text1])
-  @@index([folderId])
-  @@map("pairs")
-}
-
-model Folder {
-  id        Int      @id @default(autoincrement())
-  name      String
-  userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pairs Pair[]
-
-  @@index([userId])
-  @@map("folders")
-}
-
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  folders       Folder[]
+  id                String             @id
+  name              String
+  email             String
+  emailVerified     Boolean            @default(false)
+  image             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  sessions          Session[]
+  accounts          Account[]
+  folders           Folder[]
+  dictionaryLookUps DictionaryLookUp[]
 
   @@unique([email])
   @@map("user")
@@ -103,4 +70,123 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Pair {
+  id        Int      @id @default(autoincrement())
+  text1     String
+  text2     String
+  language1 String   @db.VarChar(20)
+  language2 String   @db.VarChar(20)
+  ipa1      String?
+  ipa2      String?
+  folderId  Int      @map("folder_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@unique([folderId, language1, language2, text1])
+  @@index([folderId])
+  @@map("pairs")
+}
+
+model Folder {
+  id        Int      @id @default(autoincrement())
+  name      String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pairs Pair[]
+
+  @@index([userId])
+  @@map("folders")
+}
+
+model DictionaryLookUp {
+  id                 Int      @id @default(autoincrement())
+  userId             String?  @map("user_id")
+  text               String
+  queryLang          String   @map("query_lang")
+  definitionLang     String   @map("definition_lang")
+  createdAt          DateTime @default(now()) @map("created_at")
+  dictionaryWordId   Int?     @map("dictionary_word_id")
+  dictionaryPhraseId Int?     @map("dictionary_phrase_id")
+
+  user             User?             @relation(fields: [userId], references: [id])
+  dictionaryWord   DictionaryWord?   @relation(fields: [dictionaryWordId], references: [id], onDelete: SetNull)
+  dictionaryPhrase DictionaryPhrase? @relation(fields: [dictionaryPhraseId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([text, queryLang, definitionLang])
+  @@map("dictionary_lookups")
+}
+
+model DictionaryWord {
+  id             Int      @id @default(autoincrement())
+  standardForm   String   @map("standard_form")
+  queryLang      String   @map("query_lang")
+  definitionLang String   @map("definition_lang")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  lookups DictionaryLookUp[]
+  entries DictionaryWordEntry[]
+
+  @@unique([standardForm, queryLang, definitionLang])
+  @@index([standardForm])
+  @@index([queryLang, definitionLang])
+  @@map("dictionary_words")
+}
+
+model DictionaryPhrase {
+  id             Int      @id @default(autoincrement())
+  standardForm   String   @map("standard_form")
+  queryLang      String   @map("query_lang")
+  definitionLang String   @map("definition_lang")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  lookups DictionaryLookUp[]
+  entries DictionaryPhraseEntry[]
+
+  @@unique([standardForm, queryLang, definitionLang])
+  @@index([standardForm])
+  @@index([queryLang, definitionLang])
+  @@map("dictionary_phrases")
+}
+
+model DictionaryWordEntry {
+  id           Int      @id @default(autoincrement())
+  wordId       Int      @map("word_id")
+  ipa          String
+  definition   String
+  partOfSpeech String   @map("part_of_speech")
+  example      String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  word DictionaryWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@index([wordId])
+  @@index([createdAt])
+  @@map("dictionary_word_entries")
+}
+
+model DictionaryPhraseEntry {
+  id         Int      @id @default(autoincrement())
+  phraseId   Int      @map("phrase_id")
+  definition String
+  example    String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  phrase DictionaryPhrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
+
+  @@index([phraseId])
+  @@index([createdAt])
+  @@map("dictionary_phrase_entries")
 }

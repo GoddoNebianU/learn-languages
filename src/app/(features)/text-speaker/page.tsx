@@ -15,10 +15,10 @@ import SaveList from "./SaveList";
 import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
-import { getTTSAudioUrl } from "@/lib/browser/tts";
-import { genIPA, genLocale } from "@/lib/server/bigmodel/translatorActions";
+import { genIPA, genLanguage } from "@/lib/server/bigmodel/translatorActions";
 import { logger } from "@/lib/logger";
 import PageLayout from "@/components/ui/PageLayout";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
@@ -31,7 +31,7 @@ export default function TextSpeakerPage() {
   const [pause, setPause] = useState(true);
   const [autopause, setAutopause] = useState(true);
   const textRef = useRef("");
-  const [locale, setLocale] = useState<string | null>(null);
+  const [language, setLanguage] = useState<string | null>(null);
   const [ipa, setIPA] = useState<string>("");
   const objurlRef = useRef<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -95,38 +95,35 @@ export default function TextSpeakerPage() {
         } else {
           // 第一次播放
           try {
-            let theLocale = locale;
-            if (!theLocale) {
-              const tmp_locale = await genLocale(textRef.current.slice(0, 30));
-              setLocale(tmp_locale);
-              theLocale = tmp_locale;
+            let theLanguage = language;
+            if (!theLanguage) {
+              const tmp_language = await genLanguage(textRef.current.slice(0, 30));
+              setLanguage(tmp_language);
+              theLanguage = tmp_language;
             }
 
-            const voice = VOICES.find((v) => v.locale.startsWith(theLocale));
-            if (!voice) throw "Voice not found.";
+            theLanguage = theLanguage.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
 
-            objurlRef.current = await getTTSAudioUrl(
+            // 检查语言是否在 TTS 支持列表中
+            const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
+              "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
+              "Spanish", "Japanese", "Korean", "French", "Russian"
+            ];
+
+            if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
+              theLanguage = "Auto";
+            }
+
+            objurlRef.current = await getTTSUrl(
               textRef.current,
-              voice.short_name,
-              (() => {
-                if (speed === 1) return {};
-                else if (speed < 1)
-                  return {
-                    rate: `-${100 - speed * 100}%`,
-                  };
-                else
-                  return {
-                    rate: `+${speed * 100 - 100}%`,
-                  };
-              })(),
+              theLanguage as TTS_SUPPORTED_LANGUAGES
             );
             load(objurlRef.current);
             play();
           } catch (e) {
             logger.error("播放音频失败", e);
             setPause(true);
-            setLocale(null);
-
+            setLanguage(null);
             setProcessing(false);
           }
         }
@@ -142,7 +139,7 @@ export default function TextSpeakerPage() {
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     textRef.current = e.target.value.trim();
-    setLocale(null);
+    setLanguage(null);
     setIPA("");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
@@ -163,7 +160,7 @@ export default function TextSpeakerPage() {
   const handleUseItem = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     if (textareaRef.current) textareaRef.current.value = item.text;
     textRef.current = item.text;
-    setLocale(item.locale);
+    setLanguage(item.locale);
     setIPA(item.ipa || "");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
@@ -178,11 +175,11 @@ export default function TextSpeakerPage() {
     setSaving(true);
 
     try {
-      let theLocale = locale;
-      if (!theLocale) {
-        const tmp_locale = await genLocale(textRef.current.slice(0, 30));
-        setLocale(tmp_locale);
-        theLocale = tmp_locale;
+      let theLanguage = language;
+      if (!theLanguage) {
+        const tmp_language = await genLanguage(textRef.current.slice(0, 30));
+        setLanguage(tmp_language);
+        theLanguage = tmp_language;
       }
 
       let theIPA = ipa;
@@ -205,19 +202,19 @@ export default function TextSpeakerPage() {
       } else if (theIPA.length === 0) {
         save.push({
           text: textRef.current,
-          locale: theLocale,
+          locale: theLanguage as string,
         });
       } else {
         save.push({
           text: textRef.current,
-          locale: theLocale,
+          locale: theLanguage as string,
           ipa: theIPA,
         });
       }
       setIntoLocalStorage(save);
     } catch (e) {
       logger.error("保存到本地存储失败", e);
-      setLocale(null);
+      setLanguage(null);
     } finally {
       setSaving(false);
     }

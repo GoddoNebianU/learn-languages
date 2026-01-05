@@ -7,7 +7,6 @@ import { VOICES } from "@/config/locales";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { tlsoPush, tlso } from "@/lib/browser/localStorageOperators";
-import { getTTSAudioUrl } from "@/lib/browser/tts";
 import { logger } from "@/lib/logger";
 import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -24,6 +23,7 @@ import FolderSelector from "./FolderSelector";
 import { createPair } from "@/lib/server/services/pairService";
 import { shallowEqual } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
+import { getTTSUrl } from "@/lib/server/bigmodel/tts";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -50,13 +50,8 @@ export default function TranslatorPage() {
 
   const tts = async (text: string, locale: string) => {
     if (lastTTS.current.text !== text) {
-      const shortName = VOICES.find((v) => v.locale === locale)?.short_name;
-      if (!shortName) {
-        toast.error("Voice not found");
-        return;
-      }
       try {
-        const url = await getTTSAudioUrl(text, shortName);
+        const url = await getTTSUrl(text, locale);
         await load(url);
         lastTTS.current.text = text;
         lastTTS.current.url = url;
