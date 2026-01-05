@@ -57,8 +57,8 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
                     createPair({
                       text1: item.text1,
                       text2: item.text2,
-                      locale1: item.locale1,
-                      locale2: item.locale2,
+                      language1: item.language1,
+                      language2: item.language2,
                       folder: {
                         connect: {
                           id: folder.id,

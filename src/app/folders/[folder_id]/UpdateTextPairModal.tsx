@@ -23,8 +23,8 @@ export default function UpdateTextPairModal({
   const t = useTranslations("folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
-  const [locale1, setLocale1] = useState(textPair.language1);
-  const [locale2, setLocale2] = useState(textPair.language2);
+  const [language1, setLanguage1] = useState(textPair.language1);
+  const [language2, setLanguage2] = useState(textPair.language2);
 
   if (!isOpen) return null;
 
@@ -32,8 +32,8 @@ export default function UpdateTextPairModal({
     if (
       !input1Ref.current?.value ||
       !input2Ref.current?.value ||
-      !locale1 ||
-      !locale2
+      !language1 ||
+      !language2
     )
       return;
 
@@ -43,14 +43,14 @@ export default function UpdateTextPairModal({
     if (
       typeof text1 === "string" &&
       typeof text2 === "string" &&
-      typeof locale1 === "string" &&
-      typeof locale2 === "string" &&
+      typeof language1 === "string" &&
+      typeof language2 === "string" &&
       text1.trim() !== "" &&
       text2.trim() !== "" &&
-      locale1.trim() !== "" &&
-      locale2.trim() !== ""
+      language1.trim() !== "" &&
+      language2.trim() !== ""
     ) {
-      onUpdate(textPair.id, { text1, text2, locale1, locale2 });
+      onUpdate(textPair.id, { text1, text2, language1, language2 });
     }
   };
   return (
@@ -88,12 +88,12 @@ export default function UpdateTextPairModal({
             ></Input>
           </div>
           <div>
-            {t("locale1")}
-            <LocaleSelector value={locale1} onChange={setLocale1} />
+            {t("language1")}
+            <LocaleSelector value={language1} onChange={setLanguage1} />
           </div>
           <div>
-            {t("locale2")}
-            <LocaleSelector value={locale2} onChange={setLocale2} />
+            {t("language2")}
+            <LocaleSelector value={language2} onChange={setLanguage2} />
           </div>
         </div>
         <LightButton onClick={handleUpdate}>{t("update")}</LightButton>

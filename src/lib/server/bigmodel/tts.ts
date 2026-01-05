@@ -1,3 +1,6 @@
+"use server";
+
+
 // ==================== 类型定义 ====================
 /**
  * 支持的语音合成模型
@@ -135,85 +138,16 @@ class QwenTTSService {
                 body: JSON.stringify(requestBody),
             });
 
-            const data: TTSResponse = await response.json();
-
             // 4. 错误处理
-            if (data.status_code !== 200) {
-                throw new Error(`API错误: [${data.code}] ${data.message}`);
+            if (response.status !== 200) {
+                throw new Error(`TTS API错误: [${response.status}] ${response.statusText}}`);
             }
 
+            const data: TTSResponse = await response.json();
             return data;
 
         } catch (error) {
             console.error('语音合成请求失败:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 流式合成语音（边生成边输出Base64音频数据）
-     */
-    async synthesizeStream(
-        text: string,
-        options: {
-            voice?: string;
-            language?: SupportedLanguage;
-            model?: TTSModel;
-            onAudioChunk?: (chunk: string) => void; // 接收音频片段的回调
-        } = {}
-    ): Promise<void> {
-        const {
-            voice = 'Cherry',
-            language = 'Auto',
-            model = 'qwen3-tts-flash',
-            onAudioChunk
-        } = options;
-
-        this.validateTextLength(text, model);
-
-        const requestBody: TTSRequest = {
-            model,
-            input: {
-                text,
-                voice,
-                language_type: language
-            },
-            parameters: {
-                stream: true // 启用流式输出
-            }
-        };
-
-        try {
-            const response = await fetch(this.baseUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${this.apiKey}`,
-                    'Content-Type': 'application/json',
-                    'X-DashScope-SSE': 'enable' // 关键：启用服务器发送事件
-                },
-                body: JSON.stringify(requestBody),
-            });
-
-            if (!response.ok || !response.body) {
-                throw new Error(`流式请求失败: ${response.status}`);
-            }
-
-            // 处理流式响应（此处为简化示例，实际需解析SSE格式）
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value);
-                if (onAudioChunk && chunk.trim()) {
-                    onAudioChunk(chunk); // 处理音频数据片段
-                }
-            }
-
-        } catch (error) {
-            console.error('流式合成失败:', error);
             throw error;
         }
     }
@@ -231,7 +165,7 @@ export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES) {
             throw "API Key设置错误";
         }
         const ttsService = new QwenTTSService(
-            process.env.DASHSCOPE_API_KEY || 'sk-xxx',
+            process.env.DASHSCORE_API_KEY
         );
         const result = await ttsService.synthesize(
             text,

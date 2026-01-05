@@ -26,7 +26,7 @@
 
 ### 国际化与辅助功能
 - **next-intl** - 国际化解决方案
-- **edge-tts-universal** - 跨平台文本转语音
+- **qwen3-tts-flash** - 通义千问语音合成
 
 ### 开发工具
 - **ESLint** - 代码质量检查

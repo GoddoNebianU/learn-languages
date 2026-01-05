@@ -11,8 +11,8 @@ interface AddTextPairModalProps {
   onAdd: (
     text1: string,
     text2: string,
-    locale1: string,
-    locale2: string,
+    language1: string,
+    language2: string,
   ) => void;
 }
 
@@ -24,8 +24,8 @@ export default function AddTextPairModal({
   const t = useTranslations("folder_id");
   const input1Ref = useRef<HTMLInputElement>(null);
   const input2Ref = useRef<HTMLInputElement>(null);
-  const [locale1, setLocale1] = useState("en-US");
-  const [locale2, setLocale2] = useState("zh-CN");
+  const [language1, setLanguage1] = useState("english");
+  const [language2, setLanguage2] = useState("chinese");
 
   if (!isOpen) return null;
 
@@ -33,8 +33,8 @@ export default function AddTextPairModal({
     if (
       !input1Ref.current?.value ||
       !input2Ref.current?.value ||
-      !locale1 ||
-      !locale2
+      !language1 ||
+      !language2
     )
       return;
 
@@ -44,14 +44,14 @@ export default function AddTextPairModal({
     if (
       typeof text1 === "string" &&
       typeof text2 === "string" &&
-      typeof locale1 === "string" &&
-      typeof locale2 === "string" &&
+      typeof language1 === "string" &&
+      typeof language2 === "string" &&
       text1.trim() !== "" &&
       text2.trim() !== "" &&
-      locale1.trim() !== "" &&
-      locale2.trim() !== ""
+      language1.trim() !== "" &&
+      language2.trim() !== ""
     ) {
-      onAdd(text1, text2, locale1, locale2);
+      onAdd(text1, text2, language1, language2);
       input1Ref.current.value = "";
       input2Ref.current.value = "";
     }
@@ -84,12 +84,12 @@ export default function AddTextPairModal({
             <Input ref={input2Ref} className="w-full"></Input>
           </div>
           <div>
-            {t("locale1")}
-            <LocaleSelector value={locale1} onChange={setLocale1} />
+            {t("language1")}
+            <LocaleSelector value={language1} onChange={setLanguage1} />
           </div>
           <div>
-            {t("locale2")}
-            <LocaleSelector value={locale2} onChange={setLocale2} />
+            {t("language2")}
+            <LocaleSelector value={language2} onChange={setLanguage2} />
           </div>
         </div>
         <LightButton onClick={handleAdd}>{t("add")}</LightButton>

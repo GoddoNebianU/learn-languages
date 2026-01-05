@@ -3,7 +3,6 @@
 import { LightButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
-import { VOICES } from "@/config/locales";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { TranslationHistorySchema } from "@/lib/interfaces";
 import { tlsoPush, tlso } from "@/lib/browser/localStorageOperators";
@@ -23,7 +22,7 @@ import FolderSelector from "./FolderSelector";
 import { createPair } from "@/lib/server/services/pairService";
 import { shallowEqual } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
-import { getTTSUrl } from "@/lib/server/bigmodel/tts";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -51,7 +50,20 @@ export default function TranslatorPage() {
   const tts = async (text: string, locale: string) => {
     if (lastTTS.current.text !== text) {
       try {
-        const url = await getTTSUrl(text, locale);
+        // Map language name to TTS format
+        let theLanguage = locale.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
+
+        // Check if language is in TTS supported list
+        const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
+          "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
+          "Spanish", "Japanese", "Korean", "French", "Russian"
+        ];
+
+        if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
+          theLanguage = "Auto";
+        }
+
+        const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
         await load(url);
         lastTTS.current.text = text;
         lastTTS.current.url = url;
@@ -74,15 +86,15 @@ export default function TranslatorPage() {
     const llmres: {
       text1: string | null;
       text2: string | null;
-      locale1: string | null;
-      locale2: string | null;
+      language1: string | null;
+      language2: string | null;
       ipa1: string | null;
       ipa2: string | null;
     } = {
       text1: text1,
       text2: null,
-      locale1: null,
-      locale2: null,
+      language1: null,
+      language2: null,
       ipa1: null,
       ipa2: null,
     };
@@ -92,21 +104,21 @@ export default function TranslatorPage() {
     // 检查更新历史记录
     const checkUpdateLocalStorage = () => {
       if (historyUpdated) return;
-      if (llmres.text1 && llmres.text2 && llmres.locale1 && llmres.locale2) {
+      if (llmres.text1 && llmres.text2 && llmres.language1 && llmres.language2) {
         setHistory(
           tlsoPush({
             text1: llmres.text1,
             text2: llmres.text2,
-            locale1: llmres.locale1,
-            locale2: llmres.locale2,
+            language1: llmres.language1,
+            language2: llmres.language2,
           }),
         );
         if (autoSave && autoSaveFolderId) {
           createPair({
             text1: llmres.text1,
             text2: llmres.text2,
-            locale1: llmres.locale1,
-            locale2: llmres.locale2,
+            language1: llmres.language1,
+            language2: llmres.language2,
             folder: {
               connect: {
                 id: autoSaveFolderId,
@@ -143,10 +155,10 @@ export default function TranslatorPage() {
         setTresult(text2);
         // 生成两个locale
         genLocale(text1).then((locale) => {
-          updateState("locale1", locale);
+          updateState("language1", locale);
         });
         genLocale(text2).then((locale) => {
-          updateState("locale2", locale);
+          updateState("language2", locale);
         });
         // 生成俩IPA
         if (genIpa) {
@@ -202,7 +214,7 @@ export default function TranslatorPage() {
                 onClick={() => {
                   const t = taref.current?.value;
                   if (!t) return;
-                  tts(t, tlso.get().find((v) => v.text1 === t)?.locale1 || "");
+                  tts(t, tlso.get().find((v) => v.text1 === t)?.language1 || "");
                 }}
               ></IconClick>
             </div>
@@ -240,7 +252,7 @@ export default function TranslatorPage() {
                 onClick={() => {
                   tts(
                     tresult,
-                    tlso.get().find((v) => v.text2 === tresult)?.locale2 || "",
+                    tlso.get().find((v) => v.text2 === tresult)?.language2 || "",
                   );
                 }}
               ></IconClick>

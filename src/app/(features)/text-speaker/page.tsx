@@ -12,7 +12,6 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
 import SaveList from "./SaveList";
 
-import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/lib/server/bigmodel/translatorActions";
@@ -160,7 +159,7 @@ export default function TextSpeakerPage() {
   const handleUseItem = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     if (textareaRef.current) textareaRef.current.value = item.text;
     textRef.current = item.text;
-    setLanguage(item.locale);
+    setLanguage(item.language);
     setIPA(item.ipa || "");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
@@ -202,12 +201,12 @@ export default function TextSpeakerPage() {
       } else if (theIPA.length === 0) {
         save.push({
           text: textRef.current,
-          locale: theLanguage as string,
+          language: theLanguage as string,
         });
       } else {
         save.push({
           text: textRef.current,
-          locale: theLanguage as string,
+          language: theLanguage as string,
           ipa: theIPA,
         });
       }

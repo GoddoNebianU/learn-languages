@@ -140,14 +140,14 @@ export default function InFolder({ folderId }: { folderId: number }) {
         onAdd={async (
           text1: string,
           text2: string,
-          locale1: string,
-          locale2: string,
+          language1: string,
+          language2: string,
         ) => {
           await createPair({
             text1: text1,
             text2: text2,
-            language1: locale1,
-            language2: locale2,
+            language1: language1,
+            language2: language2,
             folder: {
               connect: {
                 id: folderId,

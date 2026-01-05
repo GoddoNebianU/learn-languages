@@ -93,6 +93,9 @@ GITHUB_CLIENT_SECRET=your-client-secret
 
 # 数据库
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+
+// DashScore
+DASHSCORE_API_KEY=
 ```
 
 ## 重要配置细节

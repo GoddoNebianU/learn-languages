@@ -19,15 +19,15 @@ export type SupportedAlphabets =
 export const TextSpeakerItemSchema = z.object({
   text: z.string(),
   ipa: z.string().optional(),
-  locale: z.string(),
+  language: z.string(),
 });
 export const TextSpeakerArraySchema = z.array(TextSpeakerItemSchema);
 
 export const WordDataSchema = z.object({
-  locales: z
+  languages: z
     .tuple([z.string(), z.string()])
     .refine(([first, second]) => first !== second, {
-      message: "Locales must be different",
+      message: "Languages must be different",
     }),
   wordPairs: z
     .array(z.tuple([z.string(), z.string()]))
@@ -47,8 +47,8 @@ export const WordDataSchema = z.object({
 export const TranslationHistorySchema = z.object({
   text1: z.string(),
   text2: z.string(),
-  locale1: z.string(),
-  locale2: z.string(),
+  language1: z.string(),
+  language2: z.string(),
 });
 
 export const TranslationHistoryArraySchema = z.array(TranslationHistorySchema);

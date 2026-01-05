@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSAudioUrl } from "@/lib/browser/tts";
-import { VOICES } from "@/config/locales";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
 import { isNonNegativeInteger, SeededRandom } from "@/lib/utils";
@@ -59,20 +58,32 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
     if (show === "answer") {
       const newIndex = (index + 1) % getTextPairs().length;
       setIndex(newIndex);
-      if (dictation)
-        getTTSAudioUrl(
-          getTextPairs()[newIndex][reverse ? "text2" : "text1"],
-          VOICES.find(
-            (v) =>
-              v.locale ===
-              getTextPairs()[newIndex][
-              reverse ? "locale2" : "locale1"
-              ],
-          )!.short_name,
-        ).then((url) => {
+      if (dictation) {
+        const textPair = getTextPairs()[newIndex];
+        const language = textPair[reverse ? "language2" : "language1"];
+        const text = textPair[reverse ? "text2" : "text1"];
+
+        // 映射语言到 TTS 支持的格式
+        const languageMap: Record<string, TTS_SUPPORTED_LANGUAGES> = {
+          "chinese": "Chinese",
+          "english": "English",
+          "japanese": "Japanese",
+          "korean": "Korean",
+          "french": "French",
+          "german": "German",
+          "italian": "Italian",
+          "portuguese": "Portuguese",
+          "spanish": "Spanish",
+          "russian": "Russian",
+        };
+
+        const ttsLanguage = languageMap[language?.toLowerCase()] || "Auto";
+
+        getTTSUrl(text, ttsLanguage).then((url) => {
           load(url);
           play();
         });
+      }
     }
     setShow(show === "question" ? "answer" : "question");
   };
