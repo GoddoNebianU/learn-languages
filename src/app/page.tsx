@@ -61,6 +61,12 @@ export default async function HomePage() {
           color="#3c988d"
         ></LinkArea>
         <LinkArea
+          href="/dictionary"
+          name={t("dictionary.name")}
+          description={t("dictionary.description")}
+          color="#6a9c89"
+        ></LinkArea>
+        <LinkArea
           href="/alphabet"
           name={t("alphabet.name")}
           description={t("alphabet.description")}

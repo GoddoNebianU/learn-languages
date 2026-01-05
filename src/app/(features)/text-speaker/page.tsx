@@ -16,7 +16,7 @@ import { VOICES } from "@/config/locales";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { getTTSAudioUrl } from "@/lib/browser/tts";
-import { genIPA, genLocale } from "@/lib/server/translatorActions";
+import { genIPA, genLocale } from "@/lib/server/bigmodel/translatorActions";
 import { logger } from "@/lib/logger";
 import PageLayout from "@/components/ui/PageLayout";
 

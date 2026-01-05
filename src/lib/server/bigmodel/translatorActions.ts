@@ -1,12 +1,12 @@
 "use server";
 
-import { getLLMAnswer } from "./ai";
+import { getAnswer } from "./zhipu";
 
 export const genIPA = async (text: string) => {
   return (
     "[" +
     (
-      await getLLMAnswer(
+      await getAnswer(
         `
 <text>${text}</text>
 
@@ -25,7 +25,7 @@ export const genIPA = async (text: string) => {
 };
 
 export const genLocale = async (text: string) => {
-  return await getLLMAnswer(
+  return await getAnswer(
     `
 <text>${text}</text>
 
@@ -39,7 +39,7 @@ export const genLocale = async (text: string) => {
 };
 
 export const genTranslation = async (text: string, targetLanguage: string) => {
-  return await getLLMAnswer(
+  return await getAnswer(
     `
 <text>${text}</text>
 

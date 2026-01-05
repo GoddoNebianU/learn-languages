@@ -18,7 +18,7 @@ import {
   genIPA,
   genLocale,
   genTranslation,
-} from "@/lib/server/translatorActions";
+} from "@/lib/server/bigmodel/translatorActions";
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { createPair } from "@/lib/server/services/pairService";
