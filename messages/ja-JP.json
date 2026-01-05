@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "学習したい文字を選択してください",
+    "japanese": "日本語仮名",
+    "english": "英語アルファベット",
+    "uyghur": "ウイグル文字",
+    "esperanto": "エスペラント文字",
+    "loading": "読み込み中...",
+    "loadFailed": "読み込みに失敗しました。もう一度お試しください",
+    "hideLetter": "文字を非表示",
+    "showLetter": "文字を表示",
+    "hideIPA": "IPAを非表示",
+    "showIPA": "IPAを表示",
+    "roman": "ローマ字",
+    "letter": "文字",
+    "random": "ランダムモード",
+    "randomNext": "ランダムで次へ"
+  },
+  "folders": {
+    "title": "フォルダー",
+    "subtitle": "コレクションを管理",
+    "newFolder": "新規フォルダー",
+    "creating": "作成中...",
+    "noFoldersYet": "フォルダーがありません",
+    "folderInfo": "ID: {id} • {totalPairs}組",
+    "enterFolderName": "フォルダー名を入力:",
+    "confirmDelete": "削除するには「{name}」と入力してください:"
+  },
+  "folder_id": {
+    "unauthorized": "あなたはこのフォルダーの所有者ではありません",
+    "back": "戻る",
+    "textPairs": "テキストペア",
+    "itemsCount": "{count}項目",
+    "memorize": "暗記",
+    "loadingTextPairs": "テキストペアを読み込み中...",
+    "noTextPairs": "このフォルダーにはテキストペアがありません",
+    "addNewTextPair": "新しいテキストペアを追加",
+    "add": "追加",
+    "updateTextPair": "テキストペアを更新",
+    "update": "更新",
+    "text1": "テキスト1",
+    "text2": "テキスト2",
+    "locale1": "言語1",
+    "locale2": "言語2",
+    "edit": "編集",
+    "delete": "削除"
+  },
+  "home": {
+    "title": "言語を学ぶ",
+    "description": "これは、人工言語を含む世界中のほぼすべての言語を学ぶのに役立つ非常に便利なウェブサイトです。",
+    "explore": "探索",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— スティーブ・ジョブズ"
+    },
+    "translator": {
+      "name": "翻訳",
+      "description": "任意の言語に翻訳し、国際音声記号（IPA）で注釈を付けます"
+    },
+    "textSpeaker": {
+      "name": "テキストスピーカー",
+      "description": "テキストを認識して音読します。ループ再生と速度調整をサポート"
+    },
+    "srtPlayer": {
+      "name": "SRTビデオプレーヤー",
+      "description": "SRT字幕ファイルに基づいてビデオを文ごとに再生し、ネイティブスピーカーの発音を模倣します"
+    },
+    "alphabet": {
+      "name": "アルファベット",
+      "description": "アルファベットから新しい言語の学習を始めましょう"
+    },
+    "memorize": {
+      "name": "暗記",
+      "description": "言語Aから言語B、言語Bから言語A、ディクテーションをサポート"
+    },
+    "dictionary": {
+      "name": "辞書",
+      "description": "単語やフレーズを調べ、詳細な定義と例を表示"
+    },
+    "moreFeatures": {
+      "name": "その他の機能",
+      "description": "開発中です。お楽しみに"
+    }
+  },
+  "auth": {
+    "title": "認証",
+    "signIn": "ログイン",
+    "signUp": "新規登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード（確認）",
+    "name": "名前",
+    "signInButton": "ログイン",
+    "signUpButton": "新規登録",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "hasAccount": "すでにアカウントをお持ちですか？",
+    "signInWithGitHub": "GitHubでログイン",
+    "signUpWithGitHub": "GitHubで新規登録",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "passwordTooShort": "パスワードは8文字以上である必要があります",
+    "passwordsNotMatch": "パスワードが一致しません",
+    "nameRequired": "名前を入力してください",
+    "emailRequired": "メールアドレスを入力してください",
+    "passwordRequired": "パスワードを入力してください",
+    "confirmPasswordRequired": "パスワード（確認）を入力してください",
+    "loading": "読み込み中..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "フォルダーを選択",
+      "noFolders": "フォルダーが見つかりません",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "回答",
+      "next": "次へ",
+      "reverse": "逆順",
+      "dictation": "ディクテーション",
+      "noTextPairs": "利用可能なテキストペアがありません",
+      "disorder": "ランダム",
+      "previous": "前へ"
+    },
+    "page": {
+      "unauthorized": "このフォルダーにアクセスする権限がありません"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "sourceCode": "GitHub",
+    "sign_in": "ログイン",
+    "profile": "プロフィール",
+    "folders": "フォルダー"
+  },
+  "profile": {
+    "myProfile": "マイプロフィール",
+    "email": "メールアドレス: {email}",
+    "logout": "ログアウト"
+  },
+  "srt_player": {
+    "uploadVideo": "ビデオをアップロード",
+    "uploadSubtitle": "字幕をアップロード",
+    "pause": "一時停止",
+    "play": "再生",
+    "previous": "前へ",
+    "next": "次へ",
+    "restart": "最初から",
+    "autoPause": "自動一時停止 ({enabled})",
+    "uploadVideoAndSubtitle": "ビデオと字幕ファイルをアップロードしてください",
+    "uploadVideoFile": "ビデオファイルをアップロードしてください",
+    "uploadSubtitleFile": "字幕ファイルをアップロードしてください",
+    "processingSubtitle": "字幕ファイルを処理中...",
+    "needBothFiles": "学習を開始するにはビデオと字幕ファイルの両方が必要です",
+    "videoFile": "ビデオファイル",
+    "subtitleFile": "字幕ファイル",
+    "uploaded": "アップロード済み",
+    "notUploaded": "未アップロード",
+    "upload": "アップロード",
+    "autoPauseStatus": "自動一時停止: {enabled}",
+    "on": "オン",
+    "off": "オフ",
+    "videoUploadFailed": "ビデオのアップロードに失敗しました",
+    "subtitleUploadFailed": "字幕のアップロードに失敗しました"
+  },
+  "text_speaker": {
+    "generateIPA": "IPAを生成",
+    "viewSavedItems": "保存済みアイテムを表示",
+    "confirmDeleteAll": "本当にすべて削除しますか？ (Y/N)"
+  },
+  "translator": {
+    "detectLanguage": "言語を検出",
+    "generateIPA": "IPAを生成",
+    "translateInto": "翻訳",
+    "chinese": "中国語",
+    "english": "英語",
+    "italian": "イタリア語",
+    "other": "その他",
+    "translating": "翻訳中...",
+    "translate": "翻訳",
+    "inputLanguage": "言語を入力してください。",
+    "history": "履歴",
+    "enterLanguage": "言語を入力",
+    "add_to_folder": {
+      "notAuthenticated": "認証されていません",
+      "chooseFolder": "追加するフォルダーを選択",
+      "noFolders": "フォルダーが見つかりません",
+      "folderInfo": "{id}. {name}",
+      "close": "閉じる",
+      "success": "テキストペアをフォルダーに追加しました",
+      "error": "テキストペアの追加に失敗しました"
+    },
+    "autoSave": "自動保存"
+  }
+}

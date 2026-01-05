@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "Veuillez sélectionner les caractères que vous souhaitez apprendre",
+    "japanese": "Kana japonais",
+    "english": "Alphabet anglais",
+    "uyghur": "Alphabet ouïghour",
+    "esperanto": "Alphabet espéranto",
+    "loading": "Chargement...",
+    "loadFailed": "Échec du chargement, veuillez réessayer",
+    "hideLetter": "Masquer la lettre",
+    "showLetter": "Afficher la lettre",
+    "hideIPA": "Masquer l'API",
+    "showIPA": "Afficher l'API",
+    "roman": "Romanisation",
+    "letter": "Lettre",
+    "random": "Mode aléatoire",
+    "randomNext": "Suivant aléatoire"
+  },
+  "folders": {
+    "title": "Dossiers",
+    "subtitle": "Gérez vos collections",
+    "newFolder": "Nouveau dossier",
+    "creating": "Création...",
+    "noFoldersYet": "Aucun dossier pour le moment",
+    "folderInfo": "ID: {id} • {totalPairs} paires",
+    "enterFolderName": "Entrez le nom du dossier:",
+    "confirmDelete": "Tapez \"{name}\" pour supprimer:"
+  },
+  "folder_id": {
+    "unauthorized": "Vous n'êtes pas le propriétaire de ce dossier",
+    "back": "Retour",
+    "textPairs": "Paires de textes",
+    "itemsCount": "{count} éléments",
+    "memorize": "Mémoriser",
+    "loadingTextPairs": "Chargement des paires de textes...",
+    "noTextPairs": "Aucune paire de textes dans ce dossier",
+    "addNewTextPair": "Ajouter une nouvelle paire de textes",
+    "add": "Ajouter",
+    "updateTextPair": "Mettre à jour la paire de textes",
+    "update": "Mettre à jour",
+    "text1": "Texte 1",
+    "text2": "Texte 2",
+    "locale1": "Langue 1",
+    "locale2": "Langue 2",
+    "edit": "Modifier",
+    "delete": "Supprimer"
+  },
+  "home": {
+    "title": "Apprendre les langues",
+    "description": "Voici un site web très utile pour vous aider à apprendre presque toutes les langues du monde, y compris les langues construites.",
+    "explore": "Explorer",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— Steve Jobs"
+    },
+    "translator": {
+      "name": "Traducteur",
+      "description": "Traduire dans n'importe quelle langue et annoter avec l'alphabet phonétique international (API)"
+    },
+    "textSpeaker": {
+      "name": "Lecteur de texte",
+      "description": "Reconnaître et lire le texte à haute voix, prend en charge la lecture en boucle et le réglage de la vitesse"
+    },
+    "srtPlayer": {
+      "name": "Lecteur vidéo SRT",
+      "description": "Lire des vidéos phrase par phrase basées sur des fichiers de sous-titres SRT pour imiter la prononciation des locuteurs natifs"
+    },
+    "alphabet": {
+      "name": "Alphabet",
+      "description": "Commencer à apprendre une nouvelle langue par l'alphabet"
+    },
+    "memorize": {
+      "name": "Mémoriser",
+      "description": "Langue A vers langue B, langue B vers langue A, prend en charge la dictée"
+    },
+    "dictionary": {
+      "name": "Dictionnaire",
+      "description": "Rechercher des mots et des phrases avec des définitions détaillées et des exemples"
+    },
+    "moreFeatures": {
+      "name": "Plus de fonctionnalités",
+      "description": "En développement, restez à l'écoute"
+    }
+  },
+  "auth": {
+    "title": "Authentification",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "name": "Nom",
+    "signInButton": "Se connecter",
+    "signUpButton": "S'inscrire",
+    "noAccount": "Vous n'avez pas de compte?",
+    "hasAccount": "Vous avez déjà un compte?",
+    "signInWithGitHub": "Se connecter avec GitHub",
+    "signUpWithGitHub": "S'inscrire avec GitHub",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordsNotMatch": "Les mots de passe ne correspondent pas",
+    "nameRequired": "Veuillez entrer votre nom",
+    "emailRequired": "Veuillez entrer votre e-mail",
+    "passwordRequired": "Veuillez entrer votre mot de passe",
+    "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+    "loading": "Chargement..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "Sélectionner un dossier",
+      "noFolders": "Aucun dossier trouvé",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "Réponse",
+      "next": "Suivant",
+      "reverse": "Inverser",
+      "dictation": "Dictée",
+      "noTextPairs": "Aucune paire de textes disponible",
+      "disorder": "Désordre",
+      "previous": "Précédent"
+    },
+    "page": {
+      "unauthorized": "Vous n'êtes pas autorisé à accéder à ce dossier"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "sourceCode": "GitHub",
+    "sign_in": "Se connecter",
+    "profile": "Profil",
+    "folders": "Dossiers"
+  },
+  "profile": {
+    "myProfile": "Mon profil",
+    "email": "E-mail: {email}",
+    "logout": "Se déconnecter"
+  },
+  "srt_player": {
+    "uploadVideo": "Télécharger une vidéo",
+    "uploadSubtitle": "Télécharger des sous-titres",
+    "pause": "Pause",
+    "play": "Lire",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "restart": "Redémarrer",
+    "autoPause": "Pause automatique ({enabled})",
+    "uploadVideoAndSubtitle": "Veuillez télécharger des fichiers vidéo et de sous-titres",
+    "uploadVideoFile": "Veuillez télécharger un fichier vidéo",
+    "uploadSubtitleFile": "Veuillez télécharger un fichier de sous-titres",
+    "processingSubtitle": "Traitement du fichier de sous-titres...",
+    "needBothFiles": "Les fichiers vidéo et de sous-titres sont requis pour commencer l'apprentissage",
+    "videoFile": "Fichier vidéo",
+    "subtitleFile": "Fichier de sous-titres",
+    "uploaded": "Téléchargé",
+    "notUploaded": "Non téléchargé",
+    "upload": "Télécharger",
+    "autoPauseStatus": "Pause automatique: {enabled}",
+    "on": "Activé",
+    "off": "Désactivé",
+    "videoUploadFailed": "Échec du téléchargement de la vidéo",
+    "subtitleUploadFailed": "Échec du téléchargement des sous-titres"
+  },
+  "text_speaker": {
+    "generateIPA": "Générer l'API",
+    "viewSavedItems": "Voir les éléments enregistrés",
+    "confirmDeleteAll": "Êtes-vous sûr de vouloir tout supprimer? (O/N)"
+  },
+  "translator": {
+    "detectLanguage": "détecter la langue",
+    "generateIPA": "générer l'api",
+    "translateInto": "traduire en",
+    "chinese": "Chinois",
+    "english": "Anglais",
+    "italian": "Italien",
+    "other": "Autre",
+    "translating": "traduction...",
+    "translate": "traduire",
+    "inputLanguage": "Entrez une langue.",
+    "history": "Historique",
+    "enterLanguage": "Entrer la langue",
+    "add_to_folder": {
+      "notAuthenticated": "Vous n'êtes pas authentifié",
+      "chooseFolder": "Choisir un dossier à ajouter",
+      "noFolders": "Aucun dossier trouvé",
+      "folderInfo": "{id}. {name}",
+      "close": "Fermer",
+      "success": "Paire de textes ajoutée au dossier",
+      "error": "Échec de l'ajout de la paire de textes au dossier"
+    },
+    "autoSave": "Sauvegarde automatique"
+  }
+}

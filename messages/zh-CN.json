@@ -73,6 +73,10 @@
       "name": "记忆",
       "description": "语言A到语言B，语言B到语言A，支持听写"
     },
+    "dictionary": {
+      "name": "词典",
+      "description": "查询单词和短语，提供详细的释义和例句"
+    },
     "moreFeatures": {
       "name": "更多功能",
       "description": "开发中，敬请期待"

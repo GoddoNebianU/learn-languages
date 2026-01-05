@@ -73,6 +73,10 @@
       "name": "Memorize",
       "description": "Language A to Language B, Language B to Language A, supports dictation"
     },
+    "dictionary": {
+      "name": "Dictionary",
+      "description": "Look up words and phrases with detailed definitions and examples"
+    },
     "moreFeatures": {
       "name": "More Features",
       "description": "Under development, stay tuned"

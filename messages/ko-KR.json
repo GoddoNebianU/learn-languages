@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "학습할 문자를 선택하세요",
+    "japanese": "일본어 가나",
+    "english": "영문 알파벳",
+    "uyghur": "위구르 문자",
+    "esperanto": "에스페란토 문자",
+    "loading": "로딩 중...",
+    "loadFailed": "로딩 실패, 다시 시도해 주세요",
+    "hideLetter": "문자 숨기기",
+    "showLetter": "문자 표시",
+    "hideIPA": "IPA 숨기기",
+    "showIPA": "IPA 표시",
+    "roman": "로마자 표기",
+    "letter": "문자",
+    "random": "무작위 모드",
+    "randomNext": "무작위 다음"
+  },
+  "folders": {
+    "title": "폴더",
+    "subtitle": "컬렉션 관리",
+    "newFolder": "새 폴더",
+    "creating": "생성 중...",
+    "noFoldersYet": "폴더가 없습니다",
+    "folderInfo": "ID: {id} • {totalPairs}쌍",
+    "enterFolderName": "폴더 이름 입력:",
+    "confirmDelete": "삭제하려면 \"{name}\"을(를) 입력하세요:"
+  },
+  "folder_id": {
+    "unauthorized": "이 폴더의 소유자가 아닙니다",
+    "back": "뒤로",
+    "textPairs": "텍스트 쌍",
+    "itemsCount": "{count}개 항목",
+    "memorize": "암기",
+    "loadingTextPairs": "텍스트 쌍 로딩 중...",
+    "noTextPairs": "이 폴더에 텍스트 쌍이 없습니다",
+    "addNewTextPair": "새 텍스트 쌍 추가",
+    "add": "추가",
+    "updateTextPair": "텍스트 쌍 업데이트",
+    "update": "업데이트",
+    "text1": "텍스트 1",
+    "text2": "텍스트 2",
+    "locale1": "언어 1",
+    "locale2": "언어 2",
+    "edit": "편집",
+    "delete": "삭제"
+  },
+  "home": {
+    "title": "언어 학습",
+    "description": "인공 언어를 포함하여 세상의 거의 모든 언어를 배우는 데 도움이 되는 매우 유용한 웹사이트입니다.",
+    "explore": "탐색",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— 스티브 잡스"
+    },
+    "translator": {
+      "name": "번역기",
+      "description": "모든 언어로 번역하고 국제 음성 기호(IPA)로 주석 추가"
+    },
+    "textSpeaker": {
+      "name": "텍스트 스피커",
+      "description": "텍스트를 인식하고 읽어줍니다. 반복 재생 및 속도 조정 지원"
+    },
+    "srtPlayer": {
+      "name": "SRT 비디오 플레이어",
+      "description": "SRT 자막 파일을 기반으로 문장별로 비디오를 재생하여 원어민 발음 모방"
+    },
+    "alphabet": {
+      "name": "알파벳",
+      "description": "알파벳부터 새로운 언어 학습 시작"
+    },
+    "memorize": {
+      "name": "암기",
+      "description": "언어 A에서 언어 B로, 언어 B에서 언어 A로, 받아쓰기 지원"
+    },
+    "dictionary": {
+      "name": "사전",
+      "description": "단어와 구문을 조회하고 자세한 정의와 예제 제공"
+    },
+    "moreFeatures": {
+      "name": "더 많은 기능",
+      "description": "개발 중, 기대해 주세요"
+    }
+  },
+  "auth": {
+    "title": "인증",
+    "signIn": "로그인",
+    "signUp": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "name": "이름",
+    "signInButton": "로그인",
+    "signUpButton": "회원가입",
+    "noAccount": "계정이 없으신가요?",
+    "hasAccount": "이미 계정이 있으신가요?",
+    "signInWithGitHub": "GitHub로 로그인",
+    "signUpWithGitHub": "GitHub로 회원가입",
+    "invalidEmail": "유효한 이메일 주소를 입력하세요",
+    "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다",
+    "passwordsNotMatch": "비밀번호가 일치하지 않습니다",
+    "nameRequired": "이름을 입력하세요",
+    "emailRequired": "이메일을 입력하세요",
+    "passwordRequired": "비밀번호를 입력하세요",
+    "confirmPasswordRequired": "비밀번호 확인을 입력하세요",
+    "loading": "로딩 중..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "폴더 선택",
+      "noFolders": "폴더를 찾을 수 없습니다",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "정답",
+      "next": "다음",
+      "reverse": "반대",
+      "dictation": "받아쓰기",
+      "noTextPairs": "사용 가능한 텍스트 쌍이 없습니다",
+      "disorder": "무작위",
+      "previous": "이전"
+    },
+    "page": {
+      "unauthorized": "이 폴더에 액세스할 권한이 없습니다"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "sourceCode": "GitHub",
+    "sign_in": "로그인",
+    "profile": "프로필",
+    "folders": "폴더"
+  },
+  "profile": {
+    "myProfile": "내 프로필",
+    "email": "이메일: {email}",
+    "logout": "로그아웃"
+  },
+  "srt_player": {
+    "uploadVideo": "비디오 업로드",
+    "uploadSubtitle": "자막 업로드",
+    "pause": "일시정지",
+    "play": "재생",
+    "previous": "이전",
+    "next": "다음",
+    "restart": "처음부터",
+    "autoPause": "자동 일시정지 ({enabled})",
+    "uploadVideoAndSubtitle": "비디오와 자막 파일을 업로드하세요",
+    "uploadVideoFile": "비디오 파일을 업로드하세요",
+    "uploadSubtitleFile": "자막 파일을 업로드하세요",
+    "processingSubtitle": "자막 파일 처리 중...",
+    "needBothFiles": "학습을 시작하려면 비디오와 자막 파일이 모두 필요합니다",
+    "videoFile": "비디오 파일",
+    "subtitleFile": "자막 파일",
+    "uploaded": "업로드됨",
+    "notUploaded": "업로드되지 않음",
+    "upload": "업로드",
+    "autoPauseStatus": "자동 일시정지: {enabled}",
+    "on": "켜기",
+    "off": "끄기",
+    "videoUploadFailed": "비디오 업로드 실패",
+    "subtitleUploadFailed": "자막 업로드 실패"
+  },
+  "text_speaker": {
+    "generateIPA": "IPA 생성",
+    "viewSavedItems": "저장된 항목 보기",
+    "confirmDeleteAll": "정말 모두 삭제하시겠습니까? (Y/N)"
+  },
+  "translator": {
+    "detectLanguage": "언어 감지",
+    "generateIPA": "IPA 생성",
+    "translateInto": "번역",
+    "chinese": "중국어",
+    "english": "영어",
+    "italian": "이탈리아어",
+    "other": "기타",
+    "translating": "번역 중...",
+    "translate": "번역",
+    "inputLanguage": "언어를 입력하세요.",
+    "history": "기록",
+    "enterLanguage": "언어 입력",
+    "add_to_folder": {
+      "notAuthenticated": "인증되지 않았습니다",
+      "chooseFolder": "추가할 폴더 선택",
+      "noFolders": "폴더를 찾을 수 없습니다",
+      "folderInfo": "{id}. {name}",
+      "close": "닫기",
+      "success": "텍스트 쌍을 폴더에 추가했습니다",
+      "error": "텍스트 쌍 추가 실패"
+    },
+    "autoSave": "자동 저장"
+  }
+}

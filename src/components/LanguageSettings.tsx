@@ -38,6 +38,42 @@ export default function LanguageSettings() {
                             >
                                 中文
                             </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("ja-JP")}
+                            >
+                                日本語
+                            </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("ko-KR")}
+                            >
+                                한국어
+                            </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("de-DE")}
+                            >
+                                Deutsch
+                            </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("fr-FR")}
+                            >
+                                Français
+                            </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("it-IT")}
+                            >
+                                Italiano
+                            </GhostButton>
+                            <GhostButton
+                                className="w-full bg-[#35786f]"
+                                onClick={() => setLocale("ug-CN")}
+                            >
+                                ئۇيغۇرچە
+                            </GhostButton>
                         </div>
                     </div>
                 )}

@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "Seleziona i caratteri che desideri imparare",
+    "japanese": "Kana giapponese",
+    "english": "Alfabeto inglese",
+    "uyghur": "Alfabeto uiguro",
+    "esperanto": "Alfabeto esperanto",
+    "loading": "Caricamento...",
+    "loadFailed": "Caricamento fallito, riprova",
+    "hideLetter": "Nascondi lettera",
+    "showLetter": "Mostra lettera",
+    "hideIPA": "Nascondi IPA",
+    "showIPA": "Mostra IPA",
+    "roman": "Romanizzazione",
+    "letter": "Lettera",
+    "random": "Modalità casuale",
+    "randomNext": "Successivo casuale"
+  },
+  "folders": {
+    "title": "Cartelle",
+    "subtitle": "Gestisci le tue collezioni",
+    "newFolder": "Nuova cartella",
+    "creating": "Creazione...",
+    "noFoldersYet": "Nessuna cartella ancora",
+    "folderInfo": "ID: {id} • {totalPairs} coppie",
+    "enterFolderName": "Inserisci nome cartella:",
+    "confirmDelete": "Digita \"{name}\" per eliminare:"
+  },
+  "folder_id": {
+    "unauthorized": "Non sei il proprietario di questa cartella",
+    "back": "Indietro",
+    "textPairs": "Coppie di testi",
+    "itemsCount": "{count} elementi",
+    "memorize": "Memorizza",
+    "loadingTextPairs": "Caricamento coppie di testi...",
+    "noTextPairs": "Nessuna coppia di testi in questa cartella",
+    "addNewTextPair": "Aggiungi nuova coppia di testi",
+    "add": "Aggiungi",
+    "updateTextPair": "Aggiorna coppia di testi",
+    "update": "Aggiorna",
+    "text1": "Testo 1",
+    "text2": "Testo 2",
+    "locale1": "Lingua 1",
+    "locale2": "Lingua 2",
+    "edit": "Modifica",
+    "delete": "Elimina"
+  },
+  "home": {
+    "title": "Impara le lingue",
+    "description": "Questo è un sito web molto utile che ti aiuta a imparare quasi tutte le lingue del mondo, incluse quelle costruite.",
+    "explore": "Esplora",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— Steve Jobs"
+    },
+    "translator": {
+      "name": "Traduttore",
+      "description": "Traduci in qualsiasi lingua e annota con l'alfabeto fonetico internazionale (IPA)"
+    },
+    "textSpeaker": {
+      "name": "Lettore di testo",
+      "description": "Riconosce e legge il testo ad alta voce, supporta la riproduzione in loop e la regolazione della velocità"
+    },
+    "srtPlayer": {
+      "name": "Lettore video SRT",
+      "description": "Riproduci video frase per frase basandoti su file di sottotitoli SRT per imitare la pronuncia dei madrelingua"
+    },
+    "alphabet": {
+      "name": "Alfabeto",
+      "description": "Inizia a imparare una nuova lingua dall'alfabeto"
+    },
+    "memorize": {
+      "name": "Memorizza",
+      "description": "Lingua A verso lingua B, lingua B verso lingua A, supporta dettatura"
+    },
+    "dictionary": {
+      "name": "Dizionario",
+      "description": "Cerca parole e frasi con definizioni dettagliate ed esempi"
+    },
+    "moreFeatures": {
+      "name": "Altre funzionalità",
+      "description": "In sviluppo, rimani sintonizzato"
+    }
+  },
+  "auth": {
+    "title": "Autenticazione",
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma password",
+    "name": "Nome",
+    "signInButton": "Accedi",
+    "signUpButton": "Registrati",
+    "noAccount": "Non hai un account?",
+    "hasAccount": "Hai già un account?",
+    "signInWithGitHub": "Accedi con GitHub",
+    "signUpWithGitHub": "Registrati con GitHub",
+    "invalidEmail": "Inserisci un indirizzo email valido",
+    "passwordTooShort": "La password deve essere di almeno 8 caratteri",
+    "passwordsNotMatch": "Le password non corrispondono",
+    "nameRequired": "Inserisci il tuo nome",
+    "emailRequired": "Inserisci la tua email",
+    "passwordRequired": "Inserisci la tua password",
+    "confirmPasswordRequired": "Conferma la tua password",
+    "loading": "Caricamento..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "Seleziona una cartella",
+      "noFolders": "Nessuna cartella trovata",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "Risposta",
+      "next": "Successivo",
+      "reverse": "Inverti",
+      "dictation": "Dettatura",
+      "noTextPairs": "Nessuna coppia di testi disponibile",
+      "disorder": "Disordine",
+      "previous": "Precedente"
+    },
+    "page": {
+      "unauthorized": "Non sei autorizzato ad accedere a questa cartella"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "sourceCode": "GitHub",
+    "sign_in": "Accedi",
+    "profile": "Profilo",
+    "folders": "Cartelle"
+  },
+  "profile": {
+    "myProfile": "Il mio profilo",
+    "email": "Email: {email}",
+    "logout": "Esci"
+  },
+  "srt_player": {
+    "uploadVideo": "Carica video",
+    "uploadSubtitle": "Carica sottotitoli",
+    "pause": "Pausa",
+    "play": "Riproduci",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "restart": "Riavvia",
+    "autoPause": "Pausa automatica ({enabled})",
+    "uploadVideoAndSubtitle": "Carica i file video e sottotitoli",
+    "uploadVideoFile": "Carica un file video",
+    "uploadSubtitleFile": "Carica un file di sottotitoli",
+    "processingSubtitle": "Elaborazione file sottotitoli...",
+    "needBothFiles": "Sono richiesti sia i file video che i sottotitoli per iniziare l'apprendimento",
+    "videoFile": "File video",
+    "subtitleFile": "File sottotitoli",
+    "uploaded": "Caricato",
+    "notUploaded": "Non caricato",
+    "upload": "Carica",
+    "autoPauseStatus": "Pausa automatica: {enabled}",
+    "on": "Attivo",
+    "off": "Disattivo",
+    "videoUploadFailed": "Caricamento video fallito",
+    "subtitleUploadFailed": "Caricamento sottotitoli fallito"
+  },
+  "text_speaker": {
+    "generateIPA": "Genera IPA",
+    "viewSavedItems": "Visualizza elementi salvati",
+    "confirmDeleteAll": "Sei sicuro di voler eliminare tutto? (S/N)"
+  },
+  "translator": {
+    "detectLanguage": "rileva lingua",
+    "generateIPA": "genera ipa",
+    "translateInto": "traduci in",
+    "chinese": "Cinese",
+    "english": "Inglese",
+    "italian": "Italiano",
+    "other": "Altro",
+    "translating": "traduzione...",
+    "translate": "traduci",
+    "inputLanguage": "Inserisci una lingua.",
+    "history": "Cronologia",
+    "enterLanguage": "Inserisci lingua",
+    "add_to_folder": {
+      "notAuthenticated": "Non sei autenticato",
+      "chooseFolder": "Scegli una cartella a cui aggiungere",
+      "noFolders": "Nessuna cartella trovata",
+      "folderInfo": "{id}. {name}",
+      "close": "Chiudi",
+      "success": "Coppia di testi aggiunta alla cartella",
+      "error": "Impossibile aggiungere la coppia di testi alla cartella"
+    },
+    "autoSave": "Salvataggio automatico"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "Bitte wählen Sie die Zeichen aus, die Sie lernen möchten",
+    "japanese": "Japanische Kana",
+    "english": "Englisches Alphabet",
+    "uyghur": "Uigurisches Alphabet",
+    "esperanto": "Esperanto-Alphabet",
+    "loading": "Laden...",
+    "loadFailed": "Laden fehlgeschlagen, bitte versuchen Sie es erneut",
+    "hideLetter": "Zeichen ausblenden",
+    "showLetter": "Zeichen anzeigen",
+    "hideIPA": "IPA ausblenden",
+    "showIPA": "IPA anzeigen",
+    "roman": "Romanisierung",
+    "letter": "Zeichen",
+    "random": "Zufälliger Modus",
+    "randomNext": "Zufällig weiter"
+  },
+  "folders": {
+    "title": "Ordner",
+    "subtitle": "Verwalten Sie Ihre Sammlungen",
+    "newFolder": "Neuer Ordner",
+    "creating": "Erstellen...",
+    "noFoldersYet": "Noch keine Ordner",
+    "folderInfo": "ID: {id} • {totalPairs} Paare",
+    "enterFolderName": "Ordnernamen eingeben:",
+    "confirmDelete": "Geben Sie \"{name}\" ein, um zu löschen:"
+  },
+  "folder_id": {
+    "unauthorized": "Sie sind nicht der Eigentümer dieses Ordners",
+    "back": "Zurück",
+    "textPairs": "Textpaare",
+    "itemsCount": "{count} Elemente",
+    "memorize": "Einprägen",
+    "loadingTextPairs": "Textpaare werden geladen...",
+    "noTextPairs": "Keine Textpaare in diesem Ordner",
+    "addNewTextPair": "Neues Textpaar hinzufügen",
+    "add": "Hinzufügen",
+    "updateTextPair": "Textpaar aktualisieren",
+    "update": "Aktualisieren",
+    "text1": "Text 1",
+    "text2": "Text 2",
+    "locale1": "Sprache 1",
+    "locale2": "Sprache 2",
+    "edit": "Bearbeiten",
+    "delete": "Löschen"
+  },
+  "home": {
+    "title": "Sprachen lernen",
+    "description": "Hier ist eine sehr nützliche Website, die Ihnen hilft, fast jede Sprache der Welt zu lernen, einschließlich konstruierter Sprachen.",
+    "explore": "Erkunden",
+    "fortune": {
+      "quote": "Bleib hungrig, bleiv dumm.",
+      "author": "— Steve Jobs"
+    },
+    "translator": {
+      "name": "Übersetzer",
+      "description": "In jede Sprache übersetzen und mit Internationalem Phonetischem Alphabet (IPA) annotieren"
+    },
+    "textSpeaker": {
+      "name": "Text-Sprecher",
+      "description": "Text erkennen und vorlesen, unterstützt Schleifenwiedergabe und Geschwindigkeitsanpassung"
+    },
+    "srtPlayer": {
+      "name": "SRT-Videoplayer",
+      "description": "Videos basierend auf SRT-Untertiteldateien satzweise abspielen, um die Aussprache von Muttersprachlern zu imitieren"
+    },
+    "alphabet": {
+      "name": "Alphabet",
+      "description": "Beginnen Sie mit dem Erlernen einer neuen Sprache mit dem Alphabet"
+    },
+    "memorize": {
+      "name": "Einprägen",
+      "description": "Sprache A zu Sprache B, Sprache B zu Sprache A, unterstützt Diktat"
+    },
+    "dictionary": {
+      "name": "Wörterbuch",
+      "description": "Wörter und Redewendungen nachschlagen mit detaillierten Definitionen und Beispielen"
+    },
+    "moreFeatures": {
+      "name": "Weitere Funktionen",
+      "description": "In Entwicklung, bleiben Sie dran"
+    }
+  },
+  "auth": {
+    "title": "Authentifizierung",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "name": "Name",
+    "signInButton": "Anmelden",
+    "signUpButton": "Registrieren",
+    "noAccount": "Haben Sie kein Konto?",
+    "hasAccount": "Haben Sie bereits ein Konto?",
+    "signInWithGitHub": "Mit GitHub anmelden",
+    "signUpWithGitHub": "Mit GitHub registrieren",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "passwordsNotMatch": "Passwörter stimmen nicht überein",
+    "nameRequired": "Bitte geben Sie Ihren Namen ein",
+    "emailRequired": "Bitte geben Sie Ihre E-Mail ein",
+    "passwordRequired": "Bitte geben Sie Ihr Passwort ein",
+    "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+    "loading": "Laden..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "Wählen Sie einen Ordner aus",
+      "noFolders": "Keine Ordner gefunden",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "Antwort",
+      "next": "Weiter",
+      "reverse": "Umkehren",
+      "dictation": "Diktat",
+      "noTextPairs": "Keine Textpaare verfügbar",
+      "disorder": "Mischen",
+      "previous": "Zurück"
+    },
+    "page": {
+      "unauthorized": "Sie sind nicht berechtigt, auf diesen Ordner zuzugreifen"
+    }
+  },
+  "navbar": {
+    "title": "learn-languages",
+    "sourceCode": "GitHub",
+    "sign_in": "Anmelden",
+    "profile": "Profil",
+    "folders": "Ordner"
+  },
+  "profile": {
+    "myProfile": "Mein Profil",
+    "email": "E-Mail: {email}",
+    "logout": "Abmelden"
+  },
+  "srt_player": {
+    "uploadVideo": "Video hochladen",
+    "uploadSubtitle": "Untertitel hochladen",
+    "pause": "Pause",
+    "play": "Abspielen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "restart": "Neustart",
+    "autoPause": "Auto-Pause ({enabled})",
+    "uploadVideoAndSubtitle": "Bitte laden Sie Video- und Untertiteldateien hoch",
+    "uploadVideoFile": "Bitte laden Sie eine Videodatei hoch",
+    "uploadSubtitleFile": "Bitte laden Sie eine Untertiteldatei hoch",
+    "processingSubtitle": "Untertiteldatei wird verarbeitet...",
+    "needBothFiles": "Sowohl Video- als auch Untertiteldateien sind erforderlich, um mit dem Lernen zu beginnen",
+    "videoFile": "Videodatei",
+    "subtitleFile": "Untertiteldatei",
+    "uploaded": "Hochgeladen",
+    "notUploaded": "Nicht hochgeladen",
+    "upload": "Hochladen",
+    "autoPauseStatus": "Auto-Pause: {enabled}",
+    "on": "Ein",
+    "off": "Aus",
+    "videoUploadFailed": "Video-Upload fehlgeschlagen",
+    "subtitleUploadFailed": "Untertitel-Upload fehlgeschlagen"
+  },
+  "text_speaker": {
+    "generateIPA": "IPA generieren",
+    "viewSavedItems": "Gespeicherte Elemente anzeigen",
+    "confirmDeleteAll": "Sind Sie sicher, dass Sie alles löschen möchten? (J/N)"
+  },
+  "translator": {
+    "detectLanguage": "Sprache erkennen",
+    "generateIPA": "IPA generieren",
+    "translateInto": "Übersetzen in",
+    "chinese": "Chinesisch",
+    "english": "Englisch",
+    "italian": "Italienisch",
+    "other": "Andere",
+    "translating": "Übersetzung läuft...",
+    "translate": "Übersetzen",
+    "inputLanguage": "Geben Sie eine Sprache ein.",
+    "history": "Verlauf",
+    "enterLanguage": "Sprache eingeben",
+    "add_to_folder": {
+      "notAuthenticated": "Sie sind nicht authentifiziert",
+      "chooseFolder": "Wählen Sie einen Ordner zum Hinzufügen aus",
+      "noFolders": "Keine Ordner gefunden",
+      "folderInfo": "{id}. {name}",
+      "close": "Schließen",
+      "success": "Textpaar zum Ordner hinzugefügt",
+      "error": "Textpaar konnte nicht zum Ordner hinzugefügt werden"
+    },
+    "autoSave": "Automatisch speichern"
+  }
+}

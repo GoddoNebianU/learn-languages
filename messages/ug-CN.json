@@ -1,0 +1,193 @@
+{
+  "alphabet": {
+    "chooseCharacters": "ئۆگىنەرلىك ھەرپلەرنى تاللاڭ",
+    "japanese": "ياپونىيە كانا",
+    "english": "ئىنگلىز ئېلىپبې",
+    "uyghur": "ئۇيغۇر ئېلىپبېسى",
+    "esperanto": "ئېسپېرانتو ئېلىپبېسى",
+    "loading": "چىقىرىۋېتىلىۋاتىدۇ...",
+    "loadFailed": "چىقىرىش مەغلۇب بولدى، قايتا سىناڭ",
+    "hideLetter": "ھەرپنى يوشۇرۇش",
+    "showLetter": "ھەرپنى كۆرسىتىش",
+    "hideIPA": "IPA نى يوشۇرۇش",
+    "showIPA": "IPA نى كۆرسىتىش",
+    "roman": "روماللاشتۇرۇش",
+    "letter": "ھەرپ",
+    "random": "ئىختىيارىي ھالەت",
+    "randomNext": "ئىختىيارىي كېيىنكى"
+  },
+  "folders": {
+    "title": "قىسقۇچلار",
+    "subtitle": "توپلىمىڭىزنى باشقۇرۇڭ",
+    "newFolder": "يېڭى قىسقۇچ",
+    "creating": "قۇرۇۋاتىدۇ...",
+    "noFoldersYet": "قىسقۇچ يوق",
+    "folderInfo": "كود: {id} • {totalPairs} جۈپ",
+    "enterFolderName": "قىسقۇچ نامىنى كىرگۈزۈڭ:",
+    "confirmDelete": "ئۆچۈرۈش ئۈچۈن «{name}» نى كىرگۈزۈڭ:"
+  },
+  "folder_id": {
+    "unauthorized": "سىز بۇ قىسقۇچنىڭ ئىگىسى ئەمەس",
+    "back": "كەينىگە",
+    "textPairs": "تېكىست جۈپلىرى",
+    "itemsCount": "{count} تۈر",
+    "memorize": "ئەستە ساقلاش",
+    "loadingTextPairs": "تېكىست جۈپلىرى چىقىرىۋېتىلىۋاتىدۇ...",
+    "noTextPairs": "بۇ قىسقۇچتا تېكىست جۈپى يوق",
+    "addNewTextPair": "يېڭى تېكىست جۈپى قوشۇڭ",
+    "add": "قوشۇش",
+    "updateTextPair": "تېكىست جۈپىنى يېڭىلاڭ",
+    "update": "يېڭىلاش",
+    "text1": "تېكىست 1",
+    "text2": "تېكىست 2",
+    "locale1": "تىل 1",
+    "locale2": "تىل 2",
+    "edit": "تەھرىرلەش",
+    "delete": "ئۆچۈرۈش"
+  },
+  "home": {
+    "title": "تىل ئۆگىنىڭ",
+    "description": "بۇ سىزنى دۇنيادىكى ھەممە تىلنى، جۈملىدىن سۈنئىي تىللارنىمۇ ئۆگىنىشىڭىزغا ياردەم بېرىدىغان ناھايىتى پايدىلىق تور بېكەت.",
+    "explore": "ئىزدىنىش",
+    "fortune": {
+      "quote": "Stay hungry, stay foolish.",
+      "author": "— ستىۋ جوۋبس"
+    },
+    "translator": {
+      "name": "تەرجىمە",
+      "description": "خالىغان تىلغا تەرجىمە قىلىپ خەلقئارالىق فونېتىك ئېلىپبې (IPA) بىلەن ئىزاھاتلاش"
+    },
+    "textSpeaker": {
+      "name": "تېكىست ئوقۇغۇچى",
+      "description": "تېكىستنى پەرقلەندۈرۈپ ئوقىيدۇ، دەۋرىي ئوقۇش ۋە سۈرئەت تەڭشەشنى قوللايدۇ"
+    },
+    "srtPlayer": {
+      "name": "SRT سىن ئوپىراتورى",
+      "description": "SRT خەت ئاستى فايلى ئاساسىدا سىننى جۈملە-جۈملە قويۇپ، يەرلىك ئىخچام ئاۋازنى ئىمتىلايدۇ"
+    },
+    "alphabet": {
+      "name": "ئېلىپبې",
+      "description": "ئېلىپبېدىن يېڭى تىل ئۆگىنىشنى باشلاڭ"
+    },
+    "memorize": {
+      "name": "ئەستە ساقلاش",
+      "description": "تىل A دىن تىل غا، تىل B دىن تىل A غا، دىكتات قوللايدۇ"
+    },
+    "dictionary": {
+      "name": "لۇغەت",
+      "description": "سۆز ۋە سۆزنى ئىزدەپ، تەپسىلىي ئىزاھات ۋە مىساللار بىلەن تەمىنلەيدۇ"
+    },
+    "moreFeatures": {
+      "name": "تېخىمۇ كۆپ ئىقتىدار",
+      "description": "ئىشلەۋاتىدۇ، كۈتكۈن بولۇڭ"
+    }
+  },
+  "auth": {
+    "title": "دەلىللەش",
+    "signIn": "كىرىش",
+    "signUp": "تىزىملىتىش",
+    "email": "ئېلخەت",
+    "password": "ئىم",
+    "confirmPassword": "ئىمنى جەزملەش",
+    "name": "نام",
+    "signInButton": "كىرىش",
+    "signUpButton": "تىزىملىتىش",
+    "noAccount": "ھېساباتىڭىز يوقمۇ؟",
+    "hasAccount": "ھېساباتىڭىز بارمۇ؟",
+    "signInWithGitHub": "GitHub بىلەن كىرىڭ",
+    "signUpWithGitHub": "GitHub بىلەن تىزىملىتىڭ",
+    "invalidEmail": "ئىناۋەتلىك ئېلخەت ئادرېسى كىرگۈزۈڭ",
+    "passwordTooShort": "ئىم كەم دېگەندە 8 ھەرپتىن تۇرۇشى كېرەك",
+    "passwordsNotMatch": "ئىم ماس كەلمەيدۇ",
+    "nameRequired": "نامىڭىزنى كىرگۈزۈڭ",
+    "emailRequired": "ئېلخىتىڭىزنى كىرگۈزۈڭ",
+    "passwordRequired": "ئىمىڭىزنى كىرگۈزۈڭ",
+    "confirmPasswordRequired": "ئىمىڭىزنى جەزملەڭ",
+    "loading": "چىقىرىۋېتىلىۋاتىدۇ..."
+  },
+  "memorize": {
+    "folder_selector": {
+      "selectFolder": "قىسقۇچ تاللاڭ",
+      "noFolders": "قىسقۇچ تېپىلمىدى",
+      "folderInfo": "{id}. {name} ({count})"
+    },
+    "memorize": {
+      "answer": "جاۋاب",
+      "next": "كېيىنكى",
+      "reverse": "تەتۈر",
+      "dictation": "دىكتات",
+      "noTextPairs": "ئىشلەتكىلى بولىدىغان تېكىست جۈپى يوق",
+      "disorder": "بەت ئارلاش",
+      "previous": "ئىلگىرىكى"
+    },
+    "page": {
+      "unauthorized": "بۇ قىسقۇچنى زىيارەت قىلىشقا ھوقۇقىڭىز يوق"
+    }
+  },
+  "navbar": {
+    "title": "تىل ئۆگىنىش",
+    "sourceCode": "GitHub",
+    "sign_in": "كىرىش",
+    "profile": "پروفىل",
+    "folders": "قىسقۇچلار"
+  },
+  "profile": {
+    "myProfile": "مېنىڭ پروفىلىم",
+    "email": "ئېلخەت: {email}",
+    "logout": "چىقىش"
+  },
+  "srt_player": {
+    "uploadVideo": "سىن يۈكلەڭ",
+    "uploadSubtitle": "خەت ئاستى يۈكلەڭ",
+    "pause": "ۋاقىتلىق توختىتىش",
+    "play": "قويۇش",
+    "previous": "ئىلگىرىكى",
+    "next": "كېيىنكى",
+    "restart": "قايتا باشلاش",
+    "autoPause": "ئاپتوماتىك توختىتىش ({enabled})",
+    "uploadVideoAndSubtitle": "سىن ھەم خەت ئاستى فايلىنى يۈكلەڭ",
+    "uploadVideoFile": "سىن فايلى يۈكلەڭ",
+    "uploadSubtitleFile": "خەت ئاستى فايلى يۈكلەڭ",
+    "processingSubtitle": "خەت ئاستى فايلى بىر تەرەپ قىلىۋاتىدۇ...",
+    "needBothFiles": "ئۆگىنىشنى باشلاش ئۈچۈن سىن ھەم خەت ئاستى فايلىنىڭ ھەممىسى لازىم",
+    "videoFile": "سىن فايلى",
+    "subtitleFile": "خەت ئاستى فايلى",
+    "uploaded": "يۈكلەندى",
+    "notUploaded": "يۈكلەنمىدى",
+    "upload": "يۈكلەش",
+    "autoPauseStatus": "ئاپتوماتىك توختىتىش: {enabled}",
+    "on": "ئوچۇق",
+    "off": "تاقاق",
+    "videoUploadFailed": "سىن يۈكلەش مەغلۇب بولدى",
+    "subtitleUploadFailed": "خەت ئاستى يۈكلەش مەغلۇب بولدى"
+  },
+  "text_speaker": {
+    "generateIPA": "IPA ھاسىل قىلىش",
+    "viewSavedItems": "ساقلانغان تۈرلەرنى كۆرۈش",
+    "confirmDeleteAll": "ھەممىنى ئۆچۈرەمسىز؟ (H/Y)"
+  },
+  "translator": {
+    "detectLanguage": "تىل پەرقلەندۈرۈش",
+    "generateIPA": "IPA ھاسىل قىلىش",
+    "translateInto": "تەرجىمە قىلىش",
+    "chinese": "خەنزۇچە",
+    "english": "ئىنگلىزچە",
+    "italian": "ئىتاليانچە",
+    "other": "باشقا",
+    "translating": "تەرجىمە قىلىۋاتىدۇ...",
+    "translate": "تەرجىمە قىلىش",
+    "inputLanguage": "بىر تىل كىرگۈزۈڭ.",
+    "history": "تارىخ",
+    "enterLanguage": "تىل كىرگۈزۈڭ",
+    "add_to_folder": {
+      "notAuthenticated": "دەلىتلەنمىدىڭىز",
+      "chooseFolder": "قوشۇلىدىغان قىسقۇچنى تاللاڭ",
+      "noFolders": "قىسقۇچ تېپىلمىدى",
+      "folderInfo": "{id}. {name}",
+      "close": "تاقاش",
+      "success": "تېكىست جۈپى قىسقۇچقا قوشۇلدى",
+      "error": "تېكىست جۈپىنى قىسقۇچقا قوشۇش مەغلۇب بولدى"
+    },
+    "autoSave": "ئاپتوماتىك ساقلاش"
+  }
+}
