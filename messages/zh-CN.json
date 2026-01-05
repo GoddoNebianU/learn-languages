@@ -42,6 +42,7 @@
     "text2": "文本2",
     "language1": "语言1",
     "language2": "语言2",
+    "enterLanguageName": "请输入语言名称",
     "edit": "编辑",
     "delete": "删除"
   },

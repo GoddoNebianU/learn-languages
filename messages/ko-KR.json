@@ -42,6 +42,7 @@
     "text2": "텍스트 2",
     "language1": "언어 1",
     "language2": "언어 2",
+    "enterLanguageName": "언어 이름을 입력하세요",
     "edit": "편집",
     "delete": "삭제"
   },

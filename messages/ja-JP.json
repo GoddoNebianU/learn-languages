@@ -42,6 +42,7 @@
     "text2": "テキスト2",
     "language1": "言語1",
     "language2": "言語2",
+    "enterLanguageName": "言語名を入力してください",
     "edit": "編集",
     "delete": "削除"
   },

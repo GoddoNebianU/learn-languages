@@ -42,6 +42,7 @@
     "text2": "Texte 2",
     "language1": "Langue 1",
     "language2": "Langue 2",
+    "enterLanguageName": "Veuillez entrer le nom de la langue",
     "edit": "Modifier",
     "delete": "Supprimer"
   },

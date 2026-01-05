@@ -1,17 +1,18 @@
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 const COMMON_LANGUAGES = [
-  { label: "中文", value: "chinese" },
-  { label: "英文", value: "english" },
-  { label: "意大利语", value: "italian" },
-  { label: "日语", value: "japanese" },
-  { label: "韩语", value: "korean" },
-  { label: "法语", value: "french" },
-  { label: "德语", value: "german" },
-  { label: "西班牙语", value: "spanish" },
-  { label: "葡萄牙语", value: "portuguese" },
-  { label: "俄语", value: "russian" },
-  { label: "其他", value: "other" },
+  { label: "chinese", value: "chinese" },
+  { label: "english", value: "english" },
+  { label: "italian", value: "italian" },
+  { label: "japanese", value: "japanese" },
+  { label: "korean", value: "korean" },
+  { label: "french", value: "french" },
+  { label: "german", value: "german" },
+  { label: "spanish", value: "spanish" },
+  { label: "portuguese", value: "portuguese" },
+  { label: "russian", value: "russian" },
+  { label: "other", value: "other" },
 ];
 
 interface LocaleSelectorProps {
@@ -20,6 +21,7 @@ interface LocaleSelectorProps {
 }
 
 export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
+  const t = useTranslations();
   const [customInput, setCustomInput] = useState("");
   const isCommonLanguage = COMMON_LANGUAGES.some((l) => l.value === value && l.value !== "other");
   const showCustomInput = value === "other" || !isCommonLanguage;
@@ -52,7 +54,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
       >
         {COMMON_LANGUAGES.map((lang) => (
           <option key={lang.value} value={lang.value}>
-            {lang.label}
+            {t(`translator.${lang.label}`)}
           </option>
         ))}
       </select>
@@ -61,7 +63,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
           type="text"
           value={inputValue}
           onChange={(e) => handleCustomInputChange(e.target.value)}
-          placeholder="请输入语言名称"
+          placeholder={t("folder_id.enterLanguageName")}
           className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#35786f] mt-2"
         />
       )}
