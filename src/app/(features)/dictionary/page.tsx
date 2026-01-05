@@ -304,7 +304,7 @@ export default function Dictionary() {
                                                         toast.error("保存失败，请稍后重试");
                                                     });
                                             }}
-                                            className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-10 h-10 flex justify-center items-center flex-shrink-0"
+                                            className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-10 h-10 flex justify-center items-center shrink-0"
                                             title="保存到文件夹"
                                         >
                                             <Plus />
