@@ -15,6 +15,7 @@ export const getLocalStorageOperator = <T extends z.ZodTypeAny>(
   return {
     get: (): z.infer<T> => {
       try {
+        if (!globalThis.localStorage) return [] as z.infer<T>;
         const item = globalThis.localStorage.getItem(key);
 
         if (!item) return [] as z.infer<T>;

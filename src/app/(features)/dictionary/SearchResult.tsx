@@ -85,11 +85,7 @@ export function SearchResult({
             language1: queryLang,
             language2: definitionLang,
             ipa1: isDictWordResponse(searchResult) && (entry as DictWordEntry).ipa ? (entry as DictWordEntry).ipa : undefined,
-            folder: {
-                connect: {
-                    id: selectedFolderId,
-                },
-            },
+            folderId: selectedFolderId,
         })
             .then(() => {
                 const folderName = folders.find(f => f.id === selectedFolderId)?.name || "Unknown";

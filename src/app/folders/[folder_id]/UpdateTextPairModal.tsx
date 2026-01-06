@@ -3,7 +3,7 @@ import Input from "@/components/ui/Input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
-import { PairUpdateInput } from "../../../../generated/prisma/models";
+import { UpdatePairInput } from "@/lib/server/services/types";
 import { TextPair } from "./InFolder";
 import { useTranslations } from "next-intl";
 
@@ -11,7 +11,7 @@ interface UpdateTextPairModalProps {
   isOpen: boolean;
   onClose: () => void;
   textPair: TextPair;
-  onUpdate: (id: number, tp: PairUpdateInput) => void;
+  onUpdate: (id: number, tp: UpdatePairInput) => void;
 }
 
 export default function UpdateTextPairModal({

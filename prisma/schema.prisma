@@ -8,17 +8,18 @@ datasource db {
 }
 
 model User {
-  id                String             @id
-  name              String
-  email             String
-  emailVerified     Boolean            @default(false)
-  image             String?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  sessions          Session[]
-  accounts          Account[]
-  folders           Folder[]
-  dictionaryLookUps DictionaryLookUp[]
+  id                   String               @id
+  name                 String
+  email                String
+  emailVerified        Boolean              @default(false)
+  image                String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  sessions             Session[]
+  accounts             Account[]
+  folders              Folder[]
+  dictionaryLookUps    DictionaryLookUp[]
+  translationHistories TranslationHistory[]
 
   @@unique([email])
   @@map("user")
@@ -187,4 +188,25 @@ model DictionaryPhraseEntry {
   @@index([phraseId])
   @@index([createdAt])
   @@map("dictionary_phrase_entries")
+}
+
+model TranslationHistory {
+  id             Int      @id @default(autoincrement())
+  userId         String?  @map("user_id")
+  sourceText     String   @map("source_text")
+  sourceLanguage String   @map("source_language") @db.VarChar(20)
+  targetLanguage String   @map("target_language") @db.VarChar(20)
+  translatedText String   @map("translated_text")
+  sourceIpa      String?  @map("source_ipa")
+  targetIpa      String?  @map("target_ipa")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([sourceText, targetLanguage])
+  @@index([translatedText, sourceLanguage, targetLanguage])
+  @@map("translation_history")
 }

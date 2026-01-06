@@ -1,57 +1,63 @@
 "use server";
 
 import { executeDictionaryLookup } from "./dictionary";
-import { createLookUp, createPhrase, createWord, selectLastLookUp } from "../services/dictionaryService";
+import { createLookUp, createPhrase, createWord, createPhraseEntry, createWordEntry, selectLastLookUp } from "../services/dictionaryService";
 import { DictLookUpRequest, DictWordResponse, isDictErrorResponse, isDictPhraseResponse, isDictWordResponse, type DictLookUpResponse } from "@/lib/shared";
 
 const saveResult = async (req: DictLookUpRequest, res: DictLookUpResponse) => {
     if (isDictErrorResponse(res)) return;
     else if (isDictPhraseResponse(res)) {
-        return createPhrase({
+        // 先创建 Phrase
+        const phrase = await createPhrase({
             standardForm: res.standardForm,
             queryLang: req.queryLang,
             definitionLang: req.definitionLang,
-            lookups: {
-                create: {
-                    user: req.userId ? {
-                        connect: {
-                            id: req.userId
-                        }
-                    } : undefined,
-                    text: req.text,
-                    queryLang: req.queryLang,
-                    definitionLang: req.definitionLang
-                }
-            },
-            entries: {
-                createMany: {
-                    data: res.entries
-                }
-            }
         });
+
+        // 创建 Lookup
+        await createLookUp({
+            userId: req.userId,
+            text: req.text,
+            queryLang: req.queryLang,
+            definitionLang: req.definitionLang,
+            dictionaryPhraseId: phrase.id,
+        });
+
+        // 创建 Entries
+        for (const entry of res.entries) {
+            await createPhraseEntry({
+                phraseId: phrase.id,
+                definition: entry.definition,
+                example: entry.example,
+            });
+        }
     } else if (isDictWordResponse(res)) {
-        return createWord({
+        // 先创建 Word
+        const word = await createWord({
             standardForm: (res as DictWordResponse).standardForm,
             queryLang: req.queryLang,
             definitionLang: req.definitionLang,
-            lookups: {
-                create: {
-                    user: req.userId ? {
-                        connect: {
-                            id: req.userId
-                        }
-                    } : undefined,
-                    text: req.text,
-                    queryLang: req.queryLang,
-                    definitionLang: req.definitionLang
-                }
-            },
-            entries: {
-                createMany: {
-                    data: (res as DictWordResponse).entries
-                }
-            }
         });
+
+        // 创建 Lookup
+        await createLookUp({
+            userId: req.userId,
+            text: req.text,
+            queryLang: req.queryLang,
+            definitionLang: req.definitionLang,
+            dictionaryWordId: word.id,
+        });
+
+        // 创建 Entries
+        for (const entry of (res as DictWordResponse).entries) {
+            await createWordEntry({
+                wordId: word.id,
+                ipa: entry.ipa,
+                definition: entry.definition,
+                partOfSpeech: entry.partOfSpeech,
+                example: entry.example,
+            });
+        }
     }
 };
 
@@ -102,19 +108,11 @@ export const lookUp = async ({
             // 从数据库返回缓存的结果
             if (lastLookUp.dictionaryWordId) {
                 createLookUp({
-                    user: userId ? {
-                        connect: {
-                            id: userId
-                        }
-                    } : undefined,
+                    userId: userId,
                     text: text,
                     queryLang: queryLang,
                     definitionLang: definitionLang,
-                    dictionaryWord: {
-                        connect: {
-                            id: lastLookUp.dictionaryWordId,
-                        }
-                    }
+                    dictionaryWordId: lastLookUp.dictionaryWordId,
                 });
                 return {
                     standardForm: lastLookUp.dictionaryWord!.standardForm,
@@ -122,19 +120,11 @@ export const lookUp = async ({
                 };
             } else if (lastLookUp.dictionaryPhraseId) {
                 createLookUp({
-                    user: userId ? {
-                        connect: {
-                            id: userId
-                        }
-                    } : undefined,
+                    userId: userId,
                     text: text,
                     queryLang: queryLang,
                     definitionLang: definitionLang,
-                    dictionaryPhrase: {
-                        connect: {
-                            id: lastLookUp.dictionaryPhraseId
-                        }
-                    }
+                    dictionaryPhraseId: lastLookUp.dictionaryPhraseId
                 });
                 return {
                     standardForm: lastLookUp.dictionaryPhrase!.standardForm,

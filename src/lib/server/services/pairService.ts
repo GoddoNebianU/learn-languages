@@ -1,16 +1,16 @@
 "use server";
 
-import { PairCreateInput, PairUpdateInput } from "../../../../generated/prisma/models";
+import { CreatePairInput, UpdatePairInput } from "./types";
 import prisma from "../../db";
 
-export async function createPair(data: PairCreateInput) {
-  await prisma.pair.create({
+export async function createPair(data: CreatePairInput) {
+  return prisma.pair.create({
     data: data,
   });
 }
 
 export async function deletePairById(id: number) {
-  await prisma.pair.delete({
+  return prisma.pair.delete({
     where: {
       id: id,
     },
@@ -19,9 +19,9 @@ export async function deletePairById(id: number) {
 
 export async function updatePairById(
   id: number,
-  data: PairUpdateInput,
+  data: UpdatePairInput,
 ) {
-  await prisma.pair.update({
+  return prisma.pair.update({
     where: {
       id: id,
     },
@@ -30,19 +30,17 @@ export async function updatePairById(
 }
 
 export async function getPairCountByFolderId(folderId: number) {
-  const count = await prisma.pair.count({
+  return prisma.pair.count({
     where: {
       folderId: folderId,
     },
   });
-  return count;
 }
 
 export async function getPairsByFolderId(folderId: number) {
-  const textPairs = await prisma.pair.findMany({
+  return prisma.pair.findMany({
     where: {
       folderId: folderId,
     },
   });
-  return textPairs;
 }

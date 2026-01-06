@@ -1,19 +1,18 @@
 "use server";
 
-import { FolderCreateInput, FolderUpdateInput } from "../../../../generated/prisma/models";
+import { CreateFolderInput, UpdateFolderInput } from "./types";
 import prisma from "../../db";
 
 export async function getFoldersByUserId(userId: string) {
-  const folders = await prisma.folder.findMany({
+  return prisma.folder.findMany({
     where: {
       userId: userId,
     },
   });
-  return folders;
 }
 
 export async function renameFolderById(id: number, newName: string) {
-  await prisma.folder.update({
+  return prisma.folder.update({
     where: {
       id: id,
     },
@@ -32,29 +31,28 @@ export async function getFoldersWithTotalPairsByUserId(userId: string) {
       },
     },
   });
-
   return folders.map(folder => ({
     ...folder,
     total: folder._count?.pairs ?? 0,
   }));
 }
 
-export async function createFolder(folder: FolderCreateInput) {
-  await prisma.folder.create({
+export async function createFolder(folder: CreateFolderInput) {
+  return prisma.folder.create({
     data: folder,
   });
 }
 
 export async function deleteFolderById(id: number) {
-  await prisma.folder.delete({
+  return prisma.folder.delete({
     where: {
       id: id,
     },
   });
 }
 
-export async function updateFolderById(id: number, data: FolderUpdateInput) {
-  await prisma.folder.update({
+export async function updateFolderById(id: number, data: UpdateFolderInput) {
+  return prisma.folder.update({
     where: {
       id: id,
     },

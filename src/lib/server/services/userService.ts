@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { UserCreateInput } from "../../../../generated/prisma/models";
+import { randomUUID } from "crypto";
 
 export async function createUserIfNotExists(email: string, name?: string | null) {
     const user = await prisma.user.upsert({
@@ -8,9 +8,10 @@ export async function createUserIfNotExists(email: string, name?: string | null)
         },
         update: {},
         create: {
+            id: randomUUID(),
             email: email,
             name: name || "New User",
-        } as UserCreateInput,
+        },
     });
     return user;
 }

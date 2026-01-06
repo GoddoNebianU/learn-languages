@@ -148,11 +148,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
             text2: text2,
             language1: language1,
             language2: language2,
-            folder: {
-              connect: {
-                id: folderId,
-              },
-            },
+            folderId: folderId,
           });
           refreshTextPairs();
         }}

@@ -59,11 +59,7 @@ const AddToFolder: React.FC<AddToFolderProps> = ({ item, setShow }) => {
                       text2: item.text2,
                       language1: item.language1,
                       language2: item.language2,
-                      folder: {
-                        connect: {
-                          id: folder.id,
-                        },
-                      },
+                      folderId: folder.id,
                     })
                       .then(() => {
                         toast.success(t("success"));

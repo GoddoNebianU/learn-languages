@@ -12,11 +12,8 @@ import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import z from "zod";
 import AddToFolder from "./AddToFolder";
-import {
-  genIPA,
-  genLocale,
-  genTranslation,
-} from "@/lib/server/bigmodel/translatorActions";
+import { translateText } from "@/lib/server/bigmodel/translatorActions";
+import type { TranslateTextOutput } from "@/lib/server/services/types";
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { createPair } from "@/lib/server/services/pairService";
@@ -28,11 +25,14 @@ export default function TranslatorPage() {
   const t = useTranslations("translator");
 
   const taref = useRef<HTMLTextAreaElement>(null);
-  const [lang, setLang] = useState<string>("chinese");
-  const [tresult, setTresult] = useState<string>("");
-  const [genIpa, setGenIpa] = useState(true);
-  const [ipaTexts, setIpaTexts] = useState(["", ""]);
+  const [targetLanguage, setTargetLanguage] = useState<string>("Chinese");
+  const [translationResult, setTranslationResult] = useState<TranslateTextOutput | null>(null);
+  const [needIpa, setNeedIpa] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [lastTranslation, setLastTranslation] = useState<{
+    sourceText: string;
+    targetLanguage: string;
+  } | null>(null);
   const { load, play } = useAudioPlayer();
   const [history, setHistory] = useState<z.infer<typeof TranslationHistorySchema>[]>(() => tlso.get());
   const [showAddToFolder, setShowAddToFolder] = useState(false);
@@ -76,108 +76,66 @@ export default function TranslatorPage() {
   };
 
   const translate = async () => {
-    if (!taref.current) return;
-    if (processing) return;
+    if (!taref.current || processing) return;
 
     setProcessing(true);
 
-    const text1 = taref.current.value;
+    const sourceText = taref.current.value;
 
-    const llmres: {
-      text1: string | null;
-      text2: string | null;
-      language1: string | null;
-      language2: string | null;
-      ipa1: string | null;
-      ipa2: string | null;
-    } = {
-      text1: text1,
-      text2: null,
-      language1: null,
-      language2: null,
-      ipa1: null,
-      ipa2: null,
-    };
+    // 判断是否需要强制重新翻译
+    // 只有当源文本和目标语言都与上次相同时，才强制重新翻译
+    const forceRetranslate =
+      lastTranslation?.sourceText === sourceText &&
+      lastTranslation?.targetLanguage === targetLanguage;
 
-    let historyUpdated = false;
-
-    // 检查更新历史记录
-    const checkUpdateLocalStorage = () => {
-      if (historyUpdated) return;
-      if (llmres.text1 && llmres.text2 && llmres.language1 && llmres.language2) {
-        setHistory(
-          tlsoPush({
-            text1: llmres.text1,
-            text2: llmres.text2,
-            language1: llmres.language1,
-            language2: llmres.language2,
-          }),
-        );
-        if (autoSave && autoSaveFolderId) {
-          createPair({
-            text1: llmres.text1,
-            text2: llmres.text2,
-            language1: llmres.language1,
-            language2: llmres.language2,
-            folder: {
-              connect: {
-                id: autoSaveFolderId,
-              },
-            },
-          })
-            .then(() => {
-              toast.success(
-                llmres.text1 + "保存到文件夹" + autoSaveFolderId + "成功",
-              );
-            })
-            .catch((error) => {
-              toast.error(
-                llmres.text1 +
-                "保存到文件夹" +
-                autoSaveFolderId +
-                "失败：" +
-                error.message,
-              );
-            });
-        }
-        historyUpdated = true;
-      }
-    };
-    // 更新局部翻译状态
-    const updateState = (stateName: keyof typeof llmres, value: string) => {
-      llmres[stateName] = value;
-      checkUpdateLocalStorage();
-    };
-
-    genTranslation(text1, lang)
-      .then(async (text2) => {
-        updateState("text2", text2);
-        setTresult(text2);
-        // 生成两个locale
-        genLocale(text1).then((locale) => {
-          updateState("language1", locale);
-        });
-        genLocale(text2).then((locale) => {
-          updateState("language2", locale);
-        });
-        // 生成俩IPA
-        if (genIpa) {
-          genIPA(text1).then((ipa1) => {
-            setIpaTexts((prev) => [ipa1, prev[1]]);
-            updateState("ipa1", ipa1);
-          });
-          genIPA(text2).then((ipa2) => {
-            setIpaTexts((prev) => [prev[0], ipa2]);
-            updateState("ipa2", ipa2);
-          });
-        }
-      })
-      .catch(() => {
-        toast.error("Translation failed");
-      })
-      .finally(() => {
-        setProcessing(false);
+    try {
+      const result = await translateText({
+        sourceText,
+        targetLanguage,
+        forceRetranslate,
+        needIpa,
+        userId: session?.user?.id,
       });
+
+      setTranslationResult(result);
+      setLastTranslation({
+        sourceText,
+        targetLanguage,
+      });
+
+      // 更新本地历史记录
+      const historyItem = {
+        text1: result.sourceText,
+        text2: result.translatedText,
+        language1: result.sourceLanguage,
+        language2: result.targetLanguage,
+      };
+      setHistory(tlsoPush(historyItem));
+
+      // 自动保存到文件夹
+      if (autoSave && autoSaveFolderId) {
+        createPair({
+          text1: result.sourceText,
+          text2: result.translatedText,
+          language1: result.sourceLanguage,
+          language2: result.targetLanguage,
+          ipa1: result.sourceIpa || undefined,
+          ipa2: result.targetIpa || undefined,
+          folderId: autoSaveFolderId,
+        })
+          .then(() => {
+            toast.success(`${sourceText} 保存到文件夹 ${autoSaveFolderId} 成功`);
+          })
+          .catch((error) => {
+            toast.error(`保存失败: ${error.message}`);
+          });
+      }
+    } catch (error) {
+      toast.error("翻译失败，请重试");
+      console.error("翻译错误:", error);
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -196,7 +154,7 @@ export default function TranslatorPage() {
               }}
             ></textarea>
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
-              {ipaTexts[0]}
+              {translationResult?.sourceIpa || ""}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
               <IconClick
@@ -214,7 +172,7 @@ export default function TranslatorPage() {
                 onClick={() => {
                   const t = taref.current?.value;
                   if (!t) return;
-                  tts(t, tlso.get().find((v) => v.text1 === t)?.language1 || "");
+                  tts(t, translationResult?.sourceLanguage || "");
                 }}
               ></IconClick>
             </div>
@@ -222,8 +180,8 @@ export default function TranslatorPage() {
           <div className="option1 w-full flex flex-row justify-between items-center">
             <span>{t("detectLanguage")}</span>
             <LightButton
-              selected={genIpa}
-              onClick={() => setGenIpa((prev) => !prev)}
+              selected={needIpa}
+              onClick={() => setNeedIpa((prev) => !prev)}
             >
               {t("generateIPA")}
             </LightButton>
@@ -234,25 +192,26 @@ export default function TranslatorPage() {
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
           {/* ICard2 Component */}
           <div className="bg-gray-100 rounded-2xl w-full h-64 p-2">
-            <div className="h-2/3 w-full overflow-y-auto">{tresult}</div>
+            <div className="h-2/3 w-full overflow-y-auto">{translationResult?.translatedText || ""}</div>
             <div className="ipa w-full h-1/6 overflow-y-auto text-gray-600">
-              {ipaTexts[1]}
+              {translationResult?.targetIpa || ""}
             </div>
             <div className="h-1/6 w-full flex justify-end items-center">
               <IconClick
                 src={IMAGES.copy_all}
                 alt="copy"
                 onClick={async () => {
-                  await navigator.clipboard.writeText(tresult);
+                  await navigator.clipboard.writeText(translationResult?.translatedText || "");
                 }}
               ></IconClick>
               <IconClick
                 src={IMAGES.play_arrow}
                 alt="play"
                 onClick={() => {
+                  if (!translationResult) return;
                   tts(
-                    tresult,
-                    tlso.get().find((v) => v.text2 === tresult)?.language2 || "",
+                    translationResult.translatedText,
+                    translationResult.targetLanguage,
                   );
                 }}
               ></IconClick>
@@ -261,29 +220,29 @@ export default function TranslatorPage() {
           <div className="option2 w-full flex gap-1 items-center flex-wrap">
             <span>{t("translateInto")}</span>
             <LightButton
-              selected={lang === "chinese"}
-              onClick={() => setLang("chinese")}
+              selected={targetLanguage === "Chinese"}
+              onClick={() => setTargetLanguage("Chinese")}
             >
               {t("chinese")}
             </LightButton>
             <LightButton
-              selected={lang === "english"}
-              onClick={() => setLang("english")}
+              selected={targetLanguage === "English"}
+              onClick={() => setTargetLanguage("English")}
             >
               {t("english")}
             </LightButton>
             <LightButton
-              selected={lang === "italian"}
-              onClick={() => setLang("italian")}
+              selected={targetLanguage === "Italian"}
+              onClick={() => setTargetLanguage("Italian")}
             >
               {t("italian")}
             </LightButton>
             <LightButton
-              selected={!["chinese", "english", "italian"].includes(lang)}
+              selected={!["Chinese", "English", "Italian"].includes(targetLanguage)}
               onClick={() => {
                 const newLang = prompt(t("enterLanguage"));
                 if (newLang) {
-                  setLang(newLang);
+                  setTargetLanguage(newLang);
                 }
               }}
             >
@@ -341,6 +300,10 @@ export default function TranslatorPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
+                      if (!session?.user) {
+                        toast.info("请先登录后再保存到文件夹");
+                        return;
+                      }
                       setShowAddToFolder(true);
                       setAddToFolderItem(item);
                     }}

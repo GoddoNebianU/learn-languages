@@ -4,7 +4,7 @@ import { updatePairById } from "@/lib/server/services/pairService";
 import { useState } from "react";
 import UpdateTextPairModal from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
-import { PairUpdateInput } from "../../../../generated/prisma/models";
+import { UpdatePairInput } from "@/lib/server/services/types";
 
 interface TextPairCardProps {
   textPair: TextPair;
@@ -66,7 +66,7 @@ export default function TextPairCard({
       <UpdateTextPairModal
         isOpen={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
-        onUpdate={async (id: number, data: PairUpdateInput) => {
+        onUpdate={async (id: number, data: UpdatePairInput) => {
           await updatePairById(id, data);
           setOpenUpdateModal(false);
           refreshTextPairs();

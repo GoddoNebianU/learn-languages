@@ -129,7 +129,7 @@ export default function FoldersClient({ userId }: { userId: string }) {
           try {
             await createFolder({
               name: folderName,
-              user: { connect: { id: userId } },
+              userId: userId,
             });
             await updateFolders();
           } finally {

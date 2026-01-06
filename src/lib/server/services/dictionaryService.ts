@@ -1,10 +1,17 @@
 "use server";
 
-import { DictionaryLookUpCreateInput, DictionaryLookUpWhereInput, DictionaryPhraseCreateInput, DictionaryPhraseEntryCreateInput, DictionaryWordCreateInput, DictionaryWordEntryCreateInput } from "../../../../generated/prisma/models";
+import {
+    CreateDictionaryLookUpInput,
+    DictionaryLookUpQuery,
+    CreateDictionaryPhraseInput,
+    CreateDictionaryPhraseEntryInput,
+    CreateDictionaryWordInput,
+    CreateDictionaryWordEntryInput
+} from "./types";
 import prisma from "../../db";
 
-export async function selectLastLookUp(content: DictionaryLookUpWhereInput) {
-    const lookUp = await prisma.dictionaryLookUp.findFirst({
+export async function selectLastLookUp(content: DictionaryLookUpQuery) {
+    return prisma.dictionaryLookUp.findFirst({
         where: content,
         include: {
             dictionaryPhrase: {
@@ -22,35 +29,34 @@ export async function selectLastLookUp(content: DictionaryLookUpWhereInput) {
             createdAt: 'desc'
         }
     });
-    return lookUp;
 }
 
-export async function createPhraseEntry(content: DictionaryPhraseEntryCreateInput) {
-    return await prisma.dictionaryPhraseEntry.create({
+export async function createPhraseEntry(content: CreateDictionaryPhraseEntryInput) {
+    return prisma.dictionaryPhraseEntry.create({
         data: content
     });
 }
 
-export async function createWordEntry(content: DictionaryWordEntryCreateInput) {
-    return await prisma.dictionaryWordEntry.create({
+export async function createWordEntry(content: CreateDictionaryWordEntryInput) {
+    return prisma.dictionaryWordEntry.create({
         data: content
     });
 }
 
-export async function createPhrase(content: DictionaryPhraseCreateInput) {
-    return await prisma.dictionaryPhrase.create({
+export async function createPhrase(content: CreateDictionaryPhraseInput) {
+    return prisma.dictionaryPhrase.create({
         data: content
     });
 }
 
-export async function createWord(content: DictionaryWordCreateInput) {
-    return await prisma.dictionaryWord.create({
+export async function createWord(content: CreateDictionaryWordInput) {
+    return prisma.dictionaryWord.create({
         data: content
     });
 }
 
-export async function createLookUp(content: DictionaryLookUpCreateInput) {
-    return await prisma.dictionaryLookUp.create({
+export async function createLookUp(content: CreateDictionaryLookUpInput) {
+    return prisma.dictionaryLookUp.create({
         data: content
     });
 }
