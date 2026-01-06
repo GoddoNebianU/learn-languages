@@ -38,7 +38,7 @@ export interface UpdatePairInput {
 export interface CreateTranslationHistoryInput {
   userId?: string;
   sourceText: string;
-  sourceLanguage?: string;
+  sourceLanguage: string;
   targetLanguage: string;
   translatedText: string;
   sourceIpa?: string;

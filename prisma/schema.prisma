@@ -87,7 +87,7 @@ model Pair {
 
   folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
-  @@unique([folderId, language1, language2, text1])
+  @@unique([folderId, language1, language2, text1, text2])
   @@index([folderId])
   @@map("pairs")
 }
