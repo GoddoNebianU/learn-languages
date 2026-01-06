@@ -190,5 +190,33 @@
       "error": "تېكىست جۈپىنى قىسقۇچقا قوشۇش مەغلۇب بولدى"
     },
     "autoSave": "ئاپتوماتىك ساقلاش"
+  },
+  "dictionary": {
+    "title": "لۇغەت",
+    "description": "تەپسىلىي ئىلمىيى ۋە مىساللار بىلەن سۆز ۋە ئىبارە ئىزدەش",
+    "searchPlaceholder": "ئىزدەيدىغان سۆز ياكى ئىبارە كىرگۈزۈڭ...",
+    "searching": "ئىزدەۋاتىدۇ...",
+    "search": "ئىزدە",
+    "languageSettings": "تىل تەڭشىكى",
+    "queryLanguage": "سۈرەشتۈرۈش تىلى",
+    "queryLanguageHint": "ئىزدەمدەكچى بولغان سۆز/ئىبارە قايسى تىلدا",
+    "definitionLanguage": "ئىلمىيى تىلى",
+    "definitionLanguageHint": "ئىلمىيىنى قايسى تىلدا كۆرۈشنى ئويلىشىسىز",
+    "otherLanguagePlaceholder": "ياكى باشقا تىل كىرگۈزۈڭ...",
+    "currentSettings": "نۆۋەتتىكى تەڭشەك: سۈرەشتۈرۈش {queryLang}، ئىلمىيى {definitionLang}",
+    "relookup": "قايتا ئىزدە",
+    "saveToFolder": "قىسقۇچقا ساقلا",
+    "loading": "يۈكلىۋاتىدۇ...",
+    "noResults": "نەتىجە تېپىلمىدى",
+    "tryOtherWords": "باشقا سۆز ياكى ئىبارە سىناڭ",
+    "welcomeTitle": "لۇغەتكە مەرھەمەت",
+    "welcomeHint": "ئىزدەشنى باشلاش ئۈچۈن يۇقىرىدىكى ئىزدەش رامكىسىغا سۆز ياكى ئىبارە كىرگۈزۈڭ",
+    "lookupFailed": "ئىزدەش مەغلۇب بولدى، كېيىنرەك قايتا سىناڭ",
+    "relookupSuccess": "مۇۋەپپەقىيەتلىك قايتا ئىزدىدى",
+    "relookupFailed": "لۇغەت قايتا ئىزدىشى مەغلۇب بولدى",
+    "pleaseLogin": "ئاۋۋال تىزىملىتىڭ",
+    "pleaseCreateFolder": "ئاۋۋال قىسقۇچ قۇرۇڭ",
+    "savedToFolder": "قىسقۇچقا ساقلاندى: {folderName}",
+    "saveFailed": "ساقلاش مەغلۇب بولدى، كېيىنرەك قايتا سىناڭ"
   }
 }

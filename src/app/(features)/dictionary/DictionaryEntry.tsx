@@ -17,7 +17,7 @@ export function DictionaryEntry({ entry }: DictionaryEntryProps) {
                 <div className="flex items-center gap-3 mb-3">
                     {wordEntry.ipa && (
                         <span className="text-gray-600 text-lg">
-                            {wordEntry.ipa}
+                            [{wordEntry.ipa}]
                         </span>
                     )}
                     {wordEntry.partOfSpeech && (

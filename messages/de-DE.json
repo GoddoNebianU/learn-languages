@@ -190,5 +190,33 @@
       "error": "Textpaar konnte nicht zum Ordner hinzugefügt werden"
     },
     "autoSave": "Automatisch speichern"
+  },
+  "dictionary": {
+    "title": "Wörterbuch",
+    "description": "Wörter und Ausdrücke mit detaillierten Definitionen und Beispielen nachschlagen",
+    "searchPlaceholder": "Wort oder Ausdruck zum Nachschlagen eingeben...",
+    "searching": "Suche...",
+    "search": "Suchen",
+    "languageSettings": "Spracheinstellungen",
+    "queryLanguage": "Abfragesprache",
+    "queryLanguageHint": "Welche Sprache hat das Wort/die Phrase, die Sie nachschlagen möchten",
+    "definitionLanguage": "Definitionssprache",
+    "definitionLanguageHint": "In welcher Sprache möchten Sie die Definitionen sehen",
+    "otherLanguagePlaceholder": "Oder eine andere Sprache eingeben...",
+    "currentSettings": "Aktuelle Einstellungen: Abfrage {queryLang}, Definition {definitionLang}",
+    "relookup": "Neu suchen",
+    "saveToFolder": "In Ordner speichern",
+    "loading": "Laden...",
+    "noResults": "Keine Ergebnisse gefunden",
+    "tryOtherWords": "Versuchen Sie andere Wörter oder Ausdrücke",
+    "welcomeTitle": "Willkommen beim Wörterbuch",
+    "welcomeHint": "Geben Sie oben im Suchfeld ein Wort oder einen Ausdruck ein, um zu suchen",
+    "lookupFailed": "Suche fehlgeschlagen, bitte später erneut versuchen",
+    "relookupSuccess": "Erfolgreich neu gesucht",
+    "relookupFailed": "Wörterbuch Neu-Suche fehlgeschlagen",
+    "pleaseLogin": "Bitte melden Sie sich zuerst an",
+    "pleaseCreateFolder": "Bitte erstellen Sie zuerst einen Ordner",
+    "savedToFolder": "Im Ordner gespeichert: {folderName}",
+    "saveFailed": "Speichern fehlgeschlagen, bitte später erneut versuchen"
   }
 }

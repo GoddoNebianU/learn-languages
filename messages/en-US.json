@@ -190,5 +190,33 @@
       "error": "Failed to add text pair to folder"
     },
     "autoSave": "Auto Save"
+  },
+  "dictionary": {
+    "title": "Dictionary",
+    "description": "Look up words and phrases with detailed definitions and examples",
+    "searchPlaceholder": "Enter a word or phrase to look up...",
+    "searching": "Searching...",
+    "search": "Search",
+    "languageSettings": "Language Settings",
+    "queryLanguage": "Query Language",
+    "queryLanguageHint": "What language is the word/phrase you want to look up",
+    "definitionLanguage": "Definition Language",
+    "definitionLanguageHint": "What language do you want the definitions in",
+    "otherLanguagePlaceholder": "Or enter another language...",
+    "currentSettings": "Current settings: Query {queryLang}, Definition {definitionLang}",
+    "relookup": "Re-search",
+    "saveToFolder": "Save to folder",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "tryOtherWords": "Try other words or phrases",
+    "welcomeTitle": "Welcome to Dictionary",
+    "welcomeHint": "Enter a word or phrase in the search box above to start looking up",
+    "lookupFailed": "Search failed, please try again later",
+    "relookupSuccess": "Re-searched successfully",
+    "relookupFailed": "Dictionary re-search failed",
+    "pleaseLogin": "Please log in first",
+    "pleaseCreateFolder": "Please create a folder first",
+    "savedToFolder": "Saved to folder: {folderName}",
+    "saveFailed": "Save failed, please try again later"
   }
 }

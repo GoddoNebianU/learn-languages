@@ -190,5 +190,33 @@
       "error": "Échec de l'ajout de la paire de textes au dossier"
     },
     "autoSave": "Sauvegarde automatique"
+  },
+  "dictionary": {
+    "title": "Dictionnaire",
+    "description": "Rechercher des mots et des phrases avec des définitions détaillées et des exemples",
+    "searchPlaceholder": "Entrez un mot ou une phrase à rechercher...",
+    "searching": "Recherche...",
+    "search": "Rechercher",
+    "languageSettings": "Paramètres linguistiques",
+    "queryLanguage": "Langue de requête",
+    "queryLanguageHint": "Quelle est la langue du mot/phrase que vous souhaitez rechercher",
+    "definitionLanguage": "Langue de définition",
+    "definitionLanguageHint": "Dans quelle langue souhaitez-vous voir les définitions",
+    "otherLanguagePlaceholder": "Ou entrez une autre langue...",
+    "currentSettings": "Paramètres actuels : Requête {queryLang}, Définition {definitionLang}",
+    "relookup": "Rechercher à nouveau",
+    "saveToFolder": "Enregistrer dans le dossier",
+    "loading": "Chargement...",
+    "noResults": "Aucun résultat trouvé",
+    "tryOtherWords": "Essayez d'autres mots ou phrases",
+    "welcomeTitle": "Bienvenue dans le dictionnaire",
+    "welcomeHint": "Entrez un mot ou une phrase dans la zone de recherche ci-dessus pour commencer",
+    "lookupFailed": "Recherche échouée, veuillez réessayer plus tard",
+    "relookupSuccess": "Recherche répétée avec succès",
+    "relookupFailed": "Nouvelle recherche de dictionnaire échouée",
+    "pleaseLogin": "Veuillez d'abord vous connecter",
+    "pleaseCreateFolder": "Veuillez d'abord créer un dossier",
+    "savedToFolder": "Enregistré dans le dossier : {folderName}",
+    "saveFailed": "Échec de l'enregistrement, veuillez réessayer plus tard"
   }
 }

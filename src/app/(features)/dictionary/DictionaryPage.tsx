@@ -10,8 +10,11 @@ import { getFoldersByUserId } from "@/lib/server/services/folderService";
 import { DictLookUpResponse, isDictErrorResponse } from "./types";
 import { SearchForm } from "./SearchForm";
 import { SearchResult } from "./SearchResult";
+import { useTranslations } from "next-intl";
+import { POPULAR_LANGUAGES } from "./constants";
 
 export default function Dictionary() {
+    const t = useTranslations("dictionary");
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResult, setSearchResult] = useState<DictLookUpResponse | null>(null);
     const [isSearching, setIsSearching] = useState(false);
@@ -36,6 +39,11 @@ export default function Dictionary() {
         }
     }, [session, selectedFolderId]);
 
+    // 将 code 转换为 nativeName
+    const getNativeName = (code: string) => {
+        return POPULAR_LANGUAGES.find(l => l.code === code)?.nativeName || code;
+    };
+
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!searchQuery.trim()) return;
@@ -45,12 +53,11 @@ export default function Dictionary() {
         setSearchResult(null);
 
         try {
-            // 使用查询语言和释义语言
-            // const result = await lookUp(searchQuery, queryLang, definitionLang);
+            // 使用查询语言和释义语言的 nativeName
             const result = await lookUp({
                 text: searchQuery,
-                definitionLang: definitionLang,
-                queryLang: queryLang,
+                definitionLang: getNativeName(definitionLang),
+                queryLang: getNativeName(queryLang),
                 forceRelook: false
             })
 
@@ -63,7 +70,7 @@ export default function Dictionary() {
             }
         } catch (error) {
             console.error("词典查询失败:", error);
-            toast.error("查询失败，请稍后重试");
+            toast.error(t("lookupFailed"));
             setSearchResult(null);
         } finally {
             setIsSearching(false);
@@ -94,14 +101,14 @@ export default function Dictionary() {
                     {isSearching && (
                         <div className="text-center py-8">
                             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                            <p className="mt-4 text-white">加载中...</p>
+                            <p className="mt-4 text-white">{t("loading")}</p>
                         </div>
                     )}
 
                     {!isSearching && hasSearched && !searchResult && (
                         <div className="text-center py-12 bg-white/20 rounded-lg">
-                            <p className="text-gray-800 text-xl">未找到结果</p>
-                            <p className="text-gray-600 mt-2">尝试其他单词或短语</p>
+                            <p className="text-gray-800 text-xl">{t("noResults")}</p>
+                            <p className="text-gray-600 mt-2">{t("tryOtherWords")}</p>
                         </div>
                     )}
 
@@ -116,14 +123,15 @@ export default function Dictionary() {
                             onFolderSelect={setSelectedFolderId}
                             onResultUpdate={setSearchResult}
                             onSearchingChange={setIsSearching}
+                            getNativeName={getNativeName}
                         />
                     )}
 
                     {!hasSearched && (
                         <div className="text-center py-12 bg-white/20 rounded-lg">
                             <div className="text-6xl mb-4">📚</div>
-                            <p className="text-gray-800 text-xl mb-2">欢迎使用词典</p>
-                            <p className="text-gray-600">在上方搜索框中输入单词或短语开始查询</p>
+                            <p className="text-gray-800 text-xl mb-2">{t("welcomeTitle")}</p>
+                            <p className="text-gray-600">{t("welcomeHint")}</p>
                         </div>
                     )}
                 </Container>

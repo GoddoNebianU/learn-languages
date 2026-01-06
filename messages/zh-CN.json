@@ -190,5 +190,33 @@
       "error": "添加文本对到文件夹失败"
     },
     "autoSave": "自动保存"
+  },
+  "dictionary": {
+    "title": "词典",
+    "description": "查询单词和短语，提供详细的释义和例句",
+    "searchPlaceholder": "输入要查询的单词或短语...",
+    "searching": "查询中...",
+    "search": "查询",
+    "languageSettings": "语言设置",
+    "queryLanguage": "查询语言",
+    "queryLanguageHint": "你要查询的单词/短语是什么语言",
+    "definitionLanguage": "释义语言",
+    "definitionLanguageHint": "你希望用什么语言查看释义",
+    "otherLanguagePlaceholder": "或输入其他语言...",
+    "currentSettings": "当前设置：查询 {queryLang}，释义 {definitionLang}",
+    "relookup": "重新查询",
+    "saveToFolder": "保存到文件夹",
+    "loading": "加载中...",
+    "noResults": "未找到结果",
+    "tryOtherWords": "尝试其他单词或短语",
+    "welcomeTitle": "欢迎使用词典",
+    "welcomeHint": "在上方搜索框中输入单词或短语开始查询",
+    "lookupFailed": "查询失败，请稍后重试",
+    "relookupSuccess": "已重新查询",
+    "relookupFailed": "词典重新查询失败",
+    "pleaseLogin": "请先登录",
+    "pleaseCreateFolder": "请先创建文件夹",
+    "savedToFolder": "已保存到文件夹：{folderName}",
+    "saveFailed": "保存失败，请稍后重试"
   }
 }

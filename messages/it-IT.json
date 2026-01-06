@@ -190,5 +190,33 @@
       "error": "Impossibile aggiungere la coppia di testi alla cartella"
     },
     "autoSave": "Salvataggio automatico"
+  },
+  "dictionary": {
+    "title": "Dizionario",
+    "description": "Cerca parole e frasi con definizioni dettagliate ed esempi",
+    "searchPlaceholder": "Inserisci una parola o frase da cercare...",
+    "searching": "Ricerca...",
+    "search": "Cerca",
+    "languageSettings": "Impostazioni lingua",
+    "queryLanguage": "Lingua di interrogazione",
+    "queryLanguageHint": "Quale è la lingua della parola/frase che vuoi cercare",
+    "definitionLanguage": "Lingua di definizione",
+    "definitionLanguageHint": "In quale lingua vuoi vedere le definizioni",
+    "otherLanguagePlaceholder": "Oppure inserisci un'altra lingua...",
+    "currentSettings": "Impostazioni attuali: Interrogazione {queryLang}, Definizione {definitionLang}",
+    "relookup": "Ricerca di nuovo",
+    "saveToFolder": "Salva nella cartella",
+    "loading": "Caricamento...",
+    "noResults": "Nessun risultato trovato",
+    "tryOtherWords": "Prova altre parole o frasi",
+    "welcomeTitle": "Benvenuto nel dizionario",
+    "welcomeHint": "Inserisci una parola o frase nella casella di ricerca sopra per iniziare",
+    "lookupFailed": "Ricerca fallita, riprova più tardi",
+    "relookupSuccess": "Ricerca ripetuta con successo",
+    "relookupFailed": "Nuova ricerca del dizionario fallita",
+    "pleaseLogin": "Accedi prima",
+    "pleaseCreateFolder": "Crea prima una cartella",
+    "savedToFolder": "Salvato nella cartella: {folderName}",
+    "saveFailed": "Salvataggio fallito, riprova più tardi"
   }
 }

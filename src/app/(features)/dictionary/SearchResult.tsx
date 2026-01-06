@@ -13,6 +13,7 @@ import {
 } from "./types";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { POPULAR_LANGUAGES } from "./constants";
+import { useTranslations } from "next-intl";
 
 interface SearchResultProps {
     searchResult: DictWordResponse | DictPhraseResponse;
@@ -24,6 +25,7 @@ interface SearchResultProps {
     onFolderSelect: (folderId: number | null) => void;
     onResultUpdate: (newResult: DictWordResponse | DictPhraseResponse) => void;
     onSearchingChange: (isSearching: boolean) => void;
+    getNativeName: (code: string) => string;
 }
 
 export function SearchResult({
@@ -36,7 +38,9 @@ export function SearchResult({
     onFolderSelect,
     onResultUpdate,
     onSearchingChange,
+    getNativeName,
 }: SearchResultProps) {
+    const t = useTranslations("dictionary");
     const { data: session } = authClient.useSession();
 
     const handleRelookup = async () => {
@@ -45,8 +49,8 @@ export function SearchResult({
         try {
             const result = await lookUp({
                 text: searchQuery,
-                definitionLang: definitionLang,
-                queryLang: queryLang,
+                definitionLang: getNativeName(definitionLang),
+                queryLang: getNativeName(queryLang),
                 forceRelook: true
             });
 
@@ -54,11 +58,11 @@ export function SearchResult({
                 toast.error(result.error);
             } else {
                 onResultUpdate(result);
-                toast.success("已重新查询");
+                toast.success(t("relookupSuccess"));
             }
         } catch (error) {
             console.error("词典重新查询失败:", error);
-            toast.error("查询失败，请稍后重试");
+            toast.error(t("lookupFailed"));
         } finally {
             onSearchingChange(false);
         }
@@ -66,11 +70,11 @@ export function SearchResult({
 
     const handleSave = () => {
         if (!session) {
-            toast.error("请先登录");
+            toast.error(t("pleaseLogin"));
             return;
         }
         if (!selectedFolderId) {
-            toast.error("请先创建文件夹");
+            toast.error(t("pleaseCreateFolder"));
             return;
         }
 
@@ -88,11 +92,11 @@ export function SearchResult({
             },
         })
             .then(() => {
-                const folderName = folders.find(f => f.id === selectedFolderId)?.name;
-                toast.success(`已保存到文件夹：${folderName}`);
+                const folderName = folders.find(f => f.id === selectedFolderId)?.name || "Unknown";
+                toast.success(t("savedToFolder", { folderName }));
             })
             .catch(() => {
-                toast.error("保存失败，请稍后重试");
+                toast.error(t("saveFailed"));
             });
     };
 
@@ -123,7 +127,7 @@ export function SearchResult({
                         <button
                             onClick={handleSave}
                             className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-10 h-10 flex justify-center items-center shrink-0"
-                            title="保存到文件夹"
+                            title={t("saveToFolder")}
                         >
                             <Plus />
                         </button>
@@ -146,7 +150,7 @@ export function SearchResult({
                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                     >
                         <RefreshCw className="w-4 h-4" />
-                        重新查询
+                        {t("relookup")}
                     </button>
                 </div>
             </div>

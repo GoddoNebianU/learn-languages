@@ -190,5 +190,33 @@
       "error": "テキストペアの追加に失敗しました"
     },
     "autoSave": "自動保存"
+  },
+  "dictionary": {
+    "title": "辞書",
+    "description": "詳細な定義と例で単語やフレーズを検索",
+    "searchPlaceholder": "検索する単語やフレーズを入力...",
+    "searching": "検索中...",
+    "search": "検索",
+    "languageSettings": "言語設定",
+    "queryLanguage": "クエリ言語",
+    "queryLanguageHint": "検索する単語/フレーズの言語",
+    "definitionLanguage": "定義言語",
+    "definitionLanguageHint": "定義を表示する言語",
+    "otherLanguagePlaceholder": "または他の言語を入力...",
+    "currentSettings": "現在の設定：クエリ {queryLang}、定義 {definitionLang}",
+    "relookup": "再検索",
+    "saveToFolder": "フォルダに保存",
+    "loading": "読み込み中...",
+    "noResults": "結果が見つかりません",
+    "tryOtherWords": "他の単語やフレーズを試してください",
+    "welcomeTitle": "辞書へようこそ",
+    "welcomeHint": "上の検索ボックスに単語やフレーズを入力して検索を開始",
+    "lookupFailed": "検索に失敗しました。後でもう一度お試しください",
+    "relookupSuccess": "再検索しました",
+    "relookupFailed": "辞書の再検索に失敗しました",
+    "pleaseLogin": "まずログインしてください",
+    "pleaseCreateFolder": "まずフォルダを作成してください",
+    "savedToFolder": "フォルダに保存しました：{folderName}",
+    "saveFailed": "保存に失敗しました。後でもう一度お試しください"
   }
 }
