@@ -2,99 +2,183 @@
 
 import { parseAIGeneratedJSON } from "@/lib/utils";
 import { getAnswer } from "./zhipu";
+import { createLookUp, createPhrase, createWord, selectLastLookUp } from "../services/dictionaryService";
+import { DictLookUpRequest, DictWordResponse, isDictErrorResponse, isDictPhraseResponse, isDictWordResponse, type DictLookUpResponse } from "@/lib/shared";
 
-type DictionaryWordEntry = {
-    ipa: string;
-    definition: string;
-    partOfSpeech: string;
-    example: string;
+const saveResult = async (req: DictLookUpRequest, res: DictLookUpResponse) => {
+    if (isDictErrorResponse(res)) return;
+    else if (isDictPhraseResponse(res)) {
+        return createPhrase({
+            standardForm: res.standardForm,
+            queryLang: req.queryLang,
+            definitionLang: req.definitionLang,
+            lookups: {
+                create: {
+                    user: req.userId ? {
+                        connect: {
+                            id: req.userId
+                        }
+                    } : undefined,
+                    text: req.text,
+                    queryLang: req.queryLang,
+                    definitionLang: req.definitionLang
+                }
+            },
+            entries: {
+                createMany: {
+                    data: res.entries
+                }
+            }
+        });
+    } else if (isDictWordResponse(res)) {
+        return createWord({
+            standardForm: (res as DictWordResponse).standardForm,
+            queryLang: req.queryLang,
+            definitionLang: req.definitionLang,
+            lookups: {
+                create: {
+                    user: req.userId ? {
+                        connect: {
+                            id: req.userId
+                        }
+                    } : undefined,
+                    text: req.text,
+                    queryLang: req.queryLang,
+                    definitionLang: req.definitionLang
+                }
+            },
+            entries: {
+                createMany: {
+                    data: (res as DictWordResponse).entries
+                }
+            }
+        });
+    }
 };
 
-type DictionaryPhraseEntry = {
-    definition: string;
-    example: string;
-};
-
-type DictionaryErrorResponse = {
-    error: string;
-};
-
-type DictionarySuccessResponse = {
-    standardForm: string;
-    entries: (DictionaryWordEntry | DictionaryPhraseEntry)[];
-};
-
-export const lookUp = async (
-    text: string,
-    queryLang: string,
-    definitionLang: string
-): Promise<DictionarySuccessResponse | DictionaryErrorResponse> => {
-    const response = await getAnswer([
-        {
-            role: "system",
-            content: `
-你是一个词典工具，返回单词/短语的JSON解释。
+export const lookUp = async ({
+    text,
+    queryLang,
+    definitionLang,
+    userId,
+    forceRelook = false
+}: DictLookUpRequest): Promise<DictLookUpResponse> => {
+    try {
+        const lastLookUp = await selectLastLookUp({
+            text,
+            queryLang,
+            definitionLang
+        });
+        if (forceRelook || !lastLookUp) {
+            const response = await getAnswer([
+                {
+                    role: "system",
+                    content: `
+你是一个词典工具，返回单词或短语的 JSON 解释结果。
 
 查询语言：${queryLang}
 释义语言：${definitionLang}
 
-用户输入在<text>标签内。判断是单词还是短语。
+用户输入在 <text> 标签内，判断是单词还是短语。
 
-如果输入有效，返回JSON对象，格式为：
+语言规则：
+
+若输入语言与查询语言一致，直接查询。
+
+若不一致但语义清晰（如“吃”“跑”“睡觉”），先理解其语义，再映射到查询语言中最常见、最标准的对应词或短语（如 查询语言=意大利语，输入“吃” → mangiare）。
+
+若语义不清晰或存在明显歧义，视为无效输入。
+
+standardForm 规则：
+返回查询语言下的标准形式（英语动词原形、日语基本形、罗曼语族不定式等）。如无法确定，则与输入相同。
+
+有效输入时返回：
 {
-  "standardForm": "字符串，该语言下的正确形式",
-  "entries": [数组，包含一个或多个条目]
+"standardForm": "标准形式",
+"entries": [...]
 }
 
-如果是单词，条目格式：
+单词条目格式：
 {
-  "ipa": "音标（如适用）",
-  "definition": "释义",
-  "partOfSpeech": "词性",
-  "example": "例句"
+"ipa": "音标（如适用）",
+"definition": "释义（使用 ${definitionLang}）",
+"partOfSpeech": "词性",
+"example": "例句（使用 ${queryLang}）"
 }
 
-如果是短语，条目格式：
+短语条目格式：
 {
-  "definition": "短语释义",
-  "example": "例句"
+"definition": "释义（使用 ${definitionLang}）",
+"example": "例句（使用 ${queryLang}）"
 }
 
-所有释义内容使用${definitionLang}语言。
-例句使用${queryLang}语言。
-
-如果输入无效（如：输入为空、包含非法字符、无法识别的语言等），返回JSON对象：
+无效输入返回：
 {
-  "error": "错误描述信息，使用${definitionLang}语言"
+"error": "错误信息（使用 ${definitionLang}）"
 }
 
-提供standardForm时：尝试修正笔误或返回原形（如英语动词原形、日语基本形等）。若无法确定或输入正确，则与输入相同。
-
-示例：
-英语输入"ran" -> standardForm: "run"
-中文输入"跑眬" -> standardForm: "跑"
-日语输入"走った" -> standardForm: "走る"
-
-短语同理，尝试返回其标准/常见形式。
-
-现在处理用户输入。
+只输出 JSON，不附加任何解释性文字。
             `.trim()
-        }, {
-            role: "user",
-            content: `<text>${text}</text>请处理text标签内的内容后返回给我json`
+                }, {
+                    role: "user",
+                    content: `<text>${text}</text>请处理text标签内的内容后返回给我json`
+                }
+            ]).then(parseAIGeneratedJSON<DictLookUpResponse>);
+            saveResult({
+                text,
+                queryLang,
+                definitionLang,
+                userId,
+                forceRelook
+            }, response);
+            return response;
+        } else {
+            if (lastLookUp.dictionaryWordId) {
+                createLookUp({
+                    user: userId ? {
+                        connect: {
+                            id: userId
+                        }
+                    } : undefined,
+                    text: text,
+                    queryLang: queryLang,
+                    definitionLang: definitionLang,
+                    dictionaryWord: {
+                        connect: {
+                            id: lastLookUp.dictionaryWordId,
+                        }
+                    }
+                });
+                return {
+                    standardForm: lastLookUp.dictionaryWord!.standardForm,
+                    entries: lastLookUp.dictionaryWord!.entries
+                };
+            } else if (lastLookUp.dictionaryPhraseId) {
+                createLookUp({
+                    user: userId ? {
+                        connect: {
+                            id: userId
+                        }
+                    } : undefined,
+                    text: text,
+                    queryLang: queryLang,
+                    definitionLang: definitionLang,
+                    dictionaryPhrase: {
+                        connect: {
+                            id: lastLookUp.dictionaryPhraseId
+                        }
+                    }
+                });
+                return {
+                    standardForm: lastLookUp.dictionaryPhrase!.standardForm,
+                    entries: lastLookUp.dictionaryPhrase!.entries
+                };
+            } else {
+                return { error: "Database structure error!" };
+            }
         }
-    ]);
-
-    const result = parseAIGeneratedJSON<
-        DictionaryErrorResponse |
-        {
-            standardForm: string,
-            entries: DictionaryPhraseEntry[];
-        } |
-        {
-            standardForm: string,
-            entries: DictionaryWordEntry[];
-        }>(response);
-
-    return result;
+    } catch (error) {
+        console.log(error);
+        return { error: "LOOK_UP_ERROR" };
+    }
 };

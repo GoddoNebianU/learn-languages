@@ -136,7 +136,6 @@ model DictionaryWord {
   lookups DictionaryLookUp[]
   entries DictionaryWordEntry[]
 
-  @@unique([standardForm, queryLang, definitionLang])
   @@index([standardForm])
   @@index([queryLang, definitionLang])
   @@map("dictionary_words")
@@ -153,7 +152,6 @@ model DictionaryPhrase {
   lookups DictionaryLookUp[]
   entries DictionaryPhraseEntry[]
 
-  @@unique([standardForm, queryLang, definitionLang])
   @@index([standardForm])
   @@index([queryLang, definitionLang])
   @@map("dictionary_phrases")
