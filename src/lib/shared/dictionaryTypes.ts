@@ -3,7 +3,7 @@ export type DictLookUpRequest = {
     queryLang: string,
     definitionLang: string,
     userId?: string,
-    forceRelook: boolean;
+    forceRelook?: boolean;
 };
 
 export type DictWordEntry = {

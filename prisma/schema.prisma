@@ -77,8 +77,8 @@ model Pair {
   id        Int      @id @default(autoincrement())
   text1     String
   text2     String
-  language1 String   @db.VarChar(20)
-  language2 String   @db.VarChar(20)
+  language1 String
+  language2 String
   ipa1      String?
   ipa2      String?
   folderId  Int      @map("folder_id")
@@ -194,8 +194,8 @@ model TranslationHistory {
   id             Int      @id @default(autoincrement())
   userId         String?  @map("user_id")
   sourceText     String   @map("source_text")
-  sourceLanguage String   @map("source_language") @db.VarChar(20)
-  targetLanguage String   @map("target_language") @db.VarChar(20)
+  sourceLanguage String   @map("source_language")
+  targetLanguage String   @map("target_language")
   translatedText String   @map("translated_text")
   sourceIpa      String?  @map("source_ipa")
   targetIpa      String?  @map("target_ipa")

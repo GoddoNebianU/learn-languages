@@ -57,8 +57,7 @@ export default function Dictionary() {
             const result = await lookUp({
                 text: searchQuery,
                 definitionLang: getNativeName(definitionLang),
-                queryLang: getNativeName(queryLang),
-                forceRelook: false
+                queryLang: getNativeName(queryLang)
             })
 
             // 检查是否为错误响应

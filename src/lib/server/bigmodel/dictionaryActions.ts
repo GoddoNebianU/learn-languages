@@ -3,6 +3,7 @@
 import { executeDictionaryLookup } from "./dictionary";
 import { createLookUp, createPhrase, createWord, createPhraseEntry, createWordEntry, selectLastLookUp } from "../services/dictionaryService";
 import { DictLookUpRequest, DictWordResponse, isDictErrorResponse, isDictPhraseResponse, isDictWordResponse, type DictLookUpResponse } from "@/lib/shared";
+import { text } from "node:stream/consumers";
 
 const saveResult = async (req: DictLookUpRequest, res: DictLookUpResponse) => {
     if (isDictErrorResponse(res)) return;
@@ -73,13 +74,15 @@ const saveResult = async (req: DictLookUpRequest, res: DictLookUpResponse) => {
  * - 阶段5：错误处理
  * - 阶段6：最终输出封装
  */
-export const lookUp = async ({
-    text,
-    queryLang,
-    definitionLang,
-    userId,
-    forceRelook = false
-}: DictLookUpRequest): Promise<DictLookUpResponse> => {
+export const lookUp = async (req: DictLookUpRequest): Promise<DictLookUpResponse> => {
+    const {
+        text,
+        queryLang,
+        forceRelook = false,
+        definitionLang,
+        userId
+    } = req;
+
     try {
         const lastLookUp = await selectLastLookUp({
             text,
@@ -136,6 +139,6 @@ export const lookUp = async ({
         }
     } catch (error) {
         console.log(error);
-        return { error: "LOOK_UP_ERROR" };
+        return { error: "look up error" };
     }
 };
