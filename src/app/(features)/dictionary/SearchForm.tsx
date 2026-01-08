@@ -38,18 +38,18 @@ export function SearchForm({
             </div>
 
             {/* 搜索表单 */}
-            <form onSubmit={onSearch} className="flex gap-2">
+            <form onSubmit={onSearch} className="flex flex-col sm:flex-row gap-2">
                 <input
                     type="text"
                     value={searchQuery}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchQueryChange(e.target.value)}
                     placeholder={t("searchPlaceholder")}
-                    className="flex-1 px-4 py-3 text-lg text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
+                    className="flex-1 min-w-0 px-4 py-3 text-lg text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
                 />
                 <LightButton
                     type="submit"
                     disabled={isSearching || !searchQuery.trim()}
-                    className="px-6 py-3"
+                    className="px-6 py-3 whitespace-nowrap text-center sm:min-w-30"
                 >
                     {isSearching ? t("searching") : t("search")}
                 </LightButton>
