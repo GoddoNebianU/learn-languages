@@ -24,16 +24,12 @@ export async function executeDictionaryLookup(
         // 代码层面验证：输入是否有效
         if (!analysis.isValid) {
             console.log("[阶段1] 输入无效:", analysis.reason);
-            return {
-                error: analysis.reason || "无效输入",
-            };
+            throw analysis.reason || "无效输入";
         }
 
         if (analysis.isEmpty) {
             console.log("[阶段1] 输入为空");
-            return {
-                error: "输入为空",
-            };
+            throw "输入为空";
         }
 
         console.log("[阶段1] 输入分析完成:", analysis);
@@ -65,9 +61,7 @@ export async function executeDictionaryLookup(
         // 代码层面验证：标准形式不能为空
         if (!standardFormResult.standardForm) {
             console.error("[阶段3] 标准形式为空");
-            return {
-                error: "无法生成标准形式",
-            };
+            throw "无法生成标准形式";
         }
 
         console.log("[阶段3] 标准形式生成完成:", standardFormResult);
@@ -99,8 +93,6 @@ export async function executeDictionaryLookup(
 
         // 任何阶段失败都返回错误（包含 reason）
         const errorMessage = error instanceof Error ? error.message : "未知错误";
-        return {
-            error: errorMessage,
-        };
+        throw errorMessage;
     }
 }

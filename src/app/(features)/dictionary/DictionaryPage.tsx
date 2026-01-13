@@ -2,16 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Container from "@/components/ui/Container";
-import { lookUp } from "@/lib/server/bigmodel/dictionaryActions";
-import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { Folder } from "../../../../generated/prisma/browser";
 import { getFoldersByUserId } from "@/lib/server/services/folderService";
-import { DictLookUpResponse, isDictErrorResponse } from "./types";
+import { DictLookUpResponse } from "./types";
 import { SearchForm } from "./SearchForm";
 import { SearchResult } from "./SearchResult";
 import { useTranslations } from "next-intl";
 import { POPULAR_LANGUAGES } from "./constants";
+import { performDictionaryLookup } from "./utils";
 
 export default function Dictionary() {
     const t = useTranslations("dictionary");
@@ -52,28 +51,22 @@ export default function Dictionary() {
         setHasSearched(true);
         setSearchResult(null);
 
-        try {
-            // 使用查询语言和释义语言的 nativeName
-            const result = await lookUp({
+        const result = await performDictionaryLookup(
+            {
                 text: searchQuery,
-                definitionLang: getNativeName(definitionLang),
-                queryLang: getNativeName(queryLang)
-            })
+                queryLang: getNativeName(queryLang),
+                definitionLang: getNativeName(definitionLang)
+            },
+            t
+        );
 
-            // 检查是否为错误响应
-            if (isDictErrorResponse(result)) {
-                toast.error(result.error);
-                setSearchResult(null);
-            } else {
-                setSearchResult(result);
-            }
-        } catch (error) {
-            console.error("词典查询失败:", error);
-            toast.error(t("lookupFailed"));
+        if (result.success && result.data) {
+            setSearchResult(result.data);
+        } else {
             setSearchResult(null);
-        } finally {
-            setIsSearching(false);
         }
+
+        setIsSearching(false);
     };
 
     return (
@@ -111,7 +104,7 @@ export default function Dictionary() {
                         </div>
                     )}
 
-                    {!isSearching && searchResult && !isDictErrorResponse(searchResult) && (
+                    {!isSearching && searchResult && (
                         <SearchResult
                             searchResult={searchResult}
                             searchQuery={searchQuery}

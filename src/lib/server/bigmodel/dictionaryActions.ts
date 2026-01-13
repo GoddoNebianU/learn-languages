@@ -2,12 +2,11 @@
 
 import { executeDictionaryLookup } from "./dictionary";
 import { createLookUp, createPhrase, createWord, createPhraseEntry, createWordEntry, selectLastLookUp } from "../services/dictionaryService";
-import { DictLookUpRequest, DictWordResponse, isDictErrorResponse, isDictPhraseResponse, isDictWordResponse, type DictLookUpResponse } from "@/lib/shared";
-import { text } from "node:stream/consumers";
+import { DictLookUpRequest, DictWordResponse, isDictPhraseResponse, isDictWordResponse, type DictLookUpResponse } from "@/lib/shared";
+import { lookUpValidation } from "@/lib/shared/validations/dictionaryValidations";
 
 const saveResult = async (req: DictLookUpRequest, res: DictLookUpResponse) => {
-    if (isDictErrorResponse(res)) return;
-    else if (isDictPhraseResponse(res)) {
+    if (isDictPhraseResponse(res)) {
         // 先创建 Phrase
         const phrase = await createPhrase({
             standardForm: res.standardForm,
@@ -83,62 +82,59 @@ export const lookUp = async (req: DictLookUpRequest): Promise<DictLookUpResponse
         userId
     } = req;
 
-    try {
-        const lastLookUp = await selectLastLookUp({
+    lookUpValidation(req);
+
+    const lastLookUp = await selectLastLookUp({
+        text,
+        queryLang,
+        definitionLang
+    });
+
+    if (forceRelook || !lastLookUp) {
+        // 使用新的模块化查询系统
+        const response = await executeDictionaryLookup(
             text,
             queryLang,
             definitionLang
-        });
+        );
 
-        if (forceRelook || !lastLookUp) {
-            // 使用新的模块化查询系统
-            const response = await executeDictionaryLookup(
-                text,
-                queryLang,
-                definitionLang
-            );
+        saveResult({
+            text,
+            queryLang,
+            definitionLang,
+            userId,
+            forceRelook
+        }, response);
 
-            saveResult({
-                text,
-                queryLang,
-                definitionLang,
-                userId,
-                forceRelook
-            }, response);
-
-            return response;
+        return response;
+    } else {
+        // 从数据库返回缓存的结果
+        if (lastLookUp.dictionaryWordId) {
+            createLookUp({
+                userId: userId,
+                text: text,
+                queryLang: queryLang,
+                definitionLang: definitionLang,
+                dictionaryWordId: lastLookUp.dictionaryWordId,
+            });
+            return {
+                standardForm: lastLookUp.dictionaryWord!.standardForm,
+                entries: lastLookUp.dictionaryWord!.entries
+            };
+        } else if (lastLookUp.dictionaryPhraseId) {
+            createLookUp({
+                userId: userId,
+                text: text,
+                queryLang: queryLang,
+                definitionLang: definitionLang,
+                dictionaryPhraseId: lastLookUp.dictionaryPhraseId
+            });
+            return {
+                standardForm: lastLookUp.dictionaryPhrase!.standardForm,
+                entries: lastLookUp.dictionaryPhrase!.entries
+            };
         } else {
-            // 从数据库返回缓存的结果
-            if (lastLookUp.dictionaryWordId) {
-                createLookUp({
-                    userId: userId,
-                    text: text,
-                    queryLang: queryLang,
-                    definitionLang: definitionLang,
-                    dictionaryWordId: lastLookUp.dictionaryWordId,
-                });
-                return {
-                    standardForm: lastLookUp.dictionaryWord!.standardForm,
-                    entries: lastLookUp.dictionaryWord!.entries
-                };
-            } else if (lastLookUp.dictionaryPhraseId) {
-                createLookUp({
-                    userId: userId,
-                    text: text,
-                    queryLang: queryLang,
-                    definitionLang: definitionLang,
-                    dictionaryPhraseId: lastLookUp.dictionaryPhraseId
-                });
-                return {
-                    standardForm: lastLookUp.dictionaryPhrase!.standardForm,
-                    entries: lastLookUp.dictionaryPhrase!.entries
-                };
-            } else {
-                return { error: "Database structure error!" };
-            }
+            throw "错误D101";
         }
-    } catch (error) {
-        console.log(error);
-        return { error: "look up error" };
     }
 };

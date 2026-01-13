@@ -3,17 +3,15 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { Folder } from "../../../../generated/prisma/browser";
 import { createPair } from "@/lib/server/services/pairService";
-import { lookUp } from "@/lib/server/bigmodel/dictionaryActions";
 import {
     DictWordResponse,
     DictPhraseResponse,
     isDictWordResponse,
     DictWordEntry,
-    isDictErrorResponse,
 } from "./types";
 import { DictionaryEntry } from "./DictionaryEntry";
-import { POPULAR_LANGUAGES } from "./constants";
 import { useTranslations } from "next-intl";
+import { performDictionaryLookup } from "./utils";
 
 interface SearchResultProps {
     searchResult: DictWordResponse | DictPhraseResponse;
@@ -46,26 +44,21 @@ export function SearchResult({
     const handleRelookup = async () => {
         onSearchingChange(true);
 
-        try {
-            const result = await lookUp({
+        const result = await performDictionaryLookup(
+            {
                 text: searchQuery,
-                definitionLang: getNativeName(definitionLang),
                 queryLang: getNativeName(queryLang),
+                definitionLang: getNativeName(definitionLang),
                 forceRelook: true
-            });
+            },
+            t
+        );
 
-            if (isDictErrorResponse(result)) {
-                toast.error(result.error);
-            } else {
-                onResultUpdate(result);
-                toast.success(t("relookupSuccess"));
-            }
-        } catch (error) {
-            console.error("词典重新查询失败:", error);
-            toast.error(t("lookupFailed"));
-        } finally {
-            onSearchingChange(false);
+        if (result.success && result.data) {
+            onResultUpdate(result.data);
         }
+
+        onSearchingChange(false);
     };
 
     const handleSave = () => {
