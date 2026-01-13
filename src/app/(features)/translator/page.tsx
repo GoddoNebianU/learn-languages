@@ -12,14 +12,14 @@ import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import z from "zod";
 import AddToFolder from "./AddToFolder";
-import { translateText } from "@/lib/server/bigmodel/translatorActions";
+import { translateText } from "@/modules/translator/translator-action";
 import type { TranslateTextOutput } from "@/lib/server/services/types";
 import { toast } from "sonner";
 import FolderSelector from "./FolderSelector";
 import { createPair } from "@/lib/server/services/pairService";
-import { shallowEqual } from "@/lib/utils";
+import { shallowEqual } from "@/utils/random";
 import { authClient } from "@/lib/auth-client";
-import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
-import { isNonNegativeInteger, SeededRandom } from "@/lib/utils";
+import { isNonNegativeInteger, SeededRandom } from "@/utils/random";
 import { Pair } from "../../../../generated/prisma/browser";
 
 const myFont = localFont({

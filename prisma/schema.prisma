@@ -107,27 +107,27 @@ model Folder {
 }
 
 model DictionaryLookUp {
-  id                 Int      @id @default(autoincrement())
-  userId             String?  @map("user_id")
-  text               String
-  queryLang          String   @map("query_lang")
-  definitionLang     String   @map("definition_lang")
-  createdAt          DateTime @default(now()) @map("created_at")
-  dictionaryWordId   Int?     @map("dictionary_word_id")
-  dictionaryPhraseId Int?     @map("dictionary_phrase_id")
+  id               Int      @id @default(autoincrement())
+  userId           String?  @map("user_id")
+  text             String
+  normalizedText   String   @default("") @map("normalized_text")
+  queryLang        String   @map("query_lang")
+  definitionLang   String   @map("definition_lang")
+  createdAt        DateTime @default(now()) @map("created_at")
+  dictionaryItemId Int?     @map("dictionary_item_id")
 
-  user             User?             @relation(fields: [userId], references: [id])
-  dictionaryWord   DictionaryWord?   @relation(fields: [dictionaryWordId], references: [id], onDelete: SetNull)
-  dictionaryPhrase DictionaryPhrase? @relation(fields: [dictionaryPhraseId], references: [id], onDelete: SetNull)
+  user           User?           @relation(fields: [userId], references: [id])
+  dictionaryItem DictionaryItem? @relation(fields: [dictionaryItemId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([createdAt])
-  @@index([text, queryLang, definitionLang])
+  @@index([normalizedText])
   @@map("dictionary_lookups")
 }
 
-model DictionaryWord {
+model DictionaryItem {
   id             Int      @id @default(autoincrement())
+  frequency      Int      @default(1)
   standardForm   String   @map("standard_form")
   queryLang      String   @map("query_lang")
   definitionLang String   @map("definition_lang")
@@ -135,59 +135,29 @@ model DictionaryWord {
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   lookups DictionaryLookUp[]
-  entries DictionaryWordEntry[]
+  entries DictionaryEntry[]
 
+  @@unique([standardForm, queryLang, definitionLang])
   @@index([standardForm])
   @@index([queryLang, definitionLang])
-  @@map("dictionary_words")
+  @@map("dictionary_items")
 }
 
-model DictionaryPhrase {
-  id             Int      @id @default(autoincrement())
-  standardForm   String   @map("standard_form")
-  queryLang      String   @map("query_lang")
-  definitionLang String   @map("definition_lang")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  lookups DictionaryLookUp[]
-  entries DictionaryPhraseEntry[]
-
-  @@index([standardForm])
-  @@index([queryLang, definitionLang])
-  @@map("dictionary_phrases")
-}
-
-model DictionaryWordEntry {
+model DictionaryEntry {
   id           Int      @id @default(autoincrement())
-  wordId       Int      @map("word_id")
-  ipa          String
+  itemId       Int      @map("item_id")
+  ipa          String?
   definition   String
-  partOfSpeech String   @map("part_of_speech")
+  partOfSpeech String?  @map("part_of_speech")
   example      String
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  word DictionaryWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  item DictionaryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
-  @@index([wordId])
+  @@index([itemId])
   @@index([createdAt])
-  @@map("dictionary_word_entries")
-}
-
-model DictionaryPhraseEntry {
-  id         Int      @id @default(autoincrement())
-  phraseId   Int      @map("phrase_id")
-  definition String
-  example    String
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  phrase DictionaryPhrase @relation(fields: [phraseId], references: [id], onDelete: Cascade)
-
-  @@index([phraseId])
-  @@index([createdAt])
-  @@map("dictionary_phrase_entries")
+  @@map("dictionary_entries")
 }
 
 model TranslationHistory {

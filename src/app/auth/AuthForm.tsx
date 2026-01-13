@@ -2,7 +2,7 @@
 
 import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
-import { signInAction, signUpAction, SignUpState } from "@/lib/actions/auth";
+import { signInAction, signUpAction, SignUpState } from "@/modules/user/user-action";
 import Container from "@/components/ui/Container";
 import Input from "@/components/ui/Input";
 import { LightButton } from "@/components/ui/buttons";

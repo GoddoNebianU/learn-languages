@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import {
   getFoldersWithTotalPairsByUserId,
 } from "@/lib/server/services/folderService";
-import { isNonNegativeInteger } from "@/lib/utils";
+import { isNonNegativeInteger } from "@/utils/random";
 import FolderSelector from "./FolderSelector";
 import Memorize from "./Memorize";
 import { getPairsByFolderId } from "@/lib/server/services/pairService";

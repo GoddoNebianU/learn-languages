@@ -87,7 +87,7 @@ export default function Button({
   const selectedClass = variant === "secondary" && selected ? "bg-gray-100" : "";
 
   // Background color for primary variant
-  const backgroundColor = variant === "primary" ? COLORS.primary : undefined;
+  const backgroundColor = variant === "primary" ? '#35786f' : undefined;
 
   // Combine all classes
   const combinedClasses = `

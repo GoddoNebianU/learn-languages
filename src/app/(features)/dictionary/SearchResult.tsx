@@ -2,26 +2,20 @@ import { Plus, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import { Folder } from "../../../../generated/prisma/browser";
-import { createPair } from "@/lib/server/services/pairService";
-import {
-    DictWordResponse,
-    DictPhraseResponse,
-    isDictWordResponse,
-    DictWordEntry,
-} from "./types";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { useTranslations } from "next-intl";
 import { performDictionaryLookup } from "./utils";
+import { TSharedItem } from "@/shared";
 
 interface SearchResultProps {
-    searchResult: DictWordResponse | DictPhraseResponse;
+    searchResult: TSharedItem;
     searchQuery: string;
     queryLang: string;
     definitionLang: string;
     folders: Folder[];
     selectedFolderId: number | null;
     onFolderSelect: (folderId: number | null) => void;
-    onResultUpdate: (newResult: DictWordResponse | DictPhraseResponse) => void;
+    onResultUpdate: (newResult: TSharedItem) => void;
     onSearchingChange: (isSearching: boolean) => void;
     getNativeName: (code: string) => string;
 }
@@ -54,8 +48,8 @@ export function SearchResult({
             t
         );
 
-        if (result.success && result.data) {
-            onResultUpdate(result.data);
+        if (result) {
+            onResultUpdate(result);
         }
 
         onSearchingChange(false);

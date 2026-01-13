@@ -14,10 +14,10 @@ import SaveList from "./SaveList";
 
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
-import { genIPA, genLanguage } from "@/lib/server/bigmodel/translatorActions";
+import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { logger } from "@/lib/logger";
 import PageLayout from "@/components/ui/PageLayout";
-import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/server/bigmodel/tts";
+import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
