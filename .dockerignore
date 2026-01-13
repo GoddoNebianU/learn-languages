@@ -35,3 +35,5 @@ build.sh
 
 # prisma
 /generated/prisma
+
+.claude

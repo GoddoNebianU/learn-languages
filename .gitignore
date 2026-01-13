@@ -50,3 +50,5 @@ test.js
 /generated/prisma
 
 certificates
+
+.claude
