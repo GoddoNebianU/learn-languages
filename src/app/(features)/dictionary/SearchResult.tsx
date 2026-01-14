@@ -1,18 +1,19 @@
 import { Plus, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { Folder } from "../../../../generated/prisma/browser";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { useTranslations } from "next-intl";
 import { performDictionaryLookup } from "./utils";
 import { TSharedItem } from "@/shared";
+import { TSharedFolder } from "@/shared/folder-type";
+import { actionCreatePair } from "@/modules/folder";
 
 interface SearchResultProps {
     searchResult: TSharedItem;
     searchQuery: string;
     queryLang: string;
     definitionLang: string;
-    folders: Folder[];
+    folders: TSharedFolder[];
     selectedFolderId: number | null;
     onFolderSelect: (folderId: number | null) => void;
     onResultUpdate: (newResult: TSharedItem) => void;
@@ -66,12 +67,12 @@ export function SearchResult({
         }
 
         const entry = searchResult.entries[0];
-        createPair({
+        actionCreatePair({
             text1: searchResult.standardForm,
             text2: entry.definition,
             language1: queryLang,
             language2: definitionLang,
-            ipa1: isDictWordResponse(searchResult) && (entry as DictWordEntry).ipa ? (entry as DictWordEntry).ipa : undefined,
+            ipa1: entry.ipa,
             folderId: selectedFolderId,
         })
             .then(() => {

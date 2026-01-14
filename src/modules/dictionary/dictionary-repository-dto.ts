@@ -1,6 +1,6 @@
 import { TSharedItem } from "@/shared";
 
-export type CreateDictionaryLookUpInputDto = {
+export type RepoInputCreateDictionaryLookUp = {
     userId?: string;
     text: string;
     queryLang: string;
@@ -8,15 +8,15 @@ export type CreateDictionaryLookUpInputDto = {
     dictionaryItemId?: number;
 };
 
-export type SelectLastLookUpResultOutputDto = TSharedItem & {id: number} | null;
+export type RepoOutputSelectLastLookUpResult = TSharedItem & {id: number} | null;
 
-export type CreateDictionaryItemInputDto = {
+export type RepoInputCreateDictionaryItem = {
     standardForm: string;
     queryLang: string;
     definitionLang: string;
 };
 
-export type CreateDictionaryEntryInputDto = {
+export type RepoInputCreateDictionaryEntry = {
     itemId: number;
     ipa?: string;
     definition: string;
@@ -24,14 +24,14 @@ export type CreateDictionaryEntryInputDto = {
     example: string;
 };
 
-export type CreateDictionaryEntryWithoutItemIdInputDto = {
+export type RepoInputCreateDictionaryEntryWithoutItemId = {
     ipa?: string;
     definition: string;
     partOfSpeech?: string;
     example: string;
 };
 
-export type SelectLastLookUpResultInputDto = {
+export type RepoInputSelectLastLookUpResult = {
     text: string,
     queryLang: string,
     definitionLang: string;

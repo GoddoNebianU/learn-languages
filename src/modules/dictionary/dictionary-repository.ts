@@ -1,15 +1,15 @@
 import { stringNormalize } from "@/utils/string";
 import {
-    CreateDictionaryEntryInputDto,
-    CreateDictionaryEntryWithoutItemIdInputDto,
-    CreateDictionaryItemInputDto,
-    CreateDictionaryLookUpInputDto,
-    SelectLastLookUpResultInputDto,
-    SelectLastLookUpResultOutputDto,
+    RepoInputCreateDictionaryEntry,
+    RepoInputCreateDictionaryEntryWithoutItemId,
+    RepoInputCreateDictionaryItem,
+    RepoInputCreateDictionaryLookUp,
+    RepoInputSelectLastLookUpResult,
+    RepoOutputSelectLastLookUpResult,
 } from "./dictionary-repository-dto";
 import prisma from "@/lib/db";
 
-export async function selectLastLookUpResult(dto: SelectLastLookUpResultInputDto): Promise<SelectLastLookUpResultOutputDto> {
+export async function repoSelectLastLookUpResult(dto: RepoInputSelectLastLookUpResult): Promise<RepoOutputSelectLastLookUpResult> {
     const result = await prisma.dictionaryLookUp.findFirst({
         where: {
             normalizedText: stringNormalize(dto.text),
@@ -48,16 +48,16 @@ export async function selectLastLookUpResult(dto: SelectLastLookUpResultInputDto
     return null;
 }
 
-export async function createLookUp(content: CreateDictionaryLookUpInputDto) {
+export async function repoCreateLookUp(content: RepoInputCreateDictionaryLookUp) {
     return (await prisma.dictionaryLookUp.create({
         data: { ...content, normalizedText: stringNormalize(content.text) }
     })).id;
 }
 
-export async function createLookUpWithItemAndEntries(
-    itemData: CreateDictionaryItemInputDto,
-    lookUpData: CreateDictionaryLookUpInputDto,
-    entries: CreateDictionaryEntryWithoutItemIdInputDto[]
+export async function repoCreateLookUpWithItemAndEntries(
+    itemData: RepoInputCreateDictionaryItem,
+    lookUpData: RepoInputCreateDictionaryLookUp,
+    entries: RepoInputCreateDictionaryEntryWithoutItemId[]
 ) {
     return await prisma.$transaction(async (tx) => {
         const item = await tx.dictionaryItem.create({

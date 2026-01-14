@@ -1,6 +1,6 @@
 import { TSharedItem } from "@/shared";
 
-export type LookUpServiceInputDto = {
+export type ServiceInputLookUp = {
     text: string,
     queryLang: string,
     definitionLang: string,
@@ -8,4 +8,4 @@ export type LookUpServiceInputDto = {
     userId?: string;
 };
 
-export type LookUpServiceOutputDto = TSharedItem;
+export type ServiceOutputLookUp = TSharedItem;

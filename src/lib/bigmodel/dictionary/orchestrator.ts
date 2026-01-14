@@ -1,4 +1,4 @@
-import { LookUpServiceOutputDto } from "@/modules/dictionary/dictionary-service-dto";
+import { ServiceOutputLookUp } from "@/modules/dictionary/dictionary-service-dto";
 import { analyzeInput } from "./stage1-inputAnalysis";
 import { determineSemanticMapping } from "./stage2-semanticMapping";
 import { generateStandardForm } from "./stage3-standardForm";
@@ -9,7 +9,7 @@ export async function executeDictionaryLookup(
     text: string,
     queryLang: string,
     definitionLang: string
-): Promise<LookUpServiceOutputDto> {
+): Promise<ServiceOutputLookUp> {
     try {
         // ========== 阶段 1：输入分析 ==========
         console.log("[阶段1] 开始输入分析...");
@@ -74,7 +74,7 @@ export async function executeDictionaryLookup(
         console.log("[阶段4] 词条生成完成:", entriesResult);
 
         // ========== 组装最终结果 ==========
-        const finalResult: LookUpServiceOutputDto = {
+        const finalResult: ServiceOutputLookUp = {
             standardForm: standardFormResult.standardForm,
             entries: entriesResult.entries,
         };

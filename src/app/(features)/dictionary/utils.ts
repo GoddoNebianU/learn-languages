@@ -1,14 +1,14 @@
 import { toast } from "sonner";
-import { lookUpDictionaryAction } from "@/modules/dictionary/dictionary-action";
-import { DictionaryActionInputDto, DictionaryActionOutputDto } from "@/modules/dictionary";
+import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
+import { ActionInputLookUpDictionary, ActionOutputLookUpDictionary } from "@/modules/dictionary";
 import { TSharedItem } from "@/shared";
 
 export async function performDictionaryLookup(
-    options: DictionaryActionInputDto,
+    options: ActionInputLookUpDictionary,
     t?: (key: string) => string
 ): Promise<TSharedItem | null> {
     const { text, queryLang, definitionLang, forceRelook = false, userId } = options;
-    const result = await lookUpDictionaryAction({
+    const result = await actionLookUpDictionary({
         text,
         queryLang,
         definitionLang,

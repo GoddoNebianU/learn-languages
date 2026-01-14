@@ -67,6 +67,9 @@ export async function signUpAction(prevState: SignUpState, formData: FormData) {
 
         redirect(redirectTo || "/");
     } catch (error) {
+        if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
+            throw error;
+        }
         return {
             success: false,
             message: "注册失败，请稍后再试"

@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react";
 import Container from "@/components/ui/Container";
 import { authClient } from "@/lib/auth-client";
-import { Folder } from "../../../../generated/prisma/browser";
 import { SearchForm } from "./SearchForm";
 import { SearchResult } from "./SearchResult";
 import { useTranslations } from "next-intl";
 import { POPULAR_LANGUAGES } from "./constants";
 import { performDictionaryLookup } from "./utils";
 import { TSharedItem } from "@/shared";
+import { actionGetFoldersByUserId } from "@/modules/folder";
+import { TSharedFolder } from "@/shared/folder-type";
+import { toast } from "sonner";
 
 export default function DictionaryPage() {
     const t = useTranslations("dictionary");
@@ -20,20 +22,24 @@ export default function DictionaryPage() {
     const [queryLang, setQueryLang] = useState("english");
     const [definitionLang, setDefinitionLang] = useState("chinese");
     const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
-    const [folders, setFolders] = useState<Folder[]>([]);
+    const [folders, setFolders] = useState<TSharedFolder[]>([]);
     const { data: session } = authClient.useSession();
 
     // 加载用户的文件夹列表
     useEffect(() => {
         if (session) {
-            getFoldersByUserId(session.user.id as string)
+            actionGetFoldersByUserId(session.user.id as string)
+                .then(result => {
+                    if (!result.success || !result.data) throw result.message;
+                    return result.data;
+                })
                 .then((loadedFolders) => {
                     setFolders(loadedFolders);
                     // 如果有文件夹且未选择，默认选择第一个
                     if (loadedFolders.length > 0 && !selectedFolderId) {
                         setSelectedFolderId(loadedFolders[0].id);
                     }
-                });
+                }).catch(e => toast.error);
         }
     }, [session, selectedFolderId]);
 

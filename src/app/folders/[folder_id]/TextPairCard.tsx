@@ -1,13 +1,13 @@
 import { Edit, Trash2 } from "lucide-react";
-import { TextPair } from "./InFolder";
-import { updatePairById } from "@/lib/server/services/pairService";
 import { useState } from "react";
 import UpdateTextPairModal from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
-import { UpdatePairInput } from "@/lib/server/services/types";
+import { TSharedPair } from "@/shared/folder-type";
+import { actionUpdatePairById, ActionInputUpdatePairById } from "@/modules/folder";
+import { toast } from "sonner";
 
 interface TextPairCardProps {
-  textPair: TextPair;
+  textPair: TSharedPair;
   onDel: () => void;
   refreshTextPairs: () => void;
 }
@@ -66,8 +66,8 @@ export default function TextPairCard({
       <UpdateTextPairModal
         isOpen={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
-        onUpdate={async (id: number, data: UpdatePairInput) => {
-          await updatePairById(id, data);
+        onUpdate={async (id: number, data: ActionInputUpdatePairById) => {
+          await actionUpdatePairById(id, data).then(result => result.success ? toast.success(result.message) : toast.error(result.message));
           setOpenUpdateModal(false);
           refreshTextPairs();
         }}

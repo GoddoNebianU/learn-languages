@@ -1,40 +1,3 @@
-/**
- * Service 层的自定义业务类型
- *
- * 这些类型用于替换 Prisma 生成的类型，提高代码的可维护性和抽象层次
- */
-
-// Folder 相关
-export interface CreateFolderInput {
-  name: string;
-  userId: string;
-}
-
-export interface UpdateFolderInput {
-  name?: string;
-}
-
-// Pair 相关
-export interface CreatePairInput {
-  text1: string;
-  text2: string;
-  language1: string;
-  language2: string;
-  ipa1?: string;
-  ipa2?: string;
-  folderId: number;
-}
-
-export interface UpdatePairInput {
-  text1?: string;
-  text2?: string;
-  language1?: string;
-  language2?: string;
-  ipa1?: string;
-  ipa2?: string;
-}
-
-// Translation 相关
 export interface CreateTranslationHistoryInput {
   userId?: string;
   sourceText: string;
@@ -50,7 +13,6 @@ export interface TranslationHistoryQuery {
   targetLanguage: string;
 }
 
-// 翻译相关 - 统一翻译函数
 export interface TranslateTextInput {
   sourceText: string;
   targetLanguage: string;

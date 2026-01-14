@@ -3,15 +3,15 @@ import Input from "@/components/ui/Input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
-import { UpdatePairInput } from "@/lib/server/services/types";
-import { TextPair } from "./InFolder";
 import { useTranslations } from "next-intl";
+import { TSharedPair } from "@/shared/folder-type";
+import { ActionInputUpdatePairById } from "@/modules/folder";
 
 interface UpdateTextPairModalProps {
   isOpen: boolean;
   onClose: () => void;
-  textPair: TextPair;
-  onUpdate: (id: number, tp: UpdatePairInput) => void;
+  textPair: TSharedPair;
+  onUpdate: (id: number, tp: ActionInputUpdatePairById) => void;
 }
 
 export default function UpdateTextPairModal({

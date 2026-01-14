@@ -1,8 +1,8 @@
 import { executeDictionaryLookup } from "@/lib/bigmodel/dictionary";
-import { createLookUp, createLookUpWithItemAndEntries, selectLastLookUpResult } from "./dictionary-repository";
-import { LookUpServiceInputDto } from "./dictionary-service-dto";
+import { repoCreateLookUp, repoCreateLookUpWithItemAndEntries, repoSelectLastLookUpResult } from "./dictionary-repository";
+import { ServiceInputLookUp } from "./dictionary-service-dto";
 
-export const lookUpService = async (dto: LookUpServiceInputDto) => {
+export const serviceLookUp = async (dto: ServiceInputLookUp) => {
     const {
         text,
         queryLang,
@@ -11,7 +11,7 @@ export const lookUpService = async (dto: LookUpServiceInputDto) => {
         forceRelook
     } = dto;
 
-    const lastLookUpResult = await selectLastLookUpResult({
+    const lastLookUpResult = await repoSelectLastLookUpResult({
         text,
         queryLang,
         definitionLang,
@@ -25,7 +25,7 @@ export const lookUpService = async (dto: LookUpServiceInputDto) => {
         );
 
         // 使用事务确保数据一致性
-        createLookUpWithItemAndEntries(
+        repoCreateLookUpWithItemAndEntries(
             {
                 standardForm: response.standardForm,
                 queryLang,
@@ -44,7 +44,7 @@ export const lookUpService = async (dto: LookUpServiceInputDto) => {
 
         return response;
     } else {
-        createLookUp({
+        repoCreateLookUp({
             userId: userId,
             text: text,
             queryLang: queryLang,

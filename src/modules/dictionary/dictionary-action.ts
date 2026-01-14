@@ -1,15 +1,15 @@
 "use server";
 
-import { DictionaryActionInputDto, DictionaryActionOutputDto, validateDictionaryActionInput } from "./dictionary-action-dto";
+import { ActionInputLookUpDictionary, ActionOutputLookUpDictionary, validateActionInputLookUpDictionary } from "./dictionary-action-dto";
 import { ValidateError } from "@/lib/errors";
-import { lookUpService } from "./dictionary-service";
+import { serviceLookUp } from "./dictionary-service";
 
-export const lookUpDictionaryAction = async (dto: DictionaryActionInputDto): Promise<DictionaryActionOutputDto> => {
+export const actionLookUpDictionary = async (dto: ActionInputLookUpDictionary): Promise<ActionOutputLookUpDictionary> => {
     try {
         return {
             message: 'success',
             success: true,
-            data: await lookUpService(validateDictionaryActionInput(dto))
+            data: await serviceLookUp(validateActionInputLookUpDictionary(dto))
         };
     } catch (e) {
         if (e instanceof ValidateError) {

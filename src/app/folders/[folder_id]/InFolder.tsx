@@ -3,30 +3,20 @@
 import { ArrowLeft, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import {
-  createPair,
-  deletePairById,
-  getPairsByFolderId,
-} from "@/lib/server/services/pairService";
 import AddTextPairModal from "./AddTextPairModal";
 import TextPairCard from "./TextPairCard";
 import { useTranslations } from "next-intl";
 import PageLayout from "@/components/ui/PageLayout";
 import { GreenButton } from "@/components/ui/buttons";
-import { logger } from "@/lib/logger";
 import { IconButton } from "@/components/ui/buttons";
 import CardList from "@/components/ui/CardList";
+import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder";
+import { TSharedPair } from "@/shared/folder-type";
+import { toast } from "sonner";
 
-export interface TextPair {
-  id: number;
-  text1: string;
-  text2: string;
-  language1: string;
-  language2: string;
-}
 
-export default function InFolder({ folderId }: { folderId: number }) {
-  const [textPairs, setTextPairs] = useState<TextPair[]>([]);
+export default function InFolder({ folderId }: { folderId: number; }) {
+  const [textPairs, setTextPairs] = useState<TSharedPair[]>([]);
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
   const router = useRouter();
@@ -35,25 +25,26 @@ export default function InFolder({ folderId }: { folderId: number }) {
   useEffect(() => {
     const fetchTextPairs = async () => {
       setLoading(true);
-      try {
-        const data = await getPairsByFolderId(folderId);
-        setTextPairs(data as TextPair[]);
-      } catch (error) {
-        logger.error("获取文本对失败", error);
-      } finally {
-        setLoading(false);
-      }
+      await actionGetPairsByFolderId(folderId)
+        .then(result => {
+          if (!result.success || !result.data) throw result.message;
+          return result.data;
+        }).then(setTextPairs)
+        .catch(toast.error)
+        .finally(() => {
+          setLoading(false);
+        });
     };
     fetchTextPairs();
   }, [folderId]);
 
   const refreshTextPairs = async () => {
-    try {
-      const data = await getPairsByFolderId(folderId);
-      setTextPairs(data as TextPair[]);
-    } catch (error) {
-      logger.error("获取文本对失败", error);
-    }
+    await actionGetPairsByFolderId(folderId)
+      .then(result => {
+        if (!result.success || !result.data) throw result.message;
+        return result.data;
+      }).then(setTextPairs)
+      .catch(toast.error);
   };
 
   return (
@@ -123,8 +114,11 @@ export default function InFolder({ folderId }: { folderId: number }) {
                   key={textPair.id}
                   textPair={textPair}
                   onDel={() => {
-                    deletePairById(textPair.id);
-                    refreshTextPairs();
+                    actionDeletePairById(textPair.id)
+                      .then(result => {
+                        if (!result.success) throw result.message;
+                      }).then(refreshTextPairs)
+                      .catch(toast.error);
                   }}
                   refreshTextPairs={refreshTextPairs}
                 />
@@ -143,7 +137,7 @@ export default function InFolder({ folderId }: { folderId: number }) {
           language1: string,
           language2: string,
         ) => {
-          await createPair({
+          await actionCreatePair({
             text1: text1,
             text2: text2,
             language1: language1,
@@ -155,4 +149,4 @@ export default function InFolder({ folderId }: { folderId: number }) {
       />
     </PageLayout>
   );
-}
+};

@@ -1,29 +1,21 @@
-import { ValidateError } from "@/lib/errors";
 import { TSharedItem } from "@/shared";
+import { LENGTH_MAX_DICTIONARY_TEXT, LENGTH_MAX_LANGUAGE, LENGTH_MIN_DICTIONARY_TEXT, LENGTH_MIN_LANGUAGE } from "@/shared/constant";
+import { generateValidator } from "@/utils/validate";
 import z from "zod";
 
-const DictionaryActionInputDtoSchema = z.object({
-    text: z.string().min(1, 'Empty text.').max(30, 'Text too long.'),
-    queryLang: z.string().min(1, 'Query lang too short.').max(20, 'Query lang too long.'),
+const schemaActionInputLookUpDictionary = z.object({
+    text: z.string().min(LENGTH_MIN_DICTIONARY_TEXT).max(LENGTH_MAX_DICTIONARY_TEXT),
+    queryLang: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE),
     forceRelook: z.boolean(),
-    definitionLang: z.string().min(1, 'Definition lang too short.').max(20, 'Definition lang too long.'),
+    definitionLang: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE),
     userId: z.string().optional()
 });
 
-export type DictionaryActionInputDto = z.infer<typeof DictionaryActionInputDtoSchema>;
+export type ActionInputLookUpDictionary = z.infer<typeof schemaActionInputLookUpDictionary>;
 
-export const validateDictionaryActionInput = (dto: DictionaryActionInputDto): DictionaryActionInputDto => {
-    const result = DictionaryActionInputDtoSchema.safeParse(dto);
-    if (result.success) return result.data;
+export const validateActionInputLookUpDictionary = generateValidator(schemaActionInputLookUpDictionary);
 
-    const errorMessages = result.error.issues.map((issue) =>
-        `${issue.path.join('.')}: ${issue.message}`
-    ).join('; ');
-
-    throw new ValidateError(`Validation failed: ${errorMessages}`);
-};
-
-export type DictionaryActionOutputDto = {
+export type ActionOutputLookUpDictionary = {
     message: string,
     success: boolean;
     data?: TSharedItem;

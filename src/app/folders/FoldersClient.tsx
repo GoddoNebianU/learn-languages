@@ -8,23 +8,17 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { logger } from "@/lib/logger";
 import { useRouter } from "next/navigation";
-import { Folder } from "../../../generated/prisma/browser";
-import {
-  createFolder,
-  deleteFolderById,
-  getFoldersWithTotalPairsByUserId,
-  renameFolderById,
-} from "@/lib/server/services/folderService";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import PageLayout from "@/components/ui/PageLayout";
 import PageHeader from "@/components/ui/PageHeader";
 import CardList from "@/components/ui/CardList";
+import { actionCreateFolder, actionDeleteFolderById, actionGetFoldersWithTotalPairsByUserId, actionRenameFolderById } from "@/modules/folder";
+import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 
 interface FolderProps {
-  folder: Folder & { total: number };
+  folder: TSharedFolderWithTotalPairs;
   refresh: () => void;
 }
 
@@ -62,7 +56,15 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
             e.stopPropagation();
             const newName = prompt("Input a new name.")?.trim();
             if (newName && newName.length > 0) {
-              renameFolderById(folder.id, newName).then(refresh);
+              actionRenameFolderById(folder.id, newName)
+                .then(result => {
+                  if (result.success) {
+                    refresh();
+                  }
+                  else {
+                    toast.error(result.message);
+                  }
+                });
             }
           }}
           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -74,7 +76,15 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
             e.stopPropagation();
             const confirm = prompt(t("confirmDelete", { name: folder.name }));
             if (confirm === folder.name) {
-              deleteFolderById(folder.id).then(refresh);
+              actionDeleteFolderById(folder.id)
+                .then(result => {
+                  if (result.success) {
+                    refresh();
+                  }
+                  else {
+                    toast.error(result.message);
+                  }
+                });
             }
           }}
           className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
@@ -87,33 +97,37 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
   );
 };
 
-export default function FoldersClient({ userId }: { userId: string }) {
+export default function FoldersClient({ userId }: { userId: string; }) {
   const t = useTranslations("folders");
-  const [folders, setFolders] = useState<(Folder & { total: number })[]>(
+  const [folders, setFolders] = useState<TSharedFolderWithTotalPairs[]>(
     [],
   );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    getFoldersWithTotalPairsByUserId(userId)
+    actionGetFoldersWithTotalPairsByUserId(userId)
       .then((folders) => {
-        setFolders(folders);
-        setLoading(false);
-      })
-      .catch((error) => {
-        logger.error("加载文件夹失败", error);
-        toast.error("加载出错，请重试。");
+        if (folders.success && folders.data) {
+          setFolders(folders.data);
+          setLoading(false);
+        }
       });
   }, [userId]);
 
   const updateFolders = async () => {
-    try {
-      const updatedFolders = await getFoldersWithTotalPairsByUserId(userId);
-      setFolders(updatedFolders);
-    } catch (error) {
-      logger.error("更新文件夹失败", error);
-    }
+    setLoading(true);
+    await actionGetFoldersWithTotalPairsByUserId(userId)
+      .then(async result => {
+        if (!result.success) toast.error(result.message);
+        else await actionGetFoldersWithTotalPairsByUserId(userId)
+          .then((folders) => {
+            if (folders.success && folders.data) {
+              setFolders(folders.data);
+            }
+          });
+      });
+    setLoading(false);
   };
 
   return (
@@ -127,11 +141,14 @@ export default function FoldersClient({ userId }: { userId: string }) {
           if (!folderName) return;
           setLoading(true);
           try {
-            await createFolder({
-              name: folderName,
-              userId: userId,
-            });
-            await updateFolders();
+            await actionCreateFolder(userId, folderName)
+              .then(result => {
+                if (result.success) {
+                  updateFolders();
+                } else {
+                  toast.error(result.message);
+                }
+              });
           } finally {
             setLoading(false);
           }
