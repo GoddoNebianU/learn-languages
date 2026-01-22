@@ -1,14 +1,11 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import {
-  getFoldersWithTotalPairsByUserId,
-} from "@/lib/server/services/folderService";
 import { isNonNegativeInteger } from "@/utils/random";
 import FolderSelector from "./FolderSelector";
 import Memorize from "./Memorize";
-import { getPairsByFolderId } from "@/lib/server/services/pairService";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
+import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder";
 
 export default async function MemorizePage({
   searchParams,
@@ -27,13 +24,14 @@ export default async function MemorizePage({
 
   if (!folder_id) {
     const session = await auth.api.getSession({ headers: await headers() });
-    if(!session) redirect("/auth?redirect=/memorize")
+    if (!session) redirect("/auth?redirect=/memorize");
+
     return (
       <FolderSelector
-        folders={await getFoldersWithTotalPairsByUserId(session.user.id)}
+        folders={(await actionGetFoldersWithTotalPairsByUserId(session.user.id)).data!}
       />
     );
   }
 
-  return <Memorize textPairs={await getPairsByFolderId(folder_id)} />;
+  return <Memorize textPairs={(await actionGetPairsByFolderId(folder_id)).data!} />;
 }

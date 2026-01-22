@@ -4,22 +4,12 @@ import { LightButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
 import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { TranslationHistorySchema } from "@/lib/interfaces";
-import { tlsoPush, tlso } from "@/lib/browser/localStorageOperators";
-import { logger } from "@/lib/logger";
-import { Plus, Trash } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import z from "zod";
-import AddToFolder from "./AddToFolder";
-import { translateText } from "@/modules/translator/translator-action";
-import type { TranslateTextOutput } from "@/lib/server/services/types";
+import { translateText } from "@/modules/translator";
 import { toast } from "sonner";
-import FolderSelector from "./FolderSelector";
-import { createPair } from "@/lib/server/services/pairService";
-import { shallowEqual } from "@/utils/random";
-import { authClient } from "@/lib/auth-client";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
+import { TranslateTextOutput } from "@/modules/translator";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -34,18 +24,10 @@ export default function TranslatorPage() {
     targetLanguage: string;
   } | null>(null);
   const { load, play } = useAudioPlayer();
-  const [history, setHistory] = useState<z.infer<typeof TranslationHistorySchema>[]>(() => tlso.get());
-  const [showAddToFolder, setShowAddToFolder] = useState(false);
-  const [addToFolderItem, setAddToFolderItem] = useState<z.infer<
-    typeof TranslationHistorySchema
-  > | null>(null);
   const lastTTS = useRef({
     text: "",
     url: "",
   });
-  const [autoSave, setAutoSave] = useState(false);
-  const [autoSaveFolderId, setAutoSaveFolderId] = useState<number | null>(null);
-  const { data: session } = authClient.useSession();
 
   const tts = async (text: string, locale: string) => {
     if (lastTTS.current.text !== text) {
@@ -65,14 +47,13 @@ export default function TranslatorPage() {
 
         const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
         await load(url);
+        await play();
         lastTTS.current.text = text;
         lastTTS.current.url = url;
       } catch (error) {
         toast.error("Failed to generate audio");
-        logger.error("生成音频失败", error);
       }
     }
-    await play();
   };
 
   const translate = async () => {
@@ -94,7 +75,6 @@ export default function TranslatorPage() {
         targetLanguage,
         forceRetranslate,
         needIpa,
-        userId: session?.user?.id,
       });
 
       setTranslationResult(result);
@@ -102,34 +82,6 @@ export default function TranslatorPage() {
         sourceText,
         targetLanguage,
       });
-
-      // 更新本地历史记录
-      const historyItem = {
-        text1: result.sourceText,
-        text2: result.translatedText,
-        language1: result.sourceLanguage,
-        language2: result.targetLanguage,
-      };
-      setHistory(tlsoPush(historyItem));
-
-      // 自动保存到文件夹
-      if (autoSave && autoSaveFolderId) {
-        createPair({
-          text1: result.sourceText,
-          text2: result.translatedText,
-          language1: result.sourceLanguage,
-          language2: result.targetLanguage,
-          ipa1: result.sourceIpa || undefined,
-          ipa2: result.targetIpa || undefined,
-          folderId: autoSaveFolderId,
-        })
-          .then(() => {
-            toast.success(`${sourceText} 保存到文件夹 ${autoSaveFolderId} 成功`);
-          })
-          .catch((error) => {
-            toast.error(`保存失败: ${error.message}`);
-          });
-      }
     } catch (error) {
       toast.error("翻译失败，请重试");
       console.error("翻译错误:", error);
@@ -261,84 +213,6 @@ export default function TranslatorPage() {
           {t("translate")}
         </button>
       </div>
-
-      {/* AutoSave Component */}
-      <div className="w-screen flex justify-center items-center">
-        <label className="flex items-center">
-          <input
-            type="checkbox"
-            checked={autoSave}
-            onChange={(e) => {
-              const checked = e.target.checked;
-              if (checked === true && !session) {
-                toast.warning("Please login to enable auto-save");
-                return;
-              }
-              if (checked === false) setAutoSaveFolderId(null);
-              setAutoSave(checked);
-            }}
-            className="mr-2"
-          />
-          {t("autoSave")}
-          {autoSaveFolderId ? ` (${autoSaveFolderId})` : ""}
-        </label>
-      </div>
-
-      {history.length > 0 && (
-        <div className="m-6 flex flex-col items-center">
-          <h1 className="text-2xl font-light">{t("history")}</h1>
-          <div className="border border-gray-200 rounded-2xl m-4">
-            {history.toReversed().map((item, index) => (
-              <div
-                key={index}
-                className="border-b border-gray-200 p-2 group hover:bg-gray-50 flex gap-2 flex-row justify-between items-start"
-              >
-                <div className="flex-1 flex flex-col">
-                  <p className="text-sm font-light">{item.text1}</p>
-                  <p className="text-sm font-light">{item.text2}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      if (!session?.user) {
-                        toast.info("请先登录后再保存到文件夹");
-                        return;
-                      }
-                      setShowAddToFolder(true);
-                      setAddToFolderItem(item);
-                    }}
-                    className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
-                  >
-                    <Plus />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setHistory(
-                        tlso.set(
-                          tlso.get().filter((v) => !shallowEqual(v, item)),
-                        ) || [],
-                      );
-                    }}
-                    className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-8 h-8 flex justify-center items-center"
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          {showAddToFolder && (
-            <AddToFolder setShow={setShowAddToFolder} item={addToFolderItem!} />
-          )}
-          {autoSave && !autoSaveFolderId && (
-            <FolderSelector
-              userId={session!.user.id as string}
-              cancel={() => setAutoSave(false)}
-              setSelectedFolderId={(id) => setAutoSaveFolderId(id)}
-            />
-          )}
-        </div>
-      )}
     </>
   );
 }

@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Folder } from "../../../../generated/prisma/browser";
 import { Folder as Fd } from "lucide-react";
+import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 
 interface FolderSelectorProps {
-  folders: (Folder & { total: number })[];
+  folders: TSharedFolderWithTotalPairs[];
 }
 
 const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
@@ -50,7 +50,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
                       className="flex flex-row items-center p-4 gap-3 hover:cursor-pointer hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                     >
                       {/* 文件夹图标 */}
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <Fd className="text-gray-600" size={24} />
                       </div>
                       {/* 文件夹信息 */}

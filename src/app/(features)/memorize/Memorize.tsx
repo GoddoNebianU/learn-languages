@@ -6,14 +6,14 @@ import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
 import { isNonNegativeInteger, SeededRandom } from "@/utils/random";
-import { Pair } from "../../../../generated/prisma/browser";
+import { TSharedPair } from "@/shared/folder-type";
 
 const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
 interface MemorizeProps {
-  textPairs: Pair[];
+  textPairs: TSharedPair[];
 }
 
 const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
@@ -176,31 +176,28 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
             </button>
             <button
               onClick={toggleReverse}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${
-                reverse
-                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${reverse
+                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
             >
               {t("reverse")}
             </button>
             <button
               onClick={toggleDictation}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${
-                dictation
-                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${dictation
+                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
             >
               {t("dictation")}
             </button>
             <button
               onClick={toggleDisorder}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${
-                disorder
-                  ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
+              className={`px-4 py-2 rounded-full transition-colors text-sm ${disorder
+                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
             >
               {t("disorder")}
             </button>
