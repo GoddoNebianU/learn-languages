@@ -7,7 +7,7 @@ import {
     RepoInputSelectLastLookUpResult,
     RepoOutputSelectLastLookUpResult,
 } from "./dictionary-repository-dto";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function repoSelectLastLookUpResult(dto: RepoInputSelectLastLookUpResult): Promise<RepoOutputSelectLastLookUpResult> {
     const result = await prisma.dictionaryLookUp.findFirst({

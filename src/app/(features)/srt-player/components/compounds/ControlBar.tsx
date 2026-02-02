@@ -5,10 +5,10 @@ import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, RotateCcw, Pause } from "lucide-react";
 import { LightButton } from "@/components/ui/buttons";
 import { ControlBarProps } from "../../types/controls";
-import PlayButton from "../atoms/PlayButton";
-import SpeedControl from "../atoms/SpeedControl";
+import { PlayButton } from "../atoms/PlayButton";
+import { SpeedControl } from "../atoms/SpeedControl";
 
-export default function ControlBar({
+export function ControlBar({
   isPlaying,
   onPlayPause,
   onPrevious,

@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { RepoInputCreateFolder, RepoInputCreatePair, RepoInputUpdatePair } from "./folder-repository-dto";
 
 export async function repoCreatePair(data: RepoInputCreatePair) {

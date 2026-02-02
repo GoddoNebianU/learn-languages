@@ -1,4 +1,4 @@
-export default function SubtitleDisplay({ subtitle }: { subtitle: string }) {
+export function SubtitleDisplay({ subtitle }: { subtitle: string }) {
   const words = subtitle.match(/\b[\w']+(?:-[\w']+)*\b/g) || [];
   let i = 0;
   return (

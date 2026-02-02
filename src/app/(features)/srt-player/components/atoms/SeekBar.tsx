@@ -3,7 +3,7 @@
 import React from "react";
 import { SeekBarProps } from "../../types/player";
 
-export default function SeekBar({ value, max, onChange, disabled, className }: SeekBarProps) {
+export function SeekBar({ value, max, onChange, disabled, className }: SeekBarProps) {
   const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseInt(event.target.value);
     onChange(newValue);

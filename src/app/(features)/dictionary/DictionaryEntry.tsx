@@ -1,4 +1,4 @@
-import { TSharedEntry } from "@/shared";
+import { TSharedEntry } from "@/shared/dictionary-type";
 
 interface DictionaryEntryProps {
     entry: TSharedEntry;

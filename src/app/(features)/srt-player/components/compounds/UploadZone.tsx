@@ -8,7 +8,7 @@ import { LightButton } from "@/components/ui/buttons";
 import { FileUploadProps } from "../../types/controls";
 import { useFileUpload } from "../../hooks/useFileUpload";
 
-export default function UploadZone({ onVideoUpload, onSubtitleUpload, className }: FileUploadProps) {
+export function UploadZone({ onVideoUpload, onSubtitleUpload, className }: FileUploadProps) {
   const t = useTranslations("srt_player");
   const { uploadVideo, uploadSubtitle } = useFileUpload();
 

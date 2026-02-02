@@ -1,9 +1,10 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
-import UpdateTextPairModal from "./UpdateTextPairModal";
+import { UpdateTextPairModal } from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
 import { TSharedPair } from "@/shared/folder-type";
-import { actionUpdatePairById, ActionInputUpdatePairById } from "@/modules/folder";
+import { actionUpdatePairById } from "@/modules/folder/folder-aciton";
+import { ActionInputUpdatePairById } from "@/modules/folder/folder-action-dto";
 import { toast } from "sonner";
 
 interface TextPairCardProps {
@@ -12,7 +13,7 @@ interface TextPairCardProps {
   refreshTextPairs: () => void;
 }
 
-export default function TextPairCard({
+export function TextPairCard({
   textPair,
   onDel,
   refreshTextPairs,

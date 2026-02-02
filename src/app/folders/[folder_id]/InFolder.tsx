@@ -3,19 +3,19 @@
 import { ArrowLeft, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import AddTextPairModal from "./AddTextPairModal";
-import TextPairCard from "./TextPairCard";
+import { AddTextPairModal } from "./AddTextPairModal";
+import { TextPairCard } from "./TextPairCard";
 import { useTranslations } from "next-intl";
-import PageLayout from "@/components/ui/PageLayout";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { GreenButton } from "@/components/ui/buttons";
 import { IconButton } from "@/components/ui/buttons";
-import CardList from "@/components/ui/CardList";
-import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder";
+import { CardList } from "@/components/ui/CardList";
+import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 import { TSharedPair } from "@/shared/folder-type";
 import { toast } from "sonner";
 
 
-export default function InFolder({ folderId }: { folderId: number; }) {
+export function InFolder({ folderId }: { folderId: number; }) {
   const [textPairs, setTextPairs] = useState<TSharedPair[]>([]);
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);

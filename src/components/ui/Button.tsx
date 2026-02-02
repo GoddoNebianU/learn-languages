@@ -34,7 +34,7 @@ export interface ButtonProps {
   href?: string;
 }
 
-export default function Button({
+export function Button({
   variant = "secondary",
   size = "md",
   selected = false,

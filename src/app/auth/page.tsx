@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import AuthForm from "./AuthForm";
+import { AuthForm } from "./AuthForm";
 
 export default async function AuthPage(
     props: {

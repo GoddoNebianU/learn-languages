@@ -1,5 +1,5 @@
 import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
-import SubtitleDisplay from "./SubtitleDisplay";
+import { SubtitleDisplay } from "./SubtitleDisplay";
 import { LightButton } from "@/components/ui/buttons";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
 import { useTranslations } from "next-intl";
@@ -213,4 +213,4 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
 
 VideoPanel.displayName = "VideoPanel";
 
-export default VideoPanel;
+export { VideoPanel };

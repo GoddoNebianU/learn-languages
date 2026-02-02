@@ -1,5 +1,5 @@
 import { LightButton } from "@/components/ui/buttons";
-import Input from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -16,7 +16,7 @@ interface AddTextPairModalProps {
   ) => void;
 }
 
-export default function AddTextPairModal({
+export function AddTextPairModal({
   isOpen,
   onClose,
   onAdd,

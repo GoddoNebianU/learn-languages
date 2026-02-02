@@ -1,7 +1,7 @@
 // 向后兼容的按钮组件包装器
 // 这些组件将新 Button 组件包装，以保持向后兼容
 
-import Button from "../Button";
+import { Button } from "../Button";
 
 // LightButton: 次要按钮，支持 selected 状态
 export const LightButton = (props: any) => <Button variant="secondary" {...props} />;

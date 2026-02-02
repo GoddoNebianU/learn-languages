@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import FoldersClient from "./FoldersClient";
+import { FoldersClient } from "./FoldersClient";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 

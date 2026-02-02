@@ -21,7 +21,7 @@ interface CardListProps {
   className?: string;
 }
 
-export default function CardList({ children, className = "" }: CardListProps) {
+export function CardList({ children, className = "" }: CardListProps) {
   return (
     <div className={`max-h-96 overflow-y-auto rounded-xl border border-gray-200 overflow-hidden ${className}`}>
       {children}

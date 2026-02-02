@@ -20,7 +20,7 @@ interface PageLayoutProps {
   className?: string;
 }
 
-export default function PageLayout({ children, className = "" }: PageLayoutProps) {
+export function PageLayout({ children, className = "" }: PageLayoutProps) {
   return (
     <div className={`min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4 py-8 ${className}`}>
       <div className="w-full max-w-2xl">

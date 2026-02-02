@@ -7,7 +7,7 @@ interface Props {
   defaultValue?: string;
 }
 
-export default function Input({
+export function Input({
   ref,
   placeholder = "",
   type = "text",

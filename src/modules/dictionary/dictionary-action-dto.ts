@@ -1,4 +1,4 @@
-import { TSharedItem } from "@/shared";
+import { TSharedItem } from "@/shared/dictionary-type";
 import { LENGTH_MAX_DICTIONARY_TEXT, LENGTH_MAX_LANGUAGE, LENGTH_MIN_DICTIONARY_TEXT, LENGTH_MIN_LANGUAGE } from "@/shared/constant";
 import { generateValidator } from "@/utils/validate";
 import z from "zod";

@@ -7,7 +7,7 @@ import {
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
 import { IconClick } from "@/components/ui/buttons";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 
@@ -50,7 +50,7 @@ interface SaveListProps {
   show?: boolean;
   handleUse: (item: z.infer<typeof TextSpeakerItemSchema>) => void;
 }
-export default function SaveList({ show = false, handleUse }: SaveListProps) {
+export function SaveList({ show = false, handleUse }: SaveListProps) {
   const t = useTranslations("text_speaker");
   const { get: getFromLocalStorage, set: setIntoLocalStorage } =
     getLocalStorageOperator<typeof TextSpeakerArraySchema>(

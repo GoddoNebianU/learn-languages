@@ -46,4 +46,4 @@ const VideoElement = forwardRef<HTMLVideoElement, VideoElementProps>(
 
 VideoElement.displayName = "VideoElement";
 
-export default VideoElement;
+export { VideoElement };

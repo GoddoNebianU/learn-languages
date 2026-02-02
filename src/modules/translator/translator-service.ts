@@ -1,4 +1,4 @@
-import { executeTranslation } from "@/lib/bigmodel/translator";
+import { executeTranslation } from "@/lib/bigmodel/translator/orchestrator";
 import { repoCreateTranslationHistory, repoSelectLatestTranslation } from "./translator-repository";
 import { ServiceInputTranslateText, ServiceOutputTranslateText } from "./translator-service-dto";
 

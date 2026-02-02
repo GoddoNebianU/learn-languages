@@ -1,10 +1,10 @@
 "use client";
 
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { IconClick, GhostButton } from "./ui/buttons";
 import { useState } from "react";
 
-export default function LanguageSettings() {
+export function LanguageSettings() {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);
     const handleLanguageClick = () => {
         setShowLanguageMenu((prev) => !prev);

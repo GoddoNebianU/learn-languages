@@ -9,11 +9,11 @@ import { useSubtitleSync } from "./hooks/useSubtitleSync";
 import { useKeyboardShortcuts, createSrtPlayerShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useFileUpload } from "./hooks/useFileUpload";
 import { loadSubtitle } from "./utils/subtitleParser";
-import VideoPlayer from "./components/compounds/VideoPlayer";
-import SubtitleArea from "./components/compounds/SubtitleArea";
-import ControlBar from "./components/compounds/ControlBar";
-import UploadZone from "./components/compounds/UploadZone";
-import SeekBar from "./components/atoms/SeekBar";
+import { VideoPlayer } from "./components/compounds/VideoPlayer";
+import { SubtitleArea } from "./components/compounds/SubtitleArea";
+import { ControlBar } from "./components/compounds/ControlBar";
+import { UploadZone } from "./components/compounds/UploadZone";
+import { SeekBar } from "./components/atoms/SeekBar";
 import { LightButton } from "@/components/ui/buttons";
 
 export default function SrtPlayerPage() {

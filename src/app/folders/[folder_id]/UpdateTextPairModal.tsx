@@ -1,11 +1,11 @@
 import { LightButton } from "@/components/ui/buttons";
-import Input from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { TSharedPair } from "@/shared/folder-type";
-import { ActionInputUpdatePairById } from "@/modules/folder";
+import { ActionInputUpdatePairById } from "@/modules/folder/folder-action-dto";
 
 interface UpdateTextPairModalProps {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface UpdateTextPairModalProps {
   onUpdate: (id: number, tp: ActionInputUpdatePairById) => void;
 }
 
-export default function UpdateTextPairModal({
+export function UpdateTextPairModal({
   isOpen,
   onClose,
   onUpdate,

@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import InFolder from "./InFolder";
+import { InFolder } from "./InFolder";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetUserIdByFolderId } from "@/modules/folder";
+import { actionGetUserIdByFolderId } from "@/modules/folder/folder-aciton";
 export default async function FoldersPage({
   params,
 }: {

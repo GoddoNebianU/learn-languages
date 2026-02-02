@@ -1,6 +1,6 @@
 import { LightButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
   Dispatch,
@@ -12,7 +12,7 @@ import {
 } from "react";
 import { useTranslations } from "next-intl";
 
-export default function MemoryCard({
+export function MemoryCard({
   alphabet,
   setChosenAlphabet,
 }: {

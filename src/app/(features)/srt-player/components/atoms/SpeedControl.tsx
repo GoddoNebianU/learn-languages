@@ -5,7 +5,7 @@ import { LightButton } from "@/components/ui/buttons";
 import { SpeedControlProps } from "../../types/player";
 import { getPlaybackRateOptions, getPlaybackRateLabel } from "../../utils/timeUtils";
 
-export default function SpeedControl({ playbackRate, onPlaybackRateChange, disabled, className }: SpeedControlProps) {
+export function SpeedControl({ playbackRate, onPlaybackRateChange, disabled, className }: SpeedControlProps) {
   const speedOptions = getPlaybackRateOptions();
   
   const handleSpeedChange = React.useCallback(() => {

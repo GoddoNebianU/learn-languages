@@ -4,9 +4,9 @@ import { authClient } from "@/lib/auth-client";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { useTranslations } from "next-intl";
 import { performDictionaryLookup } from "./utils";
-import { TSharedItem } from "@/shared";
+import { TSharedItem } from "@/shared/dictionary-type";
 import { TSharedFolder } from "@/shared/folder-type";
-import { actionCreatePair } from "@/modules/folder";
+import { actionCreatePair } from "@/modules/folder/folder-aciton";
 
 interface SearchResultProps {
     searchResult: TSharedItem;

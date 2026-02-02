@@ -5,7 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
-export default function LogoutButton() {
+export function LogoutButton() {
     const t = useTranslations("profile");
     const router = useRouter();
     return <LightButton onClick={async () => {

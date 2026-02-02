@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
-import { ActionInputLookUpDictionary, ActionOutputLookUpDictionary } from "@/modules/dictionary";
-import { TSharedItem } from "@/shared";
+import { ActionInputLookUpDictionary, ActionOutputLookUpDictionary } from "@/modules/dictionary/dictionary-action-dto";
+import { TSharedItem } from "@/shared/dictionary-type";
 
 export async function performDictionaryLookup(
     options: ActionInputLookUpDictionary,

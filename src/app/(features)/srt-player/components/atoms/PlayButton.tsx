@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { LightButton } from "@/components/ui/buttons";
 import { PlayButtonProps } from "../../types/player";
 
-export default function PlayButton({ isPlaying, onToggle, disabled, className }: PlayButtonProps) {
+export function PlayButton({ isPlaying, onToggle, disabled, className }: PlayButtonProps) {
   const t = useTranslations("srt_player");
   
   return (

@@ -2,14 +2,14 @@
 
 import { LightButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import { actionTranslateText } from "@/modules/translator";
+import { actionTranslateText } from "@/modules/translator/translator-action";
 import { toast } from "sonner";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
-import { TSharedTranslationResult } from "@/shared";
+import { TSharedTranslationResult } from "@/shared/translator-type";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");

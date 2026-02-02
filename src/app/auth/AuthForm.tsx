@@ -2,17 +2,17 @@
 
 import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
-import Container from "@/components/ui/Container";
-import Input from "@/components/ui/Input";
+import { Container } from "@/components/ui/Container";
+import { Input } from "@/components/ui/Input";
 import { LightButton } from "@/components/ui/buttons";
 import { authClient } from "@/lib/auth-client";
-import { signInAction, signUpAction, SignUpState } from "@/modules/auth";
+import { signInAction, signUpAction, SignUpState } from "@/modules/auth/auth-action";
 
 interface AuthFormProps {
   redirectTo?: string;
 }
 
-export default function AuthForm({ redirectTo }: AuthFormProps) {
+export function AuthForm({ redirectTo }: AuthFormProps) {
   const t = useTranslations("auth");
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [clearSignIn, setClearSignIn] = useState(false);

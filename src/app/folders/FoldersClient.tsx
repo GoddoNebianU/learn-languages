@@ -11,10 +11,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import PageLayout from "@/components/ui/PageLayout";
-import PageHeader from "@/components/ui/PageHeader";
-import CardList from "@/components/ui/CardList";
-import { actionCreateFolder, actionDeleteFolderById, actionGetFoldersWithTotalPairsByUserId, actionRenameFolderById } from "@/modules/folder";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { CardList } from "@/components/ui/CardList";
+import { actionCreateFolder, actionDeleteFolderById, actionGetFoldersWithTotalPairsByUserId, actionRenameFolderById } from "@/modules/folder/folder-aciton";
 import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 
 interface FolderProps {
@@ -97,7 +97,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
   );
 };
 
-export default function FoldersClient({ userId }: { userId: string; }) {
+export function FoldersClient({ userId }: { userId: string; }) {
   const t = useTranslations("folders");
   const [folders, setFolders] = useState<TSharedFolderWithTotalPairs[]>(
     [],

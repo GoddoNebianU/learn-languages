@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Container from "@/components/ui/Container";
+import { Container } from "@/components/ui/Container";
 import { authClient } from "@/lib/auth-client";
 import { SearchForm } from "./SearchForm";
 import { SearchResult } from "./SearchResult";
 import { useTranslations } from "next-intl";
 import { POPULAR_LANGUAGES } from "./constants";
 import { performDictionaryLookup } from "./utils";
-import { TSharedItem } from "@/shared";
-import { actionGetFoldersByUserId } from "@/modules/folder";
+import { TSharedItem } from "@/shared/dictionary-type";
+import { actionGetFoldersByUserId } from "@/modules/folder/folder-aciton";
 import { TSharedFolder } from "@/shared/folder-type";
 import { toast } from "sonner";
 

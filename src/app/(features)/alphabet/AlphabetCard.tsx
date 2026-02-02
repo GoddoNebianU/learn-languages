@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { IconClick } from "@/components/ui/buttons";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface AlphabetCardProps {
@@ -13,7 +13,7 @@ interface AlphabetCardProps {
   onBack: () => void;
 }
 
-export default function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardProps) {
+export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardProps) {
   const t = useTranslations("alphabet");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showIPA, setShowIPA] = useState(true);

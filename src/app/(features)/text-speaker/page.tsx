@@ -2,7 +2,7 @@
 
 import { LightButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {
   TextSpeakerArraySchema,
@@ -10,13 +10,13 @@ import {
 } from "@/lib/interfaces";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
-import SaveList from "./SaveList";
+import { SaveList } from "./SaveList";
 
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { logger } from "@/lib/logger";
-import PageLayout from "@/components/ui/PageLayout";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 export default function TextSpeakerPage() {

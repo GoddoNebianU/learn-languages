@@ -1,4 +1,4 @@
-import { TSharedTranslationResult } from "@/shared";
+import { TSharedTranslationResult } from "@/shared/translator-type";
 import {
     LENGTH_MAX_LANGUAGE,
     LENGTH_MIN_LANGUAGE,

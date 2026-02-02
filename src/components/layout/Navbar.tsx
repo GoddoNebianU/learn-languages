@@ -1,7 +1,7 @@
 import Image from "next/image";
-import IMAGES from "@/config/images";
+import { IMAGES } from "@/config/images";
 import { Folder, Home, User } from "lucide-react";
-import LanguageSettings from "../LanguageSettings";
+import { LanguageSettings } from "../LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";

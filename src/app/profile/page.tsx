@@ -1,11 +1,11 @@
 import Image from "next/image";
-import PageLayout from "@/components/ui/PageLayout";
-import PageHeader from "@/components/ui/PageHeader";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { auth } from "@/auth";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import LogoutButton from "./LogoutButton";
+import { LogoutButton } from "./LogoutButton";
 
 export default async function ProfilePage() {
   const t = await getTranslations("profile");

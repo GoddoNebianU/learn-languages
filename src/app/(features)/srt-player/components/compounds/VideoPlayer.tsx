@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from "react";
 import { VideoElementProps } from "../../types/player";
-import VideoElement from "../atoms/VideoElement";
+import { VideoElement } from "../atoms/VideoElement";
 
 interface VideoPlayerComponentProps extends VideoElementProps {
   children?: React.ReactNode;
@@ -38,4 +38,4 @@ const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerComponentProps>(
 
 VideoPlayer.displayName = "VideoPlayer";
 
-export default VideoPlayer;
+export { VideoPlayer };

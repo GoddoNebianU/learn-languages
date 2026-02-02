@@ -208,4 +208,4 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
   );
 };
 
-export default Memorize;
+export { Memorize };

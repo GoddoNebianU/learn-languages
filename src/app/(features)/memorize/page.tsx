@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { isNonNegativeInteger } from "@/utils/random";
-import FolderSelector from "./FolderSelector";
-import Memorize from "./Memorize";
+import { FolderSelector } from "./FolderSelector";
+import { Memorize } from "./Memorize";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder";
+import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 
 export default async function MemorizePage({
   searchParams,

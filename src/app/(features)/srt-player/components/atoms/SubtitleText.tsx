@@ -3,7 +3,7 @@
 import React from "react";
 import { SubtitleTextProps } from "../../types/subtitle";
 
-export default function SubtitleText({ text, onWordClick, style, className }: SubtitleTextProps) {
+export function SubtitleText({ text, onWordClick, style, className }: SubtitleTextProps) {
   const handleWordClick = React.useCallback((word: string) => {
     onWordClick?.(word);
   }, [onWordClick]);

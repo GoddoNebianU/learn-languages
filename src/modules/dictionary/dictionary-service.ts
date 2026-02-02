@@ -1,4 +1,4 @@
-import { executeDictionaryLookup } from "@/lib/bigmodel/dictionary";
+import { executeDictionaryLookup } from "@/lib/bigmodel/dictionary/orchestrator";
 import { repoCreateLookUp, repoCreateLookUpWithItemAndEntries, repoSelectLastLookUpResult } from "./dictionary-repository";
 import { ServiceInputLookUp } from "./dictionary-service-dto";
 

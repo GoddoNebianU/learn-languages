@@ -2,9 +2,9 @@
 
 import React from "react";
 import { SubtitleDisplayProps } from "../../types/subtitle";
-import SubtitleText from "../atoms/SubtitleText";
+import { SubtitleText } from "../atoms/SubtitleText";
 
-export default function SubtitleArea({ subtitle, onWordClick, settings, className }: SubtitleDisplayProps) {
+export function SubtitleArea({ subtitle, onWordClick, settings, className }: SubtitleDisplayProps) {
   const handleWordClick = React.useCallback((word: string) => {
     // 打开有道词典页面查询单词
     window.open(

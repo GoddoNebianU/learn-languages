@@ -21,4 +21,4 @@ const IMAGES = {
   github_mark_white: "/images/github-mark/github-mark-white.svg",
 };
 
-export default IMAGES;
+export { IMAGES };

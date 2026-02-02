@@ -3,7 +3,7 @@ import {
     RepoInputSelectLatestTranslation,
     RepoOutputSelectLatestTranslation,
 } from "./translator-repository-dto";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function repoSelectLatestTranslation(
     dto: RepoInputSelectLatestTranslation

@@ -1,4 +1,4 @@
-import { TSharedItem } from "@/shared";
+import { TSharedItem } from "@/shared/dictionary-type";
 
 export type ServiceInputLookUp = {
     text: string,

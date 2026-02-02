@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import Container from "@/components/ui/Container";
+import { Container } from "@/components/ui/Container";
 import { LightButton } from "@/components/ui/buttons";
-import AlphabetCard from "./AlphabetCard";
+import { AlphabetCard } from "./AlphabetCard";
 
 export default function Alphabet() {
   const t = useTranslations("alphabet");

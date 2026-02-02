@@ -7,7 +7,7 @@ interface FileInputComponentProps extends FileInputProps {
   children: React.ReactNode;
 }
 
-export default function FileInput({ accept, onFileSelect, disabled, className, children }: FileInputComponentProps) {
+export function FileInput({ accept, onFileSelect, disabled, className, children }: FileInputComponentProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = React.useCallback(() => {

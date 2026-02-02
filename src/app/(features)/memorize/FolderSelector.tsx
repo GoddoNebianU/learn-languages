@@ -93,4 +93,4 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
   );
 };
 
-export default FolderSelector;
+export { FolderSelector };

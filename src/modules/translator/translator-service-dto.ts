@@ -1,4 +1,4 @@
-import { TSharedTranslationResult } from "@/shared";
+import { TSharedTranslationResult } from "@/shared/translator-type";
 
 export type ServiceInputTranslateText = {
     sourceText: string;
