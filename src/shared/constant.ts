@@ -12,3 +12,6 @@ export const LENGTH_MIN_IPA = 1;
 
 export const LENGTH_MAX_FOLDER_NAME = 20;
 export const LENGTH_MIN_FOLDER_NAME = 1;
+
+export const LENGTH_MAX_TRANSLATOR_TEXT = 1000;
+export const LENGTH_MIN_TRANSLATOR_TEXT = 1;

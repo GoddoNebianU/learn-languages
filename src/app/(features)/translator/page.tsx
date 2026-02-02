@@ -6,17 +6,17 @@ import IMAGES from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import { translateText } from "@/modules/translator";
+import { actionTranslateText } from "@/modules/translator";
 import { toast } from "sonner";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
-import { TranslateTextOutput } from "@/modules/translator";
+import { TSharedTranslationResult } from "@/shared";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
 
   const taref = useRef<HTMLTextAreaElement>(null);
   const [targetLanguage, setTargetLanguage] = useState<string>("Chinese");
-  const [translationResult, setTranslationResult] = useState<TranslateTextOutput | null>(null);
+  const [translationResult, setTranslationResult] = useState<TSharedTranslationResult | null>(null);
   const [needIpa, setNeedIpa] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [lastTranslation, setLastTranslation] = useState<{
@@ -70,18 +70,22 @@ export default function TranslatorPage() {
       lastTranslation?.targetLanguage === targetLanguage;
 
     try {
-      const result = await translateText({
+      const result = await actionTranslateText({
         sourceText,
         targetLanguage,
         forceRetranslate,
         needIpa,
       });
 
-      setTranslationResult(result);
-      setLastTranslation({
-        sourceText,
-        targetLanguage,
-      });
+      if (result.success && result.data) {
+        setTranslationResult(result.data);
+        setLastTranslation({
+          sourceText,
+          targetLanguage,
+        });
+      } else {
+        toast.error(result.message || "翻译失败，请重试");
+      }
     } catch (error) {
       toast.error("翻译失败，请重试");
       console.error("翻译错误:", error);

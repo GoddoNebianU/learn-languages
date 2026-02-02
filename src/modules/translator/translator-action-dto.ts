@@ -1,40 +1,27 @@
+import { TSharedTranslationResult } from "@/shared";
+import {
+    LENGTH_MAX_LANGUAGE,
+    LENGTH_MIN_LANGUAGE,
+    LENGTH_MAX_TRANSLATOR_TEXT,
+    LENGTH_MIN_TRANSLATOR_TEXT,
+} from "@/shared/constant";
+import { generateValidator } from "@/utils/validate";
+import z from "zod";
 
-export interface CreateTranslationHistoryInput {
-  userId?: string;
-  sourceText: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  translatedText: string;
-  sourceIpa?: string;
-  targetIpa?: string;
-}
+const schemaActionInputTranslateText = z.object({
+    sourceText: z.string().min(LENGTH_MIN_TRANSLATOR_TEXT).max(LENGTH_MAX_TRANSLATOR_TEXT),
+    targetLanguage: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE),
+    forceRetranslate: z.boolean().optional().default(false),
+    needIpa: z.boolean().optional().default(true),
+    userId: z.string().optional(),
+});
 
-export interface TranslationHistoryQuery {
-  sourceText: string;
-  targetLanguage: string;
-}
+export type ActionInputTranslateText = z.infer<typeof schemaActionInputTranslateText>;
 
-export interface TranslateTextInput {
-  sourceText: string;
-  targetLanguage: string;
-  forceRetranslate?: boolean; // 默认 false
-  needIpa?: boolean; // 默认 true
-  userId?: string; // 可选用户 ID
-}
+export const validateActionInputTranslateText = generateValidator(schemaActionInputTranslateText);
 
-export interface TranslateTextOutput {
-  sourceText: string;
-  translatedText: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  sourceIpa: string; // 如果 needIpa=false，返回空字符串
-  targetIpa: string; // 如果 needIpa=false，返回空字符串
-}
-
-export interface TranslationLLMResponse {
-  translatedText: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  sourceIpa?: string; // 可选，根据 needIpa 决定
-  targetIpa?: string; // 可选，根据 needIpa 决定
-}
+export type ActionOutputTranslateText = {
+    message: string;
+    success: boolean;
+    data?: TSharedTranslationResult;
+};
