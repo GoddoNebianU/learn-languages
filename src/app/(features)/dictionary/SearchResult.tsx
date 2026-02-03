@@ -1,143 +1,93 @@
-import { Plus, RefreshCw } from "lucide-react";
-import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { auth } from "@/auth";
 import { DictionaryEntry } from "./DictionaryEntry";
-import { useTranslations } from "next-intl";
-import { performDictionaryLookup } from "./utils";
 import { TSharedItem } from "@/shared/dictionary-type";
+import { SaveButtonClient, ReLookupButtonClient } from "./SearchResult.client";
+import { headers } from "next/headers";
+import { actionGetFoldersByUserId } from "@/modules/folder/folder-aciton";
 import { TSharedFolder } from "@/shared/folder-type";
-import { actionCreatePair } from "@/modules/folder/folder-aciton";
 
 interface SearchResultProps {
-    searchResult: TSharedItem;
+    searchResult: TSharedItem | null;
     searchQuery: string;
     queryLang: string;
     definitionLang: string;
-    folders: TSharedFolder[];
-    selectedFolderId: number | null;
-    onFolderSelect: (folderId: number | null) => void;
-    onResultUpdate: (newResult: TSharedItem) => void;
-    onSearchingChange: (isSearching: boolean) => void;
-    getNativeName: (code: string) => string;
 }
 
-export function SearchResult({
+export async function SearchResult({
     searchResult,
     searchQuery,
     queryLang,
-    definitionLang,
-    folders,
-    selectedFolderId,
-    onFolderSelect,
-    onResultUpdate,
-    onSearchingChange,
-    getNativeName,
+    definitionLang
 }: SearchResultProps) {
-    const t = useTranslations("dictionary");
-    const { data: session } = authClient.useSession();
+    // 获取用户会话和文件夹
+    const session = await auth.api.getSession({ headers: await headers() });
+    let folders: TSharedFolder[] = [];
 
-    const handleRelookup = async () => {
-        onSearchingChange(true);
-
-        const result = await performDictionaryLookup(
-            {
-                text: searchQuery,
-                queryLang: getNativeName(queryLang),
-                definitionLang: getNativeName(definitionLang),
-                forceRelook: true
-            },
-            t
-        );
-
-        if (result) {
-            onResultUpdate(result);
+    if (session?.user?.id) {
+        const result = await actionGetFoldersByUserId(session.user.id as string);
+        if (result.success && result.data) {
+            folders = result.data;
         }
-
-        onSearchingChange(false);
-    };
-
-    const handleSave = () => {
-        if (!session) {
-            toast.error(t("pleaseLogin"));
-            return;
-        }
-        if (!selectedFolderId) {
-            toast.error(t("pleaseCreateFolder"));
-            return;
-        }
-
-        const entry = searchResult.entries[0];
-        actionCreatePair({
-            text1: searchResult.standardForm,
-            text2: entry.definition,
-            language1: queryLang,
-            language2: definitionLang,
-            ipa1: entry.ipa,
-            folderId: selectedFolderId,
-        })
-            .then(() => {
-                const folderName = folders.find(f => f.id === selectedFolderId)?.name || "Unknown";
-                toast.success(t("savedToFolder", { folderName }));
-            })
-            .catch(() => {
-                toast.error(t("saveFailed"));
-            });
-    };
+    }
 
     return (
         <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-lg">
-                {/* 标题和保存按钮 */}
-                <div className="flex items-start justify-between mb-6">
-                    <div className="flex-1">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                            {searchResult.standardForm}
-                        </h2>
-                    </div>
-                    <div className="flex items-center gap-2 ml-4">
-                        {session && folders.length > 0 && (
-                            <select
-                                value={selectedFolderId || ""}
-                                onChange={(e) => onFolderSelect(e.target.value ? Number(e.target.value) : null)}
-                                className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#35786f]"
-                            >
-                                {folders.map((folder) => (
-                                    <option key={folder.id} value={folder.id}>
-                                        {folder.name}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
-                        <button
-                            onClick={handleSave}
-                            className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-10 h-10 flex justify-center items-center shrink-0"
-                            title={t("saveToFolder")}
-                        >
-                            <Plus />
-                        </button>
-                    </div>
+            {!searchResult ? (
+                <div className="text-center py-12 bg-white/20 rounded-lg">
+                    <p className="text-gray-800 text-xl">No results found</p>
+                    <p className="text-gray-600 mt-2">Try other words</p>
                 </div>
-
-                {/* 条目列表 */}
-                <div className="space-y-6">
-                    {searchResult.entries.map((entry, index) => (
-                        <div key={index} className="border-t border-gray-200 pt-4">
-                            <DictionaryEntry entry={entry} />
+            ) : (
+                <div className="bg-white rounded-lg p-6 shadow-lg">
+                    {/* 标题和保存按钮 */}
+                    <div className="flex items-start justify-between mb-6">
+                        <div className="flex-1">
+                            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                                {searchResult.standardForm}
+                            </h2>
                         </div>
-                    ))}
-                </div>
+                        <div className="flex items-center gap-2 ml-4">
+                            {session && folders.length > 0 && (
+                                <select
+                                    id="folder-select"
+                                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#35786f]"
+                                >
+                                    {folders.map((folder) => (
+                                        <option key={folder.id} value={folder.id}>
+                                            {folder.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+                            <SaveButtonClient
+                                session={session}
+                                folders={folders}
+                                searchResult={searchResult}
+                                queryLang={queryLang}
+                                definitionLang={definitionLang}
+                            />
+                        </div>
+                    </div>
 
-                {/* 重新查询按钮 */}
-                <div className="border-t border-gray-200 pt-4 mt-4">
-                    <button
-                        onClick={handleRelookup}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                        {t("relookup")}
-                    </button>
+                    {/* 条目列表 */}
+                    <div className="space-y-6">
+                        {searchResult.entries.map((entry, index) => (
+                            <div key={index} className="border-t border-gray-200 pt-4">
+                                <DictionaryEntry entry={entry} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* 重新查询按钮 */}
+                    <div className="border-t border-gray-200 pt-4 mt-4">
+                        <ReLookupButtonClient
+                            searchQuery={searchQuery}
+                            queryLang={queryLang}
+                            definitionLang={definitionLang}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

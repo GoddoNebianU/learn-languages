@@ -1,29 +1,37 @@
+"use client";
+
 import { LightButton } from "@/components/ui/buttons";
-import { POPULAR_LANGUAGES } from "./constants";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { POPULAR_LANGUAGES } from "./constants";
 
 interface SearchFormProps {
-    searchQuery: string;
-    onSearchQueryChange: (query: string) => void;
-    isSearching: boolean;
-    onSearch: (e: React.FormEvent) => void;
-    queryLang: string;
-    onQueryLangChange: (lang: string) => void;
-    definitionLang: string;
-    onDefinitionLangChange: (lang: string) => void;
+    defaultQueryLang?: string;
+    defaultDefinitionLang?: string;
 }
 
-export function SearchForm({
-    searchQuery,
-    onSearchQueryChange,
-    isSearching,
-    onSearch,
-    queryLang,
-    onQueryLangChange,
-    definitionLang,
-    onDefinitionLangChange,
-}: SearchFormProps) {
+export function SearchForm({ defaultQueryLang = "english", defaultDefinitionLang = "chinese" }: SearchFormProps) {
     const t = useTranslations("dictionary");
+    const [queryLang, setQueryLang] = useState(defaultQueryLang);
+    const [definitionLang, setDefinitionLang] = useState(defaultDefinitionLang);
+    const router = useRouter();
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const searchQuery = formData.get("searchQuery") as string;
+
+        if (!searchQuery?.trim()) return;
+
+        const params = new URLSearchParams({
+            q: searchQuery,
+            ql: queryLang,
+            dl: definitionLang,
+        });
+
+        router.push(`/dictionary?${params.toString()}`);
+    };
 
     return (
         <>
@@ -38,20 +46,20 @@ export function SearchForm({
             </div>
 
             {/* 搜索表单 */}
-            <form onSubmit={onSearch} className="flex flex-col sm:flex-row gap-2">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
                 <input
                     type="text"
-                    value={searchQuery}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchQueryChange(e.target.value)}
+                    name="searchQuery"
+                    defaultValue=""
                     placeholder={t("searchPlaceholder")}
                     className="flex-1 min-w-0 px-4 py-3 text-lg text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
+                    required
                 />
                 <LightButton
                     type="submit"
-                    disabled={isSearching || !searchQuery.trim()}
                     className="px-6 py-3 whitespace-nowrap text-center sm:min-w-30"
                 >
-                    {isSearching ? t("searching") : t("search")}
+                    {t("search")}
                 </LightButton>
             </form>
 
@@ -62,68 +70,47 @@ export function SearchForm({
                 </div>
 
                 <div className="space-y-4">
-                        {/* 查询语言 */}
-                        <div>
-                            <label className="block text-gray-700 text-sm mb-2">
-                                {t("queryLanguage")} ({t("queryLanguageHint")})
-                            </label>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {POPULAR_LANGUAGES.map((lang) => (
-                                    <LightButton
-                                        key={lang.code}
-                                        selected={queryLang === lang.code}
-                                        onClick={() => onQueryLangChange(lang.code)}
-                                        className="text-sm px-3 py-1"
-                                    >
-                                        {lang.nativeName}
-                                    </LightButton>
-                                ))}
-                            </div>
-                            <input
-                                type="text"
-                                value={queryLang}
-                                onChange={(e) => onQueryLangChange(e.target.value)}
-                                placeholder={t("otherLanguagePlaceholder")}
-                                className="w-full px-3 py-2 text-sm text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
-                            />
-                        </div>
-
-                        {/* 释义语言 */}
-                        <div>
-                            <label className="block text-gray-700 text-sm mb-2">
-                                {t("definitionLanguage")} ({t("definitionLanguageHint")})
-                            </label>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {POPULAR_LANGUAGES.map((lang) => (
-                                    <LightButton
-                                        key={lang.code}
-                                        selected={definitionLang === lang.code}
-                                        onClick={() => onDefinitionLangChange(lang.code)}
-                                        className="text-sm px-3 py-1"
-                                    >
-                                        {lang.nativeName}
-                                    </LightButton>
-                                ))}
-                            </div>
-                            <input
-                                type="text"
-                                value={definitionLang}
-                                onChange={(e) => onDefinitionLangChange(e.target.value)}
-                                placeholder={t("otherLanguagePlaceholder")}
-                                className="w-full px-3 py-2 text-sm text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
-                            />
-                        </div>
-
-                        {/* 当前设置显示 */}
-                        <div className="text-center text-gray-700 text-sm pt-2 border-t border-gray-300">
-                            {t("currentSettings", {
-                                queryLang: POPULAR_LANGUAGES.find(l => l.code === queryLang)?.nativeName || queryLang,
-                                definitionLang: POPULAR_LANGUAGES.find(l => l.code === definitionLang)?.nativeName || definitionLang
-                            })}
+                    {/* 查询语言 */}
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-2">
+                            {t("queryLanguage")} ({t("queryLanguageHint")})
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {POPULAR_LANGUAGES.map((lang) => (
+                                <LightButton
+                                    key={lang.code}
+                                    type="button"
+                                    selected={queryLang === lang.code}
+                                    onClick={() => setQueryLang(lang.code)}
+                                    className="text-sm px-3 py-1"
+                                >
+                                    {lang.nativeName}
+                                </LightButton>
+                            ))}
                         </div>
                     </div>
-            </div>
 
+                    {/* 释义语言 */}
+                    <div>
+                        <label className="block text-gray-700 text-sm mb-2">
+                            {t("definitionLanguage")} ({t("definitionLanguageHint")})
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {POPULAR_LANGUAGES.map((lang) => (
+                                <LightButton
+                                    key={lang.code}
+                                    type="button"
+                                    selected={definitionLang === lang.code}
+                                    onClick={() => setDefinitionLang(lang.code)}
+                                    className="text-sm px-3 py-1"
+                                >
+                                    {lang.nativeName}
+                                </LightButton>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }
