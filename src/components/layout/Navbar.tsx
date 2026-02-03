@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { IMAGES } from "@/config/images";
 import { Folder, Home, User } from "lucide-react";
-import { LanguageSettings } from "../LanguageSettings";
+import { LanguageSettings } from "./LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
@@ -24,7 +24,7 @@ export async function Navbar() {
       <div className="flex text-base md:text-xl gap-0.5 justify-center items-center flex-wrap">
         <LanguageSettings />
         <GhostButton
-          className="md:hidden! block! border-0 bg-transparent hover:bg-black/30 shadow-none p-2"
+          className="md:hidden! block! navbar-btn p-2"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           <Image
@@ -34,14 +34,14 @@ export async function Navbar() {
             height={20}
           />
         </GhostButton>
-        <GhostButton href="/folders" className="md:block! hidden! border-0 bg-transparent hover:bg-black/30 shadow-none">
+        <GhostButton href="/folders" className="md:block! hidden! navbar-btn">
           {t("folders")}
         </GhostButton>
-        <GhostButton href="/folders" className="md:hidden! block! border-0 bg-transparent hover:bg-black/30 shadow-none p-2">
+        <GhostButton href="/folders" className="md:hidden! block! navbar-btn p-2">
           <Folder size={20} />
         </GhostButton>
         <GhostButton
-          className="hidden! md:block! border-0 bg-transparent hover:bg-black/30 shadow-none"
+          className="hidden! md:block! navbar-btn"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           {t("sourceCode")}
@@ -50,18 +50,17 @@ export async function Navbar() {
           (() => {
             return session &&
               <>
-                <GhostButton href="/profile" className="hidden! md:block! text-sm md:text-base border-0 bg-transparent hover:bg-black/30 shadow-none px-2 py-1">{t("profile")}</GhostButton>
-                <GhostButton href="/profile" className="md:hidden! block! border-0 bg-transparent hover:bg-black/30 shadow-none p-2">
+                <GhostButton href="/profile" className="hidden! md:block! text-sm md:text-base navbar-btn px-2 py-1">{t("profile")}</GhostButton>
+                <GhostButton href="/profile" className="md:hidden! block! navbar-btn p-2">
                   <User size={20} />
                 </GhostButton>
               </>
               || <>
-                <GhostButton href="/auth" className="hidden! md:block! text-sm md:text-base border-0 bg-transparent hover:bg-black/30 shadow-none px-2 py-1">{t("sign_in")}</GhostButton>
-                <GhostButton href="/auth" className="md:hidden! block! border-0 bg-transparent hover:bg-black/30 shadow-none p-2">
+                <GhostButton href="/auth" className="hidden! md:block! text-sm md:text-base navbar-btn px-2 py-1">{t("sign_in")}</GhostButton>
+                <GhostButton href="/auth" className="md:hidden! block! navbar-btn p-2">
                   <User size={20} />
                 </GhostButton>
               </>;
-
           })()
         }
       </div>

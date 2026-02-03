@@ -1,6 +1,6 @@
 "use client";
 
-import { GhostButton } from "./ui/buttons";
+import { GhostButton } from "../ui/buttons";
 import { useState } from "react";
 import { Languages } from "lucide-react";
 
@@ -15,7 +15,7 @@ export function LanguageSettings() {
     };
     return (
         <>
-            <Languages />
+            <Languages onClick={handleLanguageClick} size={28} className="navbar-btn" />
             <div className="relative">
                 {showLanguageMenu && (
                     <div>
