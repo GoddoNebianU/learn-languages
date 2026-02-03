@@ -1,8 +1,8 @@
 "use client";
 
-import { IMAGES } from "@/config/images";
-import { IconClick, GhostButton } from "./ui/buttons";
+import { GhostButton } from "./ui/buttons";
 import { useState } from "react";
+import { Languages } from "lucide-react";
 
 export function LanguageSettings() {
     const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -15,13 +15,7 @@ export function LanguageSettings() {
     };
     return (
         <>
-            <IconClick
-                src={IMAGES.language_white}
-                alt="language"
-                disableOnHoverBgChange={true}
-                onClick={handleLanguageClick}
-                size={40}
-            ></IconClick>
+            <Languages />
             <div className="relative">
                 {showLanguageMenu && (
                     <div>
