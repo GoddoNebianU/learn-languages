@@ -15,7 +15,6 @@ import { SaveList } from "./SaveList";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/modules/translator/translator-action";
-import { logger } from "@/lib/logger";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
@@ -75,7 +74,7 @@ export default function TextSpeakerPage() {
           setIPA(data.ipa);
         })
         .catch((e) => {
-          logger.error("生成 IPA 失败", e);
+          console.error("生成 IPA 失败", e);
           setIPA("");
         });
     }
@@ -120,7 +119,7 @@ export default function TextSpeakerPage() {
             load(objurlRef.current);
             play();
           } catch (e) {
-            logger.error("播放音频失败", e);
+            console.error("播放音频失败", e);
             setPause(true);
             setLanguage(null);
             setProcessing(false);
@@ -212,7 +211,7 @@ export default function TextSpeakerPage() {
       }
       setIntoLocalStorage(save);
     } catch (e) {
-      logger.error("保存到本地存储失败", e);
+      console.error("保存到本地存储失败", e);
       setLanguage(null);
     } finally {
       setSaving(false);

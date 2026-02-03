@@ -1,76 +1,94 @@
 import { auth } from "@/auth";
 import {
-    ServiceInputSignUp,
+    repoFindUserByUsername,
+    repoFindUserById
+} from "./auth-repository";
+import {
+    ServiceInputGetUserProfileByUsername,
+    ServiceInputGetUserProfileById,
     ServiceInputSignIn,
-    ServiceOutputSignUp,
-    ServiceOutputSignIn
+    ServiceInputSignUp,
+    ServiceOutputAuth,
+    ServiceOutputUserProfile
 } from "./auth-service-dto";
 
 /**
- * Sign up a new user
- * Calls better-auth's signUp.email with username support
+ * Sign up service
  */
-export async function serviceSignUp(dto: ServiceInputSignUp): Promise<ServiceOutputSignUp> {
-    try {
-        await auth.api.signUpEmail({
-            body: {
-                email: dto.email,
-                password: dto.password,
-                username: dto.username,
-                name: dto.name,
-            }
-        });
-
-        return {
-            success: true,
+export async function serviceSignUp(dto: ServiceInputSignUp): Promise<ServiceOutputAuth> {
+    // Better-auth handles user creation internally
+    const result = await auth.api.signUpEmail({
+        body: {
             email: dto.email,
+            password: dto.password,
+            name: dto.name,
             username: dto.username,
-        };
-    } catch (error) {
-        // better-auth handles duplicates and validation errors
+        }
+    });
+
+    if (!result.user) {
         return {
             success: false,
         };
     }
+
+    return {
+        success: true,
+    };
 }
 
 /**
- * Sign in user
- * Uses better-auth's signIn.username for username-based authentication
+ * Sign in service
  */
-export async function serviceSignIn(dto: ServiceInputSignIn): Promise<ServiceOutputSignIn> {
-    try {
-        // Determine if identifier is email or username
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dto.identifier);
+export async function serviceSignIn(dto: ServiceInputSignIn): Promise<ServiceOutputAuth> {
+    // Try to sign in with username first
+    const userResult = await repoFindUserByUsername({ username: dto.identifier });
 
-        let session;
+    if (userResult) {
+        // User found by username, use email signIn with the user's email
+        const result = await auth.api.signInEmail({
+            body: {
+                email: userResult.email,
+                password: dto.password,
+            }
+        });
 
-        if (isEmail) {
-            // Use email sign in
-            session = await auth.api.signInEmail({
-                body: {
-                    email: dto.identifier,
-                    password: dto.password,
-                }
-            });
-        } else {
-            // Use username sign in (requires username plugin)
-            session = await auth.api.signInUsername({
-                body: {
-                    username: dto.identifier,
-                    password: dto.password,
-                }
-            });
+        if (result.user) {
+            return {
+                success: true,
+            };
         }
+    } else {
+        // Try as email
+        const result = await auth.api.signInEmail({
+            body: {
+                email: dto.identifier,
+                password: dto.password,
+            }
+        });
 
-        return {
-            success: true,
-            sessionToken: session?.token,
-        };
-    } catch (error) {
-        // better-auth throws on invalid credentials
-        return {
-            success: false,
-        };
+        if (result.user) {
+            return {
+                success: true,
+            };
+        }
     }
+
+    return {
+        success: false,
+    };
+}
+
+/**
+ * Get user profile by username
+ */
+export async function serviceGetUserProfileByUsername(dto: ServiceInputGetUserProfileByUsername): Promise<ServiceOutputUserProfile> {
+    return await repoFindUserByUsername(dto);
+}
+
+/**
+ * Get user profile by ID
+ */
+export async function serviceGetUserProfileById(dto: ServiceInputGetUserProfileById): Promise<ServiceOutputUserProfile> {
+    return await repoFindUserById(dto);
 }

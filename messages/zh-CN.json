@@ -231,5 +231,17 @@
     "pleaseCreateFolder": "请先创建文件夹",
     "savedToFolder": "已保存到文件夹：{folderName}",
     "saveFailed": "保存失败，请稍后重试"
+  },
+  "user_profile": {
+    "anonymous": "匿名",
+    "email": "邮箱",
+    "verified": "已验证",
+    "unverified": "未验证",
+    "accountInfo": "账户信息",
+    "userId": "用户ID",
+    "username": "用户名",
+    "displayName": "显示名称",
+    "notSet": "未设置",
+    "memberSince": "注册时间"
   }
 }

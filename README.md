@@ -9,7 +9,9 @@
 - **SRT字幕播放器** - 结合视频字幕学习，支持多种字幕格式
 - **字母学习模块** - 针对初学者的字母和发音基础学习
 - **记忆强化工具** - 通过科学记忆法巩固学习内容
+- **词典查询** - 查询单词和短语，提供详细释义和例句
 - **个人学习空间** - 用户可以创建、管理和组织自己的学习资料
+- **用户资料系统** - 支持用户名登录、个人资料页面展示
 
 ## 🛠 技术栈
 
@@ -26,7 +28,7 @@
 
 ### 国际化与辅助功能
 - **next-intl** - 国际化解决方案
-- **qwen3-tts-flash** - 通义千问语音合成
+- **阿里云千问 TTS** - qwen3-tts-flash 语音合成
 
 ### 开发工具
 - **ESLint** - 代码质量检查
@@ -38,8 +40,16 @@
 src/
 ├── app/                   # Next.js App Router 路由
 │   ├── (features)/       # 功能模块路由
-│   ├── api/              # API 路由
-│   └── auth/             # 认证相关页面
+│   ├── auth/             # 认证相关页面
+│   ├── profile/          # 用户资料重定向
+│   ├── users/[username]/ # 用户资料页面
+│   ├── folders/          # 文件夹管理
+│   └── api/              # API 路由
+├── modules/              # 业务模块（action-service-repository 架构）
+│   ├── auth/             # 认证模块
+│   ├── folder/           # 文件夹模块
+│   ├── dictionary/       # 词典模块
+│   └── translator/       # 翻译模块
 ├── components/           # React 组件
 │   ├── buttons/          # 按钮组件
 │   ├── cards/            # 卡片组件
@@ -50,6 +60,7 @@ src/
 │   └── server/           # 服务器端工具
 ├── hooks/                # 自定义 React Hooks
 ├── i18n/                 # 国际化配置
+├── shared/               # 共享常量和类型
 └── config/               # 应用配置
 ```
 
@@ -57,7 +68,7 @@ src/
 
 ### 环境要求
 
-- Node.js 24
+- Node.js 23
 - PostgreSQL 数据库
 - pnpm (推荐) 或 npm
 
@@ -85,17 +96,20 @@ cp .env.example .env.local
 然后编辑 `.env.local` 文件，配置所有必要的环境变量：
 
 ```env
-// LLM
+# LLM 集成（智谱 AI 用于翻译和 IPA 生成）
 ZHIPU_API_KEY=your-zhipu-api-key
 ZHIPU_MODEL_NAME=your-zhipu-model-name
 
-// Auth
+# 阿里云千问 TTS（文本转语音）
+DASHSCORE_API_KEY=your-dashscore-api-key
+
+# 认证
 BETTER_AUTH_SECRET=your-better-auth-secret
 BETTER_AUTH_URL=http://localhost:3000
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
 
-// Database
+# 数据库
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 ```
 
@@ -118,14 +132,27 @@ pnpm run dev
 
 ### 认证系统
 
-应用使用 better-auth 提供安全的用户认证系统，支持邮箱/密码登录和第三方登录。
+应用使用 better-auth 提供安全的用户认证系统，支持：
+- 邮箱/密码登录和注册
+- **用户名登录**（可通过用户名或邮箱登录）
+- GitHub OAuth 第三方登录
+- 邮箱验证功能
+
+### 后端架构
+
+项目采用 **Action-Service-Repository 三层架构**：
+- **Action 层**：处理 Server Actions、表单验证、重定向
+- **Service 层**：业务逻辑、better-auth 集成
+- **Repository 层**：Prisma 数据库操作
 
 ### 数据模型
 
 核心数据模型包括：
-- **User** - 用户信息
+- **User** - 用户信息（支持用户名、邮箱、头像）
 - **Folder** - 学习资料文件夹
 - **Pair** - 语言对（翻译对、词汇对等）
+- **Session/Account** - 认证会话追踪
+- **Verification** - 邮箱验证系统
 
 详细模型定义请参考 [prisma/schema.prisma](./prisma/schema.prisma)
 

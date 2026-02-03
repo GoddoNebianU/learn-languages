@@ -231,5 +231,17 @@
     "pleaseCreateFolder": "Please create a folder first",
     "savedToFolder": "Saved to folder: {folderName}",
     "saveFailed": "Save failed, please try again later"
+  },
+  "user_profile": {
+    "anonymous": "Anonymous",
+    "email": "Email",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "accountInfo": "Account Information",
+    "userId": "User ID",
+    "username": "Username",
+    "displayName": "Display Name",
+    "notSet": "Not Set",
+    "memberSince": "Member Since"
   }
 }

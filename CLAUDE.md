@@ -36,7 +36,7 @@ pnpm prisma studio      # 打开 Prisma Studio 查看数据库
 - **PostgreSQL** + **Prisma ORM**（自定义输出目录：`src/generated/prisma`）
 - **better-auth** 身份验证（邮箱/密码 + OAuth）
 - **next-intl** 国际化（支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN）
-- **edge-tts-universal** 文本转语音
+- **阿里云千问 TTS** (qwen3-tts-flash) 文本转语音
 - **pnpm** 包管理器
 
 ## 架构设计
@@ -51,9 +51,35 @@ src/app/
 │   └── [locale]/    # 国际化路由
 ├── auth/            # 认证页面（sign-in, sign-up）
 ├── folders/         # 用户学习文件夹管理
-├── api/             # API 路由
-└── profile/         # 用户资料页面
+├── users/[username]/# 用户资料页面（Server Component）
+├── profile/         # 重定向到当前用户的资料页面
+└── api/             # API 路由
 ```
+
+### 后端架构模式
+
+项目使用 **Action-Service-Repository 三层架构**：
+
+```
+src/modules/{module}/
+├── {module}-action.ts        # Server Actions 层（表单处理、重定向）
+├── {module}-action-dto.ts    # Action 层 DTO（Zod 验证）
+├── {module}-service.ts       # Service 层（业务逻辑）
+├── {module}-service-dto.ts   # Service 层 DTO
+├── {module}-repository.ts    # Repository 层（数据库操作）
+└── {module}-repository-dto.ts # Repository 层 DTO
+```
+
+各层职责：
+- **Action 层**：处理表单数据、验证输入、调用 service 层、处理重定向和错误响应
+- **Service 层**：实现业务逻辑、调用 better-auth API、协调多个 repository 操作
+- **Repository 层**：直接使用 Prisma 进行数据库查询和操作
+
+现有模块：
+- `auth` - 认证和用户管理（支持用户名/邮箱登录）
+- `folder` - 学习文件夹管理
+- `dictionary` - 词典查询
+- `translator` - 翻译服务
 
 ### 数据库 Schema
 
@@ -81,9 +107,12 @@ src/app/
 需要在 `.env.local` 中配置：
 
 ```env
-# LLM 集成
+# LLM 集成（智谱 AI 用于翻译和 IPA 生成）
 ZHIPU_API_KEY=your-api-key
 ZHIPU_MODEL_NAME=your-model-name
+
+# 阿里云千问 TTS（文本转语音）
+DASHSCORE_API_KEY=your-dashscore-api-key
 
 # 认证
 BETTER_AUTH_SECRET=your-secret
@@ -93,9 +122,6 @@ GITHUB_CLIENT_SECRET=your-client-secret
 
 # 数据库
 DATABASE_URL=postgresql://username:password@localhost:5432/database_name
-
-// DashScore
-DASHSCORE_API_KEY=
 ```
 
 ## 重要配置细节
@@ -108,13 +134,15 @@ DASHSCORE_API_KEY=
 
 ## 代码组织
 
-- `src/lib/actions/`: 数据库变更的 Server Actions
+- `src/modules/`: 业务模块（auth, folder, dictionary, translator）
+- `src/lib/actions/`: 数据库变更的 Server Actions（旧架构，正在迁移到 modules）
 - `src/lib/server/`: 服务端工具（AI 集成、认证、翻译器）
 - `src/lib/browser/`: 客户端工具
 - `src/hooks/`: 自定义 React hooks（认证 hooks、会话管理）
 - `src/i18n/`: 国际化配置
 - `messages/`: 各支持语言的翻译文件
 - `src/components/`: 可复用的 UI 组件（buttons, cards 等）
+- `src/shared/`: 共享常量和类型定义
 
 ## 开发注意事项
 
@@ -122,4 +150,7 @@ DASHSCORE_API_KEY=
 - schema 变更后，先运行 `pnpm prisma generate` 再运行 `pnpm prisma db push`
 - 应用使用 TypeScript 严格模式 - 确保类型安全
 - 所有面向用户的文本都需要国际化
+- **优先使用 Server Components**，只在需要交互时使用 Client Components
+- **新功能应遵循 action-service-repository 架构**
 - Better-auth 处理会话管理 - 使用 authClient 适配器进行认证操作
+- 使用 better-auth username 插件支持用户名登录

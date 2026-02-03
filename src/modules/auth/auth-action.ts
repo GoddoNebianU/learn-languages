@@ -5,19 +5,23 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ValidateError } from "@/lib/errors";
 import {
+    ActionInputGetUserProfileByUsername,
     ActionInputSignIn,
     ActionInputSignUp,
     ActionOutputAuth,
+    ActionOutputUserProfile,
+    validateActionInputGetUserProfileByUsername,
     validateActionInputSignIn,
     validateActionInputSignUp
 } from "./auth-action-dto";
 import {
+    serviceGetUserProfileByUsername,
     serviceSignIn,
     serviceSignUp
 } from "./auth-service";
 
 // Re-export types for use in components
-export type { ActionOutputAuth } from "./auth-action-dto";
+export type { ActionOutputAuth, ActionOutputUserProfile } from "./auth-action-dto";
 
 /**
  * Sign up action
@@ -142,5 +146,34 @@ export async function signOutAction() {
         }
         console.error("Sign out error:", e);
         redirect("/auth");
+    }
+}
+
+/**
+ * Get user profile by username
+ * Returns user profile data for display
+ */
+export async function actionGetUserProfileByUsername(dto: ActionInputGetUserProfileByUsername): Promise<ActionOutputUserProfile> {
+    try {
+        const userProfile = await serviceGetUserProfileByUsername(dto);
+
+        if (!userProfile) {
+            return {
+                success: false,
+                message: "User not found",
+            };
+        }
+
+        return {
+            success: true,
+            message: "User profile retrieved successfully",
+            data: userProfile,
+        };
+    } catch (e) {
+        console.error("Get user profile error:", e);
+        return {
+            success: false,
+            message: "Failed to retrieve user profile",
+        };
     }
 }
