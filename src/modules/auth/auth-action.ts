@@ -3,131 +3,144 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { ValidateError } from "@/lib/errors";
+import {
+    ActionInputSignIn,
+    ActionInputSignUp,
+    ActionOutputAuth,
+    validateActionInputSignIn,
+    validateActionInputSignUp
+} from "./auth-action-dto";
+import {
+    serviceSignIn,
+    serviceSignUp
+} from "./auth-service";
 
-export interface SignUpFormData {
-    username: string;
-    email: string;
-    password: string;
-}
+// Re-export types for use in components
+export type { ActionOutputAuth } from "./auth-action-dto";
 
-export interface SignUpState {
-    success?: boolean;
-    message?: string;
-    errors?: {
-        username?: string[];
-        email?: string[];
-        password?: string[];
-    };
-}
-
-export async function signUpAction(prevState: SignUpState, formData: FormData) {
-    const email = formData.get("email") as string;
-    const name = formData.get("name") as string;
-    const password = formData.get("password") as string;
-    const redirectTo = formData.get("redirectTo") as string;
-
-    // 服务器端验证
-    const errors: SignUpState['errors'] = {};
-
-    if (!email) {
-        errors.email = ["邮箱是必填项"];
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errors.email = ["请输入有效的邮箱地址"];
-    }
-
-    if (!name) {
-        errors.username = ["姓名是必填项"];
-    } else if (name.length < 2) {
-        errors.username = ["姓名至少需要2个字符"];
-    }
-
-    if (!password) {
-        errors.password = ["密码是必填项"];
-    } else if (password.length < 8) {
-        errors.password = ["密码至少需要8个字符"];
-    }
-
-    // 如果有验证错误，返回错误状态
-    if (Object.keys(errors).length > 0) {
-        return {
-            success: false,
-            message: "请修正表单中的错误",
-            errors
-        };
-    }
-
+/**
+ * Sign up action
+ * Creates a new user account
+ */
+export async function actionSignUp(prevState: ActionOutputAuth | undefined, formData: FormData): Promise<ActionOutputAuth> {
     try {
-        await auth.api.signUpEmail({
-            body: {
-                email,
-                password,
-                name
-            }
+        // Extract form data
+        const rawData = {
+            email: formData.get("email") as string,
+            username: formData.get("username") as string,
+            password: formData.get("password") as string,
+            redirectTo: formData.get("redirectTo") as string | undefined,
+        };
+
+        // Validate input
+        const dto: ActionInputSignUp = validateActionInputSignUp(rawData);
+
+        // Call service layer
+        const result = await serviceSignUp({
+            email: dto.email,
+            username: dto.username,
+            password: dto.password,
+            name: dto.username,
         });
 
-        redirect(redirectTo || "/");
-    } catch (error) {
-        if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
-            throw error;
+        if (!result.success) {
+            return {
+                success: false,
+                message: "Registration failed. Email or username may already be taken.",
+            };
         }
+
+        // Redirect on success
+        redirect(dto.redirectTo || "/");
+
+    } catch (e) {
+        if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) {
+            throw e;
+        }
+        if (e instanceof ValidateError) {
+            return {
+                success: false,
+                message: e.message,
+            };
+        }
+        console.error("Sign up error:", e);
         return {
             success: false,
-            message: "注册失败，请稍后再试"
+            message: "Registration failed. Please try again later.",
         };
     }
 }
 
-export async function signInAction(prevState: SignUpState, formData: FormData) {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const redirectTo = formData.get("redirectTo") as string;
-
-    // 服务器端验证
-    const errors: SignUpState['errors'] = {};
-
-    if (!email) {
-        errors.email = ["邮箱是必填项"];
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errors.email = ["请输入有效的邮箱地址"];
-    }
-
-    if (!password) {
-        errors.password = ["密码是必填项"];
-    }
-
-    // 如果有验证错误，返回错误状态
-    if (Object.keys(errors).length > 0) {
-        return {
-            success: false,
-            message: "请修正表单中的错误",
-            errors
-        };
-    }
-
+/**
+ * Sign in action
+ * Authenticates a user
+ */
+export async function actionSignIn(_prevState: ActionOutputAuth | undefined, formData: FormData): Promise<ActionOutputAuth> {
     try {
-        await auth.api.signInEmail({
-            body: {
-                email,
-                password,
-            }
+        // Extract form data
+        const rawData = {
+            identifier: formData.get("identifier") as string,
+            password: formData.get("password") as string,
+            redirectTo: formData.get("redirectTo") as string | undefined,
+        };
+
+        // Validate input
+        const dto: ActionInputSignIn = validateActionInputSignIn(rawData);
+
+        // Call service layer
+        const result = await serviceSignIn({
+            identifier: dto.identifier,
+            password: dto.password,
         });
 
-        redirect(redirectTo || "/");
-    } catch (error) {
-        if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
-            throw error;
+        if (!result.success) {
+            return {
+                success: false,
+                message: "Invalid email/username or password.",
+                errors: {
+                    identifier: ["Invalid email/username or password"],
+                },
+            };
         }
+
+        // Redirect on success
+        redirect(dto.redirectTo || "/");
+
+    } catch (e) {
+        if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) {
+            throw e;
+        }
+        if (e instanceof ValidateError) {
+            return {
+                success: false,
+                message: e.message,
+            };
+        }
+        console.error("Sign in error:", e);
         return {
             success: false,
-            message: "登录失败，请检查您的邮箱和密码"
+            message: "Sign in failed. Please check your credentials.",
         };
     }
 }
 
+/**
+ * Sign out action
+ * Signs out the current user
+ */
 export async function signOutAction() {
-    await auth.api.signOut({
-        headers: await headers()
-    });
+    try {
+        await auth.api.signOut({
+            headers: await headers()
+        });
 
-    redirect("/auth");
+        redirect("/auth");
+    } catch (e) {
+        if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) {
+            throw e;
+        }
+        console.error("Sign out error:", e);
+        redirect("/auth");
+    }
 }

@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -21,8 +22,12 @@ model User {
   dictionaryLookUps    DictionaryLookUp[]
   translationHistories TranslationHistory[]
 
+  username        String?
+  displayUsername String?
+
   @@unique([email])
   @@map("user")
+  @@unique([username])
 }
 
 model Session {

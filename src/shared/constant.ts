@@ -15,3 +15,8 @@ export const LENGTH_MIN_FOLDER_NAME = 1;
 
 export const LENGTH_MAX_TRANSLATOR_TEXT = 1000;
 export const LENGTH_MIN_TRANSLATOR_TEXT = 1;
+
+export const LENGTH_MAX_USERNAME = 30;
+export const LENGTH_MIN_USERNAME = 3;
+export const LENGTH_MAX_PASSWORD = 100;
+export const LENGTH_MIN_PASSWORD = 8;

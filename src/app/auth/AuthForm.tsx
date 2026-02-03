@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Input } from "@/components/ui/Input";
 import { LightButton } from "@/components/ui/buttons";
 import { authClient } from "@/lib/auth-client";
-import { signInAction, signUpAction, SignUpState } from "@/modules/auth/auth-action";
+import { actionSignIn, actionSignUp, ActionOutputAuth } from "@/modules/auth/auth-action";
 
 interface AuthFormProps {
   redirectTo?: string;
@@ -19,22 +19,22 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
   const [clearSignUp, setClearSignUp] = useState(false);
 
   const [signInState, signInActionForm, isSignInPending] = useActionState(
-    async (prevState: SignUpState | undefined, formData: FormData) => {
+    async (_prevState: ActionOutputAuth | undefined, formData: FormData) => {
       if (clearSignIn) {
         setClearSignIn(false);
         return undefined;
       }
-      return signInAction(prevState || {}, formData);
+      return actionSignIn(undefined, formData);
     },
     undefined
   );
   const [signUpState, signUpActionForm, isSignUpPending] = useActionState(
-    async (prevState: SignUpState | undefined, formData: FormData) => {
+    async (_prevState: ActionOutputAuth | undefined, formData: FormData) => {
       if (clearSignUp) {
         setClearSignUp(false);
         return undefined;
       }
-      return signUpAction(prevState || {}, formData);
+      return actionSignUp(undefined, formData);
     },
     undefined
   );
@@ -44,15 +44,32 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
   const validateForm = (formData: FormData): boolean => {
     const newErrors: Record<string, string> = {};
 
+    const identifier = formData.get("identifier") as string;
     const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-    const name = formData.get("name") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
 
-    if (!email) {
-      newErrors.email = t("emailRequired");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = t("invalidEmail");
+    // 登录模式验证
+    if (mode === 'signin') {
+      if (!identifier) {
+        newErrors.identifier = t("identifierRequired");
+      }
+    } else {
+      // 注册模式验证
+      if (!email) {
+        newErrors.email = t("emailRequired");
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        newErrors.email = t("invalidEmail");
+      }
+
+      if (!username) {
+        newErrors.username = t("usernameRequired");
+      } else if (username.length < 3) {
+        newErrors.username = t("usernameTooShort");
+      } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        newErrors.username = t("usernameInvalid");
+      }
     }
 
     if (!password) {
@@ -62,10 +79,6 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
     }
 
     if (mode === 'signup') {
-      if (!name) {
-        newErrors.name = t("nameRequired");
-      }
-
       if (!confirmPassword) {
         newErrors.confirmPassword = t("confirmPasswordRequired");
       } else if (password !== confirmPassword) {
@@ -128,41 +141,57 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
 
         {/* 登录/注册表单 */}
         <form onSubmit={handleFormSubmit} className="space-y-4">
-          {/* 用户名输入（仅注册模式显示） */}
-          {mode === 'signup' && (
+          {/* 邮箱/用户名输入（登录模式）或 用户名输入（注册模式） */}
+          {mode === 'signin' ? (
             <div>
               <Input
                 type="text"
-                name="name"
-                placeholder={t("name")}
+                name="identifier"
+                placeholder={t("emailOrUsername")}
                 className="w-full px-3 py-2"
               />
-              {/* 客户端验证错误 */}
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              {errors.identifier && (
+                <p className="text-red-500 text-sm mt-1">{errors.identifier}</p>
               )}
-              {/* 服务器端验证错误 */}
-              {currentError?.errors?.username && (
-                <p className="text-red-500 text-sm mt-1">{currentError.errors.username[0]}</p>
+              {currentError?.errors?.email && (
+                <p className="text-red-500 text-sm mt-1">{currentError.errors.email[0]}</p>
               )}
             </div>
-          )}
+          ) : (
+            <>
+              {/* 用户名输入（仅注册模式） */}
+              <div>
+                <Input
+                  type="text"
+                  name="username"
+                  placeholder={t("username")}
+                  className="w-full px-3 py-2"
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+                )}
+                {currentError?.errors?.username && (
+                  <p className="text-red-500 text-sm mt-1">{currentError.errors.username[0]}</p>
+                )}
+              </div>
 
-          {/* 邮箱输入 */}
-          <div>
-            <Input
-              type="email"
-              name="email"
-              placeholder={t("email")}
-              className="w-full px-3 py-2"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-            {currentError?.errors?.email && (
-              <p className="text-red-500 text-sm mt-1">{currentError.errors.email[0]}</p>
-            )}
-          </div>
+              {/* 邮箱输入（仅注册模式） */}
+              <div>
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder={t("email")}
+                  className="w-full px-3 py-2"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+                {currentError?.errors?.email && (
+                  <p className="text-red-500 text-sm mt-1">{currentError.errors.email[0]}</p>
+                )}
+              </div>
+            </>
+          )}
 
           {/* 密码输入 */}
           <div>
