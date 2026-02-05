@@ -95,7 +95,7 @@ export default function TranslatorPage() {
   };
 
   return (
-    <>
+    <div className="min-h-[calc(100vh-64px)] bg-white">
       {/* TCard Component */}
       <div className="w-screen flex flex-col md:flex-row md:justify-between gap-2 p-2">
         {/* Card Component - Left Side */}
@@ -218,6 +218,6 @@ export default function TranslatorPage() {
           {t("translate")}
         </PrimaryButton>
       </div>
-    </>
+    </div>
   );
 }

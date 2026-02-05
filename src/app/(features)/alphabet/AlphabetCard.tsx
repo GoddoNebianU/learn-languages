@@ -6,6 +6,8 @@ import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { IconClick, CircleToggleButton, CircleButton } from "@/components/ui/buttons";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { Card } from "@/components/ui/Card";
 
 interface AlphabetCardProps {
   alphabet: Letter[];
@@ -97,124 +99,122 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
-        {/* 右上角返回按钮 */}
-        <div className="flex justify-end mb-4">
-          <IconClick
-            size={32}
-            alt="close"
-            src={IMAGES.close}
-            onClick={onBack}
-            className="bg-white rounded-full shadow-md"
-          />
+    <PageLayout className="relative">
+      {/* 右上角返回按钮 - outside the white card */}
+      <div className="flex justify-end mb-4">
+        <IconClick
+          size={32}
+          alt="close"
+          src={IMAGES.close}
+          onClick={onBack}
+          className="bg-white rounded-full shadow-md"
+        />
+      </div>
+
+      {/* 白色主卡片容器 */}
+      <Card padding="xl">
+        {/* 顶部进度指示器和显示选项按钮 */}
+        <div className="flex justify-between items-center mb-6">
+          {/* 当前字母进度 */}
+          <span className="text-sm text-gray-500">
+            {currentIndex + 1} / {alphabet.length}
+          </span>
+          {/* 显示选项切换按钮组 */}
+          <div className="flex gap-2 flex-wrap">
+            <CircleToggleButton
+              selected={showLetter}
+              onClick={() => setShowLetter(!showLetter)}
+            >
+              {t("letter")}
+            </CircleToggleButton>
+            {/* IPA 音标显示切换 */}
+            <CircleToggleButton
+              selected={showIPA}
+              onClick={() => setShowIPA(!showIPA)}
+            >
+              IPA
+            </CircleToggleButton>
+            {/* 罗马音显示切换（仅日语显示） */}
+            {hasRomanization && (
+              <CircleToggleButton
+                selected={showRoman}
+                onClick={() => setShowRoman(!showRoman)}
+              >
+                {t("roman")}
+              </CircleToggleButton>
+            )}
+            {/* 随机模式切换 */}
+            <CircleToggleButton
+              selected={isRandomMode}
+              onClick={() => setIsRandomMode(!isRandomMode)}
+            >
+              {t("random")}
+            </CircleToggleButton>
+          </div>
         </div>
 
-        {/* 白色主卡片容器 */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-          {/* 顶部进度指示器和显示选项按钮 */}
-          <div className="flex justify-between items-center mb-6">
-            {/* 当前字母进度 */}
-            <span className="text-sm text-gray-500">
-              {currentIndex + 1} / {alphabet.length}
-            </span>
-            {/* 显示选项切换按钮组 */}
-            <div className="flex gap-2 flex-wrap">
-              <CircleToggleButton
-                selected={showLetter}
-                onClick={() => setShowLetter(!showLetter)}
-              >
-                {t("letter")}
-              </CircleToggleButton>
-              {/* IPA 音标显示切换 */}
-              <CircleToggleButton
-                selected={showIPA}
-                onClick={() => setShowIPA(!showIPA)}
-              >
-                IPA
-              </CircleToggleButton>
-              {/* 罗马音显示切换（仅日语显示） */}
-              {hasRomanization && (
-                <CircleToggleButton
-                  selected={showRoman}
-                  onClick={() => setShowRoman(!showRoman)}
-                >
-                  {t("roman")}
-                </CircleToggleButton>
-              )}
-              {/* 随机模式切换 */}
-              <CircleToggleButton
-                selected={isRandomMode}
-                onClick={() => setIsRandomMode(!isRandomMode)}
-              >
-                {t("random")}
-              </CircleToggleButton>
+        {/* 字母主要内容显示区域 */}
+        <div className="text-center mb-8">
+          {/* 字母本身（可隐藏） */}
+          {showLetter ? (
+            <div className="text-6xl md:text-8xl font-bold text-gray-800 mb-4">
+              {currentLetter.letter}
             </div>
-          </div>
-
-          {/* 字母主要内容显示区域 */}
-          <div className="text-center mb-8">
-            {/* 字母本身（可隐藏） */}
-            {showLetter ? (
-              <div className="text-6xl md:text-8xl font-bold text-gray-800 mb-4">
-                {currentLetter.letter}
-              </div>
-            ) : (
-              <div className="text-6xl md:text-8xl font-bold text-gray-300 mb-4 h-20 md:h-24 flex items-center justify-center">
-                <span className="text-2xl md:text-3xl text-gray-400">?</span>
-              </div>
-            )}
-
-            {/* IPA 音标显示 */}
-            {showIPA && (
-              <div className="text-2xl md:text-3xl text-gray-600 mb-2">
-                {currentLetter.letter_sound_ipa}
-              </div>
-            )}
-
-            {/* 罗马音显示（日语） */}
-            {showRoman && hasRomanization && currentLetter.roman_letter && (
-              <div className="text-lg md:text-xl text-gray-500">
-                {currentLetter.roman_letter}
-              </div>
-            )}
-          </div>
-
-          {/* 底部导航控制区域 */}
-          <div className="flex justify-between items-center">
-            {/* 上一个按钮 */}
-            <CircleButton onClick={goToPrevious} aria-label="上一个字母">
-              <ChevronLeft size={24} />
-            </CircleButton>
-
-            {/* 中间区域：随机按钮 */}
-            <div className="flex gap-2 items-center">
-              {isRandomMode && (
-                <button
-                  onClick={goToRandom}
-                  className="px-4 py-2 rounded-full bg-[#35786f] text-white text-sm font-medium hover:bg-[#2d5f58] transition-colors"
-                >
-                  {t("randomNext")}
-                </button>
-              )}
+          ) : (
+            <div className="text-6xl md:text-8xl font-bold text-gray-300 mb-4 h-20 md:h-24 flex items-center justify-center">
+              <span className="text-2xl md:text-3xl text-gray-400">?</span>
             </div>
+          )}
 
-            {/* 下一个按钮 */}
-            <CircleButton onClick={goToNext} aria-label="下一个字母">
-              <ChevronRight size={24} />
-            </CircleButton>
+          {/* IPA 音标显示 */}
+          {showIPA && (
+            <div className="text-2xl md:text-3xl text-gray-600 mb-2">
+              {currentLetter.letter_sound_ipa}
+            </div>
+          )}
+
+          {/* 罗马音显示（日语） */}
+          {showRoman && hasRomanization && currentLetter.roman_letter && (
+            <div className="text-lg md:text-xl text-gray-500">
+              {currentLetter.roman_letter}
+            </div>
+          )}
+        </div>
+
+        {/* 底部导航控制区域 */}
+        <div className="flex justify-between items-center">
+          {/* 上一个按钮 */}
+          <CircleButton onClick={goToPrevious} aria-label="上一个字母">
+            <ChevronLeft size={24} />
+          </CircleButton>
+
+          {/* 中间区域：随机按钮 */}
+          <div className="flex gap-2 items-center">
+            {isRandomMode && (
+              <button
+                onClick={goToRandom}
+                className="px-4 py-2 rounded-full bg-[#35786f] text-white text-sm font-medium hover:bg-[#2d5f58] transition-colors"
+              >
+                {t("randomNext")}
+              </button>
+            )}
           </div>
-        </div>
 
-        {/* 底部操作提示文字 */}
-        <div className="text-center mt-6 text-white text-sm">
-          <p>
-            {isRandomMode
-              ? "使用左右箭头键或空格键随机切换字母，ESC键返回"
-              : "使用左右箭头键或滑动切换字母，ESC键返回"
-            }
-          </p>
+          {/* 下一个按钮 */}
+          <CircleButton onClick={goToNext} aria-label="下一个字母">
+            <ChevronRight size={24} />
+          </CircleButton>
         </div>
+      </Card>
+
+      {/* 底部操作提示文字 */}
+      <div className="text-center mt-6 text-white text-sm">
+        <p>
+          {isRandomMode
+            ? "使用左右箭头键或空格键随机切换字母，ESC键返回"
+            : "使用左右箭头键或滑动切换字母，ESC键返回"
+          }
+        </p>
       </div>
 
       {/* 全屏触摸事件监听层（用于滑动切换） */}
@@ -224,6 +224,6 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       />
-    </div>
+    </PageLayout>
   );
 }

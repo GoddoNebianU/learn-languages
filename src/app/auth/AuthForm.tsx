@@ -2,7 +2,7 @@
 
 import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Container } from "@/components/ui/Container";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { Input } from "@/components/ui/Input";
 import { LightButton, LinkButton } from "@/components/ui/buttons";
 import { authClient } from "@/lib/auth-client";
@@ -125,8 +125,7 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
   const currentError = mode === 'signin' ? signInState : signUpState;
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4">
-      <Container className="p-8 max-w-md w-full">
+    <PageLayout>
         {/* 页面标题 */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">{t(mode === 'signin' ? 'signIn' : 'signUp')}</h1>
@@ -281,7 +280,6 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
             }
           </LinkButton>
         </div>
-      </Container>
-    </div>
+    </PageLayout>
   );
 }

@@ -31,6 +31,8 @@ export { Container } from './Container';
 export { PageLayout } from './PageLayout';
 export { PageHeader } from './PageHeader';
 export { CardList } from './CardList';
+export { Card } from './Card';
+export type { CardProps, CardVariant, CardPadding } from './Card';
 
 // 复合组件
 export { LocaleSelector } from './LocaleSelector';

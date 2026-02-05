@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Container } from "@/components/ui/Container";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
 import { notFound } from "next/navigation";
@@ -36,10 +36,9 @@ export default async function UserPage({ params }: UserPageProps) {
     const isOwnProfile = session?.user?.username === username || session?.user?.email === username;
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-gray-50 py-8">
-            <Container className="max-w-3xl mx-auto">
-                {/* Header */}
-                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <PageLayout>
+            {/* Header */}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div></div>
                         {isOwnProfile && <LogoutButton />}
@@ -191,7 +190,6 @@ export default async function UserPage({ params }: UserPageProps) {
                         </div>
                     )}
                 </div>
-            </Container>
-        </div>
+        </PageLayout>
     );
 }

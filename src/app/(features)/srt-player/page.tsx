@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Video, FileText } from "lucide-react";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { useSrtPlayer } from "./hooks/useSrtPlayer";
 import { useSubtitleSync } from "./hooks/useSubtitleSync";
 import { useKeyboardShortcuts, createSrtPlayerShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -106,23 +107,19 @@ export default function SrtPlayerPage() {
   const canPlay = state.video.url && state.subtitle.url && state.subtitle.data.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          {/* 标题区域 */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              {t("srtPlayer.name")}
-            </h1>
-            <p className="text-lg text-gray-600">
-              {t("srtPlayer.description")}
-            </p>
-          </div>
+    <PageLayout>
+      {/* 标题区域 */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          {t("srtPlayer.name")}
+        </h1>
+        <p className="text-lg text-gray-600">
+          {t("srtPlayer.description")}
+        </p>
+      </div>
 
-          {/* 主要内容区域 */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            {/* 视频播放器区域 */}
-            <div className="aspect-video bg-black relative">
+      {/* 视频播放器区域 */}
+      <div className="aspect-video bg-black relative rounded-xl overflow-hidden">
               {(!state.video.url || !state.subtitle.url || state.subtitle.data.length === 0) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-10">
                   <div className="text-center text-white">
@@ -163,10 +160,10 @@ export default function SrtPlayerPage() {
               )}
             </div>
 
-            {/* 控制面板 */}
-            <div className="p-3 bg-gray-50 border-t">
-              {/* 上传区域和状态指示器 */}
-              <div className="mb-3">
+      {/* 控制面板 */}
+      <div className="p-3 bg-gray-50 border-t rounded-b-xl">
+        {/* 上传区域和状态指示器 */}
+        <div className="mb-3">
                 <div className="flex gap-3">
                   <div className={`flex-1 p-2 rounded-lg border-2 transition-all ${state.video.url
                     ? 'border-gray-800 bg-gray-100'
@@ -269,12 +266,9 @@ export default function SrtPlayerPage() {
                       </span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

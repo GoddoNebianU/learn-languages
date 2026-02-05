@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import localFont from "next/font/local";
 import { isNonNegativeInteger, SeededRandom } from "@/utils/random";
 import { TSharedPair } from "@/shared/folder-type";
+import { PageLayout } from "@/components/ui/PageLayout";
 
 const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
@@ -28,11 +29,9 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
 
   if (textPairs.length === 0) {
     return (
-      <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-          <p className="text-gray-700">{t("noTextPairs")}</p>
-        </div>
-      </div>
+      <PageLayout maxWidth="md">
+        <p className="text-gray-700 text-center">{t("noTextPairs")}</p>
+      </PageLayout>
     );
   }
 
@@ -113,87 +112,83 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
     : [getTextPairs()[index].text1, getTextPairs()[index].text2];
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#35786f] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-          {/* 进度指示器 */}
-          <div className="flex justify-center mb-4">
-            <LinkButton onClick={handleIndexClick} className="text-sm">
-              {index + 1} / {getTextPairs().length}
-            </LinkButton>
-          </div>
-
-          {/* 文本显示区域 */}
-          <div className={`h-[40dvh] ${myFont.className} mb-4`}>
-            {(() => {
-              if (dictation) {
-                if (show === "question") {
-                  return (
-                    <div className="h-full flex items-center justify-center">
-                      <div className="text-gray-400 text-4xl">?</div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div className="space-y-2">
-                      {createText(text1)}
-                      <div className="border-t border-gray-200"></div>
-                      {createText(text2)}
-                    </div>
-                  );
-                }
-              } else {
-                if (show === "question") {
-                  return createText(text1);
-                } else {
-                  return (
-                    <div className="space-y-2">
-                      {createText(text1)}
-                      <div className="border-t border-gray-200"></div>
-                      {createText(text2)}
-                    </div>
-                  );
-                }
-              }
-            })()}
-          </div>
-
-          {/* 底部按钮 */}
-          <div className="flex flex-row gap-2 items-center justify-center flex-wrap">
-            <LightButton
-              onClick={handleNext}
-              className="px-4 py-2 rounded-full text-sm"
-            >
-              {show === "question" ? t("answer") : t("next")}
-            </LightButton>
-            <LightButton
-              onClick={handlePrevious}
-              className="px-4 py-2 rounded-full text-sm"
-            >
-              {t("previous")}
-            </LightButton>
-            <CircleToggleButton
-              selected={reverse}
-              onClick={toggleReverse}
-            >
-              {t("reverse")}
-            </CircleToggleButton>
-            <CircleToggleButton
-              selected={dictation}
-              onClick={toggleDictation}
-            >
-              {t("dictation")}
-            </CircleToggleButton>
-            <CircleToggleButton
-              selected={disorder}
-              onClick={toggleDisorder}
-            >
-              {t("disorder")}
-            </CircleToggleButton>
-          </div>
-        </div>
+    <PageLayout>
+      {/* 进度指示器 */}
+      <div className="flex justify-center mb-4">
+        <LinkButton onClick={handleIndexClick} className="text-sm">
+          {index + 1} / {getTextPairs().length}
+        </LinkButton>
       </div>
-    </div>
+
+      {/* 文本显示区域 */}
+      <div className={`h-[40dvh] ${myFont.className} mb-4`}>
+        {(() => {
+          if (dictation) {
+            if (show === "question") {
+              return (
+                <div className="h-full flex items-center justify-center">
+                  <div className="text-gray-400 text-4xl">?</div>
+                </div>
+              );
+            } else {
+              return (
+                <div className="space-y-2">
+                  {createText(text1)}
+                  <div className="border-t border-gray-200"></div>
+                  {createText(text2)}
+                </div>
+              );
+            }
+          } else {
+            if (show === "question") {
+              return createText(text1);
+            } else {
+              return (
+                <div className="space-y-2">
+                  {createText(text1)}
+                  <div className="border-t border-gray-200"></div>
+                  {createText(text2)}
+                </div>
+              );
+            }
+          }
+        })()}
+      </div>
+
+      {/* 底部按钮 */}
+      <div className="flex flex-row gap-2 items-center justify-center flex-wrap">
+        <LightButton
+          onClick={handleNext}
+          className="px-4 py-2 rounded-full text-sm"
+        >
+          {show === "question" ? t("answer") : t("next")}
+        </LightButton>
+        <LightButton
+          onClick={handlePrevious}
+          className="px-4 py-2 rounded-full text-sm"
+        >
+          {t("previous")}
+        </LightButton>
+        <CircleToggleButton
+          selected={reverse}
+          onClick={toggleReverse}
+        >
+          {t("reverse")}
+        </CircleToggleButton>
+        <CircleToggleButton
+          selected={dictation}
+          onClick={toggleDictation}
+        >
+          {t("dictation")}
+        </CircleToggleButton>
+        <CircleToggleButton
+          selected={disorder}
+          onClick={toggleDisorder}
+        >
+          {t("disorder")}
+        </CircleToggleButton>
+      </div>
+    </PageLayout>
   );
 };
 

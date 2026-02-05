@@ -1,4 +1,4 @@
-import { Container } from "@/components/ui/Container";
+import { PageLayout } from "@/components/ui/PageLayout";
 import { SearchForm } from "./SearchForm";
 import { SearchResult } from "./SearchResult";
 import { getTranslations } from "next-intl/server";
@@ -43,37 +43,33 @@ export default async function DictionaryPage({ searchParams }: DictionaryPagePro
     }
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-[#35786f]">
+        <PageLayout>
             {/* 搜索区域 */}
-            <div className="flex items-center justify-center px-4 py-12">
-                <Container className="max-w-3xl w-full p-4">
-                    <SearchForm
-                        defaultQueryLang={queryLang}
-                        defaultDefinitionLang={definitionLang}
-                    />
-                </Container>
+            <div className="mb-8">
+                <SearchForm
+                    defaultQueryLang={queryLang}
+                    defaultDefinitionLang={definitionLang}
+                />
             </div>
 
             {/* 搜索结果区域 */}
-            <div className="flex-1 px-4 pb-12">
-                <Container className="max-w-3xl w-full p-4">
-                    {searchQuery && (
-                        <SearchResult
-                            searchResult={searchResult}
-                            searchQuery={searchQuery}
-                            queryLang={queryLang}
-                            definitionLang={definitionLang}
-                        />
-                    )}
-                    {!searchQuery && (
-                        <div className="text-center py-12 bg-white/20 rounded-lg">
-                            <div className="text-6xl mb-4">📚</div>
-                            <p className="text-gray-800 text-xl mb-2">{t("welcomeTitle")}</p>
-                            <p className="text-gray-600">{t("welcomeHint")}</p>
-                        </div>
-                    )}
-                </Container>
+            <div>
+                {searchQuery && (
+                    <SearchResult
+                        searchResult={searchResult}
+                        searchQuery={searchQuery}
+                        queryLang={queryLang}
+                        definitionLang={definitionLang}
+                    />
+                )}
+                {!searchQuery && (
+                    <div className="text-center py-12">
+                        <div className="text-6xl mb-4">📚</div>
+                        <p className="text-gray-800 text-xl mb-2">{t("welcomeTitle")}</p>
+                        <p className="text-gray-600">{t("welcomeHint")}</p>
+                    </div>
+                )}
             </div>
-        </div>
+        </PageLayout>
     );
 }
