@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,29 +9,27 @@ datasource db {
 
 model User {
   id                   String               @id
-  email                String
+  name                 String
+  email                String               @unique
   emailVerified        Boolean              @default(false)
   image                String?
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
-  sessions             Session[]
+  displayUsername      String?
+  username             String?              @unique
   accounts             Account[]
-  folders              Folder[]
   dictionaryLookUps    DictionaryLookUp[]
+  folders              Folder[]
+  sessions             Session[]
   translationHistories TranslationHistory[]
 
-  username        String?
-  displayUsername String?
-
-  @@unique([email])
   @@map("user")
-  @@unique([username])
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
@@ -40,7 +37,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -50,7 +46,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -60,6 +55,7 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -79,17 +75,16 @@ model Verification {
 
 model Pair {
   id        Int      @id @default(autoincrement())
-  text1     String
-  text2     String
   language1 String
   language2 String
+  text1     String
+  text2     String
   ipa1      String?
   ipa2      String?
   folderId  Int      @map("folder_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
   @@unique([folderId, language1, language2, text1, text2])
   @@index([folderId])
@@ -102,26 +97,24 @@ model Folder {
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pairs Pair[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pairs     Pair[]
 
   @@index([userId])
   @@map("folders")
 }
 
 model DictionaryLookUp {
-  id               Int      @id @default(autoincrement())
-  userId           String?  @map("user_id")
+  id               Int             @id @default(autoincrement())
+  userId           String?         @map("user_id")
   text             String
-  normalizedText   String   @default("") @map("normalized_text")
-  queryLang        String   @map("query_lang")
-  definitionLang   String   @map("definition_lang")
-  createdAt        DateTime @default(now()) @map("created_at")
-  dictionaryItemId Int?     @map("dictionary_item_id")
-
-  user           User?           @relation(fields: [userId], references: [id])
-  dictionaryItem DictionaryItem? @relation(fields: [dictionaryItemId], references: [id], onDelete: SetNull)
+  queryLang        String          @map("query_lang")
+  definitionLang   String          @map("definition_lang")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  dictionaryItemId Int?            @map("dictionary_item_id")
+  normalizedText   String          @default("") @map("normalized_text")
+  dictionaryItem   DictionaryItem? @relation(fields: [dictionaryItemId], references: [id])
+  user             User?           @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -130,16 +123,15 @@ model DictionaryLookUp {
 }
 
 model DictionaryItem {
-  id             Int      @id @default(autoincrement())
-  frequency      Int      @default(1)
-  standardForm   String   @map("standard_form")
-  queryLang      String   @map("query_lang")
-  definitionLang String   @map("definition_lang")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  lookups DictionaryLookUp[]
-  entries DictionaryEntry[]
+  id             Int                @id @default(autoincrement())
+  frequency      Int                @default(1)
+  standardForm   String             @map("standard_form")
+  queryLang      String             @map("query_lang")
+  definitionLang String             @map("definition_lang")
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+  entries        DictionaryEntry[]
+  lookups        DictionaryLookUp[]
 
   @@unique([standardForm, queryLang, definitionLang])
   @@index([standardForm])
@@ -148,16 +140,15 @@ model DictionaryItem {
 }
 
 model DictionaryEntry {
-  id           Int      @id @default(autoincrement())
-  itemId       Int      @map("item_id")
+  id           Int            @id @default(autoincrement())
+  itemId       Int            @map("item_id")
   ipa          String?
   definition   String
-  partOfSpeech String?  @map("part_of_speech")
+  partOfSpeech String?        @map("part_of_speech")
   example      String
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  item DictionaryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  item         DictionaryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@index([itemId])
   @@index([createdAt])
@@ -175,8 +166,7 @@ model TranslationHistory {
   targetIpa      String?  @map("target_ipa")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user           User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])

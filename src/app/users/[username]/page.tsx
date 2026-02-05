@@ -3,6 +3,9 @@ import { Container } from "@/components/ui/Container";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { LogoutButton } from "@/app/users/[username]/LogoutButton";
 
 interface UserPageProps {
     params: Promise<{ username: string; }>;
@@ -11,6 +14,9 @@ interface UserPageProps {
 export default async function UserPage({ params }: UserPageProps) {
     const { username } = await params;
     const t = await getTranslations("user_profile");
+
+    // Get current session
+    const session = await auth.api.getSession({ headers: await headers() });
 
     // Get user profile
     const result = await actionGetUserProfileByUsername({ username });
@@ -21,11 +27,18 @@ export default async function UserPage({ params }: UserPageProps) {
 
     const user = result.data;
 
+    // Check if viewing own profile
+    const isOwnProfile = session?.user?.username === username || session?.user?.email === username;
+
     return (
         <div className="min-h-[calc(100vh-64px)] bg-gray-50 py-8">
             <Container className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div></div>
+                        {isOwnProfile && <LogoutButton />}
+                    </div>
                     <div className="flex items-center space-x-6">
                         {/* Avatar */}
                         {user.image ? (
