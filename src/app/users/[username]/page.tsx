@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
+import { LinkButton } from "@/components/ui/buttons";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
 import { notFound } from "next/navigation";
@@ -176,11 +177,10 @@ export default async function UserPage({ params }: UserPageProps) {
                                                 {new Date(folder.createdAt).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <Link
-                                                    href={`/folders/${folder.id}`}
-                                                    className="text-[#35786f] hover:text-[#2a5f58]"
-                                                >
-                                                    {t("folders.view")}
+                                                <Link href={`/folders/${folder.id}`}>
+                                                    <LinkButton>
+                                                        {t("folders.view")}
+                                                    </LinkButton>
                                                 </Link>
                                             </td>
                                         </tr>

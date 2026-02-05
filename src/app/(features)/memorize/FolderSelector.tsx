@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Folder as Fd } from "lucide-react";
 import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 import { PageLayout } from "@/components/ui/PageLayout";
+import { PrimaryButton } from "@/components/ui/buttons";
 
 interface FolderSelectorProps {
   folders: TSharedFolderWithTotalPairs[];
@@ -23,11 +24,10 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
             {t("noFolders")}
           </h1>
-          <Link
-            className="inline-block px-6 py-2 bg-[#35786f] text-white rounded-full hover:bg-[#2d5f58] transition-colors"
-            href="/folders"
-          >
-            Go to Folders
+          <Link href="/folders">
+            <PrimaryButton className="px-6 py-2">
+              Go to Folders
+            </PrimaryButton>
           </Link>
         </div>
       ) : (
