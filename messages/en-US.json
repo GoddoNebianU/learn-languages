@@ -242,6 +242,15 @@
     "username": "Username",
     "displayName": "Display Name",
     "notSet": "Not Set",
-    "memberSince": "Member Since"
+    "memberSince": "Member Since",
+    "folders": {
+      "title": "Folders",
+      "noFolders": "No folders yet",
+      "folderName": "Folder Name",
+      "totalPairs": "Total Pairs",
+      "createdAt": "Created At",
+      "actions": "Actions",
+      "view": "View"
+    }
   }
 }

@@ -87,12 +87,16 @@ export async function repoGetFoldersWithTotalPairsByUserId(userId: string) {
         select: { pairs: true },
       },
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
   return folders.map(folder => ({
     id: folder.id,
     name: folder.name,
     userId: folder.userId,
     total: folder._count?.pairs ?? 0,
+    createdAt: folder.createdAt,
   }));
 }
 

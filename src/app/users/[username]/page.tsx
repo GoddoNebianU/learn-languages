@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
+import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
@@ -26,6 +28,9 @@ export default async function UserPage({ params }: UserPageProps) {
     }
 
     const user = result.data;
+
+    // Get user's folders
+    const folders = await repoGetFoldersWithTotalPairsByUserId(user.id);
 
     // Check if viewing own profile
     const isOwnProfile = session?.user?.username === username || session?.user?.email === username;
@@ -106,7 +111,7 @@ export default async function UserPage({ params }: UserPageProps) {
                 </div>
 
                 {/* Account Info */}
-                <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">{t("accountInfo")}</h2>
                     <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
@@ -132,6 +137,59 @@ export default async function UserPage({ params }: UserPageProps) {
                             </dd>
                         </div>
                     </dl>
+                </div>
+
+                {/* Folders Section */}
+                <div className="bg-white rounded-lg shadow-md p-6">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">{t("folders.title")}</h2>
+                    {folders.length === 0 ? (
+                        <p className="text-gray-500 text-center py-8">{t("folders.noFolders")}</p>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            {t("folders.folderName")}
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            {t("folders.totalPairs")}
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            {t("folders.createdAt")}
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            {t("folders.actions")}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {folders.map((folder) => (
+                                        <tr key={folder.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm font-medium text-gray-900">{folder.name}</div>
+                                                <div className="text-sm text-gray-500">ID: {folder.id}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-900">{folder.total}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {new Date(folder.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <Link
+                                                    href={`/folders/${folder.id}`}
+                                                    className="text-[#35786f] hover:text-[#2a5f58]"
+                                                >
+                                                    {t("folders.view")}
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </Container>
         </div>
