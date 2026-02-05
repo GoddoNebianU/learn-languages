@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { Input } from "@/components/ui/Input";
+import { Select, Option } from "@/components/ui/Select";
 
 const COMMON_LANGUAGES = [
   { label: "chinese", value: "chinese" },
@@ -47,24 +49,24 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
 
   return (
     <div>
-      <select
+      <Select
         value={isCommonLanguage ? value : "other"}
-        onChange={(e) => handleSelectChange(e.target.value)}
-        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#35786f]"
+        onChange={handleSelectChange}
       >
         {COMMON_LANGUAGES.map((lang) => (
-          <option key={lang.value} value={lang.value}>
+          <Option key={lang.value} value={lang.value}>
             {t(`translator.${lang.label}`)}
-          </option>
+          </Option>
         ))}
-      </select>
+      </Select>
       {showCustomInput && (
-        <input
+        <Input
           type="text"
           value={inputValue}
           onChange={(e) => handleCustomInputChange(e.target.value)}
           placeholder={t("folder_id.enterLanguageName")}
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#35786f] mt-2"
+          variant="bordered"
+          className="mt-2"
         />
       )}
     </div>

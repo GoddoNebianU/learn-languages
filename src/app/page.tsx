@@ -13,7 +13,7 @@ function LinkArea({ href, name, description, color }: LinkAreaProps) {
     <Link
       href={href}
       style={{ backgroundColor: color }}
-      className={`h-32 md:h-64 flex md:justify-center items-center`}
+      className={`hover:scale-105 transition-transform duration-200 h-32 md:h-64 flex md:justify-center items-center`}
     >
       <div className="text-white m-8">
         <h1 className="md:text-4xl text-3xl">{name}</h1>

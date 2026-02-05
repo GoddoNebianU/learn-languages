@@ -1,6 +1,7 @@
 import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import { SubtitleDisplay } from "./SubtitleDisplay";
 import { LightButton } from "@/components/ui/buttons";
+import { RangeInput } from "@/components/ui/RangeInput";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
 import { useTranslations } from "next-intl";
 
@@ -196,15 +197,18 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(
             {t("autoPause", { enabled: autoPause ? "Yes" : "No" })}
           </LightButton>
         </div>
-        <input
+        <RangeInput
           className="seekbar"
-          type="range"
           min={0}
           max={srtLength}
-          onChange={handleSeek}
-          step={1}
+          onChange={(value) => {
+            if (videoRef.current && parsedSrtRef.current) {
+              videoRef.current.currentTime = parsedSrtRef.current[value]?.start || 0;
+              setProgress(value);
+            }
+          }}
           value={progress}
-        ></input>
+        />
         <span>{spanText}</span>
       </div>
     );

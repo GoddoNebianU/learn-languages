@@ -1,6 +1,7 @@
 "use client";
 
 import { LightButton } from "@/components/ui/buttons";
+import { Input } from "@/components/ui/Input";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -47,12 +48,12 @@ export function SearchForm({ defaultQueryLang = "english", defaultDefinitionLang
 
             {/* 搜索表单 */}
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-                <input
+                <Input
                     type="text"
                     name="searchQuery"
                     defaultValue=""
                     placeholder={t("searchPlaceholder")}
-                    className="flex-1 min-w-0 px-4 py-3 text-lg text-gray-800 focus:outline-none border-b-2 border-gray-600 bg-white/90 rounded"
+                    variant="search"
                     required
                 />
                 <LightButton

@@ -7,7 +7,7 @@ import { AddTextPairModal } from "./AddTextPairModal";
 import { TextPairCard } from "./TextPairCard";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { GreenButton, IconButton, LinkButton } from "@/components/ui/buttons";
+import { PrimaryButton, IconButton, LinkButton } from "@/components/ui/buttons";
 import { CardList } from "@/components/ui/CardList";
 import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 import { TSharedPair } from "@/shared/folder-type";
@@ -73,13 +73,13 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
 
           {/* 操作按钮区域 */}
           <div className="flex items-center gap-2">
-            <GreenButton
+            <PrimaryButton
               onClick={() => {
                 redirect(`/memorize?folder_id=${folderId}`);
               }}
             >
               {t("memorize")}
-            </GreenButton>
+            </PrimaryButton>
             {!isReadOnly && (
               <IconButton
                 onClick={() => {
