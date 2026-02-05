@@ -4,7 +4,7 @@ import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { Input } from "@/components/ui/Input";
-import { LightButton } from "@/components/ui/buttons";
+import { LightButton, LinkButton } from "@/components/ui/buttons";
 import { authClient } from "@/lib/auth-client";
 import { actionSignIn, actionSignUp, ActionOutputAuth } from "@/modules/auth/auth-action";
 
@@ -262,7 +262,7 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
 
         {/* 模式切换链接 */}
         <div className="mt-6 text-center">
-          <button
+          <LinkButton
             type="button"
             onClick={() => {
               setMode(mode === 'signin' ? 'signup' : 'signin');
@@ -274,13 +274,12 @@ export function AuthForm({ redirectTo }: AuthFormProps) {
                 setClearSignUp(true);
               }
             }}
-            className="text-[#35786f] hover:underline"
           >
             {mode === 'signin'
               ? `${t("noAccount")} ${t("signUp")}`
               : `${t("hasAccount")} ${t("signIn")}`
             }
-          </button>
+          </LinkButton>
         </div>
       </Container>
     </div>

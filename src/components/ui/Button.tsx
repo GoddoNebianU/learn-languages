@@ -3,9 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { COLORS } from "@/lib/theme/colors";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "icon";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "icon" | "circle" | "dashed" | "link";
 export type ButtonSize = "sm" | "md" | "lg";
 
 export interface ButtonProps {
@@ -70,6 +69,24 @@ export function Button({
     icon: `
       p-2 bg-gray-200 rounded-full
       hover:bg-gray-300
+    `,
+    circle: `
+      p-2 rounded-full
+      hover:bg-gray-200
+    `,
+    dashed: `
+      border-2 border-dashed border-gray-300
+      text-gray-500
+      hover:border-gray-400
+      hover:text-gray-600
+      bg-transparent
+      shadow-none
+    `,
+    link: `
+      text-[#35786f]
+      hover:underline
+      p-0
+      shadow-none
     `
   };
 

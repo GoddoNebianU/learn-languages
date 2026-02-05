@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { Button } from "@/components/ui/Button";
 import { FileInputProps } from "../../types/controls";
 
 interface FileInputComponentProps extends FileInputProps {
@@ -33,13 +34,15 @@ export function FileInput({ accept, onFileSelect, disabled, className, children 
         disabled={disabled}
         className="hidden"
       />
-      <button
+      <Button
         onClick={handleClick}
         disabled={disabled}
-        className={`px-2 py-1 rounded shadow font-bold hover:cursor-pointer hover:bg-gray-200 text-gray-800 bg-white ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className || ''}`}
+        variant="secondary"
+        size="sm"
+        className={className}
       >
         {children}
-      </button>
+      </Button>
     </>
   );
 }

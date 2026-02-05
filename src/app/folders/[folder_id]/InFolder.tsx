@@ -7,8 +7,7 @@ import { AddTextPairModal } from "./AddTextPairModal";
 import { TextPairCard } from "./TextPairCard";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { GreenButton } from "@/components/ui/buttons";
-import { IconButton } from "@/components/ui/buttons";
+import { GreenButton, IconButton, LinkButton } from "@/components/ui/buttons";
 import { CardList } from "@/components/ui/CardList";
 import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 import { TSharedPair } from "@/shared/folder-type";
@@ -52,13 +51,13 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
       {/* 顶部导航和标题栏 */}
       <div className="mb-6">
         {/* 返回按钮 */}
-        <button
+        <LinkButton
           onClick={router.back}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mb-4"
+          className="flex items-center gap-2 mb-4"
         >
           <ArrowLeft size={16} />
           <span className="text-sm">{t("back")}</span>
-        </button>
+        </LinkButton>
 
         {/* 页面标题和操作按钮 */}
         <div className="flex items-center justify-between">

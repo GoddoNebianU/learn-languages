@@ -7,6 +7,7 @@ import {
   FolderPlus,
   Trash2,
 } from "lucide-react";
+import { CircleButton, DashedButton } from "@/components/ui/buttons";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -51,8 +52,8 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <button
-          onClick={(e) => {
+        <CircleButton
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             const newName = prompt("Input a new name.")?.trim();
             if (newName && newName.length > 0) {
@@ -67,12 +68,11 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
                 });
             }
           }}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <FolderPen size={16} />
-        </button>
-        <button
-          onClick={(e) => {
+        </CircleButton>
+        <CircleButton
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             const confirm = prompt(t("confirmDelete", { name: folder.name }));
             if (confirm === folder.name) {
@@ -87,10 +87,10 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
                 });
             }
           }}
-          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
         >
           <Trash2 size={16} />
-        </button>
+        </CircleButton>
         <ChevronRight size={18} className="text-gray-400" />
       </div>
     </div>
@@ -135,7 +135,7 @@ export function FoldersClient({ userId }: { userId: string; }) {
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       {/* 新建文件夹按钮 */}
-      <button
+      <DashedButton
         onClick={async () => {
           const folderName = prompt(t("enterFolderName"));
           if (!folderName) return;
@@ -154,11 +154,11 @@ export function FoldersClient({ userId }: { userId: string; }) {
           }
         }}
         disabled={loading}
-        className="w-full p-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center gap-2"
+        className="w-full"
       >
         <FolderPlus size={18} />
         <span>{loading ? t("creating") : t("newFolder")}</span>
-      </button>
+      </DashedButton>
 
       {/* 文件夹列表 */}
       <div className="mt-4">

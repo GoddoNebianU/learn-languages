@@ -1,5 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { CircleButton } from "@/components/ui/buttons";
 import { UpdateTextPairModal } from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
 import { TSharedPair } from "@/shared/folder-type";
@@ -39,20 +40,20 @@ export function TextPairCard({
           <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
             {!isReadOnly && (
               <>
-                <button
-                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                <CircleButton
                   onClick={() => setOpenUpdateModal(true)}
                   title={t("edit")}
+                  className="text-gray-400 hover:text-gray-600"
                 >
                   <Edit size={14} />
-                </button>
-                <button
-                  className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                </CircleButton>
+                <CircleButton
                   onClick={onDel}
                   title={t("delete")}
+                  className="text-gray-400 hover:text-red-500 hover:bg-red-50"
                 >
                   <Trash2 size={14} />
-                </button>
+                </CircleButton>
               </>
             )}
           </div>

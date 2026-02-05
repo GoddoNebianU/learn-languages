@@ -54,3 +54,32 @@ export const IconClick = (props: any) => {
 
 // PlainButton: 基础小按钮
 export const PlainButton = (props: any) => <Button variant="secondary" size="sm" {...props} />;
+
+// CircleButton: 圆形导航按钮
+export const CircleButton = (props: any) => {
+  const { icon, className, ...rest } = props;
+  return <Button variant="circle" leftIcon={icon} className={className} {...rest} />;
+};
+
+// DashedButton: 虚线边框按钮
+export const DashedButton = (props: any) => <Button variant="dashed" {...props} />;
+
+// LinkButton: 链接样式按钮
+export const LinkButton = (props: any) => <Button variant="link" {...props} />;
+
+// CircleToggleButton: 圆形切换按钮（支持 selected 状态）
+export const CircleToggleButton = (props: any) => {
+  const { selected, className, children, ...rest } = props;
+  const selectedClass = selected
+    ? "bg-[#35786f] text-white"
+    : "bg-gray-200 text-gray-600 hover:bg-gray-300";
+  return (
+    <Button
+      variant="circle"
+      className={`rounded-full px-3 py-1 text-sm transition-colors ${selectedClass} ${className || ""}`}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+};

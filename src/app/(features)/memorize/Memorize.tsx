@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LinkButton, CircleToggleButton, LightButton } from "@/components/ui/buttons";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { useTranslations } from "next-intl";
@@ -117,12 +118,9 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
           {/* 进度指示器 */}
           <div className="flex justify-center mb-4">
-            <button
-              onClick={handleIndexClick}
-              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            >
+            <LinkButton onClick={handleIndexClick} className="text-sm">
               {index + 1} / {getTextPairs().length}
-            </button>
+            </LinkButton>
           </div>
 
           {/* 文本显示区域 */}
@@ -162,45 +160,36 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
 
           {/* 底部按钮 */}
           <div className="flex flex-row gap-2 items-center justify-center flex-wrap">
-            <button
+            <LightButton
               onClick={handleNext}
-              className="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors text-sm"
+              className="px-4 py-2 rounded-full text-sm"
             >
               {show === "question" ? t("answer") : t("next")}
-            </button>
-            <button
+            </LightButton>
+            <LightButton
               onClick={handlePrevious}
-              className="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors text-sm"
+              className="px-4 py-2 rounded-full text-sm"
             >
               {t("previous")}
-            </button>
-            <button
+            </LightButton>
+            <CircleToggleButton
+              selected={reverse}
               onClick={toggleReverse}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${reverse
-                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
             >
               {t("reverse")}
-            </button>
-            <button
+            </CircleToggleButton>
+            <CircleToggleButton
+              selected={dictation}
               onClick={toggleDictation}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${dictation
-                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
             >
               {t("dictation")}
-            </button>
-            <button
+            </CircleToggleButton>
+            <CircleToggleButton
+              selected={disorder}
               onClick={toggleDisorder}
-              className={`px-4 py-2 rounded-full transition-colors text-sm ${disorder
-                ? "bg-[#35786f] text-white hover:bg-[#2d5f58]"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
             >
               {t("disorder")}
-            </button>
+            </CircleToggleButton>
           </div>
         </div>
       </div>

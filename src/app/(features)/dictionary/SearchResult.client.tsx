@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus, RefreshCw } from "lucide-react";
+import { CircleButton, LightButton } from "@/components/ui/buttons";
 import { toast } from "sonner";
 import { actionCreatePair } from "@/modules/folder/folder-aciton";
 import { TSharedItem } from "@/shared/dictionary-type";
@@ -61,13 +62,13 @@ export function SaveButtonClient({ session, folders, searchResult, queryLang, de
     };
 
     return (
-        <button
+        <CircleButton
             onClick={handleSave}
-            className="hover:bg-gray-200 hover:cursor-pointer rounded-4xl border border-gray-200 w-10 h-10 flex justify-center items-center shrink-0"
+            className="w-10 h-10 shrink-0"
             title="Save to folder"
         >
             <Plus />
-        </button>
+        </CircleButton>
     );
 }
 
@@ -110,12 +111,12 @@ export function ReLookupButtonClient({ searchQuery, queryLang, definitionLang }:
     };
 
     return (
-        <button
+        <LightButton
             onClick={handleRelookup}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm"
+            leftIcon={<RefreshCw className="w-4 h-4" />}
         >
-            <RefreshCw className="w-4 h-4" />
             Re-lookup
-        </button>
+        </LightButton>
     );
 }

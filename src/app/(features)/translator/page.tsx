@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton } from "@/components/ui/buttons";
+import { LightButton, GreenButton } from "@/components/ui/buttons";
 import { IconClick } from "@/components/ui/buttons";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -210,12 +210,13 @@ export default function TranslatorPage() {
 
       {/* TranslateButton Component */}
       <div className="w-screen flex justify-center items-center">
-        <button
-          className={`duration-150 ease-in text-xl font-extrabold border rounded-4xl p-3 border-gray-200 h-16 ${processing ? "bg-gray-200" : "bg-white hover:bg-gray-200 hover:cursor-pointer"}`}
+        <GreenButton
           onClick={translate}
+          disabled={processing}
+          className="text-xl h-16 px-8"
         >
           {t("translate")}
-        </button>
+        </GreenButton>
       </div>
     </>
   );
