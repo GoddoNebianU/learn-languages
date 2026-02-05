@@ -44,7 +44,15 @@
     "language2": "语言2",
     "enterLanguageName": "请输入语言名称",
     "edit": "编辑",
-    "delete": "删除"
+    "delete": "删除",
+    "permissionDenied": "您没有权限执行此操作",
+    "error": {
+      "update": "您没有权限更新此项目",
+      "delete": "您没有权限删除此项目",
+      "add": "您没有权限向此文件夹添加项目",
+      "rename": "您没有权限重命名此文件夹",
+      "deleteFolder": "您没有权限删除此文件夹"
+    }
   },
   "home": {
     "title": "学语言",

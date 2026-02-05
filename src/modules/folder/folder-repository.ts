@@ -122,3 +122,15 @@ export async function repoGetUserIdByFolderId(id: number) {
   });
   return folder?.userId;
 }
+
+export async function repoGetFolderIdByPairId(pairId: number) {
+  const pair = await prisma.pair.findUnique({
+    where: {
+      id: pairId,
+    },
+    select: {
+      folderId: true,
+    },
+  });
+  return pair?.folderId;
+}

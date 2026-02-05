@@ -44,7 +44,15 @@
     "language2": "Locale 2",
     "enterLanguageName": "Please enter language name",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "permissionDenied": "You do not have permission to perform this action",
+    "error": {
+      "update": "You do not have permission to update this item.",
+      "delete": "You do not have permission to delete this item.",
+      "add": "You do not have permission to add items to this folder.",
+      "rename": "You do not have permission to rename this folder.",
+      "deleteFolder": "You do not have permission to delete this folder."
+    }
   },
   "home": {
     "title": "Learn Languages",

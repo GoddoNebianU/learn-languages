@@ -4,6 +4,7 @@ import { InFolder } from "./InFolder";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { actionGetUserIdByFolderId } from "@/modules/folder/folder-aciton";
+
 export default async function FoldersPage({
   params,
 }: {
@@ -16,9 +17,11 @@ export default async function FoldersPage({
   if (!folder_id) {
     redirect("/folders");
   }
-  if (!session) redirect(`/auth?redirect=/folders/${folder_id}`);
-  if ((await actionGetUserIdByFolderId(Number(folder_id))).data !== session.user.id) {
-    return <p>{t("unauthorized")}</p>;
-  }
-  return <InFolder folderId={Number(folder_id)} />;
+
+  // Allow non-authenticated users to view folders (read-only mode)
+  const folderUserId = (await actionGetUserIdByFolderId(Number(folder_id))).data;
+  const isOwner = session?.user?.id === folderUserId;
+  const isReadOnly = !isOwner;
+
+  return <InFolder folderId={Number(folder_id)} isReadOnly={isReadOnly} />;
 }

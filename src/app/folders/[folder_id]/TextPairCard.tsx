@@ -9,12 +9,14 @@ import { toast } from "sonner";
 
 interface TextPairCardProps {
   textPair: TSharedPair;
+  isReadOnly: boolean;
   onDel: () => void;
   refreshTextPairs: () => void;
 }
 
 export function TextPairCard({
   textPair,
+  isReadOnly,
   onDel,
   refreshTextPairs,
 }: TextPairCardProps) {
@@ -35,20 +37,24 @@ export function TextPairCard({
           </div>
 
           <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-            <button
-              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
-              onClick={() => setOpenUpdateModal(true)}
-              title={t("edit")}
-            >
-              <Edit size={14} />
-            </button>
-            <button
-              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
-              onClick={onDel}
-              title={t("delete")}
-            >
-              <Trash2 size={14} />
-            </button>
+            {!isReadOnly && (
+              <>
+                <button
+                  className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                  onClick={() => setOpenUpdateModal(true)}
+                  title={t("edit")}
+                >
+                  <Edit size={14} />
+                </button>
+                <button
+                  className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                  onClick={onDel}
+                  title={t("delete")}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </>
+            )}
           </div>
         </div>
         <div className="text-gray-900 grid grid-cols-2 gap-4 w-3/4">

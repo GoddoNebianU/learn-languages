@@ -15,7 +15,7 @@ import { TSharedPair } from "@/shared/folder-type";
 import { toast } from "sonner";
 
 
-export function InFolder({ folderId }: { folderId: number; }) {
+export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnly: boolean; }) {
   const [textPairs, setTextPairs] = useState<TSharedPair[]>([]);
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
@@ -81,12 +81,14 @@ export function InFolder({ folderId }: { folderId: number; }) {
             >
               {t("memorize")}
             </GreenButton>
-            <IconButton
-              onClick={() => {
-                setAddModal(true);
-              }}
-              icon={<Plus size={18} className="text-gray-700" />}
-            />
+            {!isReadOnly && (
+              <IconButton
+                onClick={() => {
+                  setAddModal(true);
+                }}
+                icon={<Plus size={18} className="text-gray-700" />}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -113,6 +115,7 @@ export function InFolder({ folderId }: { folderId: number; }) {
                 <TextPairCard
                   key={textPair.id}
                   textPair={textPair}
+                  isReadOnly={isReadOnly}
                   onDel={() => {
                     actionDeletePairById(textPair.id)
                       .then(result => {
