@@ -44,7 +44,15 @@
     "language2": "Lingua 2",
     "enterLanguageName": "Inserisci il nome della lingua",
     "edit": "Modifica",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "permissionDenied": "Non hai il permesso di eseguire questa azione",
+    "error": {
+      "update": "Non hai il permesso di aggiornare questo elemento.",
+      "delete": "Non hai il permesso di eliminare questo elemento.",
+      "add": "Non hai il permesso di aggiungere elementi a questa cartella.",
+      "rename": "Non hai il permesso di rinominare questa cartella.",
+      "deleteFolder": "Non hai il permesso di eliminare questa cartella."
+    }
   },
   "home": {
     "title": "Impara le lingue",
@@ -225,5 +233,26 @@
     "pleaseCreateFolder": "Crea prima una cartella",
     "savedToFolder": "Salvato nella cartella: {folderName}",
     "saveFailed": "Salvataggio fallito, riprova più tardi"
+  },
+  "user_profile": {
+    "anonymous": "Anonimo",
+    "email": "Email",
+    "verified": "Verificato",
+    "unverified": "Non verificato",
+    "accountInfo": "Informazioni account",
+    "userId": "ID utente",
+    "username": "Nome utente",
+    "displayName": "Nome visualizzato",
+    "notSet": "Non impostato",
+    "memberSince": "Membro dal",
+    "folders": {
+      "title": "Cartelle",
+      "noFolders": "Nessuna cartella ancora",
+      "folderName": "Nome cartella",
+      "totalPairs": "Numero di coppie",
+      "createdAt": "Creato il",
+      "actions": "Azioni",
+      "view": "Visualizza"
+    }
   }
 }

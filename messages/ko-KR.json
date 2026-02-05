@@ -44,7 +44,15 @@
     "language2": "언어 2",
     "enterLanguageName": "언어 이름을 입력하세요",
     "edit": "편집",
-    "delete": "삭제"
+    "delete": "삭제",
+    "permissionDenied": "이 작업을 수행할 권한이 없습니다",
+    "error": {
+      "update": "이 항목을 업데이트할 권한이 없습니다.",
+      "delete": "이 항목을 삭제할 권한이 없습니다.",
+      "add": "이 폴더에 항목을 추가할 권한이 없습니다.",
+      "rename": "이 폴더 이름을 변경할 권한이 없습니다.",
+      "deleteFolder": "이 폴더를 삭제할 권한이 없습니다."
+    }
   },
   "home": {
     "title": "언어 학습",
@@ -225,5 +233,26 @@
     "pleaseCreateFolder": "먼저 폴더를 만드세요",
     "savedToFolder": "폴더에 저장됨: {folderName}",
     "saveFailed": "저장 실패, 나중에 다시 시도하세요"
+  },
+  "user_profile": {
+    "anonymous": "익명",
+    "email": "이메일",
+    "verified": "인증됨",
+    "unverified": "미인증",
+    "accountInfo": "계정 정보",
+    "userId": "사용자 ID",
+    "username": "사용자명",
+    "displayName": "표시 이름",
+    "notSet": "설정되지 않음",
+    "memberSince": "가입일",
+    "folders": {
+      "title": "폴더",
+      "noFolders": "폴더가 없습니다",
+      "folderName": "폴더 이름",
+      "totalPairs": "텍스트 쌍 수",
+      "createdAt": "생성일",
+      "actions": "작업",
+      "view": "보기"
+    }
   }
 }

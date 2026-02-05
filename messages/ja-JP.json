@@ -44,7 +44,15 @@
     "language2": "言語2",
     "enterLanguageName": "言語名を入力してください",
     "edit": "編集",
-    "delete": "削除"
+    "delete": "削除",
+    "permissionDenied": "この操作を実行する権限がありません",
+    "error": {
+      "update": "この項目を更新する権限がありません。",
+      "delete": "この項目を削除する権限がありません。",
+      "add": "このフォルダーに項目を追加する権限がありません。",
+      "rename": "このフォルダー名を変更する権限がありません。",
+      "deleteFolder": "このフォルダーを削除する権限がありません。"
+    }
   },
   "home": {
     "title": "言語を学ぶ",
@@ -225,5 +233,26 @@
     "pleaseCreateFolder": "まずフォルダを作成してください",
     "savedToFolder": "フォルダに保存しました：{folderName}",
     "saveFailed": "保存に失敗しました。後でもう一度お試しください"
+  },
+  "user_profile": {
+    "anonymous": "匿名",
+    "email": "メールアドレス",
+    "verified": "認証済み",
+    "unverified": "未認証",
+    "accountInfo": "アカウント情報",
+    "userId": "ユーザーID",
+    "username": "ユーザー名",
+    "displayName": "表示名",
+    "notSet": "未設定",
+    "memberSince": "登録日",
+    "folders": {
+      "title": "フォルダー",
+      "noFolders": "フォルダーがありません",
+      "folderName": "フォルダー名",
+      "totalPairs": "テキストペア数",
+      "createdAt": "作成日",
+      "actions": "操作",
+      "view": "表示"
+    }
   }
 }

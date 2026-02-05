@@ -44,7 +44,15 @@
     "language2": "Langue 2",
     "enterLanguageName": "Veuillez entrer le nom de la langue",
     "edit": "Modifier",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action",
+    "error": {
+      "update": "Vous n'avez pas la permission de mettre à jour cet élément.",
+      "delete": "Vous n'avez pas la permission de supprimer cet élément.",
+      "add": "Vous n'avez pas la permission d'ajouter des éléments à ce dossier.",
+      "rename": "Vous n'avez pas la permission de renommer ce dossier.",
+      "deleteFolder": "Vous n'avez pas la permission de supprimer ce dossier."
+    }
   },
   "home": {
     "title": "Apprendre les langues",
@@ -225,5 +233,26 @@
     "pleaseCreateFolder": "Veuillez d'abord créer un dossier",
     "savedToFolder": "Enregistré dans le dossier : {folderName}",
     "saveFailed": "Échec de l'enregistrement, veuillez réessayer plus tard"
+  },
+  "user_profile": {
+    "anonymous": "Anonyme",
+    "email": "E-mail",
+    "verified": "Vérifié",
+    "unverified": "Non vérifié",
+    "accountInfo": "Informations du compte",
+    "userId": "ID utilisateur",
+    "username": "Nom d'utilisateur",
+    "displayName": "Nom d'affichage",
+    "notSet": "Non défini",
+    "memberSince": "Membre depuis",
+    "folders": {
+      "title": "Dossiers",
+      "noFolders": "Aucun dossier pour le moment",
+      "folderName": "Nom du dossier",
+      "totalPairs": "Nombre de paires",
+      "createdAt": "Créé le",
+      "actions": "Actions",
+      "view": "Voir"
+    }
   }
 }

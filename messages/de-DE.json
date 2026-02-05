@@ -44,7 +44,15 @@
     "language2": "Sprache 2",
     "enterLanguageName": "Bitte geben Sie den Sprachennamen ein",
     "edit": "Bearbeiten",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen",
+    "error": {
+      "update": "Sie haben keine Berechtigung, dieses Element zu aktualisieren.",
+      "delete": "Sie haben keine Berechtigung, dieses Element zu löschen.",
+      "add": "Sie haben keine Berechtigung, Elemente zu diesem Ordner hinzuzufügen.",
+      "rename": "Sie haben keine Berechtigung, diesen Ordner umzubenennen.",
+      "deleteFolder": "Sie haben keine Berechtigung, diesen Ordner zu löschen."
+    }
   },
   "home": {
     "title": "Sprachen lernen",
@@ -225,5 +233,26 @@
     "pleaseCreateFolder": "Bitte erstellen Sie zuerst einen Ordner",
     "savedToFolder": "Im Ordner gespeichert: {folderName}",
     "saveFailed": "Speichern fehlgeschlagen, bitte später erneut versuchen"
+  },
+  "user_profile": {
+    "anonymous": "Anonym",
+    "email": "E-Mail",
+    "verified": "Verifiziert",
+    "unverified": "Nicht verifiziert",
+    "accountInfo": "Kontoinformationen",
+    "userId": "Benutzer-ID",
+    "username": "Benutzername",
+    "displayName": "Anzeigename",
+    "notSet": "Nicht festgelegt",
+    "memberSince": "Mitglied seit",
+    "folders": {
+      "title": "Ordner",
+      "noFolders": "Noch keine Ordner",
+      "folderName": "Ordnername",
+      "totalPairs": "Anzahl der Paare",
+      "createdAt": "Erstellt am",
+      "actions": "Aktionen",
+      "view": "Ansehen"
+    }
   }
 }
