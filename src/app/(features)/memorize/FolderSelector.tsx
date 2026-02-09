@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Folder as Fd } from "lucide-react";
 import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton } from "@/components/ui/buttons";
+import { PrimaryButton } from "@/design-system/base/button";
 
 interface FolderSelectorProps {
   folders: TSharedFolderWithTotalPairs[];
@@ -37,7 +37,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
             {t("selectFolder")}
           </h1>
           {/* 文件夹列表 */}
-          <div className="border border-gray-200 rounded-2xl max-h-96 overflow-y-auto">
+          <div className="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
             {folders
               .toSorted((a, b) => a.id - b.id)
               .map((folder) => (
@@ -50,7 +50,7 @@ const FolderSelector: React.FC<FolderSelectorProps> = ({ folders }) => {
                 >
                   {/* 文件夹图标 */}
                   <div className="shrink-0">
-                    <Fd className="text-gray-600" size={24} />
+                    <Fd className="text-gray-600" size="md" />
                   </div>
                   {/* 文件夹信息 */}
                   <div className="flex-1">

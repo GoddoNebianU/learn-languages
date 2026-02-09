@@ -15,7 +15,7 @@ import { SubtitleArea } from "./components/compounds/SubtitleArea";
 import { ControlBar } from "./components/compounds/ControlBar";
 import { UploadZone } from "./components/compounds/UploadZone";
 import { SeekBar } from "./components/atoms/SeekBar";
-import { LightButton } from "@/components/ui/buttons";
+import { LightButton } from "@/design-system/base/button";
 
 export default function SrtPlayerPage() {
   const t = useTranslations("home");
@@ -119,7 +119,7 @@ export default function SrtPlayerPage() {
       </div>
 
       {/* 视频播放器区域 */}
-      <div className="aspect-video bg-black relative rounded-xl overflow-hidden">
+      <div className="aspect-video bg-black relative rounded-md overflow-hidden">
               {(!state.video.url || !state.subtitle.url || state.subtitle.data.length === 0) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-10">
                   <div className="text-center text-white">

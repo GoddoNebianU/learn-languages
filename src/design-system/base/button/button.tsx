@@ -41,7 +41,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const buttonVariants = cva(
   // 基础样式
-  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold shadow transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold shadow transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -51,6 +51,7 @@ const buttonVariants = cva(
         warning: "bg-warning-500 text-white hover:bg-warning-600 shadow-md",
         error: "bg-error-500 text-white hover:bg-error-600 shadow-md",
         ghost: "bg-transparent text-gray-700 hover:bg-gray-100 shadow-none",
+        "ghost-light": "bg-transparent text-white hover:bg-white/10 shadow-none",
         outline: "border-2 border-gray-300 text-gray-700 hover:bg-gray-50 shadow-none",
         link: "text-primary-500 hover:text-primary-600 hover:underline shadow-none px-0",
       },
@@ -138,15 +139,18 @@ export function Button({
   type = "button",
   ...props
 }: ButtonProps) {
+  // 确保 size 有默认值
+  const actualSize = size ?? "md";
+
   // 计算样式
   const computedClass = cn(
-    buttonVariants({ variant, size, fullWidth }),
+    buttonVariants({ variant, size: actualSize, fullWidth }),
     selected && variant === "secondary" && "bg-gray-200",
     className
   );
 
   // 图标尺寸映射
-  const iconSize = { sm: 14, md: 16, lg: 20 }[size];
+  const iconSize = { sm: 14, md: 16, lg: 20 }[actualSize];
 
   // 渲染 SVG 图标
   const renderSvgIcon = (icon: React.ReactNode, position: "left" | "right") => {
@@ -248,6 +252,9 @@ export const SecondaryButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="secondary" {...props} />
 );
 
+// LightButton: 次要按钮的别名（向后兼容）
+export const LightButton = SecondaryButton;
+
 export const SuccessButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="success" {...props} />
 );
@@ -264,10 +271,81 @@ export const GhostButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="ghost" {...props} />
 );
 
+// GhostLightButton: 透明按钮（白色文字，用于深色背景）
+export const GhostLightButton = (props: Omit<ButtonProps, "variant">) => (
+  <Button variant="ghost-light" {...props} />
+);
+
 export const OutlineButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="outline" {...props} />
 );
 
 export const LinkButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="link" {...props} />
+);
+
+// ========== 其他便捷组件 ==========
+
+// IconButton: SVG 图标按钮（使用 ghost 变体）
+export const IconButton = (props: Omit<ButtonProps, "variant"> & { icon?: React.ReactNode }) => {
+  const { icon, ...rest } = props;
+  return <Button variant="ghost" leftIcon={icon} {...rest} />;
+};
+
+// IconClick: 图片图标按钮（支持 Next.js Image）
+export const IconClick = (props: Omit<ButtonProps, "variant"> & {
+  src?: string;
+  alt?: string;
+  size?: number | "sm" | "md" | "lg";
+  disableOnHoverBgChange?: boolean;
+}) => {
+  const { src, alt, size, disableOnHoverBgChange, className, ...rest } = props;
+  let buttonSize: "sm" | "md" | "lg" = "md";
+  if (typeof size === "number") {
+    if (size <= 20) buttonSize = "sm";
+    else if (size >= 32) buttonSize = "lg";
+  } else if (typeof size === "string") {
+    buttonSize = (size === "sm" || size === "md" || size === "lg") ? size : "md";
+  }
+
+  const hoverClass = disableOnHoverBgChange ? "hover:bg-black/30" : "";
+
+  return (
+    <Button
+      variant="ghost"
+      iconSrc={src}
+      iconAlt={alt}
+      size={buttonSize}
+      className={`${hoverClass} ${className || ""}`}
+      {...rest}
+    />
+  );
+};
+
+// CircleButton: 圆形图标按钮
+export const CircleButton = (props: Omit<ButtonProps, "variant"> & { icon?: React.ReactNode }) => {
+  const { icon, className, ...rest } = props;
+  return <Button variant="ghost" leftIcon={icon} className={`rounded-full ${className || ""}`} {...rest} />;
+};
+
+// CircleToggleButton: 带选中状态的圆形切换按钮
+export const CircleToggleButton = (props: Omit<ButtonProps, "variant"> & { selected?: boolean }) => {
+  const { selected, className, children, ...rest } = props;
+  const selectedClass = selected
+    ? "bg-primary-500 text-white"
+    : "bg-gray-200 text-gray-600 hover:bg-gray-300";
+  return (
+    <Button
+      variant="secondary"
+      className={`rounded-full px-3 py-1 text-sm transition-colors ${selectedClass} ${className || ""}`}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+};
+
+// DashedButton: 虚线边框按钮（使用 outline 变体近似）
+export const DashedButton = (props: Omit<ButtonProps, "variant">) => (
+  <Button variant="outline" className="border-dashed" {...props} />
 );

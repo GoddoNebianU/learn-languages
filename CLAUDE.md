@@ -22,9 +22,7 @@ pnpm run start
 pnpm run lint
 
 # 数据库操作
-pnpm prisma generate    # 生成 Prisma client 到 src/generated/prisma
-pnpm prisma db push     # 推送 schema 变更到数据库
-pnpm prisma studio      # 打开 Prisma Studio 查看数据库
+# 不要进行数据库操作，让用户操作数据库
 ```
 
 ## 技术栈
@@ -102,31 +100,6 @@ src/modules/{module}/
 
 **LLM 集成**: 使用智谱 AI API 进行翻译和 IPA 生成。通过环境变量 `ZHIPU_API_KEY` 和 `ZHIPU_MODEL_NAME` 配置。
 
-### 环境变量
-
-需要在 `.env.local` 中配置：
-
-```env
-# LLM 集成（智谱 AI 用于翻译和 IPA 生成）
-ZHIPU_API_KEY=your-api-key
-ZHIPU_MODEL_NAME=your-model-name
-
-# 阿里云千问 TTS（文本转语音）
-DASHSCORE_API_KEY=your-dashscore-api-key
-
-# 认证
-BETTER_AUTH_SECRET=your-secret
-BETTER_AUTH_URL=http://localhost:3000
-GITHUB_CLIENT_ID=your-client-id
-GITHUB_CLIENT_SECRET=your-client-secret
-
-# 数据库
-DATABASE_URL=postgresql://username:password@localhost:5432/database_name
-```
-
-## 重要配置细节
-
-- **Prisma client 输出**: 自定义目录 `src/generated/prisma`（不是默认的 `node_modules/.prisma`）
 - **Standalone 输出**: 为 Docker 部署配置
 - **React Compiler**: 在 `next.config.ts` 中启用以自动优化
 - **HTTPS 开发**: 开发服务器使用 `--experimental-https` 标志
@@ -147,7 +120,6 @@ DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 ## 开发注意事项
 
 - 使用 pnpm，而不是 npm 或 yarn
-- schema 变更后，先运行 `pnpm prisma generate` 再运行 `pnpm prisma db push`
 - 应用使用 TypeScript 严格模式 - 确保类型安全
 - 所有面向用户的文本都需要国际化
 - **优先使用 Server Components**，只在需要交互时使用 Client Components

@@ -1,14 +1,22 @@
+/**
+ * Container - 容器组件
+ *
+ * 使用 Design System 重写的容器组件
+ */
+import { Container as DSContainer } from "@/design-system/layout/container";
+import { Card } from "@/design-system/base/card";
+
 interface ContainerProps {
   children?: React.ReactNode;
   className?: string;
 }
 
-export function Container({ children, className }: ContainerProps) {
+export function Container({ children, className = "" }: ContainerProps) {
   return (
-    <div
-      className={`w-full max-w-2xl mx-auto bg-white border border-gray-200 rounded-2xl ${className}`}
-    >
-      {children}
-    </div>
+    <DSContainer size="2xl" className={`mx-auto ${className}`}>
+      <Card variant="bordered" padding="md">
+        {children}
+      </Card>
+    </DSContainer>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { LightButton } from "@/components/ui/buttons";
-import { IconClick } from "@/components/ui/buttons";
+import { LightButton } from "@/design-system/base/button";
+import { IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {
@@ -222,7 +222,7 @@ export default function TextSpeakerPage() {
     <PageLayout className="items-start py-4">
       {/* 文本输入区域 */}
       <div
-        className="border border-gray-200 rounded-2xl"
+        className="border border-gray-200 rounded-lg"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         {/* 文本输入框 */}
@@ -242,37 +242,37 @@ export default function TextSpeakerPage() {
         <div className="p-4 relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
           {/* 速度调节面板 */}
           {showSpeedAdjust && (
-            <div className="bg-white p-6 rounded-2xl border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center z-10">
+            <div className="bg-white p-6 rounded-lg border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center z-10">
               <IconClick
-                size={45}
+                size="lg"
                 onClick={letMeSetSpeed(0.5)}
                 src={IMAGES.speed_0_5x}
                 alt="0.5x"
                 className={speed === 0.5 ? "bg-gray-200" : ""}
               ></IconClick>
               <IconClick
-                size={45}
+                size="lg"
                 onClick={letMeSetSpeed(0.7)}
                 src={IMAGES.speed_0_7x}
                 alt="0.7x"
                 className={speed === 0.7 ? "bg-gray-200" : ""}
               ></IconClick>
               <IconClick
-                size={45}
+                size="lg"
                 onClick={letMeSetSpeed(1)}
                 src={IMAGES.speed_1x}
                 alt="1x"
                 className={speed === 1 ? "bg-gray-200" : ""}
               ></IconClick>
               <IconClick
-                size={45}
+                size="lg"
                 onClick={letMeSetSpeed(1.2)}
                 src={IMAGES.speed_1_2_x}
                 alt="1.2x"
                 className={speed === 1.2 ? "bg-gray-200" : ""}
               ></IconClick>
               <IconClick
-                size={45}
+                size="lg"
                 onClick={letMeSetSpeed(1.5)}
                 src={IMAGES.speed_1_5x}
                 alt="1.5x"
@@ -282,7 +282,7 @@ export default function TextSpeakerPage() {
           )}
           {/* 播放/暂停按钮 */}
           <IconClick
-            size={45}
+            size="lg"
             onClick={speak}
             src={pause ? IMAGES.play_arrow : IMAGES.pause}
             alt="playorpause"
@@ -290,7 +290,7 @@ export default function TextSpeakerPage() {
           ></IconClick>
           {/* 自动暂停按钮 */}
           <IconClick
-            size={45}
+            size="lg"
             onClick={() => {
               setAutopause(!autopause);
               if (objurlRef) {
@@ -303,7 +303,7 @@ export default function TextSpeakerPage() {
           ></IconClick>
           {/* 速度调节按钮 */}
           <IconClick
-            size={45}
+            size="lg"
             onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
             src={IMAGES.speed}
             alt="speed"
@@ -311,7 +311,7 @@ export default function TextSpeakerPage() {
           ></IconClick>
           {/* 保存按钮 */}
           <IconClick
-            size={45}
+            size="lg"
             onClick={save}
             src={IMAGES.save}
             alt="save"
@@ -338,7 +338,7 @@ export default function TextSpeakerPage() {
       </div>
       {/* 保存列表 */}
       {showSaveList && (
-        <div className="mt-4 border border-gray-200 rounded-2xl overflow-hidden">
+        <div className="mt-4 border border-gray-200 rounded-lg overflow-hidden">
           <SaveList show={showSaveList} handleUse={handleUseItem}></SaveList>
         </div>
       )}

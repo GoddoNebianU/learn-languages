@@ -125,6 +125,7 @@ export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonE
   value: string;
   children: React.ReactNode;
   variant?: "line" | "enclosed" | "soft";
+  "data-state"?: string;
 }
 
 const triggerVariants = cva(
@@ -148,14 +149,15 @@ export function TabsTrigger({
   children,
   variant = "line",
   className,
+  "data-state": dataState,
   ...props
 }: TabsTriggerProps) {
   return (
     <button
       type="button"
       role="tab"
-      aria-selected={props["data-state"] === "active"}
-      data-state={props["data-state"]}
+      aria-selected={dataState === "active"}
+      data-state={dataState}
       className={cn(triggerVariants({ variant }), className)}
       {...props}
     >
@@ -170,21 +172,24 @@ export function TabsTrigger({
 export interface TabsContentProps extends React.HTMLAttributes<HTMLDivElement> {
   value: string;
   children: React.ReactNode;
+  "data-state"?: string;
 }
 
 export function TabsContent({
   value,
   children,
   className,
+  "data-state": dataState,
   ...props
 }: TabsContentProps) {
-  if (value !== props["data-state"]) return null;
+  if (value !== dataState) return null;
 
   return (
     <div
       role="tabpanel"
       className={cn("mt-4 focus:outline-none", className)}
       tabIndex={0}
+      data-state={dataState}
       {...props}
     >
       {children}

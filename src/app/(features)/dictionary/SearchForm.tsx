@@ -1,7 +1,7 @@
 "use client";
 
-import { LightButton } from "@/components/ui/buttons";
-import { Input } from "@/components/ui/Input";
+import { LightButton } from "@/design-system/base/button";
+import { Input } from "@/design-system/base/input";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

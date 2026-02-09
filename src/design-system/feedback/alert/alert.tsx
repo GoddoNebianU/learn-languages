@@ -34,7 +34,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const alertVariants = cva(
   // 基础样式
-  "rounded-xl border-2 px-4 py-3 shadow-sm transition-all duration-250",
+  "rounded-lg border-2 px-4 py-3 shadow-sm transition-all duration-250",
   {
     variants: {
       variant: {
@@ -127,6 +127,9 @@ export function Alert({
 
   if (!visible) return null;
 
+  // 确保 variant 有默认值
+  const actualVariant = variant ?? "info";
+
   // 图标颜色
   const iconColors = {
     info: "text-info-500",
@@ -137,14 +140,14 @@ export function Alert({
 
   return (
     <div
-      className={cn(alertVariants({ variant }), className)}
+      className={cn(alertVariants({ variant: actualVariant }), className)}
       role="alert"
       {...props}
     >
       <div className="flex items-start gap-3">
         {/* 图标 */}
-        <div className={cn("shrink-0", iconColors[variant])}>
-          {icon || defaultIcons[variant]}
+        <div className={cn("shrink-0", iconColors[actualVariant])}>
+          {icon || defaultIcons[actualVariant]}
         </div>
 
         {/* 内容 */}

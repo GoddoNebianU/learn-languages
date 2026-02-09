@@ -1,5 +1,5 @@
-import { LightButton } from "@/components/ui/buttons";
-import { Input } from "@/components/ui/Input";
+import { LightButton } from "@/design-system/base/button";
+import { Input } from "@/design-system/base/input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -63,7 +63,7 @@ export function UpdateTextPairModal({
         }
       }}
     >
-      <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+      <div className="bg-white rounded-md p-6 w-full max-w-md mx-4">
         <div className="flex">
           <h2 className="flex-1 text-xl font-light mb-4 text-center">
             {t("updateTextPair")}

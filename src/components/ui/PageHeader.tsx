@@ -1,29 +1,25 @@
 /**
  * PageHeader - 页面标题组件
  *
- * 用于 PageLayout 内的页面标题，支持主标题和可选的副标题
- *
- * @example
- * ```tsx
- * <PageHeader title="我的文件夹" subtitle="管理和组织你的学习内容" />
- * ```
+ * 使用 Design System 重写的页面标题组件
  */
+import { VStack } from "@/design-system/layout/stack";
+
 interface PageHeaderProps {
-  /** 页面主标题 */
   title: string;
-  /** 可选的副标题/描述 */
   subtitle?: string;
+  className?: string;
 }
 
-export function PageHeader({ title, subtitle }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, className = "" }: PageHeaderProps) {
   return (
-    <div className="mb-6">
-      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+    <VStack gap={2} className={`mb-6 ${className}`}>
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
         {title}
       </h1>
       {subtitle && (
         <p className="text-sm text-gray-500">{subtitle}</p>
       )}
-    </div>
+    </VStack>
   );
 }

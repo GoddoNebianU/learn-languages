@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LinkButton, CircleToggleButton, LightButton } from "@/components/ui/buttons";
+import { LinkButton, CircleToggleButton, LightButton } from "@/design-system/base/button";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { useTranslations } from "next-intl";
@@ -29,7 +29,7 @@ const Memorize: React.FC<MemorizeProps> = ({ textPairs }) => {
 
   if (textPairs.length === 0) {
     return (
-      <PageLayout maxWidth="md">
+      <PageLayout>
         <p className="text-gray-700 text-center">{t("noTextPairs")}</p>
       </PageLayout>
     );

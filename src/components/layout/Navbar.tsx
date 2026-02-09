@@ -5,7 +5,7 @@ import { LanguageSettings } from "./LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { GhostButton } from "../ui/buttons";
+import { GhostLightButton } from "@/design-system/base/button";
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
@@ -15,16 +15,17 @@ export async function Navbar() {
 
   return (
     <div className="flex justify-between items-center w-full h-16 px-4 md:px-8 bg-[#35786f] text-white">
-      <GhostButton href="/" className="text-lg md:text-xl border-b hidden! md:block!">
+      <GhostLightButton href="/" className="border-b hidden! md:block!" size="md">
         {t("title")}
-      </GhostButton>
-      <GhostButton className="block! md:hidden!" href={"/"}>
+      </GhostLightButton>
+      <GhostLightButton className="block! md:hidden!" size="md" href={"/"}>
         <Home size={20} />
-      </GhostButton>
-      <div className="flex text-base md:text-xl gap-0.5 justify-center items-center flex-wrap">
+      </GhostLightButton>
+      <div className="flex gap-0.5 justify-center items-center flex-wrap">
         <LanguageSettings />
-        <GhostButton
-          className="md:hidden! block! navbar-btn p-2"
+        <GhostLightButton
+          className="md:hidden! block!"
+          size="md"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           <Image
@@ -33,33 +34,34 @@ export async function Navbar() {
             width={20}
             height={20}
           />
-        </GhostButton>
-        <GhostButton href="/folders" className="md:block! hidden! navbar-btn">
+        </GhostLightButton>
+        <GhostLightButton href="/folders" className="md:block! hidden!" size="md">
           {t("folders")}
-        </GhostButton>
-        <GhostButton href="/folders" className="md:hidden! block! navbar-btn p-2">
+        </GhostLightButton>
+        <GhostLightButton href="/folders" className="md:hidden! block!" size="md">
           <Folder size={20} />
-        </GhostButton>
-        <GhostButton
-          className="hidden! md:block! navbar-btn"
+        </GhostLightButton>
+        <GhostLightButton
+          className="hidden! md:block!"
+          size="md"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           {t("sourceCode")}
-        </GhostButton>
+        </GhostLightButton>
         {
           (() => {
             return session &&
               <>
-                <GhostButton href="/profile" className="hidden! md:block! text-sm md:text-base navbar-btn px-2 py-1">{t("profile")}</GhostButton>
-                <GhostButton href="/profile" className="md:hidden! block! navbar-btn p-2">
+                <GhostLightButton href="/profile" className="hidden! md:block!" size="md">{t("profile")}</GhostLightButton>
+                <GhostLightButton href="/profile" className="md:hidden! block!" size="md">
                   <User size={20} />
-                </GhostButton>
+                </GhostLightButton>
               </>
               || <>
-                <GhostButton href="/auth" className="hidden! md:block! text-sm md:text-base navbar-btn px-2 py-1">{t("sign_in")}</GhostButton>
-                <GhostButton href="/auth" className="md:hidden! block! navbar-btn p-2">
+                <GhostLightButton href="/auth" className="hidden! md:block!" size="md">{t("sign_in")}</GhostLightButton>
+                <GhostLightButton href="/auth" className="md:hidden! block!" size="md">
                   <User size={20} />
-                </GhostButton>
+                </GhostLightButton>
               </>;
           })()
         }

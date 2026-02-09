@@ -1,5 +1,5 @@
-import { LightButton } from "@/components/ui/buttons";
-import { IconClick } from "@/components/ui/buttons";
+import { LightButton } from "@/design-system/base/button";
+import { IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
@@ -45,10 +45,10 @@ export function MemoryCard({
       className="w-full flex justify-center items-center"
       onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => e.preventDefault()}
     >
-      <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-2xl shadow border-gray-200 border flex justify-center items-center">
+      <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-lg shadow border-gray-200 border flex justify-center items-center">
         <div className="w-full flex justify-end items-center">
           <IconClick
-            size={32}
+            size="lg"
             alt="close"
             src={IMAGES.close}
             onClick={() => setChosenAlphabet(null)}
@@ -64,13 +64,13 @@ export function MemoryCard({
         </div>
         <div className="flex flex-row mt-32 items-center justify-center gap-2">
           <IconClick
-            size={48}
+            size="lg"
             alt="refresh"
             src={IMAGES.refresh}
             onClick={refresh}
           ></IconClick>
           <IconClick
-            size={48}
+            size="lg"
             alt="more"
             src={IMAGES.more_horiz}
             onClick={() => setMore(!more)}

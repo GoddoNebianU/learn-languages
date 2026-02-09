@@ -1,6 +1,6 @@
 "use client";
 
-import { GhostButton } from "../ui/buttons";
+import { GhostLightButton } from "@/design-system/base/button";
 import { useState } from "react";
 import { Languages } from "lucide-react";
 
@@ -15,59 +15,59 @@ export function LanguageSettings() {
     };
     return (
         <>
-            <Languages onClick={handleLanguageClick} size={28} className="navbar-btn" />
+            <Languages onClick={handleLanguageClick} size={28} className="text-white hover:text-white/80" />
             <div className="relative">
                 {showLanguageMenu && (
                     <div>
                         <div className="absolute top-10 right-0 rounded-md shadow-md flex flex-col gap-2">
-                            <GhostButton
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("en-US")}
                             >
                                 English
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("zh-CN")}
                             >
                                 中文
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("ja-JP")}
                             >
                                 日本語
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("ko-KR")}
                             >
                                 한국어
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("de-DE")}
                             >
                                 Deutsch
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("fr-FR")}
                             >
                                 Français
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("it-IT")}
                             >
                                 Italiano
-                            </GhostButton>
-                            <GhostButton
+                            </GhostLightButton>
+                            <GhostLightButton
                                 className="w-full bg-[#35786f]"
                                 onClick={() => setLocale("ug-CN")}
                             >
                                 ئۇيغۇرچە
-                            </GhostButton>
+                            </GhostLightButton>
                         </div>
                     </div>
                 )}

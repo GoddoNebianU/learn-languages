@@ -3,11 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { IconClick, CircleToggleButton, CircleButton, PrimaryButton } from "@/components/ui/buttons";
+import { IconClick, CircleToggleButton, CircleButton, PrimaryButton } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/design-system/base/card";
 
 interface AlphabetCardProps {
   alphabet: Letter[];
@@ -103,7 +103,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
       {/* 右上角返回按钮 - outside the white card */}
       <div className="flex justify-end mb-4">
         <IconClick
-          size={32}
+          size="lg"
           alt="close"
           src={IMAGES.close}
           onClick={onBack}
@@ -185,7 +185,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         <div className="flex justify-between items-center">
           {/* 上一个按钮 */}
           <CircleButton onClick={goToPrevious} aria-label="上一个字母">
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} />
           </CircleButton>
 
           {/* 中间区域：随机按钮 */}
@@ -202,7 +202,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
 
           {/* 下一个按钮 */}
           <CircleButton onClick={goToNext} aria-label="下一个字母">
-            <ChevronRight size={24} />
+            <ChevronRight size={20} />
           </CircleButton>
         </div>
       </Card>

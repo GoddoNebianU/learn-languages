@@ -34,7 +34,9 @@ export function RangeInput({
       value={value}
       onChange={handleChange}
       disabled={disabled}
-      className={`w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      className={`w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      } ${className}`}
       style={{
         background: `linear-gradient(to right, #374151 0%, #374151 ${progressPercentage}%, #e5e7eb ${progressPercentage}%, #e5e7eb 100%)`
       }}

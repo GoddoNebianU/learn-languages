@@ -34,11 +34,11 @@ import { cn } from "@/design-system/lib/utils";
  */
 const inputVariants = cva(
   // 基础样式
-  "flex w-full rounded-xl border px-3 py-2 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "flex w-full rounded-md border px-3 py-2 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "border-b-2 border-gray-300 bg-transparent rounded-t-xl",
+        default: "border-b-2 border-gray-300 bg-transparent rounded-t-md",
         bordered: "border-gray-300 bg-white",
         filled: "border-transparent bg-gray-100",
         search: "border-gray-200 bg-white pl-10 rounded-full",

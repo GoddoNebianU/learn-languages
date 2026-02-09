@@ -104,19 +104,22 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
       onChange?.(e);
     };
 
+    // 确保 size 有默认值
+    const actualSize = size ?? "md";
+
     // 滑块大小
     const thumbSize = {
       sm: "h-3.5 w-3.5",
       md: "h-4 w-4",
       lg: "h-5 w-5",
-    }[size];
+    }[actualSize];
 
     // 滑块位移
     const thumbTranslate = {
       sm: isChecked ? "translate-x-4" : "translate-x-0.5",
       md: isChecked ? "translate-x-5" : "translate-x-0.5",
       lg: isChecked ? "translate-x-6" : "translate-x-0.5",
-    }[size];
+    }[actualSize];
 
     const renderSwitch = () => (
       <div className="relative inline-block">

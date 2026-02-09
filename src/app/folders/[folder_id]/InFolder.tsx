@@ -7,7 +7,7 @@ import { AddTextPairModal } from "./AddTextPairModal";
 import { TextPairCard } from "./TextPairCard";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton, IconButton, LinkButton } from "@/components/ui/buttons";
+import { PrimaryButton, IconButton, LinkButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
 import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 import { TSharedPair } from "@/shared/folder-type";

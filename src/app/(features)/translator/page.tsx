@@ -1,7 +1,6 @@
 "use client";
 
-import { LightButton, PrimaryButton } from "@/components/ui/buttons";
-import { IconClick } from "@/components/ui/buttons";
+import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
@@ -101,7 +100,7 @@ export default function TranslatorPage() {
         {/* Card Component - Left Side */}
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
           {/* ICard1 Component */}
-          <div className="border border-gray-200 rounded-2xl w-full h-64 p-2">
+          <div className="border border-gray-200 rounded-lg w-full h-64 p-2">
             <textarea
               className="resize-none h-8/12 w-full focus:outline-0"
               ref={taref}
@@ -147,7 +146,7 @@ export default function TranslatorPage() {
         {/* Card Component - Right Side */}
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
           {/* ICard2 Component */}
-          <div className="bg-gray-100 rounded-2xl w-full h-64 p-2">
+          <div className="bg-gray-100 rounded-lg w-full h-64 p-2">
             <div className="h-2/3 w-full overflow-y-auto">{translationResult?.translatedText || ""}</div>
             <div className="ipa w-full h-1/6 overflow-y-auto text-gray-600">
               {translationResult?.targetIpa || ""}
@@ -213,7 +212,8 @@ export default function TranslatorPage() {
         <PrimaryButton
           onClick={translate}
           disabled={processing}
-          className="text-xl h-16 px-8"
+          size="lg"
+          className="text-xl"
         >
           {t("translate")}
         </PrimaryButton>

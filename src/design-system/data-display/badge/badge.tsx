@@ -98,13 +98,16 @@ export function Badge({
     info: "bg-info-500",
   };
 
+  // 确保 variant 有默认值
+  const actualVariant = variant ?? "default";
+
   return (
-    <div className={cn(badgeVariants({ variant, size, dot }), className)} {...props}>
+    <div className={cn(badgeVariants({ variant: actualVariant, size, dot }), className)} {...props}>
       {dot && (
         <span
           className={cn(
             "h-2 w-2 rounded-full",
-            dotColor || dotColors[variant]
+            dotColor || dotColors[actualVariant]
           )}
         />
       )}

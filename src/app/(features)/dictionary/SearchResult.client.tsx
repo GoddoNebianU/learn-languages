@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, RefreshCw } from "lucide-react";
-import { CircleButton, LightButton } from "@/components/ui/buttons";
+import { CircleButton, LightButton } from "@/design-system/base/button";
 import { toast } from "sonner";
 import { actionCreatePair } from "@/modules/folder/folder-aciton";
 import { TSharedItem } from "@/shared/dictionary-type";

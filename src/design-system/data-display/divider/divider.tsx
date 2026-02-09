@@ -95,7 +95,7 @@ export function Divider({
     <div
       className={cn(dividerVariants({ variant, orientation }), className)}
       role="separator"
-      aria-orientation={orientation}
+      aria-orientation={orientation as "horizontal" | "vertical"}
       {...props}
     />
   );

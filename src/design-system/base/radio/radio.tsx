@@ -186,12 +186,13 @@ export function RadioGroup({
   // 为每个 Radio 注入 name 和 onChange
   const enhancedChildren = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
+      const childProps = child.props as { value?: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void };
+      return React.cloneElement(child as React.ReactElement<any>, {
         name,
-        checked: value !== undefined ? child.props.value === value : undefined,
+        checked: value !== undefined ? childProps.value === value : undefined,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
           onChange?.(e.target.value);
-          child.props.onChange?.(e);
+          childProps.onChange?.(e);
         },
       });
     }

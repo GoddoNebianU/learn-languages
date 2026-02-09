@@ -36,7 +36,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const cardVariants = cva(
   // 基础样式
-  "rounded-2xl bg-white transition-all duration-250",
+  "rounded-lg bg-white transition-all duration-250",
   {
     variants: {
       variant: {

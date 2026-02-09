@@ -7,7 +7,7 @@ import {
   FolderPlus,
   Trash2,
 } from "lucide-react";
-import { CircleButton, DashedButton } from "@/components/ui/buttons";
+import { CircleButton, DashedButton } from "@/design-system/base/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -36,7 +36,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
     >
       <div className="flex items-center gap-3 flex-1">
         <div className="shrink-0">
-          <Fd className="text-gray-600" size={24} />
+          <Fd className="text-gray-600" size="md" />
         </div>
 
         <div className="flex-1">
@@ -167,13 +167,13 @@ export function FoldersClient({ userId }: { userId: string; }) {
             // 空状态
             <div className="text-center py-12 text-gray-400">
               <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <FolderPlus size={24} className="text-gray-400" />
+                <FolderPlus size="md" className="text-gray-400" />
               </div>
               <p className="text-sm">{t("noFoldersYet")}</p>
             </div>
           ) : (
             // 文件夹卡片列表
-            <div className="rounded-xl border border-gray-200 overflow-hidden">
+            <div className="rounded-md border border-gray-200 overflow-hidden">
               {folders
                 .toSorted((a, b) => a.id - b.id)
                 .map((folder) => (

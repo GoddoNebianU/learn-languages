@@ -6,7 +6,7 @@ import {
   TextSpeakerArraySchema,
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
-import { IconClick } from "@/components/ui/buttons";
+import { IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
@@ -24,7 +24,7 @@ function TextCard({ item, handleUse, handleDel }: TextCardProps) {
     handleDel(item);
   };
   return (
-    <div className="p-2 border-b border-gray-200 rounded-2xl bg-gray-100 m-2 grid grid-cols-8">
+    <div className="p-2 border-b border-gray-200 rounded-lg bg-gray-100 m-2 grid grid-cols-8">
       <div className="col-span-7" onClick={onUseClick}>
         <div className="max-h-26 hover:cursor-pointer text-3xl overflow-y-auto">
           {item.text}
@@ -39,7 +39,7 @@ function TextCard({ item, handleUse, handleDel }: TextCardProps) {
           alt="delete"
           onClick={onDelClick}
           className="place-self-center"
-          size={42}
+          size="lg"
         ></IconClick>
       </div>
     </div>
@@ -81,7 +81,7 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
   if (show)
     return (
       <div
-        className="my-4 p-2 mx-4 md:mx-32 border border-gray-200 rounded-2xl"
+        className="my-4 p-2 mx-4 md:mx-32 border border-gray-200 rounded-lg"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         <div className="flex flex-row justify-center gap-8 items-center">
@@ -89,14 +89,14 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
             src={IMAGES.refresh}
             alt="refresh"
             onClick={refresh}
-            size={48}
+            size="lg"
             className=""
           ></IconClick>
           <IconClick
             src={IMAGES.delete}
             alt="delete"
             onClick={handleDeleteAll}
-            size={48}
+            size="lg"
             className=""
           ></IconClick>
         </div>

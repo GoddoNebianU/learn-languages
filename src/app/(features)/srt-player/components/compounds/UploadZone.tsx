@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Video, FileText } from "lucide-react";
-import { LightButton } from "@/components/ui/buttons";
+import { LightButton } from "@/design-system/base/button";
 import { FileUploadProps } from "../../types/controls";
 import { useFileUpload } from "../../hooks/useFileUpload";
 

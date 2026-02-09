@@ -1,38 +1,37 @@
 // 统一的 UI 组件导出
 // 可以从 '@/components/ui' 导入所有组件
 
-// 表单组件
-export { Input } from './Input';
-export { Select, Option } from './Select';
-export { Textarea } from './Textarea';
-export { RangeInput } from './RangeInput';
-export type { InputVariant } from './Input';
-export type { SelectSize } from './Select';
-export type { TextareaVariant } from './Textarea';
-
-// 按钮组件
-export { Button } from './Button';
+// Design System 组件（向后兼容）
+export { Input, type InputVariant, type InputProps } from '@/design-system/base/input';
+export { Select, type SelectVariant, type SelectSize, type SelectProps } from '@/design-system/base/select';
+export { Textarea, type TextareaVariant, type TextareaProps } from '@/design-system/base/textarea';
+export { Card, type CardVariant, type CardPadding, type CardProps } from '@/design-system/base/card';
 export {
+  Button,
   PrimaryButton,
   SecondaryButton,
   LightButton,
+  SuccessButton,
+  WarningButton,
+  ErrorButton,
+  GhostButton,
+  GhostLightButton,
+  OutlineButton,
+  LinkButton,
   IconButton,
   IconClick,
   CircleButton,
   CircleToggleButton,
-  GhostButton,
-  LinkButton,
   DashedButton,
-} from './buttons';
-export type { ButtonVariant, ButtonSize, ButtonProps } from './Button';
+  type ButtonVariant,
+  type ButtonSize,
+  type ButtonProps
+} from '@/design-system/base/button';
 
-// 布局组件
+// 业务特定组件
+export { RangeInput } from './RangeInput';
 export { Container } from './Container';
 export { PageLayout } from './PageLayout';
 export { PageHeader } from './PageHeader';
 export { CardList } from './CardList';
-export { Card } from './Card';
-export type { CardProps, CardVariant, CardPadding } from './Card';
-
-// 复合组件
 export { LocaleSelector } from './LocaleSelector';

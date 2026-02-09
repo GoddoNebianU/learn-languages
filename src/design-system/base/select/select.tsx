@@ -24,11 +24,11 @@ import { cn } from "@/design-system/lib/utils";
  */
 const selectVariants = cva(
   // 基础样式
-  "flex w-full appearance-none items-center justify-between rounded-xl border px-3 py-2 pr-8 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "flex w-full appearance-none items-center justify-between rounded-md border px-3 py-2 pr-8 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "border-b-2 border-gray-300 bg-transparent rounded-t-xl",
+        default: "border-b-2 border-gray-300 bg-transparent rounded-t-md",
         bordered: "border-gray-300 bg-white",
         filled: "border-transparent bg-gray-100",
       },

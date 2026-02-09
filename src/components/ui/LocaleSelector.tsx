@@ -1,7 +1,13 @@
+/**
+ * LocaleSelector - 语言选择器组件
+ *
+ * 使用 Design System 重写的语言选择器组件
+ */
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Input } from "@/components/ui/Input";
-import { Select, Option } from "@/components/ui/Select";
+import { Input } from "@/design-system/base/input";
+import { Select } from "@/design-system/base/select";
+import { VStack } from "@/design-system/layout/stack";
 
 const COMMON_LANGUAGES = [
   { label: "chinese", value: "chinese" },
@@ -38,7 +44,8 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
   };
 
   // 当选择常见语言或"其他"时
-  const handleSelectChange = (selectedValue: string) => {
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
     if (selectedValue === "other") {
       setCustomInput("");
       onChange("other");
@@ -48,15 +55,15 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
   };
 
   return (
-    <div>
+    <VStack gap={2}>
       <Select
         value={isCommonLanguage ? value : "other"}
         onChange={handleSelectChange}
       >
         {COMMON_LANGUAGES.map((lang) => (
-          <Option key={lang.value} value={lang.value}>
+          <option key={lang.value} value={lang.value}>
             {t(`translator.${lang.label}`)}
-          </Option>
+          </option>
         ))}
       </Select>
       {showCustomInput && (
@@ -66,9 +73,8 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
           onChange={(e) => handleCustomInputChange(e.target.value)}
           placeholder={t("folder_id.enterLanguageName")}
           variant="bordered"
-          className="mt-2"
         />
       )}
-    </div>
+    </VStack>
   );
 }

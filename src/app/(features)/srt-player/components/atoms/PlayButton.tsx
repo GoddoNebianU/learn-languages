@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { LightButton } from "@/components/ui/buttons";
+import { LightButton } from "@/design-system/base/button";
 import { PlayButtonProps } from "../../types/player";
 
 export function PlayButton({ isPlaying, onToggle, disabled, className }: PlayButtonProps) {

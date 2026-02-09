@@ -105,7 +105,7 @@ export function Modal({
       {/* 模态框内容 */}
       <div
         className={cn(
-          "relative z-10 w-full bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
+          "relative z-10 w-full bg-white rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
           sizeClasses[size],
           className
         )}

@@ -102,7 +102,8 @@ export function Progress({
       warning: "bg-warning-500",
       error: "bg-error-500",
     };
-    return colors[variant];
+    const actualVariant = variant ?? "default";
+    return colors[actualVariant];
   };
 
   // 格式化标签
@@ -175,7 +176,7 @@ export function CircularProgress({
     warning: "#f59e0b",
     error: "#ef4444",
   };
-  const strokeColor = colors[variant];
+  const strokeColor = colors[variant ?? "default"];
 
   return (
     <div className={cn("inline-flex items-center justify-center", className)}>

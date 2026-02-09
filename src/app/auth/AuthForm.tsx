@@ -3,8 +3,8 @@
 import { useState, useActionState, startTransition } from "react";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Input } from "@/components/ui/Input";
-import { LightButton, LinkButton } from "@/components/ui/buttons";
+import { Input } from "@/design-system/base/input";
+import { LightButton, LinkButton } from "@/design-system/base/button";
 import { authClient } from "@/lib/auth-client";
 import { actionSignIn, actionSignUp, ActionOutputAuth } from "@/modules/auth/auth-action";
 

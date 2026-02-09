@@ -27,7 +27,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const textareaVariants = cva(
   // 基础样式
-  "flex w-full rounded-xl border px-3 py-2 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none",
+  "flex w-full rounded-md border px-3 py-2 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none",
   {
     variants: {
       variant: {

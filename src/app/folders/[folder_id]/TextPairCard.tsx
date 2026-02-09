@@ -1,6 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { CircleButton } from "@/components/ui/buttons";
+import { CircleButton } from "@/design-system/base/button";
 import { UpdateTextPairModal } from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
 import { TSharedPair } from "@/shared/folder-type";
