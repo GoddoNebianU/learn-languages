@@ -14,14 +14,14 @@ export async function Navbar() {
   });
 
   return (
-    <div className="flex justify-between items-center w-full h-16 px-4 md:px-8 bg-[#35786f] text-white">
+    <div className="flex justify-between items-center w-full h-16 px-4 md:px-8 bg-primary-500 text-white">
       <GhostLightButton href="/" className="border-b hidden! md:block!" size="md">
         {t("title")}
       </GhostLightButton>
       <GhostLightButton className="block! md:hidden!" size="md" href={"/"}>
         <Home size={20} />
       </GhostLightButton>
-      <div className="flex gap-0.5 justify-center items-center flex-wrap">
+      <div className="flex gap-0.5 justify-center items-center">
         <LanguageSettings />
         <GhostLightButton
           className="md:hidden! block!"

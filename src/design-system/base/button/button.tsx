@@ -41,7 +41,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const buttonVariants = cva(
   // 基础样式
-  "inline-flex items-center justify-center gap-2 rounded-md font-semibold shadow transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "border flex-inline items-center justify-center gap-2 rounded-md font-semibold shadow transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
