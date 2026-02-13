@@ -47,7 +47,7 @@ export default async function UserPage({ params }: UserPageProps) {
                     <div className="flex items-center space-x-6">
                         {/* Avatar */}
                         {user.image ? (
-                            <div className="relative w-24 h-24 rounded-full border-4 border-[#35786f] overflow-hidden">
+                            <div className="relative w-24 h-24 rounded-full border-4 border-primary-500 overflow-hidden">
                                 <Image
                                     src={user.image}
                                     alt={user.displayUsername || user.username || user.email}
@@ -57,7 +57,7 @@ export default async function UserPage({ params }: UserPageProps) {
                                 />
                             </div>
                         ) : (
-                            <div className="w-24 h-24 rounded-full bg-[#35786f] border-4 border-[#35786f] flex items-center justify-center">
+                            <div className="w-24 h-24 rounded-full bg-primary-500 border-4 border-primary-500 flex items-center justify-center">
                                 <span className="text-3xl font-bold text-white">
                                     {(user.displayUsername || user.username || user.email)[0].toUpperCase()}
                                 </span>

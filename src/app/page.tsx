@@ -27,7 +27,7 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   return (
     <>
-      <div className="bg-[#35786f] text-white w-full min-h-[75dvh] flex justify-center items-center">
+      <div className="bg-primary-500 text-white w-full min-h-[75dvh] flex justify-center items-center">
         <div className="mb-16 mx-16 md:mx-0 md:max-w-[60dvw]">
           <h1 className="text-6xl md:text-9xl mb-8 font-extrabold">
             {t("title")}
