@@ -15,7 +15,12 @@ export function LanguageSettings() {
     };
     return (
         <>
-            <Languages onClick={handleLanguageClick} size={28} className="text-white hover:text-white/80" />
+            <GhostLightButton
+                size="md"
+                onClick={handleLanguageClick}
+            >
+                <Languages size={20} />
+            </GhostLightButton>
             <div className="relative">
                 {showLanguageMenu && (
                     <div>

@@ -7,7 +7,7 @@ import { AddTextPairModal } from "./AddTextPairModal";
 import { TextPairCard } from "./TextPairCard";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton, IconButton, LinkButton } from "@/design-system/base/button";
+import { PrimaryButton, CircleButton, LinkButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
 import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
 import { TSharedPair } from "@/shared/folder-type";
@@ -81,12 +81,13 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
               {t("memorize")}
             </PrimaryButton>
             {!isReadOnly && (
-              <IconButton
+              <CircleButton
                 onClick={() => {
                   setAddModal(true);
                 }}
-                icon={<Plus size={18} className="text-gray-700" />}
-              />
+              >
+                <Plus size={18} className="text-gray-700" />
+              </CircleButton>
             )}
           </div>
         </div>

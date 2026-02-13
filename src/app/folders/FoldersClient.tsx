@@ -7,7 +7,7 @@ import {
   FolderPlus,
   Trash2,
 } from "lucide-react";
-import { CircleButton, DashedButton } from "@/design-system/base/button";
+import { CircleButton, LightButton } from "@/design-system/base/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -135,7 +135,7 @@ export function FoldersClient({ userId }: { userId: string; }) {
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       {/* 新建文件夹按钮 */}
-      <DashedButton
+      <LightButton
         onClick={async () => {
           const folderName = prompt(t("enterFolderName"));
           if (!folderName) return;
@@ -154,11 +154,11 @@ export function FoldersClient({ userId }: { userId: string; }) {
           }
         }}
         disabled={loading}
-        className="w-full"
+        className="w-full border-dashed"
       >
         <FolderPlus size={18} />
         <span>{loading ? t("creating") : t("newFolder")}</span>
-      </DashedButton>
+      </LightButton>
 
       {/* 文件夹列表 */}
       <div className="mt-4">

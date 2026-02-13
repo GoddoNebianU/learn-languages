@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Button } from "@/design-system/base/button";
+import { LightButton } from "@/design-system/base/button";
 import { FileInputProps } from "../../types/controls";
 
 interface FileInputComponentProps extends FileInputProps {
@@ -34,15 +34,14 @@ export function FileInput({ accept, onFileSelect, disabled, className, children 
         disabled={disabled}
         className="hidden"
       />
-      <Button
+      <LightButton
         onClick={handleClick}
         disabled={disabled}
-        variant="secondary"
         size="sm"
         className={className}
       >
         {children}
-      </Button>
+      </LightButton>
     </>
   );
 }

@@ -9,5 +9,9 @@
     },
     "[css]": {
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    }
+    },
+    "tailwindCSS.classFunctions": [
+        "cva",
+        "cx"
+    ]
 }

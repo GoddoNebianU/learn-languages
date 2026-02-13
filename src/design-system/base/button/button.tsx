@@ -41,7 +41,7 @@ import { cn } from "@/design-system/lib/utils";
  */
 const buttonVariants = cva(
   // 基础样式
-  "border flex-inline items-center justify-center gap-2 rounded-md font-semibold shadow transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold shadow leading-none transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -56,9 +56,9 @@ const buttonVariants = cva(
         link: "text-primary-500 hover:text-primary-600 hover:underline shadow-none px-0",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-base",
-        lg: "h-12 px-6 text-lg",
+        sm: "px-2.5 py-1.5 text-sm",
+        md: "px-4 py-2 text-base",
+        lg: "px-6 py-3 text-lg",
       },
       fullWidth: {
         true: "w-full",
@@ -248,27 +248,9 @@ export const PrimaryButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="primary" {...props} />
 );
 
-export const SecondaryButton = (props: Omit<ButtonProps, "variant">) => (
+// LightButton: 次要按钮
+export const LightButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="secondary" {...props} />
-);
-
-// LightButton: 次要按钮的别名（向后兼容）
-export const LightButton = SecondaryButton;
-
-export const SuccessButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="success" {...props} />
-);
-
-export const WarningButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="warning" {...props} />
-);
-
-export const ErrorButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="error" {...props} />
-);
-
-export const GhostButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="ghost" {...props} />
 );
 
 // GhostLightButton: 透明按钮（白色文字，用于深色背景）
@@ -276,21 +258,11 @@ export const GhostLightButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="ghost-light" {...props} />
 );
 
-export const OutlineButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="outline" {...props} />
-);
-
 export const LinkButton = (props: Omit<ButtonProps, "variant">) => (
   <Button variant="link" {...props} />
 );
 
 // ========== 其他便捷组件 ==========
-
-// IconButton: SVG 图标按钮（使用 ghost 变体）
-export const IconButton = (props: Omit<ButtonProps, "variant"> & { icon?: React.ReactNode }) => {
-  const { icon, ...rest } = props;
-  return <Button variant="ghost" leftIcon={icon} {...rest} />;
-};
 
 // IconClick: 图片图标按钮（支持 Next.js Image）
 export const IconClick = (props: Omit<ButtonProps, "variant"> & {
@@ -344,8 +316,3 @@ export const CircleToggleButton = (props: Omit<ButtonProps, "variant"> & { selec
     </Button>
   );
 };
-
-// DashedButton: 虚线边框按钮（使用 outline 变体近似）
-export const DashedButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="outline" className="border-dashed" {...props} />
-);
