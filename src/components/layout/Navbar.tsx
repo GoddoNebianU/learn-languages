@@ -58,8 +58,8 @@ export async function Navbar() {
                 </GhostLightButton>
               </>
               || <>
-                <GhostLightButton href="/auth" className="hidden! md:block!" size="md">{t("sign_in")}</GhostLightButton>
-                <GhostLightButton href="/auth" className="md:hidden! block!" size="md">
+                <GhostLightButton href="/login" className="hidden! md:block!" size="md">{t("sign_in")}</GhostLightButton>
+                <GhostLightButton href="/login" className="md:hidden! block!" size="md">
                   <User size={20} />
                 </GhostLightButton>
               </>;

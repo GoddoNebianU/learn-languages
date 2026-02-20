@@ -1,0 +1,67 @@
+"use client";
+
+import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+export default function SignUpPage() {
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect");
+
+    const session = authClient.useSession().data;
+    const router = useRouter();
+
+    console.log(JSON.stringify({ re: redirectTo }));
+
+    useEffect(() => {
+        if (session) {
+            router.push(redirectTo ?? "/profile");
+        }
+    });
+
+    function login() {
+        const username = (document.getElementById("username") as HTMLInputElement).value;
+        const email = (document.getElementById("email") as HTMLInputElement).value;
+        const password = (document.getElementById("password") as HTMLInputElement).value;
+        authClient.signUp.email({
+            email: email,
+            name: username,
+            username: username,
+            password: password,
+            fetchOptions: {
+                onError: (ctx) => {
+                    toast.error(ctx.error.message);
+                }
+            }
+        });
+    }
+
+    return (
+        <div className="flex justify-center items-center h-screen w-screen">
+            <div className="rounded shadow-lg w-96 flex flex-col py-4">
+                <h1 className="text-6xl m-16 text-center">注册</h1>
+                <input type="text"
+                    id="username"
+                    placeholder="用户名"
+                    className="mx-auto mb-8 pb-2 w-60 border-b-2 outline-none" />
+                <input type="email"
+                    id="email"
+                    placeholder="邮箱地址"
+                    className="mx-auto mb-8 pb-2 w-60 border-b-2 outline-none" />
+                <input type="password"
+                    id="password"
+                    placeholder="密码"
+                    className="mx-auto mb-8 pb-2 w-60 border-b-2 outline-none" />
+                <button
+                    onClick={login}
+                    className="text-xl rounded shadow w-16 mx-auto p-2 my-4">
+                    确认</button>
+                <Link href={"/login" + (redirectTo ? `?redirect=${redirectTo}` : "")}
+                    className="text-center text-blue-800"
+                >已有账号？去登录</Link>
+            </div>
+        </div>
+    );
+}

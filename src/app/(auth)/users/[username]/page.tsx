@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LinkButton } from "@/design-system/base/button";
+import { LightButton, LinkButton } from "@/design-system/base/button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { LogoutButton } from "@/app/users/[username]/LogoutButton";
+// import { LogoutButton } from "./LogoutButton";
 
 interface UserPageProps {
     params: Promise<{ username: string; }>;
@@ -42,7 +42,7 @@ export default async function UserPage({ params }: UserPageProps) {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div></div>
-                        {isOwnProfile && <LogoutButton />}
+                        {isOwnProfile && <LightButton>登出</LightButton>}
                     </div>
                     <div className="flex items-center space-x-6">
                         {/* Avatar */}
