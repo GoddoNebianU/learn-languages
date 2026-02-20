@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 /**
  * Checkbox 复选框组件

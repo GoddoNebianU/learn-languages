@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 /**
  * Tabs 标签页组件

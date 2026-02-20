@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 /**
  * Button 组件

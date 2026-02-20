@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 /**
  * Modal 模态框组件

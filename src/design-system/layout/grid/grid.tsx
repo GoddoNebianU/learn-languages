@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 /**
  * Grid 网格布局组件
