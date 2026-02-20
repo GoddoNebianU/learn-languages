@@ -33,7 +33,6 @@ src/design-system/
 │   └── stack/
 ├── navigation/          # 导航组件
 │   └── tabs/
-└── index.ts             # 统一导出
 ```
 
 ## 快速开始
@@ -47,10 +46,7 @@ pnpm add class-variance-authority clsx tailwind-merge
 ### 导入组件
 
 ```tsx
-// 方式 1: 从主入口导入（简单但 tree-shaking 较差）
-import { Button, Input, Card } from '@/design-system';
-
-// 方式 2: 从子路径导入（更好的 tree-shaking）
+// 使用显式导入以获得更好的 tree-shaking
 import { Button } from '@/design-system/base/button';
 import { Input } from '@/design-system/base/input';
 import { Card } from '@/design-system/base/card';
@@ -59,7 +55,8 @@ import { Card } from '@/design-system/base/card';
 ### 使用组件
 
 ```tsx
-import { Button, Card } from '@/design-system';
+import { Button } from '@/design-system/base/button';
+import { Card } from '@/design-system/base/card';
 
 export function MyComponent() {
   return (
@@ -130,7 +127,7 @@ export function MyComponent() {
 按钮组件，支持多种变体和尺寸。
 
 ```tsx
-import { Button } from '@/design-system';
+import { Button } from '@/design-system/base/button';
 
 <Button variant="primary" size="md" onClick={handleClick}>
   点击我
@@ -148,7 +145,7 @@ import { Button } from '@/design-system';
 输入框组件。
 
 ```tsx
-import { Input } from '@/design-system';
+import { Input } from '@/design-system/base/input';
 
 <Input
   variant="bordered"
@@ -166,7 +163,7 @@ import { Input } from '@/design-system';
 多行文本输入组件。
 
 ```tsx
-import { Textarea } from '@/design-system';
+import { Textarea } from '@/design-system/base/textarea';
 
 <Textarea
   variant="bordered"
@@ -182,7 +179,7 @@ import { Textarea } from '@/design-system';
 卡片容器组件。
 
 ```tsx
-import { Card, CardHeader, CardTitle, CardBody, CardFooter } from '@/design-system';
+import { Card, CardHeader, CardTitle, CardBody, CardFooter } from '@/design-system/base/card';
 
 <Card>
   <CardHeader>
@@ -206,7 +203,7 @@ import { Card, CardHeader, CardTitle, CardBody, CardFooter } from '@/design-syst
 复选框组件。
 
 ```tsx
-import { Checkbox } from '@/design-system';
+import { Checkbox } from '@/design-system/base/checkbox';
 
 <Checkbox checked={checked} onChange={setChecked}>
   同意条款
@@ -218,7 +215,7 @@ import { Checkbox } from '@/design-system';
 单选按钮组件。
 
 ```tsx
-import { Radio, RadioGroup } from '@/design-system';
+import { Radio, RadioGroup } from '@/design-system/base/radio';
 
 <RadioGroup name="choice" value={value} onChange={setValue}>
   <Radio value="1">选项 1</Radio>
@@ -231,7 +228,7 @@ import { Radio, RadioGroup } from '@/design-system';
 开关组件。
 
 ```tsx
-import { Switch } from '@/design-system';
+import { Switch } from '@/design-system/base/switch';
 
 <Switch checked={enabled} onChange={setEnabled} />
 ```
@@ -241,7 +238,7 @@ import { Switch } from '@/design-system';
 警告提示组件。
 
 ```tsx
-import { Alert } from '@/design-system';
+import { Alert } from '@/design-system/feedback/alert';
 
 <Alert variant="success" title="成功">
   操作成功完成
@@ -255,7 +252,7 @@ import { Alert } from '@/design-system';
 进度条组件。
 
 ```tsx
-import { Progress } from '@/design-system';
+import { Progress } from '@/design-system/feedback/progress';
 
 <Progress value={60} showLabel />
 ```
@@ -265,7 +262,7 @@ import { Progress } from '@/design-system';
 骨架屏组件。
 
 ```tsx
-import { Skeleton, TextSkeleton, CardSkeleton } from '@/design-system';
+import { Skeleton, TextSkeleton, CardSkeleton } from '@/design-system/feedback/skeleton';
 
 <Skeleton className="h-4 w-32" />
 <TextSkeleton lines={3} />
@@ -277,7 +274,7 @@ import { Skeleton, TextSkeleton, CardSkeleton } from '@/design-system';
 通知提示组件（基于 sonner）。
 
 ```tsx
-import { toast } from '@/design-system';
+import { toast } from '@/design-system/feedback/toast';
 
 toast.success("操作成功！");
 toast.error("发生错误");
@@ -293,7 +290,7 @@ toast.promise(promise, {
 模态框组件。
 
 ```tsx
-import { Modal } from '@/design-system';
+import { Modal } from '@/design-system/overlay/modal';
 
 <Modal open={open} onClose={() => setOpen(false)}>
   <Modal.Header>
@@ -316,7 +313,7 @@ import { Modal } from '@/design-system';
 徽章组件。
 
 ```tsx
-import { Badge } from '@/design-system';
+import { Badge } from '@/design-system/data-display/badge';
 
 <Badge variant="success">成功</Badge>
 <Badge dot />
@@ -329,7 +326,7 @@ import { Badge } from '@/design-system';
 分隔线组件。
 
 ```tsx
-import { Divider } from '@/design-system';
+import { Divider } from '@/design-system/data-display/divider';
 
 <Divider />
 <Divider>或者</Divider>
@@ -341,7 +338,7 @@ import { Divider } from '@/design-system';
 容器组件。
 
 ```tsx
-import { Container } from '@/design-system';
+import { Container } from '@/design-system/layout/container';
 
 <Container size="lg" padding="xl">
   <p>内容</p>
@@ -353,7 +350,7 @@ import { Container } from '@/design-system';
 网格布局组件。
 
 ```tsx
-import { Grid } from '@/design-system';
+import { Grid } from '@/design-system/layout/grid';
 
 <Grid cols={3} gap={4}>
   <div>项目 1</div>
@@ -367,7 +364,7 @@ import { Grid } from '@/design-system';
 堆叠布局组件。
 
 ```tsx
-import { Stack, VStack, HStack } from '@/design-system';
+import { Stack, VStack, HStack } from '@/design-system/layout/stack';
 
 <VStack gap={4}>
   <div>项目 1</div>
@@ -380,7 +377,7 @@ import { Stack, VStack, HStack } from '@/design-system';
 标签页组件。
 
 ```tsx
-import { Tabs } from '@/design-system';
+import { Tabs } from '@/design-system/navigation/tabs';
 
 <Tabs value={activeTab} onValueChange={setActiveTab}>
   <Tabs.List>
@@ -464,7 +461,7 @@ colors.info.500     // #3b82f6
 合并 Tailwind CSS 类名的工具函数。
 
 ```tsx
-import { cn } from '@/design-system';
+import { cn } from '@/design-system/lib/utils';
 
 const className = cn(
   'base-class',
@@ -480,11 +477,10 @@ const className = cn(
 对于更好的 tree-shaking，建议从子路径导入：
 
 ```tsx
-// ✅ 推荐
+// ✅ 使用显式导入
 import { Button } from '@/design-system/base/button';
-
-// ❌ 不推荐（但也可以）
-import { Button } from '@/design-system';
+import { Input } from '@/design-system/base/input';
+import { Card } from '@/design-system/base/card';
 ```
 
 ### 2. 样式覆盖
