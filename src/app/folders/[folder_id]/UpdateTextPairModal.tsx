@@ -1,5 +1,5 @@
-import { LightButton } from "@/design-system/base/button";
-import { Input } from "@/design-system/base/input";
+import { LightButton } from "@/design-system/base/button/button";
+import { Input } from "@/design-system/base/input/input";
 import { LocaleSelector } from "@/components/ui/LocaleSelector";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";

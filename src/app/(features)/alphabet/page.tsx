@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton } from "@/design-system/base/button";
+import { LightButton } from "@/design-system/base/button/button";
 import { AlphabetCard } from "./AlphabetCard";
 
 export default function Alphabet() {

@@ -1,6 +1,6 @@
 import { useState, useRef, forwardRef, useEffect, useCallback } from "react";
 import { SubtitleDisplay } from "./SubtitleDisplay";
-import { LightButton } from "@/design-system/base/button";
+import { LightButton } from "@/design-system/base/button/button";
 import { RangeInput } from "@/components/ui/RangeInput";
 import { getIndex, parseSrt, getNearistIndex } from "../subtitle";
 import { useTranslations } from "next-intl";

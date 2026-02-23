@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LinkButton, CircleToggleButton, LightButton } from "@/design-system/base/button";
+import { LinkButton, CircleToggleButton, LightButton } from "@/design-system/base/button/button";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { useTranslations } from "next-intl";

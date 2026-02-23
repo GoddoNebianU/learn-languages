@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, RotateCcw, Pause } from "lucide-react";
-import { LightButton } from "@/design-system/base/button";
+import { LightButton } from "@/design-system/base/button/button";
 import { ControlBarProps } from "../../types/controls";
 import { PlayButton } from "../atoms/PlayButton";
 import { SpeedControl } from "../atoms/SpeedControl";

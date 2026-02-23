@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button";
+import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button/button";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";

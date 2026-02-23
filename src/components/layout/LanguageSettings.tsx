@@ -1,6 +1,6 @@
 "use client";
 
-import { GhostLightButton } from "@/design-system/base/button";
+import { GhostLightButton } from "@/design-system/base/button/button";
 import { useState } from "react";
 import { Languages } from "lucide-react";
 

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Folder as Fd } from "lucide-react";
 import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton } from "@/design-system/base/button";
+import { PrimaryButton } from "@/design-system/base/button/button";
 
 interface FolderSelectorProps {
   folders: TSharedFolderWithTotalPairs[];

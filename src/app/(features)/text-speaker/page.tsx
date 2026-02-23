@@ -1,7 +1,7 @@
 "use client";
 
-import { LightButton } from "@/design-system/base/button";
-import { IconClick } from "@/design-system/base/button";
+import { LightButton } from "@/design-system/base/button/button";
+import { IconClick } from "@/design-system/base/button/button";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {

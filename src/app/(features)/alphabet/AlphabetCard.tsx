@@ -3,11 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { IconClick, CircleToggleButton, CircleButton, PrimaryButton } from "@/design-system/base/button";
+import { IconClick, CircleToggleButton, CircleButton, PrimaryButton } from "@/design-system/base/button/button";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Card } from "@/design-system/base/card";
+import { Card } from "@/design-system/base/card/card";
 
 interface AlphabetCardProps {
   alphabet: Letter[];
