@@ -9,7 +9,7 @@
  * @example
  * ```tsx
  * import { toast } from '@/design-system/feedback/toast';
- *
+ * ```
  * // 基础用法
  * toast.success("操作成功！");
  * toast.error("发生错误");

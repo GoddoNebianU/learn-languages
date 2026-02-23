@@ -3,8 +3,8 @@
  *
  * 使用 Design System 重写的容器组件
  */
-import { Container as DSContainer } from "@/design-system/layout/container/container";
-import { Card } from "@/design-system/base/card/card";
+import { Container as DSContainer } from "@/design-system/layout/container";
+import { Card } from "@/design-system/base/card";
 
 interface ContainerProps {
   children?: React.ReactNode;

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton, LinkButton } from "@/design-system/base/button/button";
+import { LightButton, LinkButton } from "@/design-system/base/button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
 import { notFound } from "next/navigation";

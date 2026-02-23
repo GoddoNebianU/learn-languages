@@ -15,7 +15,7 @@ import { SubtitleArea } from "./components/compounds/SubtitleArea";
 import { ControlBar } from "./components/compounds/ControlBar";
 import { UploadZone } from "./components/compounds/UploadZone";
 import { SeekBar } from "./components/atoms/SeekBar";
-import { LightButton } from "@/design-system/base/button/button";
+import { LightButton } from "@/design-system/base/button";
 
 export default function SrtPlayerPage() {
   const t = useTranslations("home");

@@ -6,7 +6,7 @@ import {
   TextSpeakerArraySchema,
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
-import { IconClick } from "@/design-system/base/button/button";
+import { IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";

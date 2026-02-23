@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { LightButton } from "@/design-system/base/button/button";
+import { LightButton } from "@/design-system/base/button";
 import { FileInputProps } from "../../types/controls";
 
 interface FileInputComponentProps extends FileInputProps {

@@ -3,7 +3,7 @@
  *
  * 使用 Design System 重写的卡片列表组件
  */
-import { VStack } from "@/design-system/layout/stack/stack";
+import { VStack } from "@/design-system/layout/stack";
 
 interface CardListProps {
   children: React.ReactNode;

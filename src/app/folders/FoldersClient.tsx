@@ -7,7 +7,7 @@ import {
   FolderPlus,
   Trash2,
 } from "lucide-react";
-import { CircleButton, LightButton } from "@/design-system/base/button/button";
+import { CircleButton, LightButton } from "@/design-system/base/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";

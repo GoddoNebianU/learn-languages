@@ -5,7 +5,7 @@ import { LanguageSettings } from "./LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { GhostLightButton } from "@/design-system/base/button/button";
+import { GhostLightButton } from "@/design-system/base/button";
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
