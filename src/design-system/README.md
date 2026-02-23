@@ -398,17 +398,6 @@ import { Tabs } from '@/design-system/navigation/tabs/tabs';
 ### 颜色
 
 ```tsx
-import { colors } from '@/design-system/tokens/colors';
-
-// 主色
-colors.primary.500  // #35786f
-
-// 语义色
-colors.success.500  // #22c55e
-colors.warning.500  // #f59e0b
-colors.error.500    // #ef4444
-colors.info.500     // #3b82f6
-```
 
 在组件中使用：
 
