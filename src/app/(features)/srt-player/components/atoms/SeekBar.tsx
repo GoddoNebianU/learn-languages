@@ -2,7 +2,7 @@
 
 import React from "react";
 import { SeekBarProps } from "../../types/player";
-import { RangeInput } from "@/components/ui/RangeInput";
+import { RangeInput } from "@/design-system/base/range";
 
 export function SeekBar({ value, max, onChange, disabled, className }: SeekBarProps) {
   return (

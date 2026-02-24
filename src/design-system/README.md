@@ -7,6 +7,7 @@
 ```
 src/design-system/
 ├── lib/                 # 工具函数
+│   └── utils.ts
 ├── base/                # 基础组件
 │   ├── button.tsx
 │   ├── input.tsx
@@ -15,7 +16,8 @@ src/design-system/
 │   ├── checkbox.tsx
 │   ├── radio.tsx
 │   ├── switch.tsx
-│   └── select.tsx
+│   ├── select.tsx
+│   └── range.tsx
 ├── feedback/            # 反馈组件
 │   ├── alert.tsx
 │   ├── progress.tsx
@@ -82,6 +84,7 @@ export function MyComponent() {
 | [Radio](#radio) | 单选按钮 | ✅ |
 | [Switch](#switch) | 开关 | ✅ |
 | [Select](#select) | 下拉选择框 | ✅ |
+| [Range](#range) | 范围滑块 | ✅ |
 
 ### 反馈组件
 
@@ -231,6 +234,19 @@ import { Switch } from '@/design-system/base/switch';
 
 <Switch checked={enabled} onChange={setEnabled} />
 ```
+
+### Range
+
+范围滑块组件。
+
+```tsx
+import { Range } from '@/design-system/base/range';
+
+<Range value={50} min={0} max={100} onChange={setValue} />
+<Range value={75} min={0} max={100} disabled />
+```
+
+**别名**: `RangeInput`（向后兼容）
 
 ### Alert
 

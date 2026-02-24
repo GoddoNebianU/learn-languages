@@ -19,9 +19,7 @@ export {
   type ButtonSize,
   type ButtonProps
 } from '@/design-system/base/button';
-
-// 业务特定组件
-export { RangeInput } from './RangeInput';
+export { RangeInput, Range, type RangeProps } from '@/design-system/base/range';
 export { Container } from './Container';
 export { PageLayout } from './PageLayout';
 export { PageHeader } from './PageHeader';
