@@ -1,4 +1,4 @@
-import { SubtitleEntry } from "../types/subtitle";
+import { SubtitleEntry } from "../types";
 
 export function parseSrt(data: string): SubtitleEntry[] {
   const lines = data.split(/\r?\n/);
