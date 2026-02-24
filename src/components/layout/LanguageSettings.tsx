@@ -26,49 +26,49 @@ export function LanguageSettings() {
                     <div>
                         <div className="absolute top-10 right-0 rounded-md shadow-md flex flex-col gap-2">
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("en-US")}
                             >
                                 English
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("zh-CN")}
                             >
                                 中文
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("ja-JP")}
                             >
                                 日本語
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("ko-KR")}
                             >
                                 한국어
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("de-DE")}
                             >
                                 Deutsch
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("fr-FR")}
                             >
                                 Français
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("it-IT")}
                             >
                                 Italiano
                             </GhostLightButton>
                             <GhostLightButton
-                                className="w-full bg-[#35786f]"
+                                className="w-full bg-primary-500"
                                 onClick={() => setLocale("ug-CN")}
                             >
                                 ئۇيغۇرچە
