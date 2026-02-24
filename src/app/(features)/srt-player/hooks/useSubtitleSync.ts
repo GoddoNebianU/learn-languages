@@ -24,25 +24,25 @@ export function useSubtitleSync() {
   const seek = useSrtPlayerStore((state) => state.seek);
   const pause = useSrtPlayerStore((state) => state.pause);
 
-  // 获取当前时间对应的字幕索引
-  const getCurrentSubtitleIndex = (time: number): number | null => {
-    for (let i = 0; i < subtitleData.length; i++) {
-      const subtitle = subtitleData[i];
-      if (time >= subtitle.start && time <= subtitle.end) {
-        return i;
-      }
-    }
-    return null;
-  };
-
-  // 检查是否需要自动暂停
-  const shouldAutoPause = (subtitle: { start: number; end: number }, time: number): boolean => {
-    return autoPause && time >= subtitle.end - 0.2 && time < subtitle.end;
-  };
-
   // 同步循环
   useEffect(() => {
     const syncSubtitles = () => {
+      // 获取当前时间对应的字幕索引
+      const getCurrentSubtitleIndex = (time: number): number | null => {
+        for (let i = 0; i < subtitleData.length; i++) {
+          const subtitle = subtitleData[i];
+          if (time >= subtitle.start && time <= subtitle.end) {
+            return i;
+          }
+        }
+        return null;
+      };
+
+      // 检查是否需要自动暂停
+      const shouldAutoPause = (subtitle: { start: number; end: number }, time: number): boolean => {
+        return autoPause && time >= subtitle.end - 0.2 && time < subtitle.end;
+      };
+
       const currentIndex = getCurrentSubtitleIndex(currentTime);
 
       // 检查字幕是否发生变化

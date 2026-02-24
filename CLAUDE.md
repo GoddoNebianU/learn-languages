@@ -2,18 +2,15 @@
 
 ```bash
 # 使用以下命令检查代码合法性
-pnpm run build
+pnpm eslint
 ```
 
 
-- **Next.js 16** 使用 App Router 和 standalone 输出模式
-- **React 19** 启用 React Compiler 进行优化
-- **TypeScript** 严格模式和 ES2023 目标
-- **Tailwind CSS v4** 样式框架
-- **PostgreSQL** + **Prisma ORM**（自定义输出目录：`src/generated/prisma`）
-- **better-auth** 身份验证（邮箱/密码）
-- **next-intl** 国际化（支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN）
-- **阿里云千问 TTS** (qwen3-tts-flash) 文本转语音
+- Next.js 16 使用 App Router
+- TypeScript 严格模式和 ES2023 目标
+- better-auth 身份验证（邮箱/密码）
+- next-intl 国际化（支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN）
+- 阿里云千问 TTS (qwen3-tts-flash) 文本转语音
 - 使用 pnpm，而不是 npm 或 yarn
 - 应用使用 TypeScript 严格模式 - 确保类型安全
 - 所有面向用户的文本都需要国际化

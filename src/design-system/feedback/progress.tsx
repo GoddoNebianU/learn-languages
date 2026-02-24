@@ -134,7 +134,7 @@ export function Progress({
           </div>
         </div>
         {showLabel && (
-          <div className="ml-3 text-sm font-medium text-gray-700 min-w-[3rem] text-right">
+          <div className="ml-3 text-sm font-medium text-gray-700 min-w-12 text-right">
             {formatLabel()}
           </div>
         )}
