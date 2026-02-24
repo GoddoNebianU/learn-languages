@@ -21,3 +21,4 @@ pnpm run build
 - **新功能应遵循 action-service-repository 架构**
 - Better-auth 处理会话管理 - 使用 authClient 适配器进行认证操作
 - 使用 better-auth username 插件支持用户名登录
+- 组件尽量复用/src/design-system里的可复用组件与/src/components里的业务相关组件
