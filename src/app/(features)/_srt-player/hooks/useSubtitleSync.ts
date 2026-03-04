@@ -11,11 +11,11 @@ import { useSrtPlayerStore } from "../store";
  */
 export function useSubtitleSync() {
   const lastSubtitleRef = useRef<number | null>(null);
+  const hasAutoPausedRef = useRef<{ [key: number]: boolean }>({}); // 追踪每个字幕是否已触发自动暂停
   const rafIdRef = useRef<number>(0);
 
   // 从 store 获取状态
   const subtitleData = useSrtPlayerStore((state) => state.subtitle.data);
-  const currentTime = useSrtPlayerStore((state) => state.video.currentTime);
   const isPlaying = useSrtPlayerStore((state) => state.video.isPlaying);
   const autoPause = useSrtPlayerStore((state) => state.controls.autoPause);
 
@@ -27,6 +27,9 @@ export function useSubtitleSync() {
   // 同步循环
   useEffect(() => {
     const syncSubtitles = () => {
+      // 从 store 获取最新的 currentTime
+      const currentTime = useSrtPlayerStore.getState().video.currentTime;
+
       // 获取当前时间对应的字幕索引
       const getCurrentSubtitleIndex = (time: number): number | null => {
         for (let i = 0; i < subtitleData.length; i++) {
@@ -36,11 +39,6 @@ export function useSubtitleSync() {
           }
         }
         return null;
-      };
-
-      // 检查是否需要自动暂停
-      const shouldAutoPause = (subtitle: { start: number; end: number }, time: number): boolean => {
-        return autoPause && time >= subtitle.end - 0.2 && time < subtitle.end;
       };
 
       const currentIndex = getCurrentSubtitleIndex(currentTime);
@@ -57,14 +55,26 @@ export function useSubtitleSync() {
         }
       }
 
-      // 检查是否需要自动暂停
-      const currentSubtitle = currentIndex !== null ? subtitleData[currentIndex] : null;
-      if (currentSubtitle && shouldAutoPause(currentSubtitle, currentTime)) {
-        seek(currentSubtitle.start);
-        pause();
+      // 检查是否需要自动暂停（每个字幕只触发一次）
+      if (autoPause && currentIndex !== null) {
+        const currentSubtitle = subtitleData[currentIndex];
+        const timeUntilEnd = currentSubtitle.end - currentTime;
+
+        // 在字幕结束前 0.2 秒触发自动暂停
+        if (timeUntilEnd <= 0.2 && timeUntilEnd > 0 && !hasAutoPausedRef.current[currentIndex]) {
+          hasAutoPausedRef.current[currentIndex] = true;
+          seek(currentSubtitle.start);
+          // 使用 setTimeout 确保在 seek 之后暂停
+          setTimeout(() => {
+            pause();
+          }, 0);
+        }
       }
 
-      rafIdRef.current = requestAnimationFrame(syncSubtitles);
+      // 如果视频正在播放，继续循环
+      if (useSrtPlayerStore.getState().video.isPlaying) {
+        rafIdRef.current = requestAnimationFrame(syncSubtitles);
+      }
     };
 
     if (subtitleData.length > 0 && isPlaying) {
@@ -76,10 +86,11 @@ export function useSubtitleSync() {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [subtitleData, currentTime, isPlaying, autoPause, setCurrentSubtitle, seek, pause]);
+  }, [subtitleData, isPlaying, autoPause, setCurrentSubtitle, seek, pause]);
 
   // 重置最后字幕引用
   useEffect(() => {
     lastSubtitleRef.current = null;
+    hasAutoPausedRef.current = {};
   }, [subtitleData]);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import { toast } from 'sonner';
 import type {
   SrtPlayerStore,
@@ -11,12 +11,11 @@ import type {
   SubtitleSettings,
   SubtitleEntry,
 } from './types';
-import type { MutableRefObject } from 'react';
+import type { RefObject } from 'react';
 
-// 声明视频 ref 的全局类型（用于 store 访问 video element）
-let videoRef: MutableRefObject<HTMLVideoElement | null> | null = null;
+let videoRef: RefObject<HTMLVideoElement | null> | null;
 
-export function setVideoRef(ref: MutableRefObject<HTMLVideoElement | null>) {
+export function setVideoRef(ref: RefObject<HTMLVideoElement | null> | null) {
   videoRef = ref;
 }
 
@@ -112,7 +111,10 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
 
       pause: () => {
         if (videoRef?.current) {
-          videoRef.current.pause();
+          // 只有在视频正在播放时才暂停，避免重复调用
+          if (!videoRef.current.paused) {
+            videoRef.current.pause();
+          }
           set((state) => ({ video: { ...state.video, isPlaying: false } }));
         }
       },

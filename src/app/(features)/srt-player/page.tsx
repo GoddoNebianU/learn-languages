@@ -1,63 +1,95 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
-import { PageLayout } from "@/components/ui/PageLayout";
-import { VideoPlayerPanel } from "./components/VideoPlayerPanel";
-import { ControlPanel } from "./components/ControlPanel";
-import { useVideoSync } from "./hooks/useVideoSync";
-import { useSubtitleSync } from "./hooks/useSubtitleSync";
-import { useSrtPlayerShortcuts } from "./hooks/useKeyboardShortcuts";
-import { loadSubtitle } from "./utils/subtitleParser";
-import { useSrtPlayerStore } from "./store";
+import { LightButton, PageLayout } from "@/components/ui";
+import { useVideoStore } from "./stores/videoStore";
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { HStack } from "@/design-system/layout/stack";
+import { MessageSquareQuote, Video } from "lucide-react";
+import { useFileUpload } from "./useFileUpload";
+import { useSubtitleStore } from "./stores/substitleStore";
+import { getCurrentIndex } from "./subtitleParser";
 
-export default function SrtPlayerPage() {
-  const t = useTranslations("home");
-  const srtT = useTranslations("srt_player");
-
+export default function SRTPlayerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { setVideoRef, currentSrc, loadVideo, loaded, getCurrentTime, getDuration, play, setOnTimeUpdate } = useVideoStore();
+  const {
+    uploadVideo,
+    uploadSubtitle,
+  } = useFileUpload();
+  const {
+    sub,
+    setSub,
+    index,
+    setIndex
+  } = useSubtitleStore();
 
-  // Store state
-  const subtitleUrl = useSrtPlayerStore((state) => state.subtitle.url);
-  const setSubtitleData = useSrtPlayerStore((state) => state.setSubtitleData);
-
-  // Hooks
-  useVideoSync(videoRef);
-  useSubtitleSync();
-  useSrtPlayerShortcuts();
-
-  // Load subtitle when URL changes
   useEffect(() => {
-    if (subtitleUrl) {
-      loadSubtitle(subtitleUrl)
-        .then((subtitleData) => {
-          setSubtitleData(subtitleData);
-          toast.success(srtT("subtitleLoadSuccess"));
-        })
-        .catch((error) => {
-          toast.error(srtT("subtitleLoadFailed") + ": " + error.message);
-        });
-    }
-  }, [srtT, subtitleUrl, setSubtitleData]);
+    setVideoRef(videoRef);
+    setOnTimeUpdate((time) => {
+      setIndex(getCurrentIndex(sub, time));
+    });
+    return () => {
+      setVideoRef();
+      setOnTimeUpdate(() => { });
+    };
+  }, [setVideoRef, setOnTimeUpdate, sub, setIndex]);
 
   return (
     <PageLayout>
-      {/* Title */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          {t("srtPlayer.name")}
-        </h1>
-        <p className="text-lg text-gray-600">
-          {t("srtPlayer.description")}
-        </p>
+      <video ref={videoRef} width="85%" className="mx-auto"></video>
+
+      <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
+        {
+          sub[index] && sub[index].text.split(" ").map((s, i) =>
+            <Link key={i}
+              href={`/dictionary?q=${s}`}
+              className="px-1 h-fit hover:bg-gray-200 hover:cursor-pointer">
+              {s}
+            </Link>
+          )}
       </div>
 
-      {/* Video Player */}
-      <VideoPlayerPanel ref={videoRef} />
+      {/* 上传区域 */}
+      <div className="mx-auto mt-4 flex items-center justify-center flex-wrap gap-2 w-[85%]">
+        <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
+          <div className="flex items-center flex-col">
+            <Video size={16} />
+            <span className="text-sm">视频文件</span>
+          </div>
+          <LightButton
+            onClick={() => uploadVideo((url) => {
+              loadVideo(url);
+            })}>{loaded ? currentSrc?.split("/").pop() : "视频未上传"}</LightButton>
+        </div>
+        <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
+          <div className="flex items-center flex-col">
+            <MessageSquareQuote size={16} />
+            <span className="text-sm"
+            >{sub.length > 0 ? `字幕已上传 (${sub.length} 条)` : "字幕未上传"}</span>
+          </div>
+          <LightButton
+            onClick={() =>
+              uploadSubtitle((sub) => {
+                setSub(sub);
+              })
+            }>上传字幕</LightButton>
+        </div>
+      </div>
 
-      {/* Control Panel */}
-      <ControlPanel />
+      {
+        /* 控制面板 */
+        sub.length > 0 && loaded &&
+        <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
+          <LightButton onClick={play}>play</LightButton>
+          <LightButton>previous</LightButton>
+          <LightButton>next</LightButton>
+          <LightButton>restart</LightButton>
+          <LightButton>1x</LightButton>
+          <LightButton>ap(on)</LightButton>
+        </HStack>
+      }
+
     </PageLayout>
   );
 }

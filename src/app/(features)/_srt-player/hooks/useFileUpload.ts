@@ -9,10 +9,10 @@ export function useFileUpload() {
     onError?: (error: Error) => void
   ) => {
     try {
-      // 验证文件大小（限制为100MB）
-      const maxSize = 100 * 1024 * 1024; // 100MB
+      // 验证文件大小（限制为1000MB）
+      const maxSize = 1000 * 1024 * 1024; // 1000MB
       if (file.size > maxSize) {
-        throw new Error(`文件大小超过限制 (${(file.size / 1024 / 1024).toFixed(2)}MB > 100MB)`);
+        throw new Error(`文件大小超过限制 (${(file.size / 1024 / 1024).toFixed(2)}MB > 1000MB)`);
       }
       
       const url = URL.createObjectURL(file);
