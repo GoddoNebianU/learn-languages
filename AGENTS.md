@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 ```bash
 # 使用以下命令检查代码合法性
