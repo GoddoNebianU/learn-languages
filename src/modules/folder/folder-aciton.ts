@@ -3,8 +3,39 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { ValidateError } from "@/lib/errors";
-import { ActionInputCreatePair, ActionInputUpdatePairById, ActionOutputGetFoldersWithTotalPairsByUserId, ActionOutputGetPublicFolders, ActionOutputSetFolderVisibility, ActionOutputToggleFavorite, ActionOutputCheckFavorite, validateActionInputCreatePair, validateActionInputUpdatePairById } from "./folder-action-dto";
-import { repoCreateFolder, repoCreatePair, repoDeleteFolderById, repoDeletePairById, repoGetFolderIdByPairId, repoGetFolderVisibility, repoGetFoldersByUserId, repoGetFoldersWithTotalPairsByUserId, repoGetPairsByFolderId, repoGetPublicFolders, repoGetUserIdByFolderId, repoRenameFolderById, repoSearchPublicFolders, repoUpdateFolderVisibility, repoUpdatePairById, repoToggleFavorite, repoCheckFavorite } from "./folder-repository";
+import {
+  ActionInputCreatePair,
+  ActionInputUpdatePairById,
+  ActionOutputGetFoldersWithTotalPairsByUserId,
+  ActionOutputGetPublicFolders,
+  ActionOutputSetFolderVisibility,
+  ActionOutputToggleFavorite,
+  ActionOutputCheckFavorite,
+  ActionOutputGetUserFavorites,
+  ActionOutputUserFavorite,
+  validateActionInputCreatePair,
+  validateActionInputUpdatePairById,
+} from "./folder-action-dto";
+import {
+  repoCreateFolder,
+  repoCreatePair,
+  repoDeleteFolderById,
+  repoDeletePairById,
+  repoGetFolderIdByPairId,
+  repoGetFolderVisibility,
+  repoGetFoldersByUserId,
+  repoGetFoldersWithTotalPairsByUserId,
+  repoGetPairsByFolderId,
+  repoGetPublicFolders,
+  repoGetUserIdByFolderId,
+  repoRenameFolderById,
+  repoSearchPublicFolders,
+  repoUpdateFolderVisibility,
+  repoUpdatePairById,
+  repoToggleFavorite,
+  repoCheckFavorite,
+  repoGetUserFavorites,
+} from "./folder-repository";
 import { validate } from "@/utils/validate";
 import z from "zod";
 import { LENGTH_MAX_FOLDER_NAME, LENGTH_MIN_FOLDER_NAME } from "@/shared/constant";
@@ -416,6 +447,44 @@ export async function actionCheckFavorite(
                 isFavorited,
                 favoriteCount,
             },
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionGetUserFavorites(): Promise<ActionOutputGetUserFavorites> {
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.user?.id) {
+            return {
+                success: false,
+                message: 'Unauthorized',
+            };
+        }
+
+        const favorites = await repoGetUserFavorites({
+            userId: session.user.id,
+        });
+
+        return {
+            success: true,
+            message: 'success',
+            data: favorites.map((fav) => ({
+                id: fav.id,
+                folderId: fav.folderId,
+                folderName: fav.folderName,
+                folderCreatedAt: fav.folderCreatedAt,
+                folderTotalPairs: fav.folderTotalPairs,
+                folderOwnerId: fav.folderOwnerId,
+                folderOwnerName: fav.folderOwnerName,
+                folderOwnerUsername: fav.folderOwnerUsername,
+                favoritedAt: fav.favoritedAt,
+            })),
         };
     } catch (e) {
         console.log(e);

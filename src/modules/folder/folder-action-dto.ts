@@ -84,3 +84,21 @@ export type ActionOutputCheckFavorite = {
         favoriteCount: number;
     };
 };
+
+export type ActionOutputUserFavorite = {
+    id: number;
+    folderId: number;
+    folderName: string;
+    folderCreatedAt: Date;
+    folderTotalPairs: number;
+    folderOwnerId: string;
+    folderOwnerName: string | null;
+    folderOwnerUsername: string | null;
+    favoritedAt: Date;
+};
+
+export type ActionOutputGetUserFavorites = {
+    message: string;
+    success: boolean;
+    data?: ActionOutputUserFavorite[];
+};

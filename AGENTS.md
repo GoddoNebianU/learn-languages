@@ -132,6 +132,20 @@ pnpm lint          # ESLint
 pnpm prisma studio # 数据库 GUI
 ```
 
+### 数据库迁移
+
+**必须使用 `prisma migrate dev`，禁止使用 `db push`：**
+
+```bash
+# 修改 schema 后创建迁移
+DATABASE_URL=your_db_url pnpm prisma migrate dev --name your_migration_name
+
+# 生成 Prisma Client
+DATABASE_URL=your_db_url pnpm prisma generate
+```
+
+`db push` 会绕过迁移历史，导致生产环境无法正确迁移。
+
 ## 备注
 
 - Tailwind CSS v4 (无 tailwind.config.ts)

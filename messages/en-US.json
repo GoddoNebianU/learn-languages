@@ -159,7 +159,9 @@
     "sourceCode": "GitHub",
     "sign_in": "Sign In",
     "profile": "Profile",
-    "folders": "Folders"
+    "folders": "Folders",
+    "explore": "Explore",
+    "favorites": "Favorites"
   },
   "profile": {
     "myProfile": "My Profile",
@@ -254,6 +256,26 @@
     "pleaseCreateFolder": "Please create a folder first",
     "savedToFolder": "Saved to folder: {folderName}",
     "saveFailed": "Save failed, please try again later"
+  },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Discover public folders",
+    "searchPlaceholder": "Search public folders...",
+    "loading": "Loading...",
+    "noFolders": "No public folders found",
+    "folderInfo": "{userName} • {totalPairs} pairs",
+    "unknownUser": "Unknown User",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "pleaseLogin": "Please login first"
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "subtitle": "Folders you've favorited",
+    "loading": "Loading...",
+    "noFavorites": "No favorites yet",
+    "folderInfo": "{userName} • {totalPairs} pairs",
+    "unknownUser": "Unknown User"
   },
   "user_profile": {
     "anonymous": "Anonymous",

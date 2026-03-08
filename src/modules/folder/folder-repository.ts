@@ -11,6 +11,8 @@ import {
   RepoInputToggleFavorite,
   RepoInputCheckFavorite,
   RepoOutputFavoriteStatus,
+  RepoInputGetUserFavorites,
+  RepoOutputUserFavorite,
 } from "./folder-repository-dto";
 import { Visibility } from "../../../generated/prisma/enums";
 
@@ -271,4 +273,35 @@ export async function repoCheckFavorite(
     isFavorited: !!favorite,
     favoriteCount: count,
   };
+}
+
+export async function repoGetUserFavorites(input: RepoInputGetUserFavorites) {
+  const { userId, limit = 50, offset = 0 } = input;
+
+  const favorites = await prisma.folderFavorite.findMany({
+    where: { userId },
+    include: {
+      folder: {
+        include: {
+          _count: { select: { pairs: true } },
+          user: { select: { name: true, username: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    skip: offset,
+  });
+
+  return favorites.map((fav) => ({
+    id: fav.id,
+    folderId: fav.folderId,
+    folderName: fav.folder.name,
+    folderCreatedAt: fav.folder.createdAt,
+    folderTotalPairs: fav.folder._count.pairs,
+    folderOwnerId: fav.folder.userId,
+    folderOwnerName: fav.folder.user.name,
+    folderOwnerUsername: fav.folder.user.username,
+    favoritedAt: fav.createdAt,
+  }));
 }

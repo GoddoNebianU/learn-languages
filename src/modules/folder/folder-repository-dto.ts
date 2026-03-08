@@ -71,3 +71,21 @@ export type RepoOutputFavoriteStatus = {
   isFavorited: boolean;
   favoriteCount: number;
 };
+
+export interface RepoInputGetUserFavorites {
+  userId: string;
+  limit?: number;
+  offset?: number;
+}
+
+export type RepoOutputUserFavorite = {
+  id: number;
+  folderId: number;
+  folderName: string;
+  folderCreatedAt: Date;
+  folderTotalPairs: number;
+  folderOwnerId: string;
+  folderOwnerName: string | null;
+  folderOwnerUsername: string | null;
+  favoritedAt: Date;
+};

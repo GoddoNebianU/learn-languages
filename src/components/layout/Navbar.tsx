@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { IMAGES } from "@/config/images";
-import { Folder, Home, User } from "lucide-react";
+import { Compass, Folder, Heart, Home, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
@@ -41,6 +41,22 @@ export async function Navbar() {
         <GhostLightButton href="/folders" className="md:hidden! block!" size="md">
           <Folder size={20} />
         </GhostLightButton>
+        <GhostLightButton href="/explore" className="md:block! hidden!" size="md">
+          {t("explore")}
+        </GhostLightButton>
+        <GhostLightButton href="/explore" className="md:hidden! block!" size="md">
+          <Compass size={20} />
+        </GhostLightButton>
+        {session && (
+          <>
+            <GhostLightButton href="/favorites" className="md:block! hidden!" size="md">
+              {t("favorites")}
+            </GhostLightButton>
+            <GhostLightButton href="/favorites" className="md:hidden! block!" size="md">
+              <Heart size={20} />
+            </GhostLightButton>
+          </>
+        )}
         <GhostLightButton
           className="hidden! md:block!"
           size="md"

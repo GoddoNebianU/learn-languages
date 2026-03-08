@@ -159,7 +159,9 @@
     "sourceCode": "源码",
     "sign_in": "登录",
     "profile": "个人资料",
-    "folders": "文件夹"
+    "folders": "文件夹",
+    "explore": "探索",
+    "favorites": "收藏"
   },
   "profile": {
     "myProfile": "我的个人资料",
@@ -254,6 +256,34 @@
     "pleaseCreateFolder": "请先创建文件夹",
     "savedToFolder": "已保存到文件夹：{folderName}",
     "saveFailed": "保存失败，请稍后重试"
+  },
+  "explore": {
+    "title": "探索",
+    "subtitle": "发现公开文件夹",
+    "searchPlaceholder": "搜索公开文件夹...",
+    "loading": "加载中...",
+    "noFolders": "没有找到公开文件夹",
+    "folderInfo": "{userName} • {totalPairs} 个文本对",
+    "unknownUser": "未知用户",
+    "favorite": "收藏",
+    "unfavorite": "取消收藏",
+    "pleaseLogin": "请先登录"
+  },
+  "favorites": {
+    "title": "收藏",
+    "subtitle": "我收藏的文件夹",
+    "loading": "加载中...",
+    "noFavorites": "还没有收藏",
+    "folderInfo": "{userName} • {totalPairs} 个文本对",
+    "unknownUser": "未知用户"
+  },
+  "favorites": {
+    "title": "我的收藏",
+    "subtitle": "收藏的公开文件夹",
+    "loading": "加载中...",
+    "noFavorites": "还没有收藏任何文件夹",
+    "folderInfo": "{userName} • {totalPairs} 个文本对",
+    "unknownUser": "未知用户"
   },
   "user_profile": {
     "anonymous": "匿名",
