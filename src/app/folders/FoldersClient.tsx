@@ -29,19 +29,19 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
 
   return (
     <div
-      className="flex justify-between items-center group p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+      className="flex justify-between items-center group py-4 px-5 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
       onClick={() => {
         router.push(`/folders/${folder.id}`);
       }}
     >
-      <div className="flex items-center gap-3 flex-1">
-        <div className="shrink-0">
-          <Fd className="text-gray-600" size="md" />
+      <div className="flex items-center gap-4 flex-1">
+        <div className="shrink-0 text-primary-500">
+          <Fd size={24} />
         </div>
 
-        <div className="flex-1">
-          <h3 className="font-medium text-gray-900">{folder.name}</h3>
-          <p className="text-sm text-gray-500">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-900 truncate">{folder.name}</h3>
+          <p className="text-sm text-gray-500 mt-0.5">
             {t("folderInfo", {
               id: folder.id,
               name: folder.name,
@@ -51,7 +51,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 ml-4">
         <CircleButton
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
@@ -69,7 +69,7 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
             }
           }}
         >
-          <FolderPen size={16} />
+          <FolderPen size={18} />
         </CircleButton>
         <CircleButton
           onClick={(e: React.MouseEvent) => {
@@ -89,9 +89,9 @@ const FolderCard = ({ folder, refresh }: FolderProps) => {
           }}
           className="text-gray-400 hover:text-red-500 hover:bg-red-50"
         >
-          <Trash2 size={16} />
+          <Trash2 size={18} />
         </CircleButton>
-        <ChevronRight size={18} className="text-gray-400" />
+        <ChevronRight size={20} className="text-gray-400 ml-1" />
       </div>
     </div>
   );
@@ -156,7 +156,7 @@ export function FoldersClient({ userId }: { userId: string; }) {
         disabled={loading}
         className="w-full border-dashed"
       >
-        <FolderPlus size={18} />
+        <FolderPlus size={20} />
         <span>{loading ? t("creating") : t("newFolder")}</span>
       </LightButton>
 
@@ -167,23 +167,21 @@ export function FoldersClient({ userId }: { userId: string; }) {
             // 空状态
             <div className="text-center py-12 text-gray-400">
               <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <FolderPlus size="md" className="text-gray-400" />
+                <FolderPlus size={24} className="text-gray-400" />
               </div>
               <p className="text-sm">{t("noFoldersYet")}</p>
             </div>
           ) : (
             // 文件夹卡片列表
-            <div className="rounded-md border border-gray-200 overflow-hidden">
-              {folders
-                .toSorted((a, b) => a.id - b.id)
-                .map((folder) => (
-                  <FolderCard
-                    key={folder.id}
-                    folder={folder}
-                    refresh={updateFolders}
-                  />
-                ))}
-            </div>
+            folders
+              .toSorted((a, b) => a.id - b.id)
+              .map((folder) => (
+                <FolderCard
+                  key={folder.id}
+                  folder={folder}
+                  refresh={updateFolders}
+                />
+              ))
           )}
         </CardList>
       </div>

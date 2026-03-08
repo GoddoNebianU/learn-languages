@@ -13,7 +13,7 @@ interface CardListProps {
 export function CardList({ children, className = "" }: CardListProps) {
   return (
     <div className={`max-h-96 overflow-y-auto rounded-lg border-2 border-gray-200 ${className}`}>
-      <VStack gap={0}>
+      <VStack gap={0} align="stretch">
         {children}
       </VStack>
     </div>
