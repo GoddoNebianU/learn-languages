@@ -241,6 +241,7 @@
     "definitionLanguage": "Definition Language",
     "definitionLanguageHint": "What language do you want the definitions in",
     "otherLanguagePlaceholder": "Or enter another language...",
+    "other": "Other",
     "currentSettings": "Current settings: Query {queryLang}, Definition {definitionLang}",
     "relookup": "Re-search",
     "saveToFolder": "Save to folder",
@@ -267,7 +268,9 @@
     "unknownUser": "Unknown User",
     "favorite": "Favorite",
     "unfavorite": "Unfavorite",
-    "pleaseLogin": "Please login first"
+    "pleaseLogin": "Please login first",
+    "sortByFavorites": "Sort by favorites",
+    "sortByFavoritesActive": "Undo sort by favorites"
   },
   "favorites": {
     "title": "My Favorites",

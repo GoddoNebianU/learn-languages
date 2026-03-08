@@ -143,10 +143,6 @@ export function FoldersClient({ userId }: FoldersClientProps) {
   const [folders, setFolders] = useState<TSharedFolderWithTotalPairs[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadFolders();
-  }, [userId]);
-
   const loadFolders = async () => {
     setLoading(true);
     const result = await actionGetFoldersWithTotalPairsByUserId(userId);
@@ -155,6 +151,10 @@ export function FoldersClient({ userId }: FoldersClientProps) {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    loadFolders();
+  }, [userId]);
 
   const handleUpdateFolder = (folderId: number, updates: Partial<TSharedFolderWithTotalPairs>) => {
     setFolders((prev) =>

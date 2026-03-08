@@ -66,7 +66,7 @@ ${originalInput ? `
                 role: "user",
                 content: prompt,
             },
-        ]).then(parseAIGeneratedJSON<any>);
+        ]).then(parseAIGeneratedJSON<StandardFormResult>);
 
         // 代码层面的数据验证
         if (!result.standardForm || result.standardForm.trim().length === 0) {

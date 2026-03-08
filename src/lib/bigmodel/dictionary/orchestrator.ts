@@ -19,12 +19,12 @@ export async function executeDictionaryLookup(
 
         if (!analysis.isValid) {
             log.debug("[Stage 1] Invalid input", { reason: analysis.reason });
-            throw analysis.reason || "无效输入";
+            throw new LookUpError(analysis.reason || "无效输入");
         }
 
         if (analysis.isEmpty) {
             log.debug("[Stage 1] Empty input");
-            throw "输入为空";
+            throw new LookUpError("输入为空");
         }
 
         log.debug("[Stage 1] Analysis complete", { analysis });
@@ -33,7 +33,7 @@ export async function executeDictionaryLookup(
         const semanticMapping = await determineSemanticMapping(
             text,
             queryLang,
-            analysis.inputLanguage || text
+            analysis.inputLanguage ?? text
         );
 
         log.debug("[Stage 2] Semantic mapping complete", { semanticMapping });

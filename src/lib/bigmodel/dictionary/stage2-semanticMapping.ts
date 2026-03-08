@@ -74,7 +74,7 @@ b) 输入是明确、基础、可词典化的语义概念
                 role: "user",
                 content: prompt,
             },
-        ]).then(parseAIGeneratedJSON<any>);
+        ]).then(parseAIGeneratedJSON<SemanticMappingResult>);
 
         // 代码层面的数据验证
         if (typeof result.shouldMap !== "boolean") {

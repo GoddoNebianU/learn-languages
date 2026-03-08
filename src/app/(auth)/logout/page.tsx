@@ -8,7 +8,7 @@ export default async function LogoutPage(
     }
 ) {
     const searchParams = await props.searchParams;
-    const redirectTo = props.searchParams ?? null;
+    const redirectTo = searchParams.redirect ?? null;
 
     const session = await auth.api.getSession({
         headers: await headers()

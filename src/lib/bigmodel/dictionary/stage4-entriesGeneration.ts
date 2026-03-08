@@ -98,10 +98,6 @@ ${isWord ? `
             if (isWord && !entry.partOfSpeech) {
                 throw new Error("阶段4：单词条目缺少 partOfSpeech");
             }
-
-            if (isWord && !entry.ipa) {
-                throw new Error("阶段4：单词条目缺少 ipa");
-            }
         }
 
         return result;

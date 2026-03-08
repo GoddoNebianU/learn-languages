@@ -241,6 +241,7 @@
     "definitionLanguage": "释义语言",
     "definitionLanguageHint": "你希望用什么语言查看释义",
     "otherLanguagePlaceholder": "或输入其他语言...",
+    "other": "其他",
     "currentSettings": "当前设置：查询 {queryLang}，释义 {definitionLang}",
     "relookup": "重新查询",
     "saveToFolder": "保存到文件夹",
@@ -267,7 +268,9 @@
     "unknownUser": "未知用户",
     "favorite": "收藏",
     "unfavorite": "取消收藏",
-    "pleaseLogin": "请先登录"
+    "pleaseLogin": "请先登录",
+    "sortByFavorites": "按收藏数排序",
+    "sortByFavoritesActive": "取消按收藏数排序"
   },
   "favorites": {
     "title": "收藏",

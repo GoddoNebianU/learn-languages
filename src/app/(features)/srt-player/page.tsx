@@ -111,10 +111,12 @@ export default function SrtPlayerPage() {
 
       <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
         {currentSubtitle && currentSubtitle.text.split(" ").map((s, i) => (
-          <Link 
+          <Link
             key={i}
             href={`/dictionary?q=${s}`}
             className="px-1 h-fit hover:bg-gray-200 hover:cursor-pointer"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {s}
           </Link>
