@@ -28,10 +28,11 @@ import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 
 interface FolderCardProps {
   folder: TSharedFolderWithTotalPairs;
-  refresh: () => void;
+  onUpdateFolder: (folderId: number, updates: Partial<TSharedFolderWithTotalPairs>) => void;
+  onDeleteFolder: (folderId: number) => void;
 }
 
-const FolderCard = ({ folder, refresh }: FolderCardProps) => {
+const FolderCard = ({ folder, onUpdateFolder, onDeleteFolder }: FolderCardProps) => {
   const router = useRouter();
   const t = useTranslations("folders");
 
@@ -40,9 +41,35 @@ const FolderCard = ({ folder, refresh }: FolderCardProps) => {
     const newVisibility = folder.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC";
     const result = await actionSetFolderVisibility(folder.id, newVisibility);
     if (result.success) {
-      refresh();
+      onUpdateFolder(folder.id, { visibility: newVisibility });
     } else {
       toast.error(result.message);
+    }
+  };
+
+  const handleRename = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newName = prompt(t("enterNewName"))?.trim();
+    if (newName && newName.length > 0) {
+      const result = await actionRenameFolderById(folder.id, newName);
+      if (result.success) {
+        onUpdateFolder(folder.id, { name: newName });
+      } else {
+        toast.error(result.message);
+      }
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const confirm = prompt(t("confirmDelete", { name: folder.name }));
+    if (confirm === folder.name) {
+      const result = await actionDeleteFolderById(folder.id);
+      if (result.success) {
+        onDeleteFolder(folder.id);
+      } else {
+        toast.error(result.message);
+      }
     }
   };
 
@@ -91,42 +118,16 @@ const FolderCard = ({ folder, refresh }: FolderCardProps) => {
             <Globe size={18} />
           )}
         </CircleButton>
-        <CircleButton
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            const newName = prompt(t("enterNewName"))?.trim();
-            if (newName && newName.length > 0) {
-              actionRenameFolderById(folder.id, newName).then((result) => {
-                if (result.success) {
-                  refresh();
-                } else {
-                  toast.error(result.message);
-                }
-              });
-            }
-          }}
-        >
+        <CircleButton onClick={handleRename}>
           <FolderPen size={18} />
         </CircleButton>
         <CircleButton
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            const confirm = prompt(t("confirmDelete", { name: folder.name }));
-            if (confirm === folder.name) {
-              actionDeleteFolderById(folder.id).then((result) => {
-                if (result.success) {
-                  refresh();
-                } else {
-                  toast.error(result.message);
-                }
-              });
-            }
-          }}
-          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
+          onClick={handleDelete}
+          className="hover:text-red-500 hover:bg-red-50"
         >
           <Trash2 size={18} />
         </CircleButton>
-        <ChevronRight size={20} className="text-gray-400 ml-1" />
+        <ChevronRight size={20} className="text-gray-400" />
       </div>
     </div>
   );
@@ -155,19 +156,25 @@ export function FoldersClient({ userId }: FoldersClientProps) {
     setLoading(false);
   };
 
+  const handleUpdateFolder = (folderId: number, updates: Partial<TSharedFolderWithTotalPairs>) => {
+    setFolders((prev) =>
+      prev.map((f) => (f.id === folderId ? { ...f, ...updates } : f))
+    );
+  };
+
+  const handleDeleteFolder = (folderId: number) => {
+    setFolders((prev) => prev.filter((f) => f.id !== folderId));
+  };
+
   const handleCreateFolder = async () => {
     const folderName = prompt(t("enterFolderName"));
-    if (!folderName) return;
-    setLoading(true);
-    try {
-      const result = await actionCreateFolder(userId, folderName);
-      if (result.success) {
-        loadFolders();
-      } else {
-        toast.error(result.message);
-      }
-    } finally {
-      setLoading(false);
+    if (!folderName?.trim()) return;
+
+    const result = await actionCreateFolder(userId, folderName.trim());
+    if (result.success) {
+      loadFolders();
+    } else {
+      toast.error(result.message);
     }
   };
 
@@ -175,14 +182,12 @@ export function FoldersClient({ userId }: FoldersClientProps) {
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <LightButton
-        onClick={handleCreateFolder}
-        disabled={loading}
-        className="w-full border-dashed mb-4"
-      >
-        <FolderPlus size={20} />
-        <span>{loading ? t("creating") : t("newFolder")}</span>
-      </LightButton>
+      <div className="mb-4">
+        <LightButton onClick={handleCreateFolder}>
+          <FolderPlus size={18} />
+          {t("newFolder")}
+        </LightButton>
+      </div>
 
       <CardList>
         {loading ? (
@@ -193,16 +198,19 @@ export function FoldersClient({ userId }: FoldersClientProps) {
         ) : folders.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-              <FolderPlus size={24} className="text-gray-400" />
+              <Fd size={24} className="text-gray-400" />
             </div>
             <p className="text-sm">{t("noFoldersYet")}</p>
           </div>
         ) : (
-          folders
-            .toSorted((a, b) => b.id - a.id)
-            .map((folder) => (
-              <FolderCard key={folder.id} folder={folder} refresh={loadFolders} />
-            ))
+          folders.map((folder) => (
+            <FolderCard
+              key={folder.id}
+              folder={folder}
+              onUpdateFolder={handleUpdateFolder}
+              onDeleteFolder={handleDeleteFolder}
+            />
+          ))
         )}
       </CardList>
     </PageLayout>

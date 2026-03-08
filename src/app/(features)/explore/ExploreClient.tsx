@@ -23,10 +23,10 @@ import { authClient } from "@/lib/auth-client";
 interface PublicFolderCardProps {
   folder: TPublicFolder;
   currentUserId?: string;
-  onFavoriteChange?: () => void;
+  onUpdateFavorite: (folderId: number, isFavorited: boolean, favoriteCount: number) => void;
 }
 
-const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFolderCardProps) => {
+const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFolderCardProps) => {
   const router = useRouter();
   const t = useTranslations("explore");
   const [isFavorited, setIsFavorited] = useState(false);
@@ -53,7 +53,7 @@ const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFol
     if (result.success && result.data) {
       setIsFavorited(result.data.isFavorited);
       setFavoriteCount(result.data.favoriteCount);
-      onFavoriteChange?.();
+      onUpdateFavorite(folder.id, result.data.isFavorited, result.data.favoriteCount);
     } else {
       toast.error(result.message);
     }
@@ -128,13 +128,12 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
     setLoading(false);
   };
 
-  const refreshFolders = async () => {
-    setLoading(true);
-    const result = await actionSearchPublicFolders(searchQuery.trim() || "");
-    if (result.success && result.data) {
-      setPublicFolders(result.data);
-    }
-    setLoading(false);
+  const handleUpdateFavorite = (folderId: number, _isFavorited: boolean, favoriteCount: number) => {
+    setPublicFolders((prev) =>
+      prev.map((f) =>
+        f.id === folderId ? { ...f, favoriteCount } : f
+      )
+    );
   };
 
   return (
@@ -177,7 +176,7 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
               key={folder.id}
               folder={folder}
               currentUserId={currentUserId}
-              onFavoriteChange={refreshFolders}
+              onUpdateFavorite={handleUpdateFavorite}
             />
           ))}
         </div>

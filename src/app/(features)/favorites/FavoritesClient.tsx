@@ -8,10 +8,11 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CardList } from "@/components/ui/CardList";
-import { actionGetUserFavorites } from "@/modules/folder/folder-aciton";
+import { actionGetUserFavorites, actionToggleFavorite } from "@/modules/folder/folder-aciton";
 
 type UserFavorite = {
   id: number;
@@ -27,11 +28,27 @@ type UserFavorite = {
 
 interface FavoriteCardProps {
   favorite: UserFavorite;
+  onRemoveFavorite: (folderId: number) => void;
 }
 
-const FavoriteCard = ({ favorite }: FavoriteCardProps) => {
+const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
   const router = useRouter();
   const t = useTranslations("favorites");
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const handleRemoveFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isRemoving) return;
+    
+    setIsRemoving(true);
+    const result = await actionToggleFavorite(favorite.folderId);
+    if (result.success) {
+      onRemoveFavorite(favorite.folderId);
+    } else {
+      toast.error(result.message);
+    }
+    setIsRemoving(false);
+  };
 
   return (
     <div
@@ -57,7 +74,11 @@ const FavoriteCard = ({ favorite }: FavoriteCardProps) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Heart size={18} className="fill-red-500 text-red-500" />
+        <Heart
+          size={18}
+          className="fill-red-500 text-red-500 cursor-pointer hover:scale-110 transition-transform"
+          onClick={handleRemoveFavorite}
+        />
         <ChevronRight size={20} className="text-gray-400" />
       </div>
     </div>
@@ -86,31 +107,37 @@ export function FavoritesClient({ userId }: FavoritesClientProps) {
     setLoading(false);
   };
 
+  const handleRemoveFavorite = (folderId: number) => {
+    setFavorites((prev) => prev.filter((f) => f.folderId !== folderId));
+  };
+
   return (
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <div className="mt-4">
-        <CardList>
-          {loading ? (
-            <div className="p-8 text-center">
-              <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-gray-500">{t("loading")}</p>
+      <CardList>
+        {loading ? (
+          <div className="p-8 text-center">
+            <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+            <p className="text-sm text-gray-500">{t("loading")}</p>
+          </div>
+        ) : favorites.length === 0 ? (
+          <div className="text-center py-12 text-gray-400">
+            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+              <Heart size={24} className="text-gray-400" />
             </div>
-          ) : favorites.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <Heart size={24} className="text-gray-400" />
-              </div>
-              <p className="text-sm">{t("noFavorites")}</p>
-            </div>
-          ) : (
-            favorites.map((favorite) => (
-              <FavoriteCard key={favorite.id} favorite={favorite} />
-            ))
-          )}
-        </CardList>
-      </div>
+            <p className="text-sm">{t("noFavorites")}</p>
+          </div>
+        ) : (
+          favorites.map((favorite) => (
+            <FavoriteCard
+              key={favorite.id}
+              favorite={favorite}
+              onRemoveFavorite={handleRemoveFavorite}
+            />
+          ))
+        )}
+      </CardList>
     </PageLayout>
   );
 }
