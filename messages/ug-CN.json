@@ -80,11 +80,11 @@
     },
     "memorize": {
       "name": "ئەستە ساقلاش",
-      "description": "تىل A دىن تىل غا، تىل B دىن تىل A غا، دىكتات قوللايدۇ"
+      "description": "تىل A دىن تىل B غا، تىل B دىن تىل A غا، دىكتات قوللايدۇ"
     },
     "dictionary": {
       "name": "لۇغەت",
-      "description": "سۆز ۋە سۆزنى ئىزدەپ، تەپسىلىي ئىزاھات ۋە مىساللار بىلەن تەمىنلەيدۇ"
+      "description": "سۆز ۋە ئىبارە ئىزدەپ، تەپسىلىي ئىزاھات ۋە مىساللار بىلەن تەمىنلەيدۇ"
     },
     "moreFeatures": {
       "name": "تېخىمۇ كۆپ ئىقتىدار",
@@ -99,6 +99,8 @@
     "password": "ئىم",
     "confirmPassword": "ئىمنى جەزملەش",
     "name": "نام",
+    "username": "ئىشلەتكۈچى نامى",
+    "emailOrUsername": "ئېلخەت ياكى ئىشلەتكۈچى نامى",
     "signInButton": "كىرىش",
     "signUpButton": "تىزىملىتىش",
     "noAccount": "ھېساباتىڭىز يوقمۇ؟",
@@ -109,7 +111,11 @@
     "passwordTooShort": "ئىم كەم دېگەندە 8 ھەرپتىن تۇرۇشى كېرەك",
     "passwordsNotMatch": "ئىم ماس كەلمەيدۇ",
     "nameRequired": "نامىڭىزنى كىرگۈزۈڭ",
+    "usernameRequired": "ئىشلەتكۈچى نامىڭىزنى كىرگۈزۈڭ",
+    "usernameTooShort": "ئىشلەتكۈچى نامى كەم دېگەندە 3 ھەرپتىن تۇرۇشى كېرەك",
+    "usernameInvalid": "ئىشلەتكۈچى نامى پەقەت ھەرپ، سان ۋە ئاستى سىزىقنى ئۆز ئىچىگە ئالىدۇ",
     "emailRequired": "ئېلخىتىڭىزنى كىرگۈزۈڭ",
+    "identifierRequired": "ئېلخەت ياكى ئىشلەتكۈچى نامىڭىزنى كىرگۈزۈڭ",
     "passwordRequired": "ئىمىڭىزنى كىرگۈزۈڭ",
     "confirmPasswordRequired": "ئىمىڭىزنى جەزملەڭ",
     "loading": "چىقىرىۋېتىلىۋاتىدۇ..."
@@ -208,17 +214,17 @@
   },
   "dictionary": {
     "title": "لۇغەت",
-    "description": "تەپسىلىي ئىلمىيى ۋە مىساللار بىلەن سۆز ۋە ئىبارە ئىزدەش",
+    "description": "تەپسىلىي ئىزاھات ۋە مىساللار بىلەن سۆز ۋە ئىبارە ئىزدەش",
     "searchPlaceholder": "ئىزدەيدىغان سۆز ياكى ئىبارە كىرگۈزۈڭ...",
     "searching": "ئىزدەۋاتىدۇ...",
     "search": "ئىزدە",
     "languageSettings": "تىل تەڭشىكى",
     "queryLanguage": "سۈرەشتۈرۈش تىلى",
     "queryLanguageHint": "ئىزدەمدەكچى بولغان سۆز/ئىبارە قايسى تىلدا",
-    "definitionLanguage": "ئىلمىيى تىلى",
-    "definitionLanguageHint": "ئىلمىيىنى قايسى تىلدا كۆرۈشنى ئويلىشىسىز",
+    "definitionLanguage": "ئىزاھات تىلى",
+    "definitionLanguageHint": "ئىزاھاتنى قايسى تىلدا كۆرۈشنى ئويلىشىسىز",
     "otherLanguagePlaceholder": "ياكى باشقا تىل كىرگۈزۈڭ...",
-    "currentSettings": "نۆۋەتتىكى تەڭشەك: سۈرەشتۈرۈش {queryLang}، ئىلمىيى {definitionLang}",
+    "currentSettings": "نۆۋەتتىكى تەڭشەك: سۈرەشتۈرۈش {queryLang}، ئىزاھات {definitionLang}",
     "relookup": "قايتا ئىزدە",
     "saveToFolder": "قىسقۇچقا ساقلا",
     "loading": "يۈكلىۋاتىدۇ...",
