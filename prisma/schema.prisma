@@ -20,6 +20,7 @@ model User {
   accounts             Account[]
   dictionaryLookUps    DictionaryLookUp[]
   folders              Folder[]
+  folderFavorites      FolderFavorite[]
   sessions             Session[]
   translationHistories TranslationHistory[]
 
@@ -91,17 +92,40 @@ model Pair {
   @@map("pairs")
 }
 
+enum Visibility {
+  PRIVATE
+  PUBLIC
+}
+
 model Folder {
-  id        Int      @id @default(autoincrement())
-  name      String
-  userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pairs     Pair[]
+  id         Int              @id @default(autoincrement())
+  name       String
+  userId     String           @map("user_id")
+  visibility Visibility       @default(PRIVATE)
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pairs      Pair[]
+  favorites  FolderFavorite[]
 
   @@index([userId])
+  @@index([visibility])
   @@map("folders")
+}
+
+model FolderFavorite {
+  id        Int      @id @default(autoincrement())
+  userId    String   @map("user_id")
+  folderId  Int      @map("folder_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, folderId])
+  @@index([userId])
+  @@index([folderId])
+  @@map("folder_favorites")
 }
 
 model DictionaryLookUp {

@@ -3,15 +3,13 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { ValidateError } from "@/lib/errors";
-import { ActionInputCreatePair, ActionInputUpdatePairById, ActionOutputGetFoldersWithTotalPairsByUserId, validateActionInputCreatePair, validateActionInputUpdatePairById } from "./folder-action-dto";
-import { repoCreateFolder, repoCreatePair, repoDeleteFolderById, repoDeletePairById, repoGetFolderIdByPairId, repoGetFoldersByUserId, repoGetFoldersWithTotalPairsByUserId, repoGetPairsByFolderId, repoGetUserIdByFolderId, repoRenameFolderById, repoUpdatePairById } from "./folder-repository";
+import { ActionInputCreatePair, ActionInputUpdatePairById, ActionOutputGetFoldersWithTotalPairsByUserId, ActionOutputGetPublicFolders, ActionOutputSetFolderVisibility, ActionOutputToggleFavorite, ActionOutputCheckFavorite, validateActionInputCreatePair, validateActionInputUpdatePairById } from "./folder-action-dto";
+import { repoCreateFolder, repoCreatePair, repoDeleteFolderById, repoDeletePairById, repoGetFolderIdByPairId, repoGetFolderVisibility, repoGetFoldersByUserId, repoGetFoldersWithTotalPairsByUserId, repoGetPairsByFolderId, repoGetPublicFolders, repoGetUserIdByFolderId, repoRenameFolderById, repoSearchPublicFolders, repoUpdateFolderVisibility, repoUpdatePairById, repoToggleFavorite, repoCheckFavorite } from "./folder-repository";
 import { validate } from "@/utils/validate";
 import z from "zod";
 import { LENGTH_MAX_FOLDER_NAME, LENGTH_MIN_FOLDER_NAME } from "@/shared/constant";
+import { Visibility } from "../../../generated/prisma/enums";
 
-/**
- * Helper function to check if the current user is the owner of a folder
- */
 async function checkFolderOwnership(folderId: number): Promise<boolean> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return false;
@@ -20,9 +18,6 @@ async function checkFolderOwnership(folderId: number): Promise<boolean> {
   return folderOwnerId === session.user.id;
 }
 
-/**
- * Helper function to check if the current user is the owner of a pair's folder
- */
 async function checkPairOwnership(pairId: number): Promise<boolean> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return false;
@@ -52,7 +47,6 @@ export async function actionGetPairsByFolderId(folderId: number) {
 
 export async function actionUpdatePairById(id: number, dto: ActionInputUpdatePairById) {
     try {
-        // Check ownership
         const isOwner = await checkPairOwnership(id);
         if (!isOwner) {
             return {
@@ -92,9 +86,24 @@ export async function actionGetUserIdByFolderId(folderId: number) {
     }
 }
 
+export async function actionGetFolderVisibility(folderId: number) {
+    try {
+        return {
+            success: true,
+            message: 'success',
+            data: await repoGetFolderVisibility(folderId)
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.'
+        };
+    }
+}
+
 export async function actionDeleteFolderById(folderId: number) {
     try {
-        // Check ownership
         const isOwner = await checkFolderOwnership(folderId);
         if (!isOwner) {
             return {
@@ -119,7 +128,6 @@ export async function actionDeleteFolderById(folderId: number) {
 
 export async function actionDeletePairById(id: number) {
     try {
-        // Check ownership
         const isOwner = await checkPairOwnership(id);
         if (!isOwner) {
             return {
@@ -176,7 +184,6 @@ export async function actionGetFoldersByUserId(userId: string) {
 
 export async function actionCreatePair(dto: ActionInputCreatePair) {
     try {
-        // Check ownership
         const isOwner = await checkFolderOwnership(dto.folderId);
         if (!isOwner) {
             return {
@@ -238,7 +245,6 @@ export async function actionCreateFolder(userId: string, folderName: string) {
 
 export async function actionRenameFolderById(id: number, newName: string) {
     try {
-        // Check ownership
         const isOwner = await checkFolderOwnership(id);
         if (!isOwner) {
             return {
@@ -269,6 +275,153 @@ export async function actionRenameFolderById(id: number, newName: string) {
         return {
             success: false,
             message: 'Unknown error occured.'
+        };
+    }
+}
+
+export async function actionSetFolderVisibility(
+    folderId: number,
+    visibility: "PRIVATE" | "PUBLIC",
+): Promise<ActionOutputSetFolderVisibility> {
+    try {
+        const isOwner = await checkFolderOwnership(folderId);
+        if (!isOwner) {
+            return {
+                success: false,
+                message: 'You do not have permission to change this folder visibility.',
+            };
+        }
+
+        await repoUpdateFolderVisibility({
+            folderId,
+            visibility: visibility as Visibility,
+        });
+        return {
+            success: true,
+            message: 'success',
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionGetPublicFolders(): Promise<ActionOutputGetPublicFolders> {
+    try {
+        const data = await repoGetPublicFolders({});
+        return {
+            success: true,
+            message: 'success',
+            data: data.map((folder) => ({
+                ...folder,
+                visibility: folder.visibility as "PRIVATE" | "PUBLIC",
+            })),
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionSearchPublicFolders(query: string): Promise<ActionOutputGetPublicFolders> {
+    try {
+        const data = await repoSearchPublicFolders({ query, limit: 50 });
+        return {
+            success: true,
+            message: 'success',
+            data: data.map((folder) => ({
+                ...folder,
+                visibility: folder.visibility as "PRIVATE" | "PUBLIC",
+            })),
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionToggleFavorite(
+    folderId: number,
+): Promise<ActionOutputToggleFavorite> {
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.user?.id) {
+            return {
+                success: false,
+                message: 'Unauthorized',
+            };
+        }
+
+        const isFavorited = await repoToggleFavorite({
+            folderId,
+            userId: session.user.id,
+        });
+
+        const { favoriteCount } = await repoCheckFavorite({
+            folderId,
+            userId: session.user.id,
+        });
+
+        return {
+            success: true,
+            message: 'success',
+            data: {
+                isFavorited,
+                favoriteCount,
+            },
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionCheckFavorite(
+    folderId: number,
+): Promise<ActionOutputCheckFavorite> {
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.user?.id) {
+            return {
+                success: true,
+                message: 'success',
+                data: {
+                    isFavorited: false,
+                    favoriteCount: 0,
+                },
+            };
+        }
+
+        const { isFavorited, favoriteCount } = await repoCheckFavorite({
+            folderId,
+            userId: session.user.id,
+        });
+
+        return {
+            success: true,
+            message: 'success',
+            data: {
+                isFavorited,
+                favoriteCount,
+            },
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            success: false,
+            message: 'Unknown error occured.',
         };
     }
 }

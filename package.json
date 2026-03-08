@@ -11,8 +11,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "7.4.2",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.4.10",
     "class-variance-authority": "^0.7.1",
@@ -43,7 +43,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.1",
     "eslint-plugin-react": "^7.37.5",
-    "prisma": "^7.2.0",
+    "prisma": "^7.4.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },

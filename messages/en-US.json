@@ -24,7 +24,22 @@
     "noFoldersYet": "No folders yet",
     "folderInfo": "ID: {id} • {totalPairs} pairs",
     "enterFolderName": "Enter folder name:",
-    "confirmDelete": "Type \"{name}\" to delete:"
+    "confirmDelete": "Type \"{name}\" to delete:",
+    "myFolders": "My Folders",
+    "publicFolders": "Public Folders",
+    "public": "Public",
+    "private": "Private",
+    "setPublic": "Set Public",
+    "setPrivate": "Set Private",
+    "publicFolderInfo": "{userName} • {totalPairs} pairs",
+    "searchPlaceholder": "Search public folders...",
+    "loading": "Loading...",
+    "noPublicFolders": "No public folders found",
+    "unknownUser": "Unknown User",
+    "enterNewName": "Enter new name:",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "pleaseLogin": "Please login first"
   },
   "folder_id": {
     "unauthorized": "You are not the owner of this folder",

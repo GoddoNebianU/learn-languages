@@ -1,12 +1,29 @@
 import { auth } from "@/auth";
 import { FoldersClient } from "./FoldersClient";
-import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { actionGetPublicFolders } from "@/modules/folder/folder-aciton";
 
 export default async function FoldersPage() {
   const session = await auth.api.getSession(
     { headers: await headers() }
   );
-  if (!session) redirect(`/login?redirect=/folders`);
-  return <FoldersClient userId={session.user.id} />;
+
+  const publicFoldersResult = await actionGetPublicFolders();
+  const publicFolders = publicFoldersResult.success ? publicFoldersResult.data ?? [] : [];
+
+  if (!session) {
+    return (
+      <FoldersClient
+        userId={null}
+        initialPublicFolders={publicFolders}
+      />
+    );
+  }
+
+  return (
+    <FoldersClient
+      userId={session.user.id}
+      initialPublicFolders={publicFolders}
+    />
+  );
 }

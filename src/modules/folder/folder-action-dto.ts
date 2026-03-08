@@ -32,3 +32,55 @@ export type ActionOutputGetFoldersWithTotalPairsByUserId = {
     success: boolean,
     data?: TSharedFolderWithTotalPairs[];
 };
+
+export const schemaActionInputSetFolderVisibility = z.object({
+    folderId: z.number().int().positive(),
+    visibility: z.enum(["PRIVATE", "PUBLIC"]),
+});
+export type ActionInputSetFolderVisibility = z.infer<typeof schemaActionInputSetFolderVisibility>;
+
+export const schemaActionInputSearchPublicFolders = z.object({
+    query: z.string().min(1).max(100),
+});
+export type ActionInputSearchPublicFolders = z.infer<typeof schemaActionInputSearchPublicFolders>;
+
+export type ActionOutputPublicFolder = {
+    id: number;
+    name: string;
+    visibility: "PRIVATE" | "PUBLIC";
+    createdAt: Date;
+    userId: string;
+    userName: string | null;
+    userUsername: string | null;
+    totalPairs: number;
+    favoriteCount: number;
+};
+
+export type ActionOutputGetPublicFolders = {
+    message: string;
+    success: boolean;
+    data?: ActionOutputPublicFolder[];
+};
+
+export type ActionOutputSetFolderVisibility = {
+    message: string;
+    success: boolean;
+};
+
+export type ActionOutputToggleFavorite = {
+    message: string;
+    success: boolean;
+    data?: {
+        isFavorited: boolean;
+        favoriteCount: number;
+    };
+};
+
+export type ActionOutputCheckFavorite = {
+    message: string;
+    success: boolean;
+    data?: {
+        isFavorited: boolean;
+        favoriteCount: number;
+    };
+};

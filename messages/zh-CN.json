@@ -24,7 +24,22 @@
     "noFoldersYet": "还没有文件夹",
     "folderInfo": "ID: {id} • {totalPairs} 个文本对",
     "enterFolderName": "输入文件夹名称：",
-    "confirmDelete": "输入 \"{name}\" 以删除："
+    "confirmDelete": "输入 \"{name}\" 以删除：",
+    "myFolders": "我的文件夹",
+    "publicFolders": "公开文件夹",
+    "public": "公开",
+    "private": "私有",
+    "setPublic": "设为公开",
+    "setPrivate": "设为私有",
+    "publicFolderInfo": "{userName} • {totalPairs} 个文本对",
+    "searchPlaceholder": "搜索公开文件夹...",
+    "loading": "加载中...",
+    "noPublicFolders": "没有找到公开文件夹",
+    "unknownUser": "未知用户",
+    "enterNewName": "输入新名称：",
+    "favorite": "收藏",
+    "unfavorite": "取消收藏",
+    "pleaseLogin": "请先登录"
   },
   "folder_id": {
     "unauthorized": "您不是此文件夹的所有者",

@@ -1,5 +1,18 @@
 import { prisma } from "@/lib/db";
-import { RepoInputCreateFolder, RepoInputCreatePair, RepoInputUpdatePair } from "./folder-repository-dto";
+import {
+  RepoInputCreateFolder,
+  RepoInputCreatePair,
+  RepoInputUpdatePair,
+  RepoInputUpdateFolderVisibility,
+  RepoInputSearchPublicFolders,
+  RepoInputGetPublicFolders,
+  RepoOutputPublicFolder,
+  RepoOutputFolderVisibility,
+  RepoInputToggleFavorite,
+  RepoInputCheckFavorite,
+  RepoOutputFavoriteStatus,
+} from "./folder-repository-dto";
+import { Visibility } from "../../../generated/prisma/enums";
 
 export async function repoCreatePair(data: RepoInputCreatePair) {
     return (await prisma.pair.create({
@@ -63,7 +76,8 @@ export async function repoGetFoldersByUserId(userId: string) {
     return {
       id: v.id,
       name: v.name,
-      userId: v.userId
+      userId: v.userId,
+      visibility: v.visibility,
     };
   });
 }
@@ -95,6 +109,7 @@ export async function repoGetFoldersWithTotalPairsByUserId(userId: string) {
     id: folder.id,
     name: folder.name,
     userId: folder.userId,
+    visibility: folder.visibility,
     total: folder._count?.pairs ?? 0,
     createdAt: folder.createdAt,
   }));
@@ -133,4 +148,127 @@ export async function repoGetFolderIdByPairId(pairId: number) {
     },
   });
   return pair?.folderId;
+}
+
+export async function repoUpdateFolderVisibility(
+  input: RepoInputUpdateFolderVisibility,
+): Promise<void> {
+  await prisma.folder.update({
+    where: { id: input.folderId },
+    data: { visibility: input.visibility },
+  });
+}
+
+export async function repoGetFolderVisibility(
+  folderId: number,
+): Promise<RepoOutputFolderVisibility | null> {
+  const folder = await prisma.folder.findUnique({
+    where: { id: folderId },
+    select: { visibility: true, userId: true },
+  });
+  return folder;
+}
+
+export async function repoGetPublicFolders(
+  input: RepoInputGetPublicFolders = {},
+): Promise<RepoOutputPublicFolder[]> {
+  const { limit = 50, offset = 0, orderBy = "createdAt" } = input;
+
+  const folders = await prisma.folder.findMany({
+    where: { visibility: Visibility.PUBLIC },
+    include: {
+      _count: { select: { pairs: true, favorites: true } },
+      user: { select: { name: true, username: true } },
+    },
+    orderBy: { [orderBy]: "desc" },
+    take: limit,
+    skip: offset,
+  });
+  return folders.map((folder) => ({
+    id: folder.id,
+    name: folder.name,
+    visibility: folder.visibility,
+    createdAt: folder.createdAt,
+    userId: folder.userId,
+    userName: folder.user.name,
+    userUsername: folder.user.username,
+    totalPairs: folder._count.pairs,
+    favoriteCount: folder._count.favorites,
+  }));
+}
+
+export async function repoSearchPublicFolders(
+  input: RepoInputSearchPublicFolders,
+): Promise<RepoOutputPublicFolder[]> {
+  const { query, limit = 50 } = input;
+  const folders = await prisma.folder.findMany({
+    where: {
+      visibility: Visibility.PUBLIC,
+      name: { contains: query, mode: "insensitive" },
+    },
+    include: {
+      _count: { select: { pairs: true, favorites: true } },
+      user: { select: { name: true, username: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+  return folders.map((folder) => ({
+    id: folder.id,
+    name: folder.name,
+    visibility: folder.visibility,
+    createdAt: folder.createdAt,
+    userId: folder.userId,
+    userName: folder.user.name,
+    userUsername: folder.user.username,
+    totalPairs: folder._count.pairs,
+    favoriteCount: folder._count.favorites,
+  }));
+}
+
+export async function repoToggleFavorite(
+  input: RepoInputToggleFavorite,
+): Promise<boolean> {
+  const existing = await prisma.folderFavorite.findUnique({
+    where: {
+      userId_folderId: {
+        userId: input.userId,
+        folderId: input.folderId,
+      },
+    },
+  });
+  if (existing) {
+    await prisma.folderFavorite.delete({
+      where: { id: existing.id },
+    });
+    return false;
+  } else {
+    await prisma.folderFavorite.create({
+      data: {
+        userId: input.userId,
+        folderId: input.folderId,
+      },
+    });
+    return true;
+  }
+}
+
+export async function repoCheckFavorite(
+  input: RepoInputCheckFavorite,
+): Promise<RepoOutputFavoriteStatus> {
+  const favorite = await prisma.folderFavorite.findUnique({
+    where: {
+      userId_folderId: {
+        userId: input.userId,
+        folderId: input.folderId,
+      },
+    },
+  });
+  const count = await prisma.folderFavorite.count({
+    where: { folderId: input.folderId },
+  });
+  return {
+    isFavorited: !!favorite,
+    favoriteCount: count,
+  };
 }

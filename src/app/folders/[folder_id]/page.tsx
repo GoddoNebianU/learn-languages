@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { InFolder } from "./InFolder";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetUserIdByFolderId } from "@/modules/folder/folder-aciton";
+import { actionGetFolderVisibility } from "@/modules/folder/folder-aciton";
 
 export default async function FoldersPage({
   params,
@@ -18,9 +18,19 @@ export default async function FoldersPage({
     redirect("/folders");
   }
 
-  // Allow non-authenticated users to view folders (read-only mode)
-  const folderUserId = (await actionGetUserIdByFolderId(Number(folder_id))).data;
-  const isOwner = session?.user?.id === folderUserId;
+  const folderInfo = (await actionGetFolderVisibility(Number(folder_id))).data;
+
+  if (!folderInfo) {
+    redirect("/folders");
+  }
+
+  const isOwner = session?.user?.id === folderInfo.userId;
+  const isPublic = folderInfo.visibility === "PUBLIC";
+
+  if (!isOwner && !isPublic) {
+    redirect("/folders");
+  }
+
   const isReadOnly = !isOwner;
 
   return <InFolder folderId={Number(folder_id)} isReadOnly={isReadOnly} />;
