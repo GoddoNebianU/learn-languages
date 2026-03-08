@@ -73,6 +73,14 @@ const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFol
           <Fd size={24} />
         </div>
 
+        <div className="flex items-center gap-1 text-sm text-gray-400">
+          <Heart
+            size={14}
+            className={isFavorited ? "fill-red-500 text-red-500" : ""}
+          />
+          <span>{favoriteCount}</span>
+        </div>
+
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 truncate">{folder.name}</h3>
           <p className="text-sm text-gray-500 mt-0.5">
@@ -85,13 +93,6 @@ const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFol
       </div>
 
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1 text-sm text-gray-400">
-          <Heart
-            size={14}
-            className={isFavorited ? "fill-red-500 text-red-500" : ""}
-          />
-          <span>{favoriteCount}</span>
-        </div>
         <CircleButton
           onClick={handleToggleFavorite}
           title={isFavorited ? t("unfavorite") : t("favorite")}
