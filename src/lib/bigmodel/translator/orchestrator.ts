@@ -1,6 +1,9 @@
 import { getAnswer } from "../zhipu";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { LanguageDetectionResult, TranslationLLMResponse } from "./types";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("translator-orchestrator");
 
 async function detectLanguage(text: string): Promise<LanguageDetectionResult> {
     const prompt = `
@@ -40,7 +43,7 @@ async function detectLanguage(text: string): Promise<LanguageDetectionResult> {
 
         return result;
     } catch (error) {
-        console.error("Language detection failed:", error);
+        log.error("Language detection failed", { error });
         throw new Error("Failed to detect source language");
     }
 }
@@ -82,7 +85,7 @@ async function performTranslation(
 
         return result.trim();
     } catch (error) {
-        console.error("Translation failed:", error);
+        log.error("Translation failed", { error });
         throw new Error("Translation failed");
     }
 }
@@ -121,7 +124,7 @@ async function generateIPA(
 
         return result.trim();
     } catch (error) {
-        console.error("IPA generation failed:", error);
+        log.error("IPA generation failed", { error });
         return "";
     }
 }
@@ -132,24 +135,19 @@ export async function executeTranslation(
     needIpa: boolean
 ): Promise<TranslationLLMResponse> {
     try {
-        console.log("[翻译] 开始翻译流程...");
-        console.log("[翻译] 源文本:", sourceText);
-        console.log("[翻译] 目标语言:", targetLanguage);
-        console.log("[翻译] 需要 IPA:", needIpa);
+        log.debug("Starting translation", { sourceText, targetLanguage, needIpa });
 
-        // Stage 1: Detect source language
-        console.log("[阶段1] 检测源语言...");
+        log.debug("[Stage 1] Detecting source language");
         const detectionResult = await detectLanguage(sourceText);
-        console.log("[阶段1] 检测结果:", detectionResult);
+        log.debug("[Stage 1] Detection result", { detectionResult });
 
-        // Stage 2: Perform translation
-        console.log("[阶段2] 执行翻译...");
+        log.debug("[Stage 2] Performing translation");
         const translatedText = await performTranslation(
             sourceText,
             detectionResult.sourceLanguage,
             targetLanguage
         );
-        console.log("[阶段2] 翻译完成:", translatedText);
+        log.debug("[Stage 2] Translation complete", { translatedText });
 
         // Validate translation result
         if (!translatedText) {
@@ -161,12 +159,12 @@ export async function executeTranslation(
         let targetIpa: string | undefined;
 
         if (needIpa) {
-            console.log("[阶段3] 生成 IPA...");
+            log.debug("[Stage 3] Generating IPA");
             sourceIpa = await generateIPA(sourceText, detectionResult.sourceLanguage);
-            console.log("[阶段3] 源文本 IPA:", sourceIpa);
+            log.debug("[Stage 3] Source IPA", { sourceIpa });
 
             targetIpa = await generateIPA(translatedText, targetLanguage);
-            console.log("[阶段3] 目标文本 IPA:", targetIpa);
+            log.debug("[Stage 3] Target IPA", { targetIpa });
         }
 
         // Assemble final result
@@ -179,10 +177,10 @@ export async function executeTranslation(
             targetIpa,
         };
 
-        console.log("[完成] 翻译流程成功");
+        log.info("Translation completed successfully");
         return finalResult;
     } catch (error) {
-        console.error("[错误] 翻译失败:", error);
+        log.error("Translation failed", { error });
         const errorMessage = error instanceof Error ? error.message : "未知错误";
         throw new Error(errorMessage);
     }

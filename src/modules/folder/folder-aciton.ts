@@ -3,6 +3,9 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { ValidateError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("folder-action");
 import {
   ActionInputCreatePair,
   ActionInputUpdatePairById,
@@ -68,7 +71,7 @@ export async function actionGetPairsByFolderId(folderId: number) {
             data: await repoGetPairsByFolderId(folderId)
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -93,7 +96,7 @@ export async function actionUpdatePairById(id: number, dto: ActionInputUpdatePai
             message: 'success',
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -109,7 +112,7 @@ export async function actionGetUserIdByFolderId(folderId: number) {
             data: await repoGetUserIdByFolderId(folderId)
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -125,7 +128,7 @@ export async function actionGetFolderVisibility(folderId: number) {
             data: await repoGetFolderVisibility(folderId)
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -149,7 +152,7 @@ export async function actionDeleteFolderById(folderId: number) {
             message: 'success',
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -173,7 +176,7 @@ export async function actionDeletePairById(id: number) {
             message: 'success'
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -189,7 +192,7 @@ export async function actionGetFoldersWithTotalPairsByUserId(id: string): Promis
             data: await repoGetFoldersWithTotalPairsByUserId(id)
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -205,7 +208,7 @@ export async function actionGetFoldersByUserId(userId: string) {
             data: await repoGetFoldersByUserId(userId)
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -236,7 +239,7 @@ export async function actionCreatePair(dto: ActionInputCreatePair) {
                 message: e.message
             };
         }
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -266,7 +269,7 @@ export async function actionCreateFolder(userId: string, folderName: string) {
                 message: e.message
             };
         }
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -302,7 +305,7 @@ export async function actionRenameFolderById(id: number, newName: string) {
                 message: e.message
             };
         }
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'
@@ -332,7 +335,7 @@ export async function actionSetFolderVisibility(
             message: 'success',
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',
@@ -352,7 +355,7 @@ export async function actionGetPublicFolders(): Promise<ActionOutputGetPublicFol
             })),
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',
@@ -372,7 +375,7 @@ export async function actionSearchPublicFolders(query: string): Promise<ActionOu
             })),
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',
@@ -411,7 +414,7 @@ export async function actionToggleFavorite(
             },
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',
@@ -449,7 +452,7 @@ export async function actionCheckFavorite(
             },
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',
@@ -487,7 +490,7 @@ export async function actionGetUserFavorites(): Promise<ActionOutputGetUserFavor
             })),
         };
     } catch (e) {
-        console.log(e);
+        log.error("Operation failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.',

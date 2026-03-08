@@ -1,6 +1,9 @@
 import { executeDictionaryLookup } from "@/lib/bigmodel/dictionary/orchestrator";
 import { repoCreateLookUp, repoCreateLookUpWithItemAndEntries, repoSelectLastLookUpResult } from "./dictionary-repository";
 import { ServiceInputLookUp } from "./dictionary-service-dto";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("dictionary-service");
 
 export const serviceLookUp = async (dto: ServiceInputLookUp) => {
     const {
@@ -39,7 +42,7 @@ export const serviceLookUp = async (dto: ServiceInputLookUp) => {
             },
             response.entries
         ).catch(error => {
-            console.error('Failed to save dictionary data:', error);
+            log.error("Failed to save dictionary data", { error });
         });
 
         return response;
@@ -51,7 +54,7 @@ export const serviceLookUp = async (dto: ServiceInputLookUp) => {
             definitionLang: definitionLang,
             dictionaryItemId: lastLookUpResult.id
         }).catch(error => {
-            console.error('Failed to save dictionary data:', error);
+            log.error("Failed to save dictionary data", { error });
         });
         return {
             standardForm: lastLookUpResult.standardForm,

@@ -1,6 +1,9 @@
 import { getAnswer } from "../zhipu";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { StandardFormResult } from "./types";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("dictionary-stage3");
 
 /**
  * 阶段 3：standardForm 生成与规范化
@@ -90,7 +93,7 @@ ${originalInput ? `
             reason,
         };
     } catch (error) {
-        console.error("阶段3失败：", error);
+        log.error("Stage 3 failed", { error });
         // 失败时抛出错误
         throw error;
     }

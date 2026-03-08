@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ValidateError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import {
     ActionInputGetUserProfileByUsername,
     ActionInputSignIn,
@@ -22,6 +23,8 @@ import {
 
 // Re-export types for use in components
 export type { ActionOutputAuth, ActionOutputUserProfile } from "./auth-action-dto";
+
+const log = createLogger("auth-action");
 
 /**
  * Sign up action
@@ -68,7 +71,7 @@ export async function actionSignUp(prevState: ActionOutputAuth | undefined, form
                 message: e.message,
             };
         }
-        console.error("Sign up error:", e);
+        log.error("Sign up failed", { error: e });
         return {
             success: false,
             message: "Registration failed. Please try again later.",
@@ -121,7 +124,7 @@ export async function actionSignIn(_prevState: ActionOutputAuth | undefined, for
                 message: e.message,
             };
         }
-        console.error("Sign in error:", e);
+        log.error("Sign in failed", { error: e });
         return {
             success: false,
             message: "Sign in failed. Please check your credentials.",
@@ -144,7 +147,7 @@ export async function signOutAction() {
         if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) {
             throw e;
         }
-        console.error("Sign out error:", e);
+        log.error("Sign out failed", { error: e });
         redirect("/login");
     }
 }
@@ -170,7 +173,7 @@ export async function actionGetUserProfileByUsername(dto: ActionInputGetUserProf
             data: userProfile,
         };
     } catch (e) {
-        console.error("Get user profile error:", e);
+        log.error("Get user profile failed", { error: e });
         return {
             success: false,
             message: "Failed to retrieve user profile",

@@ -1,6 +1,9 @@
 import { executeTranslation } from "@/lib/bigmodel/translator/orchestrator";
 import { repoCreateTranslationHistory, repoSelectLatestTranslation } from "./translator-repository";
 import { ServiceInputTranslateText, ServiceOutputTranslateText } from "./translator-service-dto";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("translator-service");
 
 export const serviceTranslateText = async (
     dto: ServiceInputTranslateText
@@ -31,7 +34,7 @@ export const serviceTranslateText = async (
             sourceIpa: needIpa ? response.sourceIpa : undefined,
             targetIpa: needIpa ? response.targetIpa : undefined,
         }).catch((error) => {
-            console.error("Failed to save translation data:", error);
+            log.error("Failed to save translation data", { error });
         });
 
         return {
@@ -54,7 +57,7 @@ export const serviceTranslateText = async (
             sourceIpa: lastTranslation.sourceIpa || undefined,
             targetIpa: lastTranslation.targetIpa || undefined,
         }).catch((error) => {
-            console.error("Failed to save translation data:", error);
+            log.error("Failed to save translation data", { error });
         });
 
         return {

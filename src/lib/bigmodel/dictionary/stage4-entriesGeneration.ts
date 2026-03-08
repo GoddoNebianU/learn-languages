@@ -1,6 +1,9 @@
 import { getAnswer } from "../zhipu";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { EntriesGenerationResult } from "./types";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("dictionary-stage4");
 
 /**
  * 阶段 4：释义与词条生成
@@ -103,7 +106,7 @@ ${isWord ? `
 
         return result;
     } catch (error) {
-        console.error("阶段4失败：", error);
+        log.error("Stage 4 failed", { error });
         throw error; // 阶段4失败应该返回错误，因为这个阶段是核心
     }
 }

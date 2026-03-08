@@ -2,7 +2,10 @@
 
 import { ActionInputLookUpDictionary, ActionOutputLookUpDictionary, validateActionInputLookUpDictionary } from "./dictionary-action-dto";
 import { ValidateError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { serviceLookUp } from "./dictionary-service";
+
+const log = createLogger("dictionary-action");
 
 export const actionLookUpDictionary = async (dto: ActionInputLookUpDictionary): Promise<ActionOutputLookUpDictionary> => {
     try {
@@ -18,7 +21,7 @@ export const actionLookUpDictionary = async (dto: ActionInputLookUpDictionary): 
                 message: e.message
             };
         }
-        console.log(e);
+        log.error("Dictionary lookup failed", { error: e });
         return {
             success: false,
             message: 'Unknown error occured.'

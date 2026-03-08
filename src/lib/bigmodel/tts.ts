@@ -1,5 +1,9 @@
 "use server";
 
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("tts");
+
 
 // ==================== 类型定义 ====================
 /**
@@ -147,7 +151,7 @@ class QwenTTSService {
             return data;
 
         } catch (error) {
-            console.error('语音合成请求失败:', error);
+            log.error("TTS request failed", { error });
             throw error;
         }
     }
@@ -157,11 +161,7 @@ export type TTS_SUPPORTED_LANGUAGES = 'Auto' | 'Chinese' | 'English' | 'German' 
 export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES) {
     try {
         if (!process.env.DASHSCORE_API_KEY) {
-            console.warn(
-                `⚠️  环境变量 DASHSCORE_API_KEY 未设置\n` +
-                `   请在 .env 文件中设置或直接传入API Key\n` +
-                `   获取API Key: https://help.aliyun.com/zh/model-studio/get-api-key`
-            );
+            log.warn("DASHSCORE_API_KEY not set");
             throw "API Key设置错误";
         }
         const ttsService = new QwenTTSService(
@@ -176,7 +176,7 @@ export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES) {
         );
         return result.output.audio.url;
     } catch (error) {
-        console.error('TTS合成失败:', error instanceof Error ? error.message : error);
+        log.error("TTS synthesis failed", { error: error instanceof Error ? error.message : error });
         return "error";
     }
 }

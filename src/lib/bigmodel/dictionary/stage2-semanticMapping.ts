@@ -1,6 +1,9 @@
 import { getAnswer } from "../zhipu";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { SemanticMappingResult } from "./types";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("dictionary-stage2");
 
 /**
  * 阶段 2：跨语言语义映射决策
@@ -99,7 +102,7 @@ b) 输入是明确、基础、可词典化的语义概念
             reason: result.reason,
         };
     } catch (error) {
-        console.error("阶段2失败：", error);
+        log.error("Stage 2 failed", { error });
         // 失败时直接抛出错误，让编排器返回错误响应
         throw error;
     }

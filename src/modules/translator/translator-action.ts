@@ -6,8 +6,11 @@ import {
     validateActionInputTranslateText,
 } from "./translator-action-dto";
 import { ValidateError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { serviceTranslateText } from "./translator-service";
 import { getAnswer } from "@/lib/bigmodel/zhipu";
+
+const log = createLogger("translator-action");
 
 export const actionTranslateText = async (
     dto: ActionInputTranslateText
@@ -25,7 +28,7 @@ export const actionTranslateText = async (
                 message: e.message,
             };
         }
-        console.log(e);
+        log.error("Translation action failed", { error: e });
         return {
             success: false,
             message: "Unknown error occurred.",

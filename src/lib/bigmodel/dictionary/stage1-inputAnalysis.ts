@@ -1,6 +1,9 @@
 import { getAnswer } from "../zhipu";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { InputAnalysisResult } from "./types";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("dictionary-stage1");
 
 /**
  * 阶段 1：输入解析与语言识别
@@ -59,7 +62,7 @@ export async function analyzeInput(text: string): Promise<InputAnalysisResult> {
 
         return result;
     } catch (error) {
-        console.error("阶段1失败：", error);
+        log.error("Stage 1 failed", { error });
         // 失败时抛出错误，包含 reason
         throw new Error("输入分析失败：无法识别输入类型或语言");
     }
