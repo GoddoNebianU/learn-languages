@@ -12,7 +12,7 @@ import { getCurrentIndex } from "./subtitleParser";
 
 export default function SRTPlayerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { setVideoRef, currentSrc, loadVideo, loaded, getCurrentTime, getDuration, play, setOnTimeUpdate } = useVideoStore();
+  const { setVideoRef, pause, currentSrc, isPlaying, loadVideo, loaded, getCurrentTime, getDuration, play, setOnTimeUpdate } = useVideoStore();
   const {
     uploadVideo,
     uploadSubtitle,
@@ -81,7 +81,9 @@ export default function SRTPlayerPage() {
         /* 控制面板 */
         sub.length > 0 && loaded &&
         <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
-          <LightButton onClick={play}>play</LightButton>
+          {isPlaying() ?
+            LightButton({ children: "pause", onClick: () => pause() }) :
+            LightButton({ children: "play", onClick: () => play() })}
           <LightButton>previous</LightButton>
           <LightButton>next</LightButton>
           <LightButton>restart</LightButton>

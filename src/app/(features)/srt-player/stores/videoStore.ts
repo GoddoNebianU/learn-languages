@@ -16,6 +16,7 @@ interface VideoStore {
     setVolume: (vol: number) => void;
     getCurrentTime: () => number | undefined;
     getDuration: () => number | undefined;
+    isPlaying: () => boolean;
 }
 
 export const useVideoStore = create<VideoStore>()(
@@ -102,5 +103,10 @@ export const useVideoStore = create<VideoStore>()(
         },
         getCurrentTime: () => get().videoRef?.current?.currentTime,
         getDuration: () => get().videoRef?.current?.duration,
+        isPlaying: () => {
+            const video = get().videoRef?.current;
+            if (!video) return false;
+            return !video.paused && !video.ended && video.readyState > 2;
+        }
     }))
 );

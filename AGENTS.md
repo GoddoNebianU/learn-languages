@@ -2,7 +2,7 @@
 
 ```bash
 # 使用以下命令检查代码合法性
-pnpm eslint
+pnpm build
 ```
 
 
