@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ChevronRight,
   Folder as Fd,
   Heart,
   Search,
@@ -13,7 +12,6 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { CardList } from "@/components/ui/CardList";
 import {
   actionSearchPublicFolders,
   actionToggleFavorite,
@@ -63,36 +61,15 @@ const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFol
 
   return (
     <div
-      className="flex justify-between items-center group py-4 px-5 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+      className="group bg-white border-2 border-gray-200 rounded-lg p-5 hover:border-primary-300 hover:shadow-md cursor-pointer transition-all"
       onClick={() => {
         router.push(`/explore/${folder.id}`);
       }}
     >
-      <div className="flex items-center gap-4 flex-1">
-        <div className="shrink-0 text-primary-500">
-          <Fd size={24} />
+      <div className="flex items-start justify-between mb-3">
+        <div className="shrink-0 w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500">
+          <Fd size={22} />
         </div>
-
-        <div className="flex items-center gap-1 text-sm text-gray-400">
-          <Heart
-            size={14}
-            className={isFavorited ? "fill-red-500 text-red-500" : ""}
-          />
-          <span>{favoriteCount}</span>
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{folder.name}</h3>
-          <p className="text-sm text-gray-500 mt-0.5">
-            {t("folderInfo", {
-              userName: folder.userName ?? folder.userUsername ?? t("unknownUser"),
-              totalPairs: folder.totalPairs,
-            })}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
         <CircleButton
           onClick={handleToggleFavorite}
           title={isFavorited ? t("unfavorite") : t("favorite")}
@@ -102,7 +79,23 @@ const PublicFolderCard = ({ folder, currentUserId, onFavoriteChange }: PublicFol
             className={isFavorited ? "fill-red-500 text-red-500" : ""}
           />
         </CircleButton>
-        <ChevronRight size={20} className="text-gray-400" />
+      </div>
+
+      <h3 className="font-semibold text-gray-900 truncate mb-2">{folder.name}</h3>
+      
+      <p className="text-sm text-gray-500 mb-3">
+        {t("folderInfo", {
+          userName: folder.userName ?? folder.userUsername ?? t("unknownUser"),
+          totalPairs: folder.totalPairs,
+        })}
+      </p>
+
+      <div className="flex items-center gap-1 text-sm text-gray-400">
+        <Heart
+          size={14}
+          className={isFavorited ? "fill-red-500 text-red-500" : ""}
+        />
+        <span>{favoriteCount}</span>
       </div>
     </div>
   );
@@ -148,7 +141,7 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-6">
         <div className="relative flex-1">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -165,32 +158,30 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
         </CircleButton>
       </div>
 
-      <div className="mt-4">
-        <CardList>
-          {loading ? (
-            <div className="p-8 text-center">
-              <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-gray-500">{t("loading")}</p>
-            </div>
-          ) : publicFolders.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-                <Fd size={24} className="text-gray-400" />
-              </div>
-              <p className="text-sm">{t("noFolders")}</p>
-            </div>
-          ) : (
-            publicFolders.map((folder) => (
-              <PublicFolderCard
-                key={folder.id}
-                folder={folder}
-                currentUserId={currentUserId}
-                onFavoriteChange={refreshFolders}
-              />
-            ))
-          )}
-        </CardList>
-      </div>
+      {loading ? (
+        <div className="p-8 text-center">
+          <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-sm text-gray-500">{t("loading")}</p>
+        </div>
+      ) : publicFolders.length === 0 ? (
+        <div className="text-center py-12 text-gray-400">
+          <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+            <Fd size={24} className="text-gray-400" />
+          </div>
+          <p className="text-sm">{t("noFolders")}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {publicFolders.map((folder) => (
+            <PublicFolderCard
+              key={folder.id}
+              folder={folder}
+              currentUserId={currentUserId}
+              onFavoriteChange={refreshFolders}
+            />
+          ))}
+        </div>
+      )}
     </PageLayout>
   );
 }
