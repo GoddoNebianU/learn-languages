@@ -19,4 +19,4 @@ pnpm build
 - Better-auth 处理会话管理 - 使用 authClient 适配器进行认证操作
 - 组件尽量复用/src/design-system里的可复用组件与/src/components里的业务相关组件
 - 不要创建index.ts
-- 每变更一个完整项目自动git commit，如需就git reset
+- 每变更一个完整项目自动git commit，如需撤销就git reset
