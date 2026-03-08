@@ -139,13 +139,13 @@ export async function signOutAction() {
             headers: await headers()
         });
 
-        redirect("/auth");
+        redirect("/login");
     } catch (e) {
         if (e instanceof Error && e.message.includes('NEXT_REDIRECT')) {
             throw e;
         }
         console.error("Sign out error:", e);
-        redirect("/auth");
+        redirect("/login");
     }
 }
 

@@ -24,7 +24,7 @@ export default async function MemorizePage({
 
   if (!folder_id) {
     const session = await auth.api.getSession({ headers: await headers() });
-    if (!session) redirect("/auth?redirect=/memorize");
+    if (!session) redirect("/login?redirect=/memorize");
 
     return (
       <FolderSelector
