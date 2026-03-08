@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from 'react';
-import { useSrtPlayerStore } from '../store';
+import { useSrtPlayerStore } from '../stores/srtPlayerStore';
 
 export function useVideoSync(videoRef: RefObject<HTMLVideoElement | null>) {
   const setCurrentTime = useSrtPlayerStore((state) => state.setCurrentTime);

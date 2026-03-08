@@ -1,14 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSrtPlayerStore } from "../store";
+import { useSrtPlayerStore } from "../stores/srtPlayerStore";
 
-/**
- * useSrtPlayerShortcuts - SRT 播放器快捷键 Hook
- *
- * 自动为 SRT 播放器设置键盘快捷键，无需传入参数。
- * 直接使用 Zustand store 中的 actions。
- */
 export function useSrtPlayerShortcuts(enabled: boolean = true) {
   const togglePlayPause = useSrtPlayerStore((state) => state.togglePlayPause);
   const nextSubtitle = useSrtPlayerStore((state) => state.nextSubtitle);
@@ -20,7 +14,6 @@ export function useSrtPlayerShortcuts(enabled: boolean = true) {
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (!enabled) return;
 
-      // 防止在输入框中触发快捷键
       const target = event.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return;
@@ -61,7 +54,6 @@ export function useSrtPlayerShortcuts(enabled: boolean = true) {
   }, [enabled, togglePlayPause, nextSubtitle, previousSubtitle, restartSubtitle, toggleAutoPause]);
 }
 
-// 保留通用快捷键 Hook 用于其他场景
 export function useKeyboardShortcuts(
   shortcuts: Array<{ key: string; action: () => void }>,
   isEnabled: boolean = true

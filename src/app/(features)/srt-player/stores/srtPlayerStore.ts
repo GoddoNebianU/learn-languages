@@ -10,7 +10,7 @@ import type {
   ControlState,
   SubtitleSettings,
   SubtitleEntry,
-} from './types';
+} from '../types';
 import type { RefObject } from 'react';
 
 let videoRef: RefObject<HTMLVideoElement | null> | null;
@@ -19,7 +19,6 @@ export function setVideoRef(ref: RefObject<HTMLVideoElement | null> | null) {
   videoRef = ref;
 }
 
-// 初始状态
 const initialVideoState: VideoState = {
   url: null,
   isPlaying: false,
@@ -55,12 +54,10 @@ const initialControlState: ControlState = {
 export const useSrtPlayerStore = create<SrtPlayerStore>()(
   devtools(
     (set, get) => ({
-      // ==================== Initial State ====================
       video: initialVideoState,
       subtitle: initialSubtitleState,
       controls: initialControlState,
 
-      // ==================== Video Actions ====================
       setVideoUrl: (url) =>
         set((state) => {
           if (videoRef?.current) {
@@ -111,7 +108,6 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
 
       pause: () => {
         if (videoRef?.current) {
-          // 只有在视频正在播放时才暂停，避免重复调用
           if (!videoRef.current.paused) {
             videoRef.current.pause();
           }
@@ -146,7 +142,6 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
         }
       },
 
-      // ==================== Subtitle Actions ====================
       setSubtitleUrl: (url) =>
         set((state) => ({ subtitle: { ...state.subtitle, url } })),
 
@@ -202,7 +197,6 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
         }
       },
 
-      // ==================== Controls Actions ====================
       toggleAutoPause: () =>
         set((state) => ({
           controls: { ...state.controls, autoPause: !state.controls.autoPause },

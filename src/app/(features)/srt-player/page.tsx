@@ -1,97 +1,177 @@
 "use client";
 
-import { LightButton, PageLayout } from "@/components/ui";
-import { useVideoStore } from "./stores/videoStore";
-import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { LightButton } from "@/design-system/base/button";
 import { HStack } from "@/design-system/layout/stack";
-import { MessageSquareQuote, Video } from "lucide-react";
-import { useFileUpload } from "./useFileUpload";
-import { useSubtitleStore } from "./stores/substitleStore";
-import { getCurrentIndex } from "./subtitleParser";
+import { Video, FileText, ChevronLeft, ChevronRight, RotateCcw, Pause, Play } from "lucide-react";
+import { useVideoSync } from "./hooks/useVideoSync";
+import { useSubtitleSync } from "./hooks/useSubtitleSync";
+import { useSrtPlayerShortcuts } from "./hooks/useKeyboardShortcuts";
+import { loadSubtitle } from "./utils/subtitleParser";
+import { useSrtPlayerStore } from "./stores/srtPlayerStore";
+import { useFileUpload } from "./hooks/useFileUpload";
+import { setVideoRef } from "./stores/srtPlayerStore";
+import Link from "next/link";
 
-export default function SRTPlayerPage() {
+export default function SrtPlayerPage() {
+  const t = useTranslations("home");
+  const srtT = useTranslations("srt_player");
+
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { setVideoRef, pause, currentSrc, isPlaying, loadVideo, loaded, getCurrentTime, getDuration, play, setOnTimeUpdate } = useVideoStore();
-  const {
-    uploadVideo,
-    uploadSubtitle,
-  } = useFileUpload();
-  const {
-    sub,
-    setSub,
-    index,
-    setIndex
-  } = useSubtitleStore();
+  const { uploadVideo, uploadSubtitle } = useFileUpload();
+
+  const subtitleUrl = useSrtPlayerStore((state) => state.subtitle.url);
+  const setSubtitleData = useSrtPlayerStore((state) => state.setSubtitleData);
+  const setSubtitleUrl = useSrtPlayerStore((state) => state.setSubtitleUrl);
+  const setVideoUrl = useSrtPlayerStore((state) => state.setVideoUrl);
+
+  const videoUrl = useSrtPlayerStore((state) => state.video.url);
+  const subtitleData = useSrtPlayerStore((state) => state.subtitle.data);
+  const currentIndex = useSrtPlayerStore((state) => state.subtitle.currentIndex);
+  const isPlaying = useSrtPlayerStore((state) => state.video.isPlaying);
+  const playbackRate = useSrtPlayerStore((state) => state.video.playbackRate);
+  const autoPause = useSrtPlayerStore((state) => state.controls.autoPause);
+
+  const togglePlayPause = useSrtPlayerStore((state) => state.togglePlayPause);
+  const nextSubtitle = useSrtPlayerStore((state) => state.nextSubtitle);
+  const previousSubtitle = useSrtPlayerStore((state) => state.previousSubtitle);
+  const restartSubtitle = useSrtPlayerStore((state) => state.restartSubtitle);
+  const setPlaybackRate = useSrtPlayerStore((state) => state.setPlaybackRate);
+  const toggleAutoPause = useSrtPlayerStore((state) => state.toggleAutoPause);
+  const seek = useSrtPlayerStore((state) => state.seek);
+
+  useVideoSync(videoRef);
+  useSubtitleSync();
+  useSrtPlayerShortcuts();
 
   useEffect(() => {
     setVideoRef(videoRef);
-    setOnTimeUpdate((time) => {
-      setIndex(getCurrentIndex(sub, time));
+  }, [videoRef]);
+
+  const canPlay = !!videoUrl && !!subtitleUrl && subtitleData.length > 0;
+
+  useEffect(() => {
+    if (subtitleUrl) {
+      loadSubtitle(subtitleUrl)
+        .then((subtitleData) => {
+          setSubtitleData(subtitleData);
+          toast.success(srtT("subtitleLoadSuccess"));
+        })
+        .catch((error) => {
+          toast.error(srtT("subtitleLoadFailed") + ": " + error.message);
+        });
+    }
+  }, [srtT, subtitleUrl, setSubtitleData]);
+
+  const handleVideoUpload = () => {
+    uploadVideo((url) => {
+      setVideoUrl(url);
+    }, (error) => {
+      toast.error(t('videoUploadFailed') + ': ' + error.message);
     });
-    return () => {
-      setVideoRef();
-      setOnTimeUpdate(() => { });
-    };
-  }, [setVideoRef, setOnTimeUpdate, sub, setIndex]);
+  };
+
+  const handleSubtitleUpload = () => {
+    uploadSubtitle((url) => {
+      setSubtitleUrl(url);
+    }, (error) => {
+      toast.error(t('subtitleUploadFailed') + ': ' + error.message);
+    });
+  };
+
+  const handlePlaybackRateChange = () => {
+    const rates = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
+    const currentIndexRate = rates.indexOf(playbackRate);
+    const nextIndexRate = (currentIndexRate + 1) % rates.length;
+    setPlaybackRate(rates[nextIndexRate]);
+  };
+
+  const currentSubtitle = currentIndex !== null ? subtitleData[currentIndex] : null;
 
   return (
     <PageLayout>
-      <video ref={videoRef} width="85%" className="mx-auto"></video>
-
-      <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
-        {
-          sub[index] && sub[index].text.split(" ").map((s, i) =>
-            <Link key={i}
-              href={`/dictionary?q=${s}`}
-              className="px-1 h-fit hover:bg-gray-200 hover:cursor-pointer">
-              {s}
-            </Link>
-          )}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          {t("srtPlayer.name")}
+        </h1>
+        <p className="text-lg text-gray-600">
+          {t("srtPlayer.description")}
+        </p>
       </div>
 
-      {/* 上传区域 */}
+      <video 
+        ref={videoRef} 
+        width="85%" 
+        className="mx-auto"
+        playsInline
+      />
+
+      <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
+        {currentSubtitle && currentSubtitle.text.split(" ").map((s, i) => (
+          <Link 
+            key={i}
+            href={`/dictionary?q=${s}`}
+            className="px-1 h-fit hover:bg-gray-200 hover:cursor-pointer"
+          >
+            {s}
+          </Link>
+        ))}
+      </div>
+
       <div className="mx-auto mt-4 flex items-center justify-center flex-wrap gap-2 w-[85%]">
         <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
           <div className="flex items-center flex-col">
             <Video size={16} />
             <span className="text-sm">视频文件</span>
           </div>
-          <LightButton
-            onClick={() => uploadVideo((url) => {
-              loadVideo(url);
-            })}>{loaded ? currentSrc?.split("/").pop() : "视频未上传"}</LightButton>
+          <LightButton onClick={handleVideoUpload} disabled={!!videoUrl}>
+            {videoUrl ? '已上传' : '上传视频'}
+          </LightButton>
         </div>
         <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
           <div className="flex items-center flex-col">
-            <MessageSquareQuote size={16} />
-            <span className="text-sm"
-            >{sub.length > 0 ? `字幕已上传 (${sub.length} 条)` : "字幕未上传"}</span>
+            <FileText size={16} />
+            <span className="text-sm">
+              {subtitleData.length > 0 ? `字幕已上传 (${subtitleData.length} 条)` : "字幕未上传"}
+            </span>
           </div>
-          <LightButton
-            onClick={() =>
-              uploadSubtitle((sub) => {
-                setSub(sub);
-              })
-            }>上传字幕</LightButton>
+          <LightButton onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
+            {subtitleUrl ? '已上传' : '上传字幕'}
+          </LightButton>
         </div>
       </div>
 
-      {
-        /* 控制面板 */
-        sub.length > 0 && loaded &&
+      {canPlay && (
         <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
-          {isPlaying() ?
-            LightButton({ children: "pause", onClick: () => pause() }) :
-            LightButton({ children: "play", onClick: () => play() })}
-          <LightButton>previous</LightButton>
-          <LightButton>next</LightButton>
-          <LightButton>restart</LightButton>
-          <LightButton>1x</LightButton>
-          <LightButton>ap(on)</LightButton>
+          {isPlaying ? (
+            <LightButton onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
+              {srtT('pause')}
+            </LightButton>
+          ) : (
+            <LightButton onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
+              {srtT('play')}
+            </LightButton>
+          )}
+          <LightButton onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
+            {srtT('previous')}
+          </LightButton>
+          <LightButton onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
+            {srtT('next')}
+          </LightButton>
+          <LightButton onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
+            {srtT('restart')}
+          </LightButton>
+          <LightButton onClick={handlePlaybackRateChange}>
+            {playbackRate}x
+          </LightButton>
+          <LightButton onClick={toggleAutoPause}>
+            {srtT('autoPause', { enabled: autoPause ? srtT('on') : srtT('off') })}
+          </LightButton>
         </HStack>
-      }
-
+      )}
     </PageLayout>
   );
 }

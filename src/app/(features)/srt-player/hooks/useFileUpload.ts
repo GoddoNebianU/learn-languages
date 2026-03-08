@@ -9,8 +9,7 @@ export function useFileUpload() {
     onError?: (error: Error) => void
   ) => {
     try {
-      // 验证文件大小（限制为1000MB）
-      const maxSize = 1000 * 1024 * 1024; // 1000MB
+      const maxSize = 1000 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error(`文件大小超过限制 (${(file.size / 1024 / 1024).toFixed(2)}MB > 1000MB)`);
       }
@@ -34,7 +33,6 @@ export function useFileUpload() {
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        // 验证文件类型
         if (!file.type.startsWith('video/')) {
           onError?.(new Error('请选择有效的视频文件'));
           return;
@@ -61,7 +59,6 @@ export function useFileUpload() {
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        // 验证文件扩展名
         if (!file.name.toLowerCase().endsWith('.srt')) {
           onError?.(new Error('请选择.srt格式的字幕文件'));
           return;
@@ -80,6 +77,5 @@ export function useFileUpload() {
   return {
     uploadVideo,
     uploadSubtitle,
-    uploadFile,
   };
 }
