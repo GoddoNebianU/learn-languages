@@ -93,6 +93,17 @@ if (!session?.user?.id) return { success: false, message: "未授权" };
 // 变更前检查所有权
 ```
 
+### 日志
+```typescript
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("folder-repository");
+
+log.debug("Fetching public folders");
+log.info("Fetched folders", { count: folders.length });
+log.error("Failed to fetch folders", { error });
+```
+
 ## 反模式 (本项目)
 
 - ❌ `index.ts` barrel exports
@@ -100,7 +111,7 @@ if (!session?.user?.id) return { success: false, message: "未授权" };
 - ❌ 用 API routes 做数据操作 (使用 Server Actions)
 - ❌ Server Component 可行时用 Client Component
 - ❌ npm 或 yarn (使用 pnpm)
-- ❌ 生产代码中使用 `console.log`
+- ❌ 生产代码中使用 `console.log` (使用 winston logger)
 
 ## 独特风格
 
