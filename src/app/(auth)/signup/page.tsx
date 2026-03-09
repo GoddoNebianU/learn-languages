@@ -6,12 +6,14 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
 import { PrimaryButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
 export default function SignUpPage() {
+  const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,18 +22,18 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
 
-  const session = authClient.useSession().data;
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      router.push(redirectTo ?? "/profile");
+    if (!isPending && session?.user?.username && !redirectTo) {
+      router.push("/folders");
     }
-  }, [session, router, redirectTo]);
+  }, [session, isPending, router, redirectTo]);
 
   const handleSignUp = async () => {
     if (!username || !email || !password) {
-      toast.error("请填写所有字段");
+      toast.error(t("fillAllFields"));
       return;
     }
 
@@ -43,9 +45,9 @@ export default function SignUpPage() {
         username: username,
         password: password,
       });
-      router.push(redirectTo ?? "/profile");
+      router.push(redirectTo ?? "/folders");
     } catch (error) {
-      toast.error("注册失败");
+      toast.error(t("signUpFailed"));
     } finally {
       setLoading(false);
     }
@@ -53,28 +55,28 @@ export default function SignUpPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="w-80">
+      <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">注册</h1>
+            <h1 className="text-3xl font-bold text-center w-full">{t("signUpTitle")}</h1>
             
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
-                placeholder="用户名"
+                placeholder={t("usernamePlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
               
               <Input
                 type="email"
-                placeholder="邮箱地址"
+                placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               
               <Input
                 type="password"
-                placeholder="密码"
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -85,14 +87,14 @@ export default function SignUpPage() {
               loading={loading}
               fullWidth
             >
-              确认
+              {t("confirm")}
             </PrimaryButton>
             
             <Link 
               href={"/login" + (redirectTo ? `?redirect=${redirectTo}` : "")}
               className="text-center text-primary-500 hover:underline"
             >
-              已有账号？去登录
+              {t("hasAccountLink")}
             </Link>
           </VStack>
         </CardBody>

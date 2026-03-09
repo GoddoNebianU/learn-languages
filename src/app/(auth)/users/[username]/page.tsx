@@ -42,7 +42,7 @@ export default async function UserPage({ params }: UserPageProps) {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div></div>
-                        {isOwnProfile && <LinkButton href="/logout">登出</LinkButton>}
+                        {isOwnProfile && <LinkButton href="/logout">{t("logout")}</LinkButton>}
                     </div>
                     <div className="flex items-center space-x-6">
                         {/* Avatar */}

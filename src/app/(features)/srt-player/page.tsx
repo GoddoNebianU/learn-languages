@@ -127,21 +127,21 @@ export default function SrtPlayerPage() {
         <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
           <div className="flex items-center flex-col">
             <Video size={16} />
-            <span className="text-sm">视频文件</span>
+            <span className="text-sm">{srtT("videoFile")}</span>
           </div>
           <LightButton onClick={handleVideoUpload} disabled={!!videoUrl}>
-            {videoUrl ? '已上传' : '上传视频'}
+            {videoUrl ? srtT("uploaded") : srtT("uploadVideoButton")}
           </LightButton>
         </div>
         <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
           <div className="flex items-center flex-col">
             <FileText size={16} />
             <span className="text-sm">
-              {subtitleData.length > 0 ? `字幕已上传 (${subtitleData.length} 条)` : "字幕未上传"}
+              {subtitleData.length > 0 ? srtT("subtitleUploaded", { count: subtitleData.length }) : srtT("subtitleNotUploaded")}
             </span>
           </div>
           <LightButton onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
-            {subtitleUrl ? '已上传' : '上传字幕'}
+            {subtitleUrl ? srtT("uploaded") : srtT("uploadSubtitleButton")}
           </LightButton>
         </div>
       </div>

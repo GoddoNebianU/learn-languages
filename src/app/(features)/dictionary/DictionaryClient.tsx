@@ -133,10 +133,11 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
           placeholder={t("searchPlaceholder")}
           variant="search"
           required
+          containerClassName="flex-1"
         />
         <LightButton
           type="submit"
-          className="px-6 py-3 whitespace-nowrap text-center sm:min-w-30"
+          className="h-10 px-6 rounded-full whitespace-nowrap"
           loading={isSearching}
         >
           {t("search")}

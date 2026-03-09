@@ -1,6 +1,7 @@
 {
   "alphabet": {
     "chooseCharacters": "Please select the characters you want to learn",
+    "chooseAlphabetHint": "Select an alphabet to start learning",
     "japanese": "Japanese Kana",
     "english": "English Alphabet",
     "uyghur": "Uyghur Alphabet",
@@ -14,7 +15,11 @@
     "roman": "Romanization",
     "letter": "Letter",
     "random": "Random Mode",
-    "randomNext": "Random Next"
+    "randomNext": "Random Next",
+    "previousLetter": "Previous letter",
+    "nextLetter": "Next letter",
+    "keyboardHint": "Use left/right arrow keys or space for random, ESC to go back",
+    "swipeHint": "Use left/right arrow keys or swipe to navigate, ESC to go back"
   },
   "folders": {
     "title": "Folders",
@@ -107,7 +112,8 @@
     }
   },
   "auth": {
-    "title": "Authentication",
+    "title": "Sign In",
+    "signUpTitle": "Sign Up",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "email": "Email",
@@ -133,7 +139,18 @@
     "identifierRequired": "Please enter your email or username",
     "passwordRequired": "Please enter your password",
     "confirmPasswordRequired": "Please confirm your password",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "noAccountLink": "Don't have an account? Sign up",
+    "hasAccountLink": "Already have an account? Sign in",
+    "usernamePlaceholder": "Username",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "usernameOrEmailPlaceholder": "Username or email",
+    "loginFailed": "Login failed",
+    "signUpFailed": "Sign up failed",
+    "fillAllFields": "Please fill in all fields",
+    "enterCredentials": "Please enter username and password"
   },
   "memorize": {
     "folder_selector": {
@@ -187,11 +204,17 @@
     "uploaded": "Uploaded",
     "notUploaded": "Not Uploaded",
     "upload": "Upload",
+    "uploadVideoButton": "Upload Video",
+    "uploadSubtitleButton": "Upload Subtitle",
+    "subtitleUploaded": "Subtitle Uploaded ({count} entries)",
+    "subtitleNotUploaded": "Subtitle Not Uploaded",
     "autoPauseStatus": "Auto Pause: {enabled}",
     "on": "On",
     "off": "Off",
     "videoUploadFailed": "Video upload failed",
-    "subtitleUploadFailed": "Subtitle upload failed"
+    "subtitleUploadFailed": "Subtitle upload failed",
+    "subtitleLoadSuccess": "Subtitle loaded successfully",
+    "subtitleLoadFailed": "Subtitle load failed"
   },
   "text_speaker": {
     "generateIPA": "Generate IPA",
@@ -256,7 +279,9 @@
     "pleaseLogin": "Please log in first",
     "pleaseCreateFolder": "Please create a folder first",
     "savedToFolder": "Saved to folder: {folderName}",
-    "saveFailed": "Save failed, please try again later"
+    "saveFailed": "Save failed, please try again later",
+    "definition": "Definition",
+    "example": "Example"
   },
   "explore": {
     "title": "Explore",
@@ -291,6 +316,7 @@
     "displayName": "Display Name",
     "notSet": "Not Set",
     "memberSince": "Member Since",
+    "logout": "Logout",
     "folders": {
       "title": "Folders",
       "noFolders": "No folders yet",

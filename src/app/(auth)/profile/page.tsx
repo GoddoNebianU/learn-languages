@@ -5,9 +5,9 @@ import { headers } from "next/headers";
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect("/login?redirect=/profile");
   }
   
-  redirect(`/users/${session.user.username}`);
+  redirect(session.user.username ? `/users/${session.user.username}` : "/folders");
 }

@@ -54,8 +54,8 @@ export default function Alphabet() {
           {t("chooseCharacters")}
         </h1>
         {/* 副标题说明 */}
-        <p className="text-gray-600 mb-8 text-lg">
-          选择一种语言的字母表开始学习
+        <p className="text-lg text-gray-600 text-center">
+          {t("chooseAlphabetHint")}
         </p>
 
         {/* 语言选择按钮网格 */}

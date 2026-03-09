@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
 import { PrimaryButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
 export default function LoginPage() {
+  const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,18 +20,18 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
 
-  const session = authClient.useSession().data;
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      router.push(redirectTo ?? "/profile");
+    if (!isPending && session?.user?.username && !redirectTo) {
+      router.push("/folders");
     }
-  }, [session, router, redirectTo]);
+  }, [session, isPending, router, redirectTo]);
 
   const handleLogin = async () => {
     if (!username || !password) {
-      toast.error("请输入用户名和密码");
+      toast.error(t("enterCredentials"));
       return;
     }
 
@@ -39,7 +40,7 @@ export default function LoginPage() {
       if (username.includes("@")) {
         await authClient.signIn.email({
           email: username,
-          password: username
+          password: password,
         });
       } else {
         await authClient.signIn.username({
@@ -47,9 +48,9 @@ export default function LoginPage() {
           password: password,
         });
       }
-      router.push(redirectTo ?? "/profile");
+      router.push(redirectTo ?? "/folders");
     } catch (error) {
-      toast.error("登录失败");
+      toast.error(t("loginFailed"));
     } finally {
       setLoading(false);
     }
@@ -57,21 +58,21 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="w-80">
+      <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">登录</h1>
+            <h1 className="text-3xl font-bold text-center w-full">{t("title")}</h1>
             
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
-                placeholder="用户名或邮箱地址"
+                placeholder={t("usernameOrEmailPlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
               
               <Input
                 type="password"
-                placeholder="密码"
+                placeholder={t("passwordPlaceholder")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -82,14 +83,14 @@ export default function LoginPage() {
               loading={loading}
               fullWidth
             >
-              确认
+              {t("confirm")}
             </PrimaryButton>
             
             <Link 
               href={"/signup" + (redirectTo ? `?redirect=${redirectTo}` : "")}
               className="text-center text-primary-500 hover:underline"
             >
-              没有账号？去注册
+              {t("noAccountLink")}
             </Link>
           </VStack>
         </CardBody>

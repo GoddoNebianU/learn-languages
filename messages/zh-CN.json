@@ -1,6 +1,7 @@
 {
   "alphabet": {
     "chooseCharacters": "请选择您想学习的字符",
+    "chooseAlphabetHint": "选择一种语言的字母表开始学习",
     "japanese": "日语假名",
     "english": "英文字母",
     "uyghur": "维吾尔字母",
@@ -14,7 +15,11 @@
     "roman": "罗马音",
     "letter": "字母",
     "random": "随机模式",
-    "randomNext": "随机下一个"
+    "randomNext": "随机下一个",
+    "previousLetter": "上一个字母",
+    "nextLetter": "下一个字母",
+    "keyboardHint": "使用左右箭头键或空格键随机切换，ESC键返回",
+    "swipeHint": "使用左右箭头键或滑动切换字母"
   },
   "folders": {
     "title": "文件夹",
@@ -108,6 +113,7 @@
   },
   "auth": {
     "title": "登录",
+    "signUpTitle": "注册",
     "signIn": "登录",
     "signUp": "注册",
     "email": "邮箱",
@@ -133,7 +139,18 @@
     "identifierRequired": "请输入邮箱或用户名",
     "passwordRequired": "请输入密码",
     "confirmPasswordRequired": "请确认密码",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "confirm": "确认",
+    "noAccountLink": "没有账号？去注册",
+    "hasAccountLink": "已有账号？去登录",
+    "usernamePlaceholder": "用户名",
+    "emailPlaceholder": "邮箱地址",
+    "passwordPlaceholder": "密码",
+    "usernameOrEmailPlaceholder": "用户名或邮箱地址",
+    "loginFailed": "登录失败",
+    "signUpFailed": "注册失败",
+    "fillAllFields": "请填写所有字段",
+    "enterCredentials": "请输入用户名和密码"
   },
   "memorize": {
     "folder_selector": {
@@ -187,11 +204,17 @@
     "subtitleFile": "字幕文件",
     "uploaded": "已上传",
     "notUploaded": "未上传",
+    "uploadVideoButton": "上传视频",
+    "uploadSubtitleButton": "上传字幕",
+    "subtitleUploaded": "字幕已上传 ({count} 条)",
+    "subtitleNotUploaded": "字幕未上传",
     "autoPauseStatus": "自动暂停: {enabled}",
     "on": "开",
     "off": "关",
     "videoUploadFailed": "视频上传失败",
-    "subtitleUploadFailed": "字幕上传失败"
+    "subtitleUploadFailed": "字幕上传失败",
+    "subtitleLoadSuccess": "字幕加载成功",
+    "subtitleLoadFailed": "字幕加载失败"
   },
   "text_speaker": {
     "generateIPA": "生成IPA",
@@ -256,7 +279,9 @@
     "pleaseLogin": "请先登录",
     "pleaseCreateFolder": "请先创建文件夹",
     "savedToFolder": "已保存到文件夹：{folderName}",
-    "saveFailed": "保存失败，请稍后重试"
+    "saveFailed": "保存失败，请稍后重试",
+    "definition": "释义",
+    "example": "例句"
   },
   "explore": {
     "title": "探索",
@@ -271,14 +296,6 @@
     "pleaseLogin": "请先登录",
     "sortByFavorites": "按收藏数排序",
     "sortByFavoritesActive": "取消按收藏数排序"
-  },
-  "favorites": {
-    "title": "收藏",
-    "subtitle": "我收藏的文件夹",
-    "loading": "加载中...",
-    "noFavorites": "还没有收藏",
-    "folderInfo": "{userName} • {totalPairs} 个文本对",
-    "unknownUser": "未知用户"
   },
   "favorites": {
     "title": "我的收藏",
@@ -299,6 +316,7 @@
     "displayName": "显示名称",
     "notSet": "未设置",
     "memberSince": "注册时间",
+    "logout": "登出",
     "folders": {
       "title": "文件夹",
       "noFolders": "还没有文件夹",
