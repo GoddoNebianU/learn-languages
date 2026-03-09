@@ -1,6 +1,7 @@
 {
   "alphabet": {
     "chooseCharacters": "Veuillez sélectionner les caractères que vous souhaitez apprendre",
+    "chooseAlphabetHint": "Sélectionnez un alphabet pour commencer à apprendre",
     "japanese": "Kana japonais",
     "english": "Alphabet anglais",
     "uyghur": "Alphabet ouïghour",
@@ -14,29 +15,48 @@
     "roman": "Romanisation",
     "letter": "Lettre",
     "random": "Mode aléatoire",
-    "randomNext": "Suivant aléatoire"
+    "randomNext": "Suivant aléatoire",
+    "previousLetter": "Lettre précédente",
+    "nextLetter": "Lettre suivante",
+    "keyboardHint": "Utilisez les touches fléchées gauche/droite ou espace pour aléatoire, ÉCHAP pour revenir",
+    "swipeHint": "Utilisez les touches fléchées gauche/droite ou balayez pour naviguer, ÉCHAP pour revenir"
   },
   "folders": {
     "title": "Dossiers",
     "subtitle": "Gérez vos collections",
     "newFolder": "Nouveau dossier",
     "creating": "Création...",
-    "noFoldersYet": "Aucun dossier pour le moment",
-    "folderInfo": "ID: {id} • {totalPairs} paires",
-    "enterFolderName": "Entrez le nom du dossier:",
-    "confirmDelete": "Tapez \"{name}\" pour supprimer:"
+    "noFoldersYet": "Pas encore de dossiers",
+    "folderInfo": "ID : {id} • {totalPairs} paires",
+    "enterFolderName": "Entrez le nom du dossier :",
+    "confirmDelete": "Tapez \"{name}\" pour supprimer :",
+    "myFolders": "Mes dossiers",
+    "publicFolders": "Dossiers publics",
+    "public": "Public",
+    "private": "Privé",
+    "setPublic": "Définir comme public",
+    "setPrivate": "Définir comme privé",
+    "publicFolderInfo": "{userName} • {totalPairs} paires",
+    "searchPlaceholder": "Rechercher des dossiers publics...",
+    "loading": "Chargement...",
+    "noPublicFolders": "Aucun dossier public trouvé",
+    "unknownUser": "Utilisateur inconnu",
+    "enterNewName": "Entrez le nouveau nom :",
+    "favorite": "Favori",
+    "unfavorite": "Retirer des favoris",
+    "pleaseLogin": "Veuillez vous connecter d'abord"
   },
   "folder_id": {
     "unauthorized": "Vous n'êtes pas le propriétaire de ce dossier",
     "back": "Retour",
-    "textPairs": "Paires de textes",
+    "textPairs": "Paires de texte",
     "itemsCount": "{count} éléments",
     "memorize": "Mémoriser",
-    "loadingTextPairs": "Chargement des paires de textes...",
-    "noTextPairs": "Aucune paire de textes dans ce dossier",
-    "addNewTextPair": "Ajouter une nouvelle paire de textes",
+    "loadingTextPairs": "Chargement des paires de texte...",
+    "noTextPairs": "Aucune paire de texte dans ce dossier",
+    "addNewTextPair": "Ajouter une nouvelle paire de texte",
     "add": "Ajouter",
-    "updateTextPair": "Mettre à jour la paire de textes",
+    "updateTextPair": "Mettre à jour la paire de texte",
     "update": "Mettre à jour",
     "text1": "Texte 1",
     "text2": "Texte 2",
@@ -56,15 +76,15 @@
   },
   "home": {
     "title": "Apprendre les langues",
-    "description": "Voici un site web très utile pour vous aider à apprendre presque toutes les langues du monde, y compris les langues construites.",
+    "description": "Voici un site Web très utile pour vous aider à apprendre presque toutes les langues du monde, y compris les langues construites.",
     "explore": "Explorer",
     "fortune": {
-      "quote": "Stay hungry, stay foolish.",
+      "quote": "Restez affamés, restez fous.",
       "author": "— Steve Jobs"
     },
     "translator": {
       "name": "Traducteur",
-      "description": "Traduire dans n'importe quelle langue et annoter avec l'alphabet phonétique international (API)"
+      "description": "Traduire vers n'importe quelle langue et annoter avec l'Alphabet Phonétique International (API)"
     },
     "textSpeaker": {
       "name": "Lecteur de texte",
@@ -76,15 +96,15 @@
     },
     "alphabet": {
       "name": "Alphabet",
-      "description": "Commencer à apprendre une nouvelle langue par l'alphabet"
+      "description": "Commencez à apprendre une nouvelle langue à partir de l'alphabet"
     },
     "memorize": {
       "name": "Mémoriser",
-      "description": "Langue A vers langue B, langue B vers langue A, prend en charge la dictée"
+      "description": "Langue A vers Langue B, Langue B vers Langue A, prend en charge la dictée"
     },
     "dictionary": {
       "name": "Dictionnaire",
-      "description": "Rechercher des mots et des phrases avec des définitions détaillées et des exemples"
+      "description": "Rechercher des mots et des expressions avec des définitions détaillées et des exemples"
     },
     "moreFeatures": {
       "name": "Plus de fonctionnalités",
@@ -92,7 +112,8 @@
     }
   },
   "auth": {
-    "title": "Authentification",
+    "title": "Se connecter",
+    "signUpTitle": "S'inscrire",
     "signIn": "Se connecter",
     "signUp": "S'inscrire",
     "email": "E-mail",
@@ -103,22 +124,33 @@
     "emailOrUsername": "E-mail ou nom d'utilisateur",
     "signInButton": "Se connecter",
     "signUpButton": "S'inscrire",
-    "noAccount": "Vous n'avez pas de compte?",
-    "hasAccount": "Vous avez déjà un compte?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "hasAccount": "Vous avez déjà un compte ?",
     "signInWithGitHub": "Se connecter avec GitHub",
     "signUpWithGitHub": "S'inscrire avec GitHub",
     "invalidEmail": "Veuillez entrer une adresse e-mail valide",
     "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
     "passwordsNotMatch": "Les mots de passe ne correspondent pas",
     "nameRequired": "Veuillez entrer votre nom",
-    "usernameRequired": "Veuillez entrer votre nom d'utilisateur",
+    "usernameRequired": "Veuillez entrer un nom d'utilisateur",
     "usernameTooShort": "Le nom d'utilisateur doit contenir au moins 3 caractères",
     "usernameInvalid": "Le nom d'utilisateur ne peut contenir que des lettres, des chiffres et des underscores",
     "emailRequired": "Veuillez entrer votre e-mail",
     "identifierRequired": "Veuillez entrer votre e-mail ou nom d'utilisateur",
     "passwordRequired": "Veuillez entrer votre mot de passe",
     "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "confirm": "Confirmer",
+    "noAccountLink": "Vous n'avez pas de compte ? Inscrivez-vous",
+    "hasAccountLink": "Vous avez déjà un compte ? Connectez-vous",
+    "usernamePlaceholder": "Nom d'utilisateur",
+    "emailPlaceholder": "Adresse e-mail",
+    "passwordPlaceholder": "Mot de passe",
+    "usernameOrEmailPlaceholder": "Nom d'utilisateur ou e-mail",
+    "loginFailed": "Échec de la connexion",
+    "signUpFailed": "Échec de l'inscription",
+    "fillAllFields": "Veuillez remplir tous les champs",
+    "enterCredentials": "Veuillez entrer le nom d'utilisateur et le mot de passe"
   },
   "memorize": {
     "folder_selector": {
@@ -131,7 +163,7 @@
       "next": "Suivant",
       "reverse": "Inverser",
       "dictation": "Dictée",
-      "noTextPairs": "Aucune paire de textes disponible",
+      "noTextPairs": "Aucune paire de texte disponible",
       "disorder": "Désordre",
       "previous": "Précédent"
     },
@@ -140,46 +172,54 @@
     }
   },
   "navbar": {
-    "title": "learn-languages",
+    "title": "apprendre-langues",
     "sourceCode": "GitHub",
     "sign_in": "Se connecter",
     "profile": "Profil",
-    "folders": "Dossiers"
+    "folders": "Dossiers",
+    "explore": "Explorer",
+    "favorites": "Favoris"
   },
   "profile": {
     "myProfile": "Mon profil",
-    "email": "E-mail: {email}",
-    "logout": "Se déconnecter"
+    "email": "E-mail : {email}",
+    "logout": "Déconnexion"
   },
   "srt_player": {
-    "uploadVideo": "Télécharger une vidéo",
-    "uploadSubtitle": "Télécharger des sous-titres",
+    "uploadVideo": "Télécharger la vidéo",
+    "uploadSubtitle": "Télécharger les sous-titres",
     "pause": "Pause",
-    "play": "Lire",
+    "play": "Lecture",
     "previous": "Précédent",
     "next": "Suivant",
-    "restart": "Redémarrer",
+    "restart": "Recommencer",
     "autoPause": "Pause automatique ({enabled})",
-    "uploadVideoAndSubtitle": "Veuillez télécharger des fichiers vidéo et de sous-titres",
-    "uploadVideoFile": "Veuillez télécharger un fichier vidéo",
-    "uploadSubtitleFile": "Veuillez télécharger un fichier de sous-titres",
+    "uploadVideoAndSubtitle": "Veuillez télécharger les fichiers vidéo et sous-titres",
+    "uploadVideoFile": "Veuillez télécharger le fichier vidéo",
+    "uploadSubtitleFile": "Veuillez télécharger le fichier de sous-titres",
     "processingSubtitle": "Traitement du fichier de sous-titres...",
-    "needBothFiles": "Les fichiers vidéo et de sous-titres sont requis pour commencer l'apprentissage",
+    "needBothFiles": "Les fichiers vidéo et sous-titres sont tous deux requis pour commencer l'apprentissage",
     "videoFile": "Fichier vidéo",
     "subtitleFile": "Fichier de sous-titres",
     "uploaded": "Téléchargé",
     "notUploaded": "Non téléchargé",
     "upload": "Télécharger",
-    "autoPauseStatus": "Pause automatique: {enabled}",
+    "uploadVideoButton": "Télécharger la vidéo",
+    "uploadSubtitleButton": "Télécharger les sous-titres",
+    "subtitleUploaded": "Sous-titres téléchargés ({count} entrées)",
+    "subtitleNotUploaded": "Sous-titres non téléchargés",
+    "autoPauseStatus": "Pause automatique : {enabled}",
     "on": "Activé",
     "off": "Désactivé",
     "videoUploadFailed": "Échec du téléchargement de la vidéo",
-    "subtitleUploadFailed": "Échec du téléchargement des sous-titres"
+    "subtitleUploadFailed": "Échec du téléchargement des sous-titres",
+    "subtitleLoadSuccess": "Sous-titres chargés avec succès",
+    "subtitleLoadFailed": "Échec du chargement des sous-titres"
   },
   "text_speaker": {
     "generateIPA": "Générer l'API",
     "viewSavedItems": "Voir les éléments enregistrés",
-    "confirmDeleteAll": "Êtes-vous sûr de vouloir tout supprimer? (O/N)"
+    "confirmDeleteAll": "Êtes-vous sûr de vouloir tout supprimer ? (O/N)"
   },
   "translator": {
     "detectLanguage": "détecter la langue",
@@ -200,45 +240,84 @@
     "translate": "traduire",
     "inputLanguage": "Entrez une langue.",
     "history": "Historique",
-    "enterLanguage": "Entrer la langue",
+    "enterLanguage": "Entrez la langue",
     "add_to_folder": {
       "notAuthenticated": "Vous n'êtes pas authentifié",
-      "chooseFolder": "Choisir un dossier à ajouter",
+      "chooseFolder": "Choisissez un dossier à ajouter",
       "noFolders": "Aucun dossier trouvé",
       "folderInfo": "{id}. {name}",
       "close": "Fermer",
-      "success": "Paire de textes ajoutée au dossier",
-      "error": "Échec de l'ajout de la paire de textes au dossier"
+      "success": "Paire de texte ajoutée au dossier",
+      "error": "Échec de l'ajout de la paire de texte au dossier"
     },
     "autoSave": "Sauvegarde automatique"
   },
   "dictionary": {
     "title": "Dictionnaire",
-    "description": "Rechercher des mots et des phrases avec des définitions détaillées et des exemples",
-    "searchPlaceholder": "Entrez un mot ou une phrase à rechercher...",
+    "description": "Rechercher des mots et des expressions avec des définitions détaillées et des exemples",
+    "searchPlaceholder": "Entrez un mot ou une expression à rechercher...",
     "searching": "Recherche...",
     "search": "Rechercher",
-    "languageSettings": "Paramètres linguistiques",
+    "languageSettings": "Paramètres de langue",
     "queryLanguage": "Langue de requête",
-    "queryLanguageHint": "Quelle est la langue du mot/phrase que vous souhaitez rechercher",
+    "queryLanguageHint": "Dans quelle langue est le mot/l'expression que vous voulez rechercher",
     "definitionLanguage": "Langue de définition",
-    "definitionLanguageHint": "Dans quelle langue souhaitez-vous voir les définitions",
+    "definitionLanguageHint": "Dans quelle langue voulez-vous les définitions",
     "otherLanguagePlaceholder": "Ou entrez une autre langue...",
+    "other": "Autre",
     "currentSettings": "Paramètres actuels : Requête {queryLang}, Définition {definitionLang}",
     "relookup": "Rechercher à nouveau",
     "saveToFolder": "Enregistrer dans le dossier",
     "loading": "Chargement...",
     "noResults": "Aucun résultat trouvé",
-    "tryOtherWords": "Essayez d'autres mots ou phrases",
+    "tryOtherWords": "Essayez d'autres mots ou expressions",
     "welcomeTitle": "Bienvenue dans le dictionnaire",
-    "welcomeHint": "Entrez un mot ou une phrase dans la zone de recherche ci-dessus pour commencer",
-    "lookupFailed": "Recherche échouée, veuillez réessayer plus tard",
-    "relookupSuccess": "Recherche répétée avec succès",
-    "relookupFailed": "Nouvelle recherche de dictionnaire échouée",
-    "pleaseLogin": "Veuillez d'abord vous connecter",
-    "pleaseCreateFolder": "Veuillez d'abord créer un dossier",
+    "welcomeHint": "Entrez un mot ou une expression dans la zone de recherche ci-dessus pour commencer la recherche",
+    "lookupFailed": "La recherche a échoué, veuillez réessayer plus tard",
+    "relookupSuccess": "Recherche effectuée avec succès",
+    "relookupFailed": "La nouvelle recherche dans le dictionnaire a échoué",
+    "pleaseLogin": "Veuillez vous connecter d'abord",
+    "pleaseCreateFolder": "Veuillez créer un dossier d'abord",
     "savedToFolder": "Enregistré dans le dossier : {folderName}",
-    "saveFailed": "Échec de l'enregistrement, veuillez réessayer plus tard"
+    "saveFailed": "Échec de l'enregistrement, veuillez réessayer plus tard",
+    "definition": "Définition",
+    "example": "Exemple"
+  },
+  "explore": {
+    "title": "Explorer",
+    "subtitle": "Découvrir les dossiers publics",
+    "searchPlaceholder": "Rechercher des dossiers publics...",
+    "loading": "Chargement...",
+    "noFolders": "Aucun dossier public trouvé",
+    "folderInfo": "{userName} • {totalPairs} paires",
+    "unknownUser": "Utilisateur inconnu",
+    "favorite": "Favori",
+    "unfavorite": "Retirer des favoris",
+    "pleaseLogin": "Veuillez vous connecter d'abord",
+    "sortByFavorites": "Trier par favoris",
+    "sortByFavoritesActive": "Annuler le tri par favoris"
+  },
+  "exploreDetail": {
+    "title": "Détails du dossier",
+    "createdBy": "Créé par : {name}",
+    "unknownUser": "Utilisateur inconnu",
+    "totalPairs": "Total des paires",
+    "favorites": "Favoris",
+    "createdAt": "Créé le",
+    "viewContent": "Voir le contenu",
+    "favorite": "Favori",
+    "unfavorite": "Retirer des favoris",
+    "favorited": "Ajouté aux favoris",
+    "unfavorited": "Retiré des favoris",
+    "pleaseLogin": "Veuillez vous connecter d'abord"
+  },
+  "favorites": {
+    "title": "Mes favoris",
+    "subtitle": "Les dossiers que vous avez mis en favoris",
+    "loading": "Chargement...",
+    "noFavorites": "Pas encore de favoris",
+    "folderInfo": "{userName} • {totalPairs} paires",
+    "unknownUser": "Utilisateur inconnu"
   },
   "user_profile": {
     "anonymous": "Anonyme",
@@ -251,11 +330,12 @@
     "displayName": "Nom d'affichage",
     "notSet": "Non défini",
     "memberSince": "Membre depuis",
+    "logout": "Déconnexion",
     "folders": {
       "title": "Dossiers",
-      "noFolders": "Aucun dossier pour le moment",
+      "noFolders": "Pas encore de dossiers",
       "folderName": "Nom du dossier",
-      "totalPairs": "Nombre de paires",
+      "totalPairs": "Total des paires",
       "createdAt": "Créé le",
       "actions": "Actions",
       "view": "Voir"

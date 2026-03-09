@@ -1,10 +1,11 @@
 {
   "alphabet": {
     "chooseCharacters": "学習したい文字を選択してください",
+    "chooseAlphabetHint": "学習を始めるアルファベットを選択してください",
     "japanese": "日本語仮名",
     "english": "英語アルファベット",
-    "uyghur": "ウイグル文字",
-    "esperanto": "エスペラント文字",
+    "uyghur": "ウイグル語アルファベット",
+    "esperanto": "エスペラント語アルファベット",
     "loading": "読み込み中...",
     "loadFailed": "読み込みに失敗しました。もう一度お試しください",
     "hideLetter": "文字を非表示",
@@ -14,23 +15,42 @@
     "roman": "ローマ字",
     "letter": "文字",
     "random": "ランダムモード",
-    "randomNext": "ランダムで次へ"
+    "randomNext": "ランダム次へ",
+    "previousLetter": "前の文字",
+    "nextLetter": "次の文字",
+    "keyboardHint": "左右の矢印キーまたはスペースキーでランダム移動、ESCで戻る",
+    "swipeHint": "左右の矢印キーまたはスワイプで移動、ESCで戻る"
   },
   "folders": {
     "title": "フォルダー",
     "subtitle": "コレクションを管理",
     "newFolder": "新規フォルダー",
     "creating": "作成中...",
-    "noFoldersYet": "フォルダーがありません",
-    "folderInfo": "ID: {id} • {totalPairs}組",
+    "noFoldersYet": "まだフォルダーがありません",
+    "folderInfo": "ID: {id} • {totalPairs} ペア",
     "enterFolderName": "フォルダー名を入力:",
-    "confirmDelete": "削除するには「{name}」と入力してください:"
+    "confirmDelete": "削除するには「{name}」と入力してください:",
+    "myFolders": "マイフォルダー",
+    "publicFolders": "公開フォルダー",
+    "public": "公開",
+    "private": "非公開",
+    "setPublic": "公開に設定",
+    "setPrivate": "非公開に設定",
+    "publicFolderInfo": "{userName} • {totalPairs} ペア",
+    "searchPlaceholder": "公開フォルダーを検索...",
+    "loading": "読み込み中...",
+    "noPublicFolders": "公開フォルダーが見つかりません",
+    "unknownUser": "不明なユーザー",
+    "enterNewName": "新しい名前を入力:",
+    "favorite": "お気に入り",
+    "unfavorite": "お気に入り解除",
+    "pleaseLogin": "まずログインしてください"
   },
   "folder_id": {
-    "unauthorized": "あなたはこのフォルダーの所有者ではありません",
+    "unauthorized": "このフォルダーの所有者ではありません",
     "back": "戻る",
     "textPairs": "テキストペア",
-    "itemsCount": "{count}項目",
+    "itemsCount": "{count} 項目",
     "memorize": "暗記",
     "loadingTextPairs": "テキストペアを読み込み中...",
     "noTextPairs": "このフォルダーにはテキストペアがありません",
@@ -45,34 +65,34 @@
     "enterLanguageName": "言語名を入力してください",
     "edit": "編集",
     "delete": "削除",
-    "permissionDenied": "この操作を実行する権限がありません",
+    "permissionDenied": "このアクションを実行する権限がありません",
     "error": {
       "update": "この項目を更新する権限がありません。",
       "delete": "この項目を削除する権限がありません。",
       "add": "このフォルダーに項目を追加する権限がありません。",
-      "rename": "このフォルダー名を変更する権限がありません。",
+      "rename": "このフォルダーの名前を変更する権限がありません。",
       "deleteFolder": "このフォルダーを削除する権限がありません。"
     }
   },
   "home": {
     "title": "言語を学ぶ",
-    "description": "これは、人工言語を含む世界中のほぼすべての言語を学ぶのに役立つ非常に便利なウェブサイトです。",
+    "description": "ここは世界のほぼすべての言語（人工言語を含む）を学ぶのに役立つ非常に便利なウェブサイトです。",
     "explore": "探索",
     "fortune": {
       "quote": "Stay hungry, stay foolish.",
-      "author": "— スティーブ・ジョブズ"
+      "author": "— Steve Jobs"
     },
     "translator": {
-      "name": "翻訳",
-      "description": "任意の言語に翻訳し、国際音声記号（IPA）で注釈を付けます"
+      "name": "翻訳者",
+      "description": "あらゆる言語に翻訳し、国際音声記号（IPA）で注釈を付けます"
     },
     "textSpeaker": {
       "name": "テキストスピーカー",
-      "description": "テキストを認識して音読します。ループ再生と速度調整をサポート"
+      "description": "テキストを認識して読み上げ、ループ再生と速度調整をサポート"
     },
     "srtPlayer": {
       "name": "SRTビデオプレーヤー",
-      "description": "SRT字幕ファイルに基づいてビデオを文ごとに再生し、ネイティブスピーカーの発音を模倣します"
+      "description": "SRT字幕ファイルに基づいて文ごとにビデオを再生し、ネイティブスピーカーの発音を模倣"
     },
     "alphabet": {
       "name": "アルファベット",
@@ -80,32 +100,33 @@
     },
     "memorize": {
       "name": "暗記",
-      "description": "言語Aから言語B、言語Bから言語A、ディクテーションをサポート"
+      "description": "言語Aから言語B、言語Bから言語A、書き取りをサポート"
     },
     "dictionary": {
       "name": "辞書",
-      "description": "単語やフレーズを調べ、詳細な定義と例を表示"
+      "description": "詳細な定義と例文で単語やフレーズを検索"
     },
     "moreFeatures": {
       "name": "その他の機能",
-      "description": "開発中です。お楽しみに"
+      "description": "開発中、お楽しみに"
     }
   },
   "auth": {
-    "title": "認証",
-    "signIn": "ログイン",
+    "title": "サインイン",
+    "signUpTitle": "新規登録",
+    "signIn": "サインイン",
     "signUp": "新規登録",
     "email": "メールアドレス",
     "password": "パスワード",
-    "confirmPassword": "パスワード（確認）",
+    "confirmPassword": "パスワード確認",
     "name": "名前",
     "username": "ユーザー名",
     "emailOrUsername": "メールアドレスまたはユーザー名",
-    "signInButton": "ログイン",
+    "signInButton": "サインイン",
     "signUpButton": "新規登録",
     "noAccount": "アカウントをお持ちでないですか？",
     "hasAccount": "すでにアカウントをお持ちですか？",
-    "signInWithGitHub": "GitHubでログイン",
+    "signInWithGitHub": "GitHubでサインイン",
     "signUpWithGitHub": "GitHubで新規登録",
     "invalidEmail": "有効なメールアドレスを入力してください",
     "passwordTooShort": "パスワードは8文字以上である必要があります",
@@ -113,12 +134,23 @@
     "nameRequired": "名前を入力してください",
     "usernameRequired": "ユーザー名を入力してください",
     "usernameTooShort": "ユーザー名は3文字以上である必要があります",
-    "usernameInvalid": "ユーザー名には英数字とアンダースコアのみ使用できます",
+    "usernameInvalid": "ユーザー名には文字、数字、アンダースコアのみ使用できます",
     "emailRequired": "メールアドレスを入力してください",
     "identifierRequired": "メールアドレスまたはユーザー名を入力してください",
     "passwordRequired": "パスワードを入力してください",
-    "confirmPasswordRequired": "パスワード（確認）を入力してください",
-    "loading": "読み込み中..."
+    "confirmPasswordRequired": "パスワードを確認してください",
+    "loading": "読み込み中...",
+    "confirm": "確認",
+    "noAccountLink": "アカウントをお持ちでないですか？ 新規登録",
+    "hasAccountLink": "すでにアカウントをお持ちですか？ サインイン",
+    "usernamePlaceholder": "ユーザー名",
+    "emailPlaceholder": "メールアドレス",
+    "passwordPlaceholder": "パスワード",
+    "usernameOrEmailPlaceholder": "ユーザー名またはメールアドレス",
+    "loginFailed": "ログインに失敗しました",
+    "signUpFailed": "新規登録に失敗しました",
+    "fillAllFields": "すべてのフィールドに入力してください",
+    "enterCredentials": "ユーザー名とパスワードを入力してください"
   },
   "memorize": {
     "folder_selector": {
@@ -127,12 +159,12 @@
       "folderInfo": "{id}. {name} ({count})"
     },
     "memorize": {
-      "answer": "回答",
+      "answer": "答え",
       "next": "次へ",
       "reverse": "逆順",
-      "dictation": "ディクテーション",
+      "dictation": "書き取り",
       "noTextPairs": "利用可能なテキストペアがありません",
-      "disorder": "ランダム",
+      "disorder": "シャッフル",
       "previous": "前へ"
     },
     "page": {
@@ -142,13 +174,15 @@
   "navbar": {
     "title": "learn-languages",
     "sourceCode": "GitHub",
-    "sign_in": "ログイン",
+    "sign_in": "サインイン",
     "profile": "プロフィール",
-    "folders": "フォルダー"
+    "folders": "フォルダー",
+    "explore": "探索",
+    "favorites": "お気に入り"
   },
   "profile": {
     "myProfile": "マイプロフィール",
-    "email": "メールアドレス: {email}",
+    "email": "メール: {email}",
     "logout": "ログアウト"
   },
   "srt_player": {
@@ -170,21 +204,27 @@
     "uploaded": "アップロード済み",
     "notUploaded": "未アップロード",
     "upload": "アップロード",
+    "uploadVideoButton": "ビデオをアップロード",
+    "uploadSubtitleButton": "字幕をアップロード",
+    "subtitleUploaded": "字幕をアップロード済み ({count} エントリ)",
+    "subtitleNotUploaded": "字幕がアップロードされていません",
     "autoPauseStatus": "自動一時停止: {enabled}",
     "on": "オン",
     "off": "オフ",
     "videoUploadFailed": "ビデオのアップロードに失敗しました",
-    "subtitleUploadFailed": "字幕のアップロードに失敗しました"
+    "subtitleUploadFailed": "字幕のアップロードに失敗しました",
+    "subtitleLoadSuccess": "字幕の読み込みに成功しました",
+    "subtitleLoadFailed": "字幕の読み込みに失敗しました"
   },
   "text_speaker": {
     "generateIPA": "IPAを生成",
-    "viewSavedItems": "保存済みアイテムを表示",
-    "confirmDeleteAll": "本当にすべて削除しますか？ (Y/N)"
+    "viewSavedItems": "保存済み項目を表示",
+    "confirmDeleteAll": "すべて削除してもよろしいですか？ (Y/N)"
   },
   "translator": {
     "detectLanguage": "言語を検出",
-    "generateIPA": "IPAを生成",
-    "translateInto": "翻訳",
+    "generateIPA": "ipaを生成",
+    "translateInto": "翻訳先",
     "chinese": "中国語",
     "english": "英語",
     "french": "フランス語",
@@ -207,38 +247,77 @@
       "noFolders": "フォルダーが見つかりません",
       "folderInfo": "{id}. {name}",
       "close": "閉じる",
-      "success": "テキストペアをフォルダーに追加しました",
-      "error": "テキストペアの追加に失敗しました"
+      "success": "テキストペアがフォルダーに追加されました",
+      "error": "テキストペアをフォルダーに追加できませんでした"
     },
     "autoSave": "自動保存"
   },
   "dictionary": {
     "title": "辞書",
-    "description": "詳細な定義と例で単語やフレーズを検索",
+    "description": "詳細な定義と例文で単語やフレーズを検索",
     "searchPlaceholder": "検索する単語やフレーズを入力...",
     "searching": "検索中...",
     "search": "検索",
     "languageSettings": "言語設定",
     "queryLanguage": "クエリ言語",
-    "queryLanguageHint": "検索する単語/フレーズの言語",
+    "queryLanguageHint": "検索したい単語/フレーズの言語",
     "definitionLanguage": "定義言語",
     "definitionLanguageHint": "定義を表示する言語",
-    "otherLanguagePlaceholder": "または他の言語を入力...",
-    "currentSettings": "現在の設定：クエリ {queryLang}、定義 {definitionLang}",
+    "otherLanguagePlaceholder": "または別の言語を入力...",
+    "other": "その他",
+    "currentSettings": "現在の設定: クエリ {queryLang}, 定義 {definitionLang}",
     "relookup": "再検索",
-    "saveToFolder": "フォルダに保存",
+    "saveToFolder": "フォルダーに保存",
     "loading": "読み込み中...",
     "noResults": "結果が見つかりません",
-    "tryOtherWords": "他の単語やフレーズを試してください",
+    "tryOtherWords": "別の単語やフレーズを試してください",
     "welcomeTitle": "辞書へようこそ",
-    "welcomeHint": "上の検索ボックスに単語やフレーズを入力して検索を開始",
+    "welcomeHint": "上の検索ボックスに単語やフレーズを入力して検索を始めましょう",
     "lookupFailed": "検索に失敗しました。後でもう一度お試しください",
-    "relookupSuccess": "再検索しました",
+    "relookupSuccess": "再検索に成功しました",
     "relookupFailed": "辞書の再検索に失敗しました",
     "pleaseLogin": "まずログインしてください",
-    "pleaseCreateFolder": "まずフォルダを作成してください",
-    "savedToFolder": "フォルダに保存しました：{folderName}",
-    "saveFailed": "保存に失敗しました。後でもう一度お試しください"
+    "pleaseCreateFolder": "まずフォルダーを作成してください",
+    "savedToFolder": "フォルダーに保存しました: {folderName}",
+    "saveFailed": "保存に失敗しました。後でもう一度お試しください",
+    "definition": "定義",
+    "example": "例文"
+  },
+  "explore": {
+    "title": "探索",
+    "subtitle": "公開フォルダーを発見",
+    "searchPlaceholder": "公開フォルダーを検索...",
+    "loading": "読み込み中...",
+    "noFolders": "公開フォルダーが見つかりません",
+    "folderInfo": "{userName} • {totalPairs} ペア",
+    "unknownUser": "不明なユーザー",
+    "favorite": "お気に入り",
+    "unfavorite": "お気に入り解除",
+    "pleaseLogin": "まずログインしてください",
+    "sortByFavorites": "お気に入り順に並べ替え",
+    "sortByFavoritesActive": "お気に入り順の並べ替えを解除"
+  },
+  "exploreDetail": {
+    "title": "フォルダー詳細",
+    "createdBy": "作成者: {name}",
+    "unknownUser": "不明なユーザー",
+    "totalPairs": "合計ペア数",
+    "favorites": "お気に入り",
+    "createdAt": "作成日",
+    "viewContent": "コンテンツを表示",
+    "favorite": "お気に入り",
+    "unfavorite": "お気に入り解除",
+    "favorited": "お気に入りに追加しました",
+    "unfavorited": "お気に入りから削除しました",
+    "pleaseLogin": "まずログインしてください"
+  },
+  "favorites": {
+    "title": "マイお気に入り",
+    "subtitle": "お気に入りに追加したフォルダー",
+    "loading": "読み込み中...",
+    "noFavorites": "まだお気に入りがありません",
+    "folderInfo": "{userName} • {totalPairs} ペア",
+    "unknownUser": "不明なユーザー"
   },
   "user_profile": {
     "anonymous": "匿名",
@@ -251,13 +330,14 @@
     "displayName": "表示名",
     "notSet": "未設定",
     "memberSince": "登録日",
+    "logout": "ログアウト",
     "folders": {
       "title": "フォルダー",
-      "noFolders": "フォルダーがありません",
+      "noFolders": "まだフォルダーがありません",
       "folderName": "フォルダー名",
-      "totalPairs": "テキストペア数",
+      "totalPairs": "合計ペア数",
       "createdAt": "作成日",
-      "actions": "操作",
+      "actions": "アクション",
       "view": "表示"
     }
   }

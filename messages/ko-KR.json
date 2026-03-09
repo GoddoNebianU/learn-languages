@@ -1,12 +1,13 @@
 {
   "alphabet": {
-    "chooseCharacters": "학습할 문자를 선택하세요",
+    "chooseCharacters": "배우고 싶은 문자를 선택하세요",
+    "chooseAlphabetHint": "학습을 시작할 알파벳을 선택하세요",
     "japanese": "일본어 가나",
-    "english": "영문 알파벳",
-    "uyghur": "위구르 문자",
-    "esperanto": "에스페란토 문자",
+    "english": "영어 알파벳",
+    "uyghur": "위구르어 알파벳",
+    "esperanto": "에스페란토 알파벳",
     "loading": "로딩 중...",
-    "loadFailed": "로딩 실패, 다시 시도해 주세요",
+    "loadFailed": "로딩 실패, 다시 시도해주세요",
     "hideLetter": "문자 숨기기",
     "showLetter": "문자 표시",
     "hideIPA": "IPA 숨기기",
@@ -14,17 +15,36 @@
     "roman": "로마자 표기",
     "letter": "문자",
     "random": "무작위 모드",
-    "randomNext": "무작위 다음"
+    "randomNext": "무작위 다음",
+    "previousLetter": "이전 문자",
+    "nextLetter": "다음 문자",
+    "keyboardHint": "왼쪽/오른쪽 화살표 키 또는 스페이스바로 무작위, ESC로 뒤로가기",
+    "swipeHint": "왼쪽/오른쪽 화살표 키 또는 스와이프로 탐색, ESC로 뒤로가기"
   },
   "folders": {
     "title": "폴더",
     "subtitle": "컬렉션 관리",
     "newFolder": "새 폴더",
     "creating": "생성 중...",
-    "noFoldersYet": "폴더가 없습니다",
-    "folderInfo": "ID: {id} • {totalPairs}쌍",
+    "noFoldersYet": "아직 폴더가 없습니다",
+    "folderInfo": "ID: {id} • {totalPairs} 쌍",
     "enterFolderName": "폴더 이름 입력:",
-    "confirmDelete": "삭제하려면 \"{name}\"을(를) 입력하세요:"
+    "confirmDelete": "삭제하려면 \"{name}\"을(를) 입력하세요:",
+    "myFolders": "내 폴더",
+    "publicFolders": "공개 폴더",
+    "public": "공개",
+    "private": "비공개",
+    "setPublic": "공개로 설정",
+    "setPrivate": "비공개로 설정",
+    "publicFolderInfo": "{userName} • {totalPairs} 쌍",
+    "searchPlaceholder": "공개 폴더 검색...",
+    "loading": "로딩 중...",
+    "noPublicFolders": "공개 폴더를 찾을 수 없습니다",
+    "unknownUser": "알 수 없는 사용자",
+    "enterNewName": "새 이름 입력:",
+    "favorite": "즐겨찾기",
+    "unfavorite": "즐겨찾기 해제",
+    "pleaseLogin": "먼저 로그인해주세요"
   },
   "folder_id": {
     "unauthorized": "이 폴더의 소유자가 아닙니다",
@@ -36,39 +56,39 @@
     "noTextPairs": "이 폴더에 텍스트 쌍이 없습니다",
     "addNewTextPair": "새 텍스트 쌍 추가",
     "add": "추가",
-    "updateTextPair": "텍스트 쌍 업데이트",
-    "update": "업데이트",
+    "updateTextPair": "텍스트 쌍 수정",
+    "update": "수정",
     "text1": "텍스트 1",
     "text2": "텍스트 2",
-    "language1": "언어 1",
-    "language2": "언어 2",
+    "language1": "로캘 1",
+    "language2": "로캘 2",
     "enterLanguageName": "언어 이름을 입력하세요",
     "edit": "편집",
     "delete": "삭제",
     "permissionDenied": "이 작업을 수행할 권한이 없습니다",
     "error": {
-      "update": "이 항목을 업데이트할 권한이 없습니다.",
+      "update": "이 항목을 수정할 권한이 없습니다.",
       "delete": "이 항목을 삭제할 권한이 없습니다.",
       "add": "이 폴더에 항목을 추가할 권한이 없습니다.",
-      "rename": "이 폴더 이름을 변경할 권한이 없습니다.",
+      "rename": "이 폴더의 이름을 변경할 권한이 없습니다.",
       "deleteFolder": "이 폴더를 삭제할 권한이 없습니다."
     }
   },
   "home": {
-    "title": "언어 학습",
-    "description": "인공 언어를 포함하여 세상의 거의 모든 언어를 배우는 데 도움이 되는 매우 유용한 웹사이트입니다.",
+    "title": "언어 배우기",
+    "description": "세계의 거의 모든 언어(인공어 포함)를 배우는 데 도움이 되는 매우 유용한 웹사이트입니다.",
     "explore": "탐색",
     "fortune": {
       "quote": "Stay hungry, stay foolish.",
-      "author": "— 스티브 잡스"
+      "author": "— Steve Jobs"
     },
     "translator": {
       "name": "번역기",
-      "description": "모든 언어로 번역하고 국제 음성 기호(IPA)로 주석 추가"
+      "description": "모든 언어로 번역하고 국제 음성 기호(IPA)로 주석 달기"
     },
     "textSpeaker": {
       "name": "텍스트 스피커",
-      "description": "텍스트를 인식하고 읽어줍니다. 반복 재생 및 속도 조정 지원"
+      "description": "텍스트 인식 및 낭독, 반복 재생 및 속도 조절 지원"
     },
     "srtPlayer": {
       "name": "SRT 비디오 플레이어",
@@ -84,15 +104,16 @@
     },
     "dictionary": {
       "name": "사전",
-      "description": "단어와 구문을 조회하고 자세한 정의와 예제 제공"
+      "description": "상세한 정의와 예문으로 단어 및 구문 검색"
     },
     "moreFeatures": {
       "name": "더 많은 기능",
-      "description": "개발 중, 기대해 주세요"
+      "description": "개발 중, 기대해주세요"
     }
   },
   "auth": {
-    "title": "인증",
+    "title": "로그인",
+    "signUpTitle": "회원가입",
     "signIn": "로그인",
     "signUp": "회원가입",
     "email": "이메일",
@@ -113,12 +134,23 @@
     "nameRequired": "이름을 입력하세요",
     "usernameRequired": "사용자명을 입력하세요",
     "usernameTooShort": "사용자명은 최소 3자 이상이어야 합니다",
-    "usernameInvalid": "사용자명은 영문, 숫자, 밑줄만 포함할 수 있습니다",
+    "usernameInvalid": "사용자명은 문자, 숫자, 밑줄만 포함할 수 있습니다",
     "emailRequired": "이메일을 입력하세요",
     "identifierRequired": "이메일 또는 사용자명을 입력하세요",
     "passwordRequired": "비밀번호를 입력하세요",
-    "confirmPasswordRequired": "비밀번호 확인을 입력하세요",
-    "loading": "로딩 중..."
+    "confirmPasswordRequired": "비밀번호를 확인하세요",
+    "loading": "로딩 중...",
+    "confirm": "확인",
+    "noAccountLink": "계정이 없으신가요? 회원가입",
+    "hasAccountLink": "이미 계정이 있으신가요? 로그인",
+    "usernamePlaceholder": "사용자명",
+    "emailPlaceholder": "이메일 주소",
+    "passwordPlaceholder": "비밀번호",
+    "usernameOrEmailPlaceholder": "사용자명 또는 이메일",
+    "loginFailed": "로그인 실패",
+    "signUpFailed": "회원가입 실패",
+    "fillAllFields": "모든 필드를 입력하세요",
+    "enterCredentials": "사용자명과 비밀번호를 입력하세요"
   },
   "memorize": {
     "folder_selector": {
@@ -136,7 +168,7 @@
       "previous": "이전"
     },
     "page": {
-      "unauthorized": "이 폴더에 액세스할 권한이 없습니다"
+      "unauthorized": "이 폴더에 접근할 권한이 없습니다"
     }
   },
   "navbar": {
@@ -144,7 +176,9 @@
     "sourceCode": "GitHub",
     "sign_in": "로그인",
     "profile": "프로필",
-    "folders": "폴더"
+    "folders": "폴더",
+    "explore": "탐색",
+    "favorites": "즐겨찾기"
   },
   "profile": {
     "myProfile": "내 프로필",
@@ -158,7 +192,7 @@
     "play": "재생",
     "previous": "이전",
     "next": "다음",
-    "restart": "처음부터",
+    "restart": "다시 시작",
     "autoPause": "자동 일시정지 ({enabled})",
     "uploadVideoAndSubtitle": "비디오와 자막 파일을 업로드하세요",
     "uploadVideoFile": "비디오 파일을 업로드하세요",
@@ -170,21 +204,27 @@
     "uploaded": "업로드됨",
     "notUploaded": "업로드되지 않음",
     "upload": "업로드",
+    "uploadVideoButton": "비디오 업로드",
+    "uploadSubtitleButton": "자막 업로드",
+    "subtitleUploaded": "자막 업로드됨 ({count}개 항목)",
+    "subtitleNotUploaded": "자막 업로드되지 않음",
     "autoPauseStatus": "자동 일시정지: {enabled}",
     "on": "켜기",
     "off": "끄기",
     "videoUploadFailed": "비디오 업로드 실패",
-    "subtitleUploadFailed": "자막 업로드 실패"
+    "subtitleUploadFailed": "자막 업로드 실패",
+    "subtitleLoadSuccess": "자막 로드 성공",
+    "subtitleLoadFailed": "자막 로드 실패"
   },
   "text_speaker": {
     "generateIPA": "IPA 생성",
     "viewSavedItems": "저장된 항목 보기",
-    "confirmDeleteAll": "정말 모두 삭제하시겠습니까? (Y/N)"
+    "confirmDeleteAll": "모든 것을 삭제하시겠습니까? (Y/N)"
   },
   "translator": {
     "detectLanguage": "언어 감지",
     "generateIPA": "IPA 생성",
-    "translateInto": "번역",
+    "translateInto": "번역할 언어",
     "chinese": "중국어",
     "english": "영어",
     "french": "프랑스어",
@@ -207,38 +247,77 @@
       "noFolders": "폴더를 찾을 수 없습니다",
       "folderInfo": "{id}. {name}",
       "close": "닫기",
-      "success": "텍스트 쌍을 폴더에 추가했습니다",
-      "error": "텍스트 쌍 추가 실패"
+      "success": "텍스트 쌍이 폴더에 추가됨",
+      "error": "폴더에 텍스트 쌍 추가 실패"
     },
     "autoSave": "자동 저장"
   },
   "dictionary": {
     "title": "사전",
-    "description": "상세한 정의와 예제로 단어 및 구문 검색",
+    "description": "상세한 정의와 예문으로 단어 및 구문 검색",
     "searchPlaceholder": "검색할 단어나 구문을 입력하세요...",
     "searching": "검색 중...",
     "search": "검색",
     "languageSettings": "언어 설정",
-    "queryLanguage": "쿼리 언어",
-    "queryLanguageHint": "검색하려는 단어/구문의 언어",
+    "queryLanguage": "질의 언어",
+    "queryLanguageHint": "검색할 단어/구문의 언어",
     "definitionLanguage": "정의 언어",
     "definitionLanguageHint": "정의를 표시할 언어",
-    "otherLanguagePlaceholder": "또는 다른 언어를 입력하세요...",
-    "currentSettings": "현재 설정: 쿼리 {queryLang}, 정의 {definitionLang}",
-    "relookup": "재검색",
+    "otherLanguagePlaceholder": "또는 다른 언어 입력...",
+    "other": "기타",
+    "currentSettings": "현재 설정: 질의 {queryLang}, 정의 {definitionLang}",
+    "relookup": "다시 검색",
     "saveToFolder": "폴더에 저장",
-    "loading": "로드 중...",
-    "noResults": "결과를 찾을 수 없습니다",
+    "loading": "로딩 중...",
+    "noResults": "검색 결과 없음",
     "tryOtherWords": "다른 단어나 구문을 시도하세요",
     "welcomeTitle": "사전에 오신 것을 환영합니다",
-    "welcomeHint": "위 검색 상자에 단어나 구문을 입력하여 검색을 시작하세요",
+    "welcomeHint": "위의 검색 상자에 단어나 구문을 입력하여 검색을 시작하세요",
     "lookupFailed": "검색 실패, 나중에 다시 시도하세요",
-    "relookupSuccess": "재검색했습니다",
-    "relookupFailed": "사전 재검색 실패",
+    "relookupSuccess": "다시 검색 성공",
+    "relookupFailed": "사전 다시 검색 실패",
     "pleaseLogin": "먼저 로그인하세요",
-    "pleaseCreateFolder": "먼저 폴더를 만드세요",
+    "pleaseCreateFolder": "먼저 폴더를 생성하세요",
     "savedToFolder": "폴더에 저장됨: {folderName}",
-    "saveFailed": "저장 실패, 나중에 다시 시도하세요"
+    "saveFailed": "저장 실패, 나중에 다시 시도하세요",
+    "definition": "정의",
+    "example": "예문"
+  },
+  "explore": {
+    "title": "탐색",
+    "subtitle": "공개 폴더 발견",
+    "searchPlaceholder": "공개 폴더 검색...",
+    "loading": "로딩 중...",
+    "noFolders": "공개 폴더를 찾을 수 없습니다",
+    "folderInfo": "{userName} • {totalPairs} 쌍",
+    "unknownUser": "알 수 없는 사용자",
+    "favorite": "즐겨찾기",
+    "unfavorite": "즐겨찾기 해제",
+    "pleaseLogin": "먼저 로그인해주세요",
+    "sortByFavorites": "즐겨찾기순 정렬",
+    "sortByFavoritesActive": "즐겨찾기순 정렬 해제"
+  },
+  "exploreDetail": {
+    "title": "폴더 상세",
+    "createdBy": "생성자: {name}",
+    "unknownUser": "알 수 없는 사용자",
+    "totalPairs": "총 쌍",
+    "favorites": "즐겨찾기",
+    "createdAt": "생성일",
+    "viewContent": "내용 보기",
+    "favorite": "즐겨찾기",
+    "unfavorite": "즐겨찾기 해제",
+    "favorited": "즐겨찾기됨",
+    "unfavorited": "즐겨찾기 해제됨",
+    "pleaseLogin": "먼저 로그인해주세요"
+  },
+  "favorites": {
+    "title": "내 즐겨찾기",
+    "subtitle": "즐겨찾기한 폴더",
+    "loading": "로딩 중...",
+    "noFavorites": "아직 즐겨찾기가 없습니다",
+    "folderInfo": "{userName} • {totalPairs} 쌍",
+    "unknownUser": "알 수 없는 사용자"
   },
   "user_profile": {
     "anonymous": "익명",
@@ -251,11 +330,12 @@
     "displayName": "표시 이름",
     "notSet": "설정되지 않음",
     "memberSince": "가입일",
+    "logout": "로그아웃",
     "folders": {
       "title": "폴더",
-      "noFolders": "폴더가 없습니다",
+      "noFolders": "아직 폴더가 없습니다",
       "folderName": "폴더 이름",
-      "totalPairs": "텍스트 쌍 수",
+      "totalPairs": "총 쌍",
       "createdAt": "생성일",
       "actions": "작업",
       "view": "보기"
