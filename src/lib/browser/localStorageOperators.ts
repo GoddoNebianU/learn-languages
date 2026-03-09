@@ -1,7 +1,9 @@
+"use client";
+
 import { z } from "zod";
 
 interface LocalStorageOperator<T> {
-  get: () => T;
+  get: () => T | null;
   set: (value: T) => void;
 }
 
@@ -9,22 +11,29 @@ export function getLocalStorageOperator<T extends z.ZodType>(
   key: string,
   schema: T
 ): LocalStorageOperator<z.infer<T>> {
-  const get = (): z.infer<T> => {
+  const get = (): z.infer<T> | null => {
     if (typeof window === "undefined") {
-      return [] as unknown as z.infer<T>;
+      return null;
     }
 
     try {
       const item = localStorage.getItem(key);
       if (item === null) {
-        return [] as unknown as z.infer<T>;
+        return null;
       }
 
       const parsed = JSON.parse(item);
-      return schema.parse(parsed);
+      const result = schema.safeParse(parsed);
+      
+      if (!result.success) {
+        console.warn(`[localStorage] Schema validation failed for key "${key}":`, result.error.message);
+        return null;
+      }
+      
+      return result.data;
     } catch (error) {
-      console.error(`Error reading from localStorage key "${key}":`, error);
-      return [] as unknown as z.infer<T>;
+      console.error(`[localStorage] Error reading key "${key}":`, error instanceof Error ? error.message : String(error));
+      return null;
     }
   };
 
@@ -36,7 +45,7 @@ export function getLocalStorageOperator<T extends z.ZodType>(
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(`Error writing to localStorage key "${key}":`, error);
+      console.error(`[localStorage] Error writing key "${key}":`, error instanceof Error ? error.message : String(error));
     }
   };
 

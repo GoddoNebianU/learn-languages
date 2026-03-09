@@ -62,13 +62,12 @@ export function getNearestIndex(
 ): number | null {
   for (let i = 0; i < subtitles.length; i++) {
     const subtitle = subtitles[i];
-    const isBefore = currentTime - subtitle.start >= 0;
-    const isAfter = currentTime - subtitle.end >= 0;
+    const isWithin = currentTime >= subtitle.start && currentTime <= subtitle.end;
     
-    if (!isBefore || !isAfter) return i - 1;
-    if (isBefore && !isAfter) return i;
+    if (isWithin) return i;
+    if (currentTime < subtitle.start) return i > 0 ? i - 1 : null;
   }
-  return null;
+  return subtitles.length > 0 ? subtitles.length - 1 : null;
 }
 
 export function getCurrentSubtitle(

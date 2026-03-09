@@ -192,8 +192,8 @@ export async function repoGetPublicFolders(
     visibility: folder.visibility,
     createdAt: folder.createdAt,
     userId: folder.userId,
-    userName: folder.user.name,
-    userUsername: folder.user.username,
+    userName: folder.user?.name ?? "Unknown",
+    userUsername: folder.user?.username ?? "unknown",
     totalPairs: folder._count.pairs,
     favoriteCount: folder._count.favorites,
   }));
@@ -221,8 +221,8 @@ export async function repoSearchPublicFolders(
     visibility: folder.visibility,
     createdAt: folder.createdAt,
     userId: folder.userId,
-    userName: folder.user.name,
-    userUsername: folder.user.username,
+    userName: folder.user?.name ?? "Unknown",
+    userUsername: folder.user?.username ?? "unknown",
     totalPairs: folder._count.pairs,
     favoriteCount: folder._count.favorites,
   }));
@@ -300,8 +300,8 @@ export async function repoGetUserFavorites(input: RepoInputGetUserFavorites) {
     folderCreatedAt: fav.folder.createdAt,
     folderTotalPairs: fav.folder._count.pairs,
     folderOwnerId: fav.folder.userId,
-    folderOwnerName: fav.folder.user.name,
-    folderOwnerUsername: fav.folder.user.username,
+    folderOwnerName: fav.folder.user?.name ?? "Unknown",
+    folderOwnerUsername: fav.folder.user?.username ?? "unknown",
     favoritedAt: fav.createdAt,
   }));
 }

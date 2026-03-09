@@ -48,8 +48,8 @@ export default function TextSpeakerPage() {
     const handleEnded = () => {
       if (autopause) {
         setPause(true);
-      } else {
-        load(objurlRef.current!);
+      } else if (objurlRef.current) {
+        load(objurlRef.current);
         play();
       }
     };
@@ -187,7 +187,7 @@ export default function TextSpeakerPage() {
         theIPA = tmp_ipa;
       }
 
-      const save = getFromLocalStorage();
+      const save = getFromLocalStorage() ?? [];
       const oldIndex = save.findIndex((v) => v.text === textRef.current);
       if (oldIndex !== -1) {
         const oldItem = save[oldIndex];
@@ -293,7 +293,7 @@ export default function TextSpeakerPage() {
             size="lg"
             onClick={() => {
               setAutopause(!autopause);
-              if (objurlRef) {
+              if (objurlRef.current) {
                 stop();
               }
               setPause(true);

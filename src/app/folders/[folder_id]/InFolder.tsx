@@ -26,10 +26,14 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
       setLoading(true);
       await actionGetPairsByFolderId(folderId)
         .then(result => {
-          if (!result.success || !result.data) throw result.message;
+          if (!result.success || !result.data) {
+            throw new Error(result.message || "Failed to load text pairs");
+          }
           return result.data;
         }).then(setTextPairs)
-        .catch(toast.error)
+        .catch((error) => {
+          toast.error(error instanceof Error ? error.message : "Unknown error");
+        })
         .finally(() => {
           setLoading(false);
         });
@@ -40,10 +44,14 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
   const refreshTextPairs = async () => {
     await actionGetPairsByFolderId(folderId)
       .then(result => {
-        if (!result.success || !result.data) throw result.message;
+        if (!result.success || !result.data) {
+          throw new Error(result.message || "Failed to refresh text pairs");
+        }
         return result.data;
       }).then(setTextPairs)
-      .catch(toast.error);
+      .catch((error) => {
+        toast.error(error instanceof Error ? error.message : "Unknown error");
+      });
   };
 
   return (
@@ -119,9 +127,11 @@ export function InFolder({ folderId, isReadOnly }: { folderId: number; isReadOnl
                   onDel={() => {
                     actionDeletePairById(textPair.id)
                       .then(result => {
-                        if (!result.success) throw result.message;
+                        if (!result.success) throw new Error(result.message || "Delete failed");
                       }).then(refreshTextPairs)
-                      .catch(toast.error);
+                      .catch((error) => {
+                        toast.error(error instanceof Error ? error.message : "Unknown error");
+                      });
                   }}
                   refreshTextPairs={refreshTextPairs}
                 />

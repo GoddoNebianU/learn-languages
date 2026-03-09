@@ -90,11 +90,11 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
     const folderSelect = document.getElementById("folder-select") as HTMLSelectElement;
     const folderId = folderSelect?.value ? Number(folderSelect.value) : folders[0]?.id;
 
-    if (!searchResult) return;
+    if (!searchResult?.entries?.length) return;
 
-    const definition = searchResult.entries.reduce((p, e) => {
-      return { ...p, definition: p.definition + ' | ' + e.definition };
-    }).definition;
+    const definition = searchResult.entries
+      .map((e) => e.definition)
+      .join(" | ");
 
     try {
       await actionCreatePair({
@@ -102,7 +102,7 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
         text2: definition,
         language1: queryLang,
         language2: definitionLang,
-        ipa1: searchResult.entries[0].ipa,
+        ipa1: searchResult.entries[0]?.ipa,
         folderId: folderId,
       });
 

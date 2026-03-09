@@ -47,7 +47,12 @@ async function getAnswer(prompt: string | Messages): Promise<string> {
     : prompt;
 
   const response = await callZhipuAPI(messages);
-  return response.choices[0].message.content.trim() as string;
+  
+  if (!response.choices?.[0]?.message?.content) {
+    throw new Error("AI API 返回空响应");
+  }
+  
+  return response.choices[0].message.content.trim();
 }
 
 export { getAnswer };

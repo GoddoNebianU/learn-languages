@@ -60,11 +60,12 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
   const [data, setData] = useState(getFromLocalStorage());
   const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     const current_data = getFromLocalStorage();
+    if (!current_data) return;
 
-    current_data.splice(
-      current_data.findIndex((v) => v.text === item.text),
-      1,
-    );
+    const index = current_data.findIndex((v) => v.text === item.text);
+    if (index === -1) return;
+    
+    current_data.splice(index, 1);
     setIntoLocalStorage(current_data);
     refresh();
   };
@@ -78,33 +79,25 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
       refresh();
     }
   };
-  if (show)
+  if (show && data)
     return (
       <div
         className="my-4 p-2 mx-4 md:mx-32 border border-gray-200 rounded-lg"
-        style={{ fontFamily: "Times New Roman, serif" }}
       >
-        <div className="flex flex-row justify-center gap-8 items-center">
-          <IconClick
-            src={IMAGES.refresh}
-            alt="refresh"
-            onClick={refresh}
-            size="lg"
-            className=""
-          ></IconClick>
-          <IconClick
-            src={IMAGES.delete}
-            alt="delete"
+        <div className="flex justify-between items-center mb-2">
+          <p className="text-sm text-gray-600">{t("saved")}</p>
+          <button
             onClick={handleDeleteAll}
-            size="lg"
-            className=""
-          ></IconClick>
+            className="text-xs text-gray-500 hover:text-gray-800"
+          >
+            {t("clearAll")}
+          </button>
         </div>
-        <ul>
-          {data.map((v) => (
+        <ul className="divide-y divide-gray-100">
+          {data.map((item, i) => (
             <TextCard
-              item={v}
-              key={crypto.randomUUID()}
+              key={i}
+              item={item}
               handleUse={handleUse}
               handleDel={handleDel}
             ></TextCard>
