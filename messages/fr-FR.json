@@ -150,7 +150,23 @@
     "loginFailed": "Échec de la connexion",
     "signUpFailed": "Échec de l'inscription",
     "fillAllFields": "Veuillez remplir tous les champs",
-    "enterCredentials": "Veuillez entrer le nom d'utilisateur et le mot de passe"
+    "enterCredentials": "Veuillez entrer le nom d'utilisateur et le mot de passe",
+    "forgotPassword": "Mot de passe oublié",
+    "forgotPasswordHint": "Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    "sendResetEmail": "Envoyer l'e-mail de réinitialisation",
+    "resetPasswordFailed": "Échec de l'envoi de l'e-mail de réinitialisation",
+    "resetPasswordEmailSent": "E-mail de réinitialisation envoyé avec succès",
+    "resetPasswordEmailSentHint": "Nous avons envoyé un lien de réinitialisation de mot de passe à votre adresse e-mail. Veuillez vérifier votre boîte de réception.",
+    "checkYourEmail": "Vérifiez votre e-mail",
+    "backToLogin": "Retour à la connexion",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "invalidToken": "Lien invalide ou expiré",
+    "invalidTokenHint": "Ce lien de réinitialisation de mot de passe est invalide ou a expiré. Veuillez en demander un nouveau.",
+    "requestNewToken": "Demander un nouveau lien de réinitialisation",
+    "resetPasswordSuccess": "Mot de passe réinitialisé avec succès",
+    "resetPasswordSuccessTitle": "Réinitialisation du mot de passe terminée",
+    "resetPasswordSuccessHint": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
   },
   "memorize": {
     "folder_selector": {

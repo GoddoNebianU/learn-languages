@@ -83,6 +83,13 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </VStack>
+
+            <Link
+              href="/forgot-password"
+              className="text-sm text-gray-500 hover:text-primary-500 self-end"
+            >
+              {t("forgotPassword")}
+            </Link>
             
             <PrimaryButton 
               onClick={handleLogin} 

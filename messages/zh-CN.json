@@ -150,7 +150,23 @@
     "loginFailed": "登录失败",
     "signUpFailed": "注册失败",
     "fillAllFields": "请填写所有字段",
-    "enterCredentials": "请输入用户名和密码"
+    "enterCredentials": "请输入用户名和密码",
+    "forgotPassword": "忘记密码",
+    "forgotPasswordHint": "输入您的邮箱地址，我们将向您发送重置密码的链接。",
+    "sendResetEmail": "发送重置邮件",
+    "resetPasswordFailed": "发送重置邮件失败",
+    "resetPasswordEmailSent": "重置邮件已发送",
+    "resetPasswordEmailSentHint": "我们已向您的邮箱发送了密码重置链接，请查收。",
+    "checkYourEmail": "请查收邮件",
+    "backToLogin": "返回登录",
+    "resetPassword": "重置密码",
+    "newPassword": "新密码",
+    "invalidToken": "链接无效或已过期",
+    "invalidTokenHint": "此密码重置链接无效或已过期，请重新申请。",
+    "requestNewToken": "重新申请重置链接",
+    "resetPasswordSuccess": "密码重置成功",
+    "resetPasswordSuccessTitle": "密码重置完成",
+    "resetPasswordSuccessHint": "您的密码已成功重置，现在可以使用新密码登录了。"
   },
   "memorize": {
     "folder_selector": {

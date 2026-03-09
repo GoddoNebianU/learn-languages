@@ -150,7 +150,23 @@
     "loginFailed": "Anmeldung fehlgeschlagen",
     "signUpFailed": "Registrierung fehlgeschlagen",
     "fillAllFields": "Bitte füllen Sie alle Felder aus",
-    "enterCredentials": "Bitte geben Sie Benutzername und Passwort ein"
+    "enterCredentials": "Bitte geben Sie Benutzername und Passwort ein",
+    "forgotPassword": "Passwort vergessen",
+    "forgotPasswordHint": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "sendResetEmail": "Reset-E-Mail senden",
+    "resetPasswordFailed": "Reset-E-Mail konnte nicht gesendet werden",
+    "resetPasswordEmailSent": "Reset-E-Mail erfolgreich gesendet",
+    "resetPasswordEmailSentHint": "Wir haben einen Link zum Zurücksetzen Ihres Passworts an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie Ihren Posteingang.",
+    "checkYourEmail": "Überprüfen Sie Ihre E-Mail",
+    "backToLogin": "Zurück zur Anmeldung",
+    "resetPassword": "Passwort zurücksetzen",
+    "newPassword": "Neues Passwort",
+    "invalidToken": "Ungültiger oder abgelaufener Link",
+    "invalidTokenHint": "Dieser Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
+    "requestNewToken": "Neuen Reset-Link anfordern",
+    "resetPasswordSuccess": "Passwort erfolgreich zurückgesetzt",
+    "resetPasswordSuccessTitle": "Passwort-Zurücksetzung abgeschlossen",
+    "resetPasswordSuccessHint": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
   },
   "memorize": {
     "folder_selector": {

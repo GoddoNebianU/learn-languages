@@ -150,7 +150,23 @@
     "loginFailed": "Login failed",
     "signUpFailed": "Sign up failed",
     "fillAllFields": "Please fill in all fields",
-    "enterCredentials": "Please enter username and password"
+    "enterCredentials": "Please enter username and password",
+    "forgotPassword": "Forgot Password",
+    "forgotPasswordHint": "Enter your email address and we'll send you a link to reset your password.",
+    "sendResetEmail": "Send Reset Email",
+    "resetPasswordFailed": "Failed to send reset email",
+    "resetPasswordEmailSent": "Reset email sent successfully",
+    "resetPasswordEmailSentHint": "We've sent a password reset link to your email address. Please check your inbox.",
+    "checkYourEmail": "Check Your Email",
+    "backToLogin": "Back to Login",
+    "resetPassword": "Reset Password",
+    "newPassword": "New Password",
+    "invalidToken": "Invalid or Expired Link",
+    "invalidTokenHint": "This password reset link is invalid or has expired. Please request a new one.",
+    "requestNewToken": "Request New Reset Link",
+    "resetPasswordSuccess": "Password reset successfully",
+    "resetPasswordSuccessTitle": "Password Reset Complete",
+    "resetPasswordSuccessHint": "Your password has been reset successfully. You can now log in with your new password."
   },
   "memorize": {
     "folder_selector": {

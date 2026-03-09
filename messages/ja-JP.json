@@ -150,7 +150,23 @@
     "loginFailed": "ログインに失敗しました",
     "signUpFailed": "新規登録に失敗しました",
     "fillAllFields": "すべてのフィールドに入力してください",
-    "enterCredentials": "ユーザー名とパスワードを入力してください"
+    "enterCredentials": "ユーザー名とパスワードを入力してください",
+    "forgotPassword": "パスワードをお忘れですか",
+    "forgotPasswordHint": "メールアドレスを入力してください。パスワードリセット用のリンクをお送りします。",
+    "sendResetEmail": "リセットメールを送信",
+    "resetPasswordFailed": "リセットメールの送信に失敗しました",
+    "resetPasswordEmailSent": "リセットメールを送信しました",
+    "resetPasswordEmailSentHint": "パスワードリセット用のリンクをメールでお送りしました。受信トレイをご確認ください。",
+    "checkYourEmail": "メールをご確認ください",
+    "backToLogin": "ログインに戻る",
+    "resetPassword": "パスワードをリセット",
+    "newPassword": "新しいパスワード",
+    "invalidToken": "無効または期限切れのリンク",
+    "invalidTokenHint": "このパスワードリセットリンクは無効または期限切れです。新しいものをリクエストしてください。",
+    "requestNewToken": "新しいリセットリンクをリクエスト",
+    "resetPasswordSuccess": "パスワードのリセットに成功しました",
+    "resetPasswordSuccessTitle": "パスワードリセット完了",
+    "resetPasswordSuccessHint": "パスワードが正常にリセットされました。新しいパスワードでログインできます。"
   },
   "memorize": {
     "folder_selector": {
