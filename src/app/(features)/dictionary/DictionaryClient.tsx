@@ -11,7 +11,7 @@ import { Plus, RefreshCw } from "lucide-react";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
-import { actionGetFoldersByUserId, actionCreatePair } from "@/modules/folder/folder-aciton";
+import { actionGetFoldersByUserId, actionCreatePair } from "@/modules/folder/folder-action";
 import { TSharedFolder } from "@/shared/folder-type";
 import { toast } from "sonner";
 

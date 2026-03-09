@@ -5,7 +5,7 @@ import { FolderSelector } from "./FolderSelector";
 import { Memorize } from "./Memorize";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
+import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder/folder-action";
 
 export default async function MemorizePage({
   searchParams,

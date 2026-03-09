@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PrimaryButton, CircleButton, LinkButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
-import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-aciton";
+import { actionCreatePair, actionDeletePairById, actionGetPairsByFolderId } from "@/modules/folder/folder-action";
 import { TSharedPair } from "@/shared/folder-type";
 import { toast } from "sonner";
 

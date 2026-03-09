@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { InFolder } from "./InFolder";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFolderVisibility } from "@/modules/folder/folder-aciton";
+import { actionGetFolderVisibility } from "@/modules/folder/folder-action";
 
 export default async function FoldersPage({
   params,

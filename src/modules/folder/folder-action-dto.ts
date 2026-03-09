@@ -62,6 +62,12 @@ export type ActionOutputGetPublicFolders = {
     data?: ActionOutputPublicFolder[];
 };
 
+export type ActionOutputGetPublicFolderById = {
+    message: string;
+    success: boolean;
+    data?: ActionOutputPublicFolder;
+};
+
 export type ActionOutputSetFolderVisibility = {
     message: string;
     success: boolean;

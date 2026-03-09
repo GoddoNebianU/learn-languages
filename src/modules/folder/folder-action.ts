@@ -11,6 +11,7 @@ import {
   ActionInputUpdatePairById,
   ActionOutputGetFoldersWithTotalPairsByUserId,
   ActionOutputGetPublicFolders,
+  ActionOutputGetPublicFolderById,
   ActionOutputSetFolderVisibility,
   ActionOutputToggleFavorite,
   ActionOutputCheckFavorite,
@@ -30,6 +31,7 @@ import {
   repoGetFoldersWithTotalPairsByUserId,
   repoGetPairsByFolderId,
   repoGetPublicFolders,
+  repoGetPublicFolderById,
   repoGetUserIdByFolderId,
   repoRenameFolderById,
   repoSearchPublicFolders,
@@ -373,6 +375,32 @@ export async function actionSearchPublicFolders(query: string): Promise<ActionOu
                 ...folder,
                 visibility: folder.visibility as "PRIVATE" | "PUBLIC",
             })),
+        };
+    } catch (e) {
+        log.error("Operation failed", { error: e });
+        return {
+            success: false,
+            message: 'Unknown error occured.',
+        };
+    }
+}
+
+export async function actionGetPublicFolderById(folderId: number): Promise<ActionOutputGetPublicFolderById> {
+    try {
+        const folder = await repoGetPublicFolderById(folderId);
+        if (!folder) {
+            return {
+                success: false,
+                message: 'Folder not found.',
+            };
+        }
+        return {
+            success: true,
+            message: 'success',
+            data: {
+                ...folder,
+                visibility: folder.visibility as "PRIVATE" | "PUBLIC",
+            },
         };
     } catch (e) {
         log.error("Operation failed", { error: e });

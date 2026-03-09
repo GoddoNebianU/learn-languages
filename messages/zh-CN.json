@@ -297,6 +297,20 @@
     "sortByFavorites": "按收藏数排序",
     "sortByFavoritesActive": "取消按收藏数排序"
   },
+  "exploreDetail": {
+    "title": "文件夹详情",
+    "createdBy": "创建者：{name}",
+    "unknownUser": "未知用户",
+    "totalPairs": "词对数量",
+    "favorites": "收藏数",
+    "createdAt": "创建时间",
+    "viewContent": "查看内容",
+    "favorite": "收藏",
+    "unfavorite": "取消收藏",
+    "favorited": "已收藏",
+    "unfavorited": "已取消收藏",
+    "pleaseLogin": "请先登录"
+  },
   "favorites": {
     "title": "我的收藏",
     "subtitle": "收藏的公开文件夹",

@@ -4,7 +4,7 @@ import { CircleButton } from "@/design-system/base/button";
 import { UpdateTextPairModal } from "./UpdateTextPairModal";
 import { useTranslations } from "next-intl";
 import { TSharedPair } from "@/shared/folder-type";
-import { actionUpdatePairById } from "@/modules/folder/folder-aciton";
+import { actionUpdatePairById } from "@/modules/folder/folder-action";
 import { ActionInputUpdatePairById } from "@/modules/folder/folder-action-dto";
 import { toast } from "sonner";
 

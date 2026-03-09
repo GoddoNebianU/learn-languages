@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CardList } from "@/components/ui/CardList";
-import { actionGetUserFavorites, actionToggleFavorite } from "@/modules/folder/folder-aciton";
+import { actionGetUserFavorites, actionToggleFavorite } from "@/modules/folder/folder-action";
 
 type UserFavorite = {
   id: number;

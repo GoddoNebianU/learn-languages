@@ -23,7 +23,7 @@ import {
   actionGetFoldersWithTotalPairsByUserId,
   actionRenameFolderById,
   actionSetFolderVisibility,
-} from "@/modules/folder/folder-aciton";
+} from "@/modules/folder/folder-action";
 import { TSharedFolderWithTotalPairs } from "@/shared/folder-type";
 
 interface FolderCardProps {

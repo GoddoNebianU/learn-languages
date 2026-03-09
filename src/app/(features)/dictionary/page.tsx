@@ -1,7 +1,7 @@
 import { DictionaryClient } from "./DictionaryClient";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersByUserId } from "@/modules/folder/folder-aciton";
+import { actionGetFoldersByUserId } from "@/modules/folder/folder-action";
 import { TSharedFolder } from "@/shared/folder-type";
 
 export default async function DictionaryPage() {

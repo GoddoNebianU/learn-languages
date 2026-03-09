@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { InFolder } from "@/app/folders/[folder_id]/InFolder";
-import { actionGetFolderVisibility } from "@/modules/folder/folder-aciton";
+import { ExploreDetailClient } from "./ExploreDetailClient";
+import { actionGetPublicFolderById } from "@/modules/folder/folder-action";
 
 export default async function ExploreFolderPage({
   params,
@@ -13,17 +13,11 @@ export default async function ExploreFolderPage({
     redirect("/explore");
   }
 
-  const folderInfo = (await actionGetFolderVisibility(Number(id))).data;
+  const result = await actionGetPublicFolderById(Number(id));
 
-  if (!folderInfo) {
+  if (!result.success || !result.data) {
     redirect("/explore");
   }
 
-  const isPublic = folderInfo.visibility === "PUBLIC";
-
-  if (!isPublic) {
-    redirect("/explore");
-  }
-
-  return <InFolder folderId={Number(id)} isReadOnly={true} />;
+  return <ExploreDetailClient folder={result.data} />;
 }

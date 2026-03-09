@@ -17,7 +17,7 @@ import {
   actionSearchPublicFolders,
   actionToggleFavorite,
   actionCheckFavorite,
-} from "@/modules/folder/folder-aciton";
+} from "@/modules/folder/folder-action";
 import { TPublicFolder } from "@/shared/folder-type";
 import { authClient } from "@/lib/auth-client";
 

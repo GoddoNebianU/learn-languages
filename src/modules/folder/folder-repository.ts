@@ -171,6 +171,32 @@ export async function repoGetFolderVisibility(
   return folder;
 }
 
+export async function repoGetPublicFolderById(
+  folderId: number,
+): Promise<RepoOutputPublicFolder | null> {
+  const folder = await prisma.folder.findUnique({
+    where: { id: folderId, visibility: Visibility.PUBLIC },
+    include: {
+      _count: { select: { pairs: true, favorites: true } },
+      user: { select: { name: true, username: true } },
+    },
+  });
+
+  if (!folder) return null;
+
+  return {
+    id: folder.id,
+    name: folder.name,
+    visibility: folder.visibility,
+    createdAt: folder.createdAt,
+    userId: folder.userId,
+    userName: folder.user?.name ?? "Unknown",
+    userUsername: folder.user?.username ?? "unknown",
+    totalPairs: folder._count.pairs,
+    favoriteCount: folder._count.favorites,
+  };
+}
+
 export async function repoGetPublicFolders(
   input: RepoInputGetPublicFolders = {},
 ): Promise<RepoOutputPublicFolder[]> {

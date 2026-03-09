@@ -297,6 +297,20 @@
     "sortByFavorites": "Sort by favorites",
     "sortByFavoritesActive": "Undo sort by favorites"
   },
+  "exploreDetail": {
+    "title": "Folder Details",
+    "createdBy": "Created by: {name}",
+    "unknownUser": "Unknown User",
+    "totalPairs": "Total Pairs",
+    "favorites": "Favorites",
+    "createdAt": "Created At",
+    "viewContent": "View Content",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "favorited": "Favorited",
+    "unfavorited": "Unfavorited",
+    "pleaseLogin": "Please login first"
+  },
   "favorites": {
     "title": "My Favorites",
     "subtitle": "Folders you've favorited",
