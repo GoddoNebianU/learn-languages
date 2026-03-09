@@ -45,7 +45,7 @@
 
 ### 前置要求
 
-- Node.js 23+
+- Node.js 24+
 - PostgreSQL 14+
 - pnpm 8+ (推荐) 或 npm/yarn
 
