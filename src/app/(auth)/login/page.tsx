@@ -38,19 +38,25 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (username.includes("@")) {
-        await authClient.signIn.email({
+        const { error } = await authClient.signIn.email({
           email: username,
           password: password,
         });
+        if (error) {
+          toast.error(error.message ?? t("loginFailed"));
+          return;
+        }
       } else {
-        await authClient.signIn.username({
+        const { error } = await authClient.signIn.username({
           username: username,
           password: password,
         });
+        if (error) {
+          toast.error(error.message ?? t("loginFailed"));
+          return;
+        }
       }
       router.push(redirectTo ?? "/folders");
-    } catch (error) {
-      toast.error(t("loginFailed"));
     } finally {
       setLoading(false);
     }

@@ -39,15 +39,17 @@ export default function SignUpPage() {
 
     setLoading(true);
     try {
-      await authClient.signUp.email({
+      const { error } = await authClient.signUp.email({
         email: email,
         name: username,
         username: username,
         password: password,
       });
+      if (error) {
+        toast.error(error.message ?? t("signUpFailed"));
+        return;
+      }
       router.push(redirectTo ?? "/folders");
-    } catch (error) {
-      toast.error(t("signUpFailed"));
     } finally {
       setLoading(false);
     }
