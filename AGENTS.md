@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
 **生成时间:** 2026-03-08
-**提交:** 91c59c3
+**提交:** 6ba5ae9
 **分支:** dev
 
 ## 概述
@@ -112,6 +112,7 @@ log.error("Failed to fetch folders", { error });
 - ❌ Server Component 可行时用 Client Component
 - ❌ npm 或 yarn (使用 pnpm)
 - ❌ 生产代码中使用 `console.log` (使用 winston logger)
+- ❌ 擅自运行 `pnpm dev` (不需要，用 `pnpm build` 验证即可)
 
 ## 独特风格
 

@@ -20,6 +20,7 @@ export interface InputAnalysisResult {
 // 阶段2：语义映射结果
 export interface SemanticMappingResult {
     shouldMap: boolean;
+    canMap?: boolean;
     coreSemantic?: string;
     mappedQuery?: string;
     reason: string;

@@ -53,7 +53,7 @@ export async function executeDictionaryLookup(
 
         if (!standardFormResult.standardForm) {
             log.error("[Stage 3] Standard form is empty");
-            throw "无法生成标准形式";
+            throw new LookUpError("无法生成标准形式");
         }
 
         log.debug("[Stage 3] Standard form complete", { standardFormResult });

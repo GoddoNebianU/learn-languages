@@ -9,7 +9,7 @@ const log = createLogger("dictionary-stage2");
  * 阶段 2：跨语言语义映射决策
  *
  * 独立的 LLM 调用，决定是否需要语义映射
- * 如果输入不符合"明确、基础、可词典化的语义概念"且语言不一致，直接返回失败
+ * 如果输入不符合"明确、基础、可词典化的语义概念"且语言不一致，则降级使用原始输入
  */
 
 export async function determineSemanticMapping(
@@ -86,9 +86,17 @@ b) 输入是明确、基础、可词典化的语义概念
             result.reason = "";
         }
 
-        // 如果不应该映射，返回错误
+        // 如果不应该映射，返回降级结果（不抛出错误）
+        // 这样可以让后续阶段使用原始输入继续处理
         if (!result.shouldMap) {
-            throw new Error(result.reason || "输入不符合可词典化的语义概念，无法进行跨语言查询");
+            log.debug("Semantic mapping not applicable, using original input", { 
+                reason: result.reason 
+            });
+            return {
+                shouldMap: false,
+                canMap: result.canMap ?? false,
+                reason: result.reason,
+            };
         }
 
         if (!result.mappedQuery || result.mappedQuery.trim().length === 0) {
@@ -97,6 +105,7 @@ b) 输入是明确、基础、可词典化的语义概念
 
         return {
             shouldMap: result.shouldMap,
+            canMap: result.canMap ?? true,
             coreSemantic: result.coreSemantic,
             mappedQuery: result.mappedQuery,
             reason: result.reason,

@@ -2,10 +2,15 @@
 
 type Messages = { role: string; content: string; }[];
 
+const LLM_TIMEOUT_MS = 30000;
+
 async function callZhipuAPI(
   messages: Messages,
   model = process.env.ZHIPU_MODEL_NAME,
 ) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
+
   const url = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
   const response = await fetch(url, {
@@ -22,7 +27,10 @@ async function callZhipuAPI(
         type: "disabled",
       },
     }),
+    signal: controller.signal,
   });
+
+  clearTimeout(timeoutId);
 
   if (!response.ok) {
     throw new Error(`API 调用失败: ${response.status} ${response.statusText}`);

@@ -55,6 +55,14 @@ export async function analyzeInput(text: string): Promise<InputAnalysisResult> {
             throw new Error("阶段1：isValid 字段类型错误");
         }
 
+        if (typeof result.isEmpty !== "boolean") {
+            throw new Error("阶段1：isEmpty 字段类型错误");
+        }
+
+        if (typeof result.isNaturalLanguage !== "boolean") {
+            throw new Error("阶段1：isNaturalLanguage 字段类型错误");
+        }
+
         // 确保 reason 字段存在
         if (typeof result.reason !== "string") {
             result.reason = "";
