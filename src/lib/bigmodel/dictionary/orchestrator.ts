@@ -41,7 +41,7 @@ export async function executeDictionaryLookup(
         return finalResult;
 
     } catch (error) {
-        log.error("Dictionary lookup failed", { error });
+        log.error("Dictionary lookup failed", { error: error instanceof Error ? error.message : String(error) });
         const errorMessage = error instanceof Error ? error.message : "未知错误";
         throw new LookUpError(errorMessage);
     }

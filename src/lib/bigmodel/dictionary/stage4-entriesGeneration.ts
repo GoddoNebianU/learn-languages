@@ -49,7 +49,7 @@ ${isWord ? `{"entries":[{"ipa":"音标","partOfSpeech":"词性","definition":"�
 
         return result;
     } catch (error) {
-        log.error("Entries generation failed", { error });
+        log.error("Entries generation failed", { error: error instanceof Error ? error.message : String(error) });
         throw error;
     }
 }

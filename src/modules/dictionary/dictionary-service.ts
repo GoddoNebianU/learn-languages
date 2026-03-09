@@ -42,7 +42,7 @@ export const serviceLookUp = async (dto: ServiceInputLookUp) => {
             },
             response.entries
         ).catch(error => {
-            log.error("Failed to save dictionary data", { error });
+            log.error("Failed to save dictionary data", { error: error instanceof Error ? error.message : String(error) });
         });
 
         return response;
@@ -54,7 +54,7 @@ export const serviceLookUp = async (dto: ServiceInputLookUp) => {
             definitionLang: definitionLang,
             dictionaryItemId: lastLookUpResult.id
         }).catch(error => {
-            log.error("Failed to save dictionary data", { error });
+            log.error("Failed to save dictionary data", { error: error instanceof Error ? error.message : String(error) });
         });
         return {
             standardForm: lastLookUpResult.standardForm,

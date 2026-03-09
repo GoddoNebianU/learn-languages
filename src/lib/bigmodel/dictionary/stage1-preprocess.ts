@@ -17,23 +17,23 @@ export async function preprocessInput(
 
 任务：
 1. 判断输入是否有效（非空、是自然语言）
-2. 识别输入语言和类型（单词/短语）
-3. 如果输入语言 ≠ 查询语言，判断是否需要语义映射
-4. 生成查询语言下的标准形式
+2. 识别输入类型（单词/短语）
+3. 将输入转换为查询语言的对应词（语义映射）
+4. 生成标准形式（必须是查询语言）
 
-语义映射规则：
-- 只有当输入是"明确、基础、可词典化的语义概念"（如常见动词、名词、形容词）时才映射
-- 复杂句子、专业术语、无法确定语义的词汇不映射，直接用原文
-
-标准形式规则：
-- 修正拼写错误
-- 还原为词典形式（英语：动词原形/名词单数；日语：辞书形；中文：标准简化字）
+重要规则：
+- standardForm 必须是查询语言的词汇
+- 例如：查询语言=维吾尔语，输入="japanese" → standardForm="ياپونىيە"
+- 例如：查询语言=中文，输入="japanese" → standardForm="日语"
+- 例如：查询语言=English，输入="日语" → standardForm="Japanese"
+- 如果输入本身就是查询语言，则保持不变
+- 只做词典形式还原，不纠正拼写
 
 返回 JSON：
 {
   "isValid": boolean,
   "inputType": "word" | "phrase",
-  "standardForm": "标准形式",
+  "standardForm": "查询语言对应的标准形式",
   "confidence": "high" | "medium" | "low",
   "reason": "错误原因，成功时为空字符串"
 }
@@ -81,7 +81,7 @@ export async function preprocessInput(
             reason: typeof result.reason === "string" ? result.reason : "",
         };
     } catch (error) {
-        log.error("Preprocess failed", { error });
+        log.error("Preprocess failed", { error: error instanceof Error ? error.message : String(error) });
         throw error;
     }
 }

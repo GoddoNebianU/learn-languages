@@ -21,7 +21,7 @@ export const actionLookUpDictionary = async (dto: ActionInputLookUpDictionary): 
                 message: e.message
             };
         }
-        log.error("Dictionary lookup failed", { error: e });
+        log.error("Dictionary lookup failed", { error: e instanceof Error ? e.message : String(e) });
         return {
             success: false,
             message: 'Unknown error occured.'
