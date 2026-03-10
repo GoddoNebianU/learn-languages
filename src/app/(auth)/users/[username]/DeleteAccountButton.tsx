@@ -44,9 +44,12 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
 
   return (
     <>
-      <Button variant="error" onClick={() => setShowModal(true)}>
+      <button 
+        onClick={() => setShowModal(true)}
+        className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+      >
         {t("deleteAccount.button")}
-      </Button>
+      </button>
 
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <div className="p-6">
