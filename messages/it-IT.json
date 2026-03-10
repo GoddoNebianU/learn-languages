@@ -422,6 +422,21 @@
     "notSet": "Non Impostato",
     "memberSince": "Membro Dal",
     "logout": "Esci",
+    "deleteAccount": {
+      "button": "Elimina Account",
+      "title": "Elimina Account",
+      "warning": "Questa azione è irreversibile. Tutti i tuoi dati saranno eliminati definitivamente.",
+      "warningDecks": "Tutti i tuoi mazzi e le tue carte",
+      "warningCards": "Tutto il tuo progresso di apprendimento",
+      "warningHistory": "Tutto il tuo cronologia di traduzione e dizionario",
+      "warningPermanent": "Questa azione non può essere annullata",
+      "confirmLabel": "Digita il tuo nome utente per confermare:",
+      "usernameMismatch": "Il nome utente non corrisponde",
+      "cancel": "Annulla",
+      "confirm": "Elimina il mio account",
+      "success": "Account eliminato con successo",
+      "failed": "Impossibile eliminare l'account"
+    },
     "decks": {
       "title": "Mazzi",
       "noDecks": "Nessun mazzo ancora",

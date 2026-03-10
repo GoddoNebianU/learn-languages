@@ -422,6 +422,21 @@
     "notSet": "Non défini",
     "memberSince": "Membre depuis",
     "logout": "Déconnexion",
+    "deleteAccount": {
+      "button": "Supprimer le compte",
+      "title": "Supprimer le compte",
+      "warning": "Cette action est irréversible. Toutes vos données seront définitivement supprimées.",
+      "warningDecks": "Tous vos decks et cartes",
+      "warningCards": "Tout votre progression d'apprentissage",
+      "warningHistory": "Tout votre historique de traduction et de dictionnaire",
+      "warningPermanent": "Cette action ne peut pas être annulée",
+      "confirmLabel": "Tapez votre nom d'utilisateur pour confirmer :",
+      "usernameMismatch": "Le nom d'utilisateur ne correspond pas",
+      "cancel": "Annuler",
+      "confirm": "Supprimer mon compte",
+      "success": "Compte supprimé avec succès",
+      "failed": "Échec de la suppression du compte"
+    },
     "decks": {
       "title": "Decks",
       "noDecks": "Pas encore de decks",

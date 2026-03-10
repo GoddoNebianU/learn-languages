@@ -413,6 +413,21 @@
     "notSet": "未設定",
     "memberSince": "登録日",
     "logout": "ログアウト",
+    "deleteAccount": {
+      "button": "アカウント削除",
+      "title": "アカウント削除",
+      "warning": "この操作は取り消せません。すべてのデータが完全に削除されます。",
+      "warningDecks": "すべてのデッキとカード",
+      "warningCards": "すべての学習履歴",
+      "warningHistory": "すべての翻訳と辞書の履歴",
+      "warningPermanent": "この操作は取り消せません",
+      "confirmLabel": "確認のためユーザー名を入力してください：",
+      "usernameMismatch": "ユーザー名が一致しません",
+      "cancel": "キャンセル",
+      "confirm": "アカウントを削除する",
+      "success": "アカウントが正常に削除されました",
+      "failed": "アカウントの削除に失敗しました"
+    },
     "decks": {
       "title": "デッキ",
       "noDecks": "まだデッキがありません",

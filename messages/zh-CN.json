@@ -428,6 +428,21 @@
     "memberSince": "注册时间",
     "joined": "加入于",
     "logout": "登出",
+    "deleteAccount": {
+      "button": "注销账号",
+      "title": "注销账号",
+      "warning": "此操作不可逆，您的所有数据将被永久删除。",
+      "warningDecks": "您的所有牌组和卡片",
+      "warningCards": "您的所有学习进度",
+      "warningHistory": "您的所有翻译和词典历史",
+      "warningPermanent": "此操作无法撤销",
+      "confirmLabel": "输入您的用户名以确认：",
+      "usernameMismatch": "用户名不匹配",
+      "cancel": "取消",
+      "confirm": "注销我的账号",
+      "success": "账号已成功注销",
+      "failed": "注销账号失败"
+    },
     "decks": {
       "title": "牌组",
       "noDecks": "还没有牌组",

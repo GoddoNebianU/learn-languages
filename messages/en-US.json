@@ -428,6 +428,21 @@
     "memberSince": "Member Since",
     "joined": "Joined",
     "logout": "Logout",
+    "deleteAccount": {
+      "button": "Delete Account",
+      "title": "Delete Account",
+      "warning": "This action is irreversible. All your data will be permanently deleted.",
+      "warningDecks": "All your decks and cards",
+      "warningCards": "All your learning progress",
+      "warningHistory": "All your translation and dictionary history",
+      "warningPermanent": "This action cannot be undone",
+      "confirmLabel": "Type your username to confirm:",
+      "usernameMismatch": "Username does not match",
+      "cancel": "Cancel",
+      "confirm": "Delete My Account",
+      "success": "Account deleted successfully",
+      "failed": "Failed to delete account"
+    },
     "decks": {
       "title": "Decks",
       "noDecks": "No decks yet",

@@ -5,11 +5,13 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { ValidateError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { prisma } from "@/lib/db";
 import {
     ActionInputGetUserProfileByUsername,
     ActionInputSignIn,
     ActionInputSignUp,
     ActionOutputAuth,
+    ActionOutputDeleteAccount,
     ActionOutputUserProfile,
     validateActionInputGetUserProfileByUsername,
     validateActionInputSignIn,
@@ -178,5 +180,93 @@ export async function actionGetUserProfileByUsername(dto: ActionInputGetUserProf
             success: false,
             message: "Failed to retrieve user profile",
         };
+    }
+}
+
+/**
+ * Delete account action
+ * Permanently deletes the current user and all associated data
+ */
+export async function actionDeleteAccount(): Promise<ActionOutputDeleteAccount> {
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.user?.id) {
+            return { success: false, message: "Unauthorized" };
+        }
+
+        const userId = session.user.id;
+
+        await prisma.$transaction(async (tx) => {
+            // Delete in correct order to avoid foreign key constraints
+            // 1. Revlogs (depend on cards)
+            await tx.revlog.deleteMany({
+                where: { card: { note: { userId } } }
+            });
+
+            // 2. Cards (depend on notes and decks)
+            await tx.card.deleteMany({
+                where: { note: { userId } }
+            });
+
+            // 3. Notes (depend on note types)
+            await tx.note.deleteMany({
+                where: { userId }
+            });
+
+            // 4. Note types
+            await tx.noteType.deleteMany({
+                where: { userId }
+            });
+
+            // 5. Deck favorites
+            await tx.deckFavorite.deleteMany({
+                where: { userId }
+            });
+
+            // 6. Decks
+            await tx.deck.deleteMany({
+                where: { userId }
+            });
+
+            // 7. Follows (both as follower and following)
+            await tx.follow.deleteMany({
+                where: {
+                    OR: [
+                        { followerId: userId },
+                        { followingId: userId }
+                    ]
+                }
+            });
+
+            // 8. Dictionary lookups
+            await tx.dictionaryLookUp.deleteMany({
+                where: { userId }
+            });
+
+            // 9. Translation history
+            await tx.translationHistory.deleteMany({
+                where: { userId }
+            });
+
+            // 10. Sessions
+            await tx.session.deleteMany({
+                where: { userId }
+            });
+
+            // 11. Accounts
+            await tx.account.deleteMany({
+                where: { userId }
+            });
+
+            // 12. Finally, delete the user
+            await tx.user.delete({
+                where: { id: userId }
+            });
+        });
+
+        return { success: true, message: "Account deleted successfully" };
+    } catch (e) {
+        log.error("Delete account failed", { error: e });
+        return { success: false, message: "Failed to delete account" };
     }
 }

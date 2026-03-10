@@ -61,3 +61,8 @@ export type ActionOutputUserProfile = {
         updatedAt: Date;
     };
 };
+
+export type ActionOutputDeleteAccount = {
+    success: boolean;
+    message: string;
+};

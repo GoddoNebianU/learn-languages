@@ -10,6 +10,7 @@ import { getTranslations } from "next-intl/server";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { FollowStats } from "@/components/follow/FollowStats";
+import { DeleteAccountButton } from "./DeleteAccountButton";
 
 interface UserPageProps {
     params: Promise<{ username: string; }>;
@@ -45,7 +46,14 @@ export default async function UserPage({ params }: UserPageProps) {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
                     <div></div>
-                    {isOwnProfile && <LinkButton href="/logout">{t("logout")}</LinkButton>}
+                    <div className="flex items-center gap-3">
+                        {isOwnProfile && (
+                            <>
+                                <LinkButton href="/logout">{t("logout")}</LinkButton>
+                                <DeleteAccountButton username={username} />
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
                     {user.image ? (

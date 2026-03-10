@@ -422,6 +422,21 @@
     "notSet": "Nicht festgelegt",
     "memberSince": "Mitglied seit",
     "logout": "Abmelden",
+    "deleteAccount": {
+      "button": "Konto löschen",
+      "title": "Konto löschen",
+      "warning": "Diese Aktion ist unwiderruflich. Alle Ihre Daten werden dauerhaft gelöscht.",
+      "warningDecks": "Alle Ihre Decks und Karten",
+      "warningCards": "All Ihr Lernfortschritt",
+      "warningHistory": "All Ihr Übersetzungs- und Wörterbuchverlauf",
+      "warningPermanent": "Diese Aktion kann nicht rückgängig gemacht werden",
+      "confirmLabel": "Geben Sie Ihren Benutzernamen zur Bestätigung ein:",
+      "usernameMismatch": "Benutzername stimmt nicht überein",
+      "cancel": "Abbrechen",
+      "confirm": "Mein Konto löschen",
+      "success": "Konto erfolgreich gelöscht",
+      "failed": "Konto konnte nicht gelöscht werden"
+    },
     "folders": {
       "title": "Decks",
       "noFolders": "Noch keine Decks",

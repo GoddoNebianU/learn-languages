@@ -422,6 +422,21 @@
     "notSet": "설정되지 않음",
     "memberSince": "가입일",
     "logout": "로그아웃",
+    "deleteAccount": {
+      "button": "계정 삭제",
+      "title": "계정 삭제",
+      "warning": "이 작업은 되돌릴 수 없습니다. 모든 데이터가 영구적으로 삭제됩니다.",
+      "warningDecks": "모든 덱과 카드",
+      "warningCards": "모든 학습 진행 상황",
+      "warningHistory": "모든 번역 및 사전 기록",
+      "warningPermanent": "이 작업은 취소할 수 없습니다",
+      "confirmLabel": "확인을 위해 사용자명을 입력하세요:",
+      "usernameMismatch": "사용자명이 일치하지 않습니다",
+      "cancel": "취소",
+      "confirm": "내 계정 삭제",
+      "success": "계정이 성공적으로 삭제되었습니다",
+      "failed": "계정 삭제에 실패했습니다"
+    },
     "folders": {
       "title": "덱",
       "noFolders": "아직 덱이 없습니다",
