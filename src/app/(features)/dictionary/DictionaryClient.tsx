@@ -11,15 +11,18 @@ import { Plus, RefreshCw } from "lucide-react";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
-import { actionGetFoldersByUserId, actionCreatePair } from "@/modules/folder/folder-action";
-import { TSharedFolder } from "@/shared/folder-type";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import { actionCreateNote } from "@/modules/note/note-action";
+import { actionCreateCard } from "@/modules/card/card-action";
+import { actionGetNoteTypesByUserId, actionCreateDefaultBasicNoteType } from "@/modules/note-type/note-type-action";
+import type { TSharedDeck } from "@/shared/anki-type";
 import { toast } from "sonner";
 
 interface DictionaryClientProps {
-  initialFolders: TSharedFolder[];
+  initialDecks: TSharedDeck[];
 }
 
-export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
+export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
   const t = useTranslations("dictionary");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -39,7 +42,9 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
   } = useDictionaryStore();
 
   const { data: session } = authClient.useSession();
-  const [folders, setFolders] = useState<TSharedFolder[]>(initialFolders);
+  const [decks, setDecks] = useState<TSharedDeck[]>(initialDecks);
+  const [defaultNoteTypeId, setDefaultNoteTypeId] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const q = searchParams.get("q") || undefined;
@@ -55,9 +60,31 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
 
   useEffect(() => {
     if (session?.user?.id) {
-      actionGetFoldersByUserId(session.user.id).then((result) => {
+      actionGetDecksByUserId(session.user.id).then((result) => {
         if (result.success && result.data) {
-          setFolders(result.data);
+          setDecks(result.data as TSharedDeck[]);
+        }
+      });
+    }
+  }, [session?.user?.id]);
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      actionGetNoteTypesByUserId().then(async (result) => {
+        if (result.success && result.data) {
+          const basicNoteType = result.data.find(
+            (nt) => nt.name === "Basic Vocabulary"
+          );
+          if (basicNoteType) {
+            setDefaultNoteTypeId(basicNoteType.id);
+          } else if (result.data.length > 0) {
+            setDefaultNoteTypeId(result.data[0].id);
+          } else {
+            const createResult = await actionCreateDefaultBasicNoteType();
+            if (createResult.success && createResult.data) {
+              setDefaultNoteTypeId(createResult.data.id);
+            }
+          }
         }
       });
     }
@@ -79,37 +106,73 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
 
   const handleSave = async () => {
     if (!session) {
-      toast.error("Please login first");
+      toast.error(t("pleaseLogin"));
       return;
     }
-    if (folders.length === 0) {
-      toast.error("Please create a folder first");
+    if (decks.length === 0) {
+      toast.error(t("pleaseCreateFolder"));
       return;
     }
-
-    const folderSelect = document.getElementById("folder-select") as HTMLSelectElement;
-    const folderId = folderSelect?.value ? Number(folderSelect.value) : folders[0]?.id;
-
+    if (!defaultNoteTypeId) {
+      toast.error("No note type available. Please try again.");
+      return;
+    }
     if (!searchResult?.entries?.length) return;
+
+    const deckSelect = document.getElementById("deck-select") as HTMLSelectElement;
+    const deckId = deckSelect?.value ? Number(deckSelect.value) : decks[0]?.id;
+
+    if (!deckId) {
+      toast.error("No deck selected");
+      return;
+    }
+
+    setIsSaving(true);
 
     const definition = searchResult.entries
       .map((e) => e.definition)
       .join(" | ");
+    
+    const ipa = searchResult.entries[0]?.ipa || "";
+    const example = searchResult.entries
+      .map((e) => e.example)
+      .filter(Boolean)
+      .join(" | ") || "";
 
     try {
-      await actionCreatePair({
-        text1: searchResult.standardForm,
-        text2: definition,
-        language1: queryLang,
-        language2: definitionLang,
-        ipa1: searchResult.entries[0]?.ipa,
-        folderId: folderId,
+      const noteResult = await actionCreateNote({
+        noteTypeId: defaultNoteTypeId,
+        fields: [searchResult.standardForm, definition, ipa, example],
+        tags: ["dictionary"],
       });
 
-      const folderName = folders.find((f) => f.id === folderId)?.name || "Unknown";
-      toast.success(`Saved to ${folderName}`);
+      if (!noteResult.success || !noteResult.data) {
+        toast.error(t("saveFailed"));
+        setIsSaving(false);
+        return;
+      }
+
+      const noteId = BigInt(noteResult.data.id);
+
+      await actionCreateCard({
+        noteId,
+        deckId,
+        ord: 0,
+      });
+
+      await actionCreateCard({
+        noteId,
+        deckId,
+        ord: 1,
+      });
+
+      const deckName = decks.find((d) => d.id === deckId)?.name || "Unknown";
+      toast.success(t("savedToFolder", { folderName: deckName }));
     } catch (error) {
-      toast.error("Save failed");
+      console.error("Save error:", error);
+      toast.error(t("saveFailed"));
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -174,8 +237,8 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
           </div>
         ) : query && !searchResult ? (
           <div className="text-center py-12 bg-white/20 rounded-lg">
-            <p className="text-gray-800 text-xl">No results found</p>
-            <p className="text-gray-600 mt-2">Try other words</p>
+            <p className="text-gray-800 text-xl">{t("noResults")}</p>
+            <p className="text-gray-600 mt-2">{t("tryOtherWords")}</p>
           </div>
         ) : searchResult ? (
           <div className="bg-white rounded-lg p-6 shadow-lg">
@@ -186,14 +249,14 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
                 </h2>
               </div>
               <div className="flex items-center gap-2 ml-4">
-                {session && folders.length > 0 && (
+                {session && decks.length > 0 && (
                   <select
-                    id="folder-select"
+                    id="deck-select"
                     className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#35786f]"
                   >
-                    {folders.map((folder) => (
-                      <option key={folder.id} value={folder.id}>
-                        {folder.name}
+                    {decks.map((deck) => (
+                      <option key={deck.id} value={deck.id}>
+                        {deck.name}
                       </option>
                     ))}
                   </select>
@@ -201,7 +264,9 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
                 <LightButton
                   onClick={handleSave}
                   className="w-10 h-10 shrink-0"
-                  title="Save to folder"
+                  title={t("saveToFolder")}
+                  loading={isSaving}
+                  disabled={isSaving}
                 >
                   <Plus />
                 </LightButton>
@@ -223,7 +288,7 @@ export function DictionaryClient({ initialFolders }: DictionaryClientProps) {
                 loading={isSearching}
               >
                 <RefreshCw className="w-4 h-4" />
-                Re-lookup
+                {t("relookup")}
               </LightButton>
             </div>
           </div>

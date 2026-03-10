@@ -1,20 +1,20 @@
 import { DictionaryClient } from "./DictionaryClient";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersByUserId } from "@/modules/folder/folder-action";
-import { TSharedFolder } from "@/shared/folder-type";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import type { TSharedDeck } from "@/shared/anki-type";
 
 export default async function DictionaryPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   
-  let folders: TSharedFolder[] = [];
+  let decks: TSharedDeck[] = [];
   
   if (session?.user?.id) {
-    const result = await actionGetFoldersByUserId(session.user.id as string);
+    const result = await actionGetDecksByUserId(session.user.id as string);
     if (result.success && result.data) {
-      folders = result.data;
+      decks = result.data as TSharedDeck[];
     }
   }
 
-  return <DictionaryClient initialFolders={folders} />;
+  return <DictionaryClient initialDecks={decks} />;
 }

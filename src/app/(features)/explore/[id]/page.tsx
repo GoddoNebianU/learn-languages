@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { ExploreDetailClient } from "./ExploreDetailClient";
-import { actionGetPublicFolderById } from "@/modules/folder/folder-action";
+import { actionGetPublicDeckById } from "@/modules/deck/deck-action";
 
-export default async function ExploreFolderPage({
+export default async function ExploreDeckPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -13,11 +13,11 @@ export default async function ExploreFolderPage({
     redirect("/explore");
   }
 
-  const result = await actionGetPublicFolderById(Number(id));
+  const result = await actionGetPublicDeckById({ deckId: Number(id) });
 
   if (!result.success || !result.data) {
     redirect("/explore");
   }
 
-  return <ExploreDetailClient folder={result.data} />;
+  return <ExploreDetailClient deck={result.data} />;
 }

@@ -46,6 +46,15 @@
     "unfavorite": "Aus Favoriten entfernen",
     "pleaseLogin": "Bitte melden Sie sich zuerst an"
   },
+  "decks": {
+    "title": "Decks",
+    "noDecks": "Noch keine Decks",
+    "deckName": "Deckname",
+    "totalCards": "Gesamtkarten",
+    "createdAt": "Erstellt am",
+    "actions": "Aktionen",
+    "view": "Anzeigen"
+  },
   "folder_id": {
     "unauthorized": "Sie sind nicht der Besitzer dieses Ordners",
     "back": "Zurück",
@@ -169,22 +178,46 @@
     "resetPasswordSuccessHint": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "Wählen Sie einen Ordner",
-      "noFolders": "Keine Ordner gefunden",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "Deck auswählen",
+      "noDecks": "Keine Decks gefunden",
+      "goToDecks": "Zu Decks",
+      "noCards": "Keine Karten",
+      "new": "Neu",
+      "learning": "Lernen",
+      "review": "Wiederholen",
+      "due": "Fällig"
     },
-    "memorize": {
-      "answer": "Antwort",
-      "next": "Weiter",
-      "reverse": "Umkehren",
-      "dictation": "Diktat",
-      "noTextPairs": "Keine Textpaare verfügbar",
-      "disorder": "Mischen",
-      "previous": "Zurück"
+    "review": {
+      "loading": "Laden...",
+      "backToDecks": "Zurück zu Decks",
+      "allDone": "Fertig!",
+      "allDoneDesc": "Alle fälligen Karten wurden wiederholt.",
+      "reviewedCount": "{count} Karten wiederholt",
+      "progress": "{current} / {total}",
+      "nextReview": "Nächste Wiederholung",
+      "interval": "Intervall",
+      "ease": "Leichtigkeit",
+      "lapses": "Verlernungen",
+      "showAnswer": "Antwort zeigen",
+      "again": "Nochmal",
+      "hard": "Schwer",
+      "good": "Gut",
+      "easy": "Leicht",
+      "now": "jetzt",
+      "lessThanMinute": "<1 Min",
+      "inMinutes": "{count} Min",
+      "inHours": "{count} Std",
+      "inDays": "{count} Tage",
+      "inMonths": "{count} Monate",
+      "minutes": "<1 Min",
+      "days": "{count} Tage",
+      "months": "{count} Monate",
+      "minAbbr": "m",
+      "dayAbbr": "T"
     },
     "page": {
-      "unauthorized": "Sie sind nicht berechtigt, auf diesen Ordner zuzugreifen"
+      "unauthorized": "Sie sind nicht berechtigt, auf dieses Deck zuzugreifen"
     }
   },
   "navbar": {
@@ -202,10 +235,10 @@
     "description": "Laden Sie Screenshots von Vokabeltabellen aus Lehrbüchern hoch, um Wort-Definition-Paare zu extrahieren",
     "uploadImage": "Bild hochladen",
     "dragDropHint": "Ziehen Sie ein Bild hierher oder klicken Sie zum Auswählen",
-    "supportedFormats": "Unterstützt: JPG, PNG, WebP",
-    "selectFolder": "Ordner auswählen",
-    "chooseFolder": "Wählen Sie einen Ordner zum Speichern der extrahierten Paare",
-    "noFolders": "Keine Ordner verfügbar. Bitte erstellen Sie zuerst einen Ordner.",
+    "supportedFormats": "Unterstüt: JPG, PNG, WebP",
+    "selectDeck": "Deck auswählen",
+    "chooseDeck": "Wählen Sie einen Deck zum Speichern der extrahierten Paare",
+    "noDecks": "Keine Decks verfügbar. Bitte create a deck first.",
     "languageHints": "Sprachhinweise (Optional)",
     "sourceLanguageHint": "Quellsprache (z.B. Englisch)",
     "targetLanguageHint": "Ziel-/Übersetzungssprache (z.B. Chinesisch)",
@@ -216,14 +249,14 @@
     "word": "Wort",
     "definition": "Definition",
     "pairsCount": "{count} Paare extrahiert",
-    "savePairs": "In Ordner speichern",
+    "savePairs": "In Deck speichern",
     "saving": "Speichern...",
-    "saved": "{count} Paare erfolgreich in {folder} gespeichert",
+    "saved": "{count} Paare erfolgreich in {deck} gespeichert",
     "saveFailed": "Speichern fehlgeschlagen",
     "noImage": "Bitte laden Sie zuerst ein Bild hoch",
-    "noFolder": "Bitte wählen Sie einen Ordner",
+    "noDeck": "Bitte select a deck",
     "processingFailed": "OCR-Verarbeitung fehlgeschlagen",
-    "tryAgain": "Bitte versuchen Sie es mit einem klareren Bild",
+    "tryAgain": "Bitte try again with a clearer image",
     "detectedLanguages": "Erkannt: {source} → {target}"
   },
   "profile": {
@@ -385,10 +418,10 @@
     "memberSince": "Mitglied seit",
     "logout": "Abmelden",
     "folders": {
-      "title": "Ordner",
-      "noFolders": "Noch keine Ordner",
-      "folderName": "Ordnername",
-      "totalPairs": "Gesamtpaare",
+      "title": "Decks",
+      "noFolders": "Noch keine Decks",
+      "folderName": "Deckname",
+      "totalPairs": "Gesamtkarten",
       "createdAt": "Erstellt am",
       "actions": "Aktionen",
       "view": "Anzeigen"

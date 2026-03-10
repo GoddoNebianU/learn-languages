@@ -46,6 +46,15 @@
     "unfavorite": "Rimuovi dai preferiti",
     "pleaseLogin": "Per favore accedi prima"
   },
+  "decks": {
+    "title": "Mazzi",
+    "noDecks": "Nessun mazzo ancora",
+    "deckName": "Nome del mazzo",
+    "totalCards": "Totale carte",
+    "createdAt": "Creato il",
+    "actions": "Azioni",
+    "view": "Visualizza"
+  },
   "folder_id": {
     "unauthorized": "Non sei il proprietario di questa cartella",
     "back": "Indietro",
@@ -169,22 +178,46 @@
     "resetPasswordSuccessHint": "La tua password è stata reimpostata con successo. Ora puoi accedere con la tua nuova password."
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "Seleziona una cartella",
-      "noFolders": "Nessuna cartella trovata",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "Seleziona un mazzo",
+      "noDecks": "Nessun mazzo trovato",
+      "goToDecks": "Vai ai mazzi",
+      "noCards": "Nessuna carta",
+      "new": "Nuove",
+      "learning": "In apprendimento",
+      "review": "Ripasso",
+      "due": "In scadenza"
     },
-    "memorize": {
-      "answer": "Risposta",
-      "next": "Successivo",
-      "reverse": "Inverti",
-      "dictation": "Dettatura",
-      "noTextPairs": "Nessuna coppia di testo disponibile",
-      "disorder": "Disordina",
-      "previous": "Precedente"
+    "review": {
+      "loading": "Caricamento...",
+      "backToDecks": "Torna ai mazzi",
+      "allDone": "Fatto!",
+      "allDoneDesc": "Hai ripassato tutte le carte in scadenza.",
+      "reviewedCount": "{count} carte ripassate",
+      "progress": "{current} / {total}",
+      "nextReview": "Prossima revisione",
+      "interval": "Intervallo",
+      "ease": "Facilità",
+      "lapses": "Dimenticanze",
+      "showAnswer": "Mostra risposta",
+      "again": "Ancora",
+      "hard": "Difficile",
+      "good": "Bene",
+      "easy": "Facile",
+      "now": "ora",
+      "lessThanMinute": "<1 min",
+      "inMinutes": "{count} min",
+      "inHours": "{count}h",
+      "inDays": "{count}g",
+      "inMonths": "{count}mesi",
+      "minutes": "<1 min",
+      "days": "{count}g",
+      "months": "{count}mesi",
+      "minAbbr": "m",
+      "dayAbbr": "g"
     },
     "page": {
-      "unauthorized": "Non sei autorizzato ad accedere a questa cartella"
+      "unauthorized": "Non sei autorizzato ad accedere a questo mazzo"
     }
   },
   "navbar": {
@@ -203,9 +236,9 @@
     "uploadImage": "Carica immagine",
     "dragDropHint": "Trascina e rilascia un'immagine qui, o clicca per selezionare",
     "supportedFormats": "Supportati: JPG, PNG, WebP",
-    "selectFolder": "Seleziona cartella",
-    "chooseFolder": "Scegli una cartella per salvare le coppie estratte",
-    "noFolders": "Nessuna cartella disponibile. Crea prima una cartella.",
+    "selectDeck": "Seleziona un mazzo",
+    "chooseDeck": "Scegli un mazzo per salvare le coppie estratte",
+    "noDecks": "Nessun mazzo disponibile. Creane prima un mazzo.",
     "languageHints": "Suggerimenti lingua (Opzionale)",
     "sourceLanguageHint": "Lingua sorgente (es: Inglese)",
     "targetLanguageHint": "Lingua target/traduzione (es: Cinese)",
@@ -216,12 +249,12 @@
     "word": "Parola",
     "definition": "Definizione",
     "pairsCount": "{count} coppie estratte",
-    "savePairs": "Salva nella cartella",
+    "savePairs": "Salva nel mazzo",
     "saving": "Salvataggio...",
-    "saved": "{count} coppie salvate in {folder}",
+    "saved": "{count} coppie salvate in {deck}",
     "saveFailed": "Salvataggio fallito",
     "noImage": "Carica prima un'immagine",
-    "noFolder": "Seleziona una cartella",
+    "noDeck": "Seleziona un mazzo",
     "processingFailed": "Elaborazione OCR fallita",
     "tryAgain": "Riprova con un'immagine più chiara",
     "detectedLanguages": "Rilevato: {source} → {target}"
@@ -384,11 +417,11 @@
     "notSet": "Non Impostato",
     "memberSince": "Membro Dal",
     "logout": "Esci",
-    "folders": {
-      "title": "Cartelle",
-      "noFolders": "Nessuna cartella ancora",
-      "folderName": "Nome Cartella",
-      "totalPairs": "Coppie Totali",
+    "decks": {
+      "title": "Mazzi",
+      "noDecks": "Nessun mazzo ancora",
+      "deckName": "Nome Mazzo",
+      "totalCards": "Carte Totali",
       "createdAt": "Creata Il",
       "actions": "Azioni",
       "view": "Visualizza"

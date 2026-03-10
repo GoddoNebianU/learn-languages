@@ -46,6 +46,15 @@
     "unfavorite": "즐겨찾기 해제",
     "pleaseLogin": "먼저 로그인해주세요"
   },
+  "decks": {
+    "title": "덱",
+    "noDecks": "덱이 없습니다",
+    "deckName": "덱 이름",
+    "totalCards": "총 카드",
+    "createdAt": "생성일",
+    "actions": "작업",
+    "view": "보기"
+  },
   "folder_id": {
     "unauthorized": "이 폴더의 소유자가 아닙니다",
     "back": "뒤로",
@@ -169,22 +178,46 @@
     "resetPasswordSuccessHint": "비밀번호가 성공적으로 재설정되었습니다. 새 비밀번호로 로그인할 수 있습니다."
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "폴더 선택",
-      "noFolders": "폴더를 찾을 수 없습니다",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "덱 선택",
+      "noDecks": "덱을 찾을 수 없습니다",
+      "goToDecks": "덱으로 이동",
+      "noCards": "카드 없음",
+      "new": "새 카드",
+      "learning": "학습 중",
+      "review": "복습",
+      "due": "예정"
     },
-    "memorize": {
-      "answer": "정답",
-      "next": "다음",
-      "reverse": "반대",
-      "dictation": "받아쓰기",
-      "noTextPairs": "사용 가능한 텍스트 쌍이 없습니다",
-      "disorder": "무작위",
-      "previous": "이전"
+    "review": {
+      "loading": "로딩 중...",
+      "backToDecks": "덱으로 돌아가기",
+      "allDone": "완료!",
+      "allDoneDesc": "모든 복습 카드를 완료했습니다.",
+      "reviewedCount": "{count}장의 카드 복습함",
+      "progress": "{current} / {total}",
+      "nextReview": "다음 복습",
+      "interval": "간격",
+      "ease": "난이도",
+      "lapses": "망각 횟수",
+      "showAnswer": "정답 보기",
+      "again": "다시",
+      "hard": "어려움",
+      "good": "보통",
+      "easy": "쉬움",
+      "now": "지금",
+      "lessThanMinute": "<1분",
+      "inMinutes": "{count}분",
+      "inHours": "{count}시간",
+      "inDays": "{count}일",
+      "inMonths": "{count}개월",
+      "minutes": "<1분",
+      "days": "{count}일",
+      "months": "{count}개월",
+      "minAbbr": "분",
+      "dayAbbr": "일"
     },
     "page": {
-      "unauthorized": "이 폴더에 접근할 권한이 없습니다"
+      "unauthorized": "이 덱에 접근할 권한이 없습니다"
     }
   },
   "navbar": {
@@ -199,31 +232,31 @@
   },
   "ocr": {
     "title": "OCR 어휘 추출",
-    "description": "교과서 어휘표 스크린샷을 업로드하여 단어-정의 쌍 추출",
+    "description": "교과서 어휘표 스크린샷 only어업로드하여 단어-정의 쌍 추출",
     "uploadImage": "이미지 업로드",
     "dragDropHint": "이미지를 여기에 끌어다 놓거나 클릭하여 선택",
     "supportedFormats": "지원 형식: JPG, PNG, WebP",
-    "selectFolder": "폴더 선택",
-    "chooseFolder": "추출된 쌍을 저장할 폴더 선택",
-    "noFolders": "폴더가 없습니다. 먼저 폴더를 만드세요.",
+    "selectDeck": "덱 선택",
+    "chooseDeck": "추출된 쌍을 저장할 덱 선택",
+    "noDecks": "덱이 없습니다. 먼저 덱을 만드세요.",
     "languageHints": "언어 힌트 (선택사항)",
     "sourceLanguageHint": "소스 언어 (예: 영어)",
     "targetLanguageHint": "대상/번역 언어 (예: 중국어)",
     "process": "이미지 처리",
-    "processing": "처리 중...",
+    "processing": "처리中...",
     "preview": "미리보기",
     "extractedPairs": "추출된 쌍",
     "word": "단어",
     "definition": "정의",
     "pairsCount": "{count} 쌍 추출됨",
-    "savePairs": "폴더에 저장",
-    "saving": "저장 중...",
-    "saved": "{folder}에 {count} 쌍 저장 완료",
+    "savePairs": "덱에 저장",
+    "saving": "저장中...",
+    "saved": "{deck}에 {count} 쌍 저장 완료",
     "saveFailed": "저장 실패",
     "noImage": "먼저 이미지를 업로드하세요",
-    "noFolder": "폴더를 선택하세요",
+    "noDeck": "덱을 선택하세요",
     "processingFailed": "OCR 처리 실패",
-    "tryAgain": "더 선명한 이미지로 다시 시도하세요",
+    "tryAgain": "더 선晰的图像로 다시 시도하세요",
     "detectedLanguages": "감지됨: {source} → {target}"
   },
   "profile": {
@@ -385,10 +418,10 @@
     "memberSince": "가입일",
     "logout": "로그아웃",
     "folders": {
-      "title": "폴더",
-      "noFolders": "아직 폴더가 없습니다",
-      "folderName": "폴더 이름",
-      "totalPairs": "총 쌍",
+      "title": "덱",
+      "noFolders": "아직 덱이 없습니다",
+      "folderName": "덱 이름",
+      "totalPairs": "총 카드 수",
       "createdAt": "생성일",
       "actions": "작업",
       "view": "보기"

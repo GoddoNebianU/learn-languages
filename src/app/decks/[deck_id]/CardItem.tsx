@@ -1,39 +1,38 @@
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CircleButton } from "@/design-system/base/button";
-import { UpdateTextPairModal } from "./UpdateTextPairModal";
+import { UpdateCardModal } from "./UpdateCardModal";
 import { useTranslations } from "next-intl";
-import { TSharedPair } from "@/shared/folder-type";
-import { actionUpdatePairById } from "@/modules/folder/folder-action";
-import { ActionInputUpdatePairById } from "@/modules/folder/folder-action-dto";
+import type { ActionOutputCardWithNote } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
-interface TextPairCardProps {
-  textPair: TSharedPair;
+interface CardItemProps {
+  card: ActionOutputCardWithNote;
   isReadOnly: boolean;
   onDel: () => void;
-  refreshTextPairs: () => void;
+  refreshCards: () => void;
 }
 
-export function TextPairCard({
-  textPair,
+export function CardItem({
+  card,
   isReadOnly,
   onDel,
-  refreshTextPairs,
-}: TextPairCardProps) {
+  refreshCards,
+}: CardItemProps) {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const t = useTranslations("folder_id");
+  const t = useTranslations("deck_id");
+
+  const fields = card.note.flds.split('\x1f');
+  const field1 = fields[0] || "";
+  const field2 = fields[1] || "";
+
   return (
     <div className="group border-b border-gray-100 hover:bg-gray-50 transition-colors">
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.language1.toUpperCase()}
-            </span>
-            <span>→</span>
-            <span className="px-2 py-1 bg-gray-100 rounded-md">
-              {textPair.language2.toUpperCase()}
+              {t("card")}
             </span>
           </div>
 
@@ -60,26 +59,25 @@ export function TextPairCard({
         </div>
         <div className="text-gray-900 grid grid-cols-2 gap-4 w-3/4">
           <div>
-            {textPair.text1.length > 30
-              ? textPair.text1.substring(0, 30) + "..."
-              : textPair.text1}
+            {field1.length > 30
+              ? field1.substring(0, 30) + "..."
+              : field1}
           </div>
           <div>
-            {textPair.text2.length > 30
-              ? textPair.text2.substring(0, 30) + "..."
-              : textPair.text2}
+            {field2.length > 30
+              ? field2.substring(0, 30) + "..."
+              : field2}
           </div>
         </div>
       </div>
-      <UpdateTextPairModal
+      <UpdateCardModal
         isOpen={openUpdateModal}
         onClose={() => setOpenUpdateModal(false)}
-        onUpdate={async (id: number, data: ActionInputUpdatePairById) => {
-          await actionUpdatePairById(id, data).then(result => result.success ? toast.success(result.message) : toast.error(result.message));
+        card={card}
+        onUpdated={() => {
           setOpenUpdateModal(false);
-          refreshTextPairs();
+          refreshCards();
         }}
-        textPair={textPair}
       />
     </div>
   );

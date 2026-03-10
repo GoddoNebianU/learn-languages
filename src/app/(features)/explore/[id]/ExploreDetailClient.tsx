@@ -1,6 +1,6 @@
 "use client";
 
-import { Folder as Fd, Heart, ExternalLink, ArrowLeft } from "lucide-react";
+import { Layers, Heart, ExternalLink, ArrowLeft } from "lucide-react";
 import { CircleButton } from "@/design-system/base/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,42 +8,42 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import Link from "next/link";
 import {
-  actionToggleFavorite,
-  actionCheckFavorite,
-} from "@/modules/folder/folder-action";
-import { ActionOutputPublicFolder } from "@/modules/folder/folder-action-dto";
+  actionToggleDeckFavorite,
+  actionCheckDeckFavorite,
+} from "@/modules/deck/deck-action";
+import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
 
 interface ExploreDetailClientProps {
-  folder: ActionOutputPublicFolder;
+  deck: ActionOutputPublicDeck;
 }
 
-export function ExploreDetailClient({ folder }: ExploreDetailClientProps) {
+export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
   const router = useRouter();
   const t = useTranslations("exploreDetail");
   const [isFavorited, setIsFavorited] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(folder.favoriteCount);
+  const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
 
   const { data: session } = authClient.useSession();
   const currentUserId = session?.user?.id;
 
   useEffect(() => {
     if (currentUserId) {
-      actionCheckFavorite(folder.id).then((result) => {
+      actionCheckDeckFavorite({ deckId: deck.id }).then((result) => {
         if (result.success && result.data) {
           setIsFavorited(result.data.isFavorited);
           setFavoriteCount(result.data.favoriteCount);
         }
       });
     }
-  }, [folder.id, currentUserId]);
+  }, [deck.id, currentUserId]);
 
   const handleToggleFavorite = async () => {
     if (!currentUserId) {
       toast.error(t("pleaseLogin"));
       return;
     }
-    const result = await actionToggleFavorite(folder.id);
+    const result = await actionToggleDeckFavorite({ deckId: deck.id });
     if (result.success && result.data) {
       setIsFavorited(result.data.isFavorited);
       setFavoriteCount(result.data.favoriteCount);
@@ -79,15 +79,15 @@ export function ExploreDetailClient({ folder }: ExploreDetailClientProps) {
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-primary-50 flex items-center justify-center text-primary-500">
-                <Fd size={28} className="sm:w-8 sm:h-8" />
+                <Layers size={28} className="sm:w-8 sm:h-8" />
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {folder.name}
+                  {deck.name}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
                   {t("createdBy", {
-                    name: folder.userName ?? folder.userUsername ?? t("unknownUser"),
+                    name: deck.userName ?? deck.userUsername ?? t("unknownUser"),
                   })}
                 </p>
               </div>
@@ -104,13 +104,19 @@ export function ExploreDetailClient({ folder }: ExploreDetailClientProps) {
             </CircleButton>
           </div>
 
+          {deck.desc && (
+            <p className="text-gray-600 mb-6 text-sm sm:text-base">
+              {deck.desc}
+            </p>
+          )}
+
           <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-gray-100">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-primary-600">
-                {folder.totalPairs}
+                {deck.cardCount ?? 0}
               </div>
               <div className="text-xs sm:text-sm text-gray-500 mt-1">
-                {t("totalPairs")}
+                {t("totalCards")}
               </div>
             </div>
             <div className="text-center border-x border-gray-100">
@@ -124,7 +130,7 @@ export function ExploreDetailClient({ folder }: ExploreDetailClientProps) {
             </div>
             <div className="text-center">
               <div className="text-lg sm:text-xl font-semibold text-gray-700">
-                {formatDate(folder.createdAt)}
+                {formatDate(deck.createdAt)}
               </div>
               <div className="text-xs sm:text-sm text-gray-500 mt-1">
                 {t("createdAt")}
@@ -133,7 +139,7 @@ export function ExploreDetailClient({ folder }: ExploreDetailClientProps) {
           </div>
 
           <Link
-            href={`/folders/${folder.id}`}
+            href={`/decks/${deck.id}`}
             className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
           >
             <ExternalLink size={18} />

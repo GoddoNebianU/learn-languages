@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LinkButton } from "@/design-system/base/button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
-import { repoGetFoldersWithTotalPairsByUserId } from "@/modules/folder/folder-repository";
+import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -29,8 +29,8 @@ export default async function UserPage({ params }: UserPageProps) {
 
     const user = result.data;
 
-    const [folders, followStatus] = await Promise.all([
-        repoGetFoldersWithTotalPairsByUserId(user.id),
+    const [decks, followStatus] = await Promise.all([
+        repoGetDecksByUserId({ userId: user.id }),
         actionGetFollowStatus({ targetUserId: user.id }),
     ]);
 
@@ -137,45 +137,45 @@ export default async function UserPage({ params }: UserPageProps) {
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">{t("folders.title")}</h2>
-                {folders.length === 0 ? (
-                    <p className="text-gray-500 text-center py-8">{t("folders.noFolders")}</p>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">{t("decks.title")}</h2>
+                {decks.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">{t("decks.noDecks")}</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {t("folders.folderName")}
+                                        {t("decks.deckName")}
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {t("folders.totalPairs")}
+                                        {t("decks.totalCards")}
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {t("folders.createdAt")}
+                                        {t("decks.createdAt")}
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {t("folders.actions")}
+                                        {t("decks.actions")}
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {folders.map((folder) => (
-                                    <tr key={folder.id} className="hover:bg-gray-50">
+                                {decks.map((deck) => (
+                                    <tr key={deck.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">{folder.name}</div>
-                                            <div className="text-sm text-gray-500">ID: {folder.id}</div>
+                                            <div className="text-sm font-medium text-gray-900">{deck.name}</div>
+                                            <div className="text-sm text-gray-500">ID: {deck.id}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{folder.total}</div>
+                                            <div className="text-sm text-gray-900">{deck.cardCount ?? 0}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {new Date(folder.createdAt).toLocaleDateString()}
+                                            {new Date(deck.createdAt).toLocaleDateString()}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link href={`/folders/${folder.id}`}>
+                                            <Link href={`/decks/${deck.id}`}>
                                                 <LinkButton>
-                                                    {t("folders.view")}
+                                                    {t("decks.view")}
                                                 </LinkButton>
                                             </Link>
                                         </td>

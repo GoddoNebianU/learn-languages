@@ -1,20 +1,20 @@
 import { OCRClient } from "./OCRClient";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersByUserId } from "@/modules/folder/folder-action";
-import { TSharedFolder } from "@/shared/folder-type";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 
 export default async function OCRPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   
-  let folders: TSharedFolder[] = [];
+  let decks: ActionOutputDeck[] = [];
   
   if (session?.user?.id) {
-    const result = await actionGetFoldersByUserId(session.user.id as string);
+    const result = await actionGetDecksByUserId(session.user.id as string);
     if (result.success && result.data) {
-      folders = result.data;
+      decks = result.data;
     }
   }
 
-  return <OCRClient initialFolders={folders} />;
+  return <OCRClient initialDecks={decks} />;
 }

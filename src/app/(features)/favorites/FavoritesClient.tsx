@@ -2,33 +2,22 @@
 
 import {
   ChevronRight,
-  Folder as Fd,
+  Layers as DeckIcon,
   Heart,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CardList } from "@/components/ui/CardList";
-import { actionGetUserFavorites, actionToggleFavorite } from "@/modules/folder/folder-action";
-
-type UserFavorite = {
-  id: number;
-  folderId: number;
-  folderName: string;
-  folderCreatedAt: Date;
-  folderTotalPairs: number;
-  folderOwnerId: string;
-  folderOwnerName: string | null;
-  folderOwnerUsername: string | null;
-  favoritedAt: Date;
-};
+import { actionGetUserFavoriteDecks, actionToggleDeckFavorite } from "@/modules/deck/deck-action";
+import type { ActionOutputUserFavoriteDeck } from "@/modules/deck/deck-action-dto";
 
 interface FavoriteCardProps {
-  favorite: UserFavorite;
-  onRemoveFavorite: (folderId: number) => void;
+  favorite: ActionOutputUserFavoriteDeck;
+  onRemoveFavorite: (deckId: number) => void;
 }
 
 const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
@@ -41,9 +30,9 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
     if (isRemoving) return;
     
     setIsRemoving(true);
-    const result = await actionToggleFavorite(favorite.folderId);
+    const result = await actionToggleDeckFavorite({ deckId: favorite.id });
     if (result.success) {
-      onRemoveFavorite(favorite.folderId);
+      onRemoveFavorite(favorite.id);
     } else {
       toast.error(result.message);
     }
@@ -54,20 +43,20 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
     <div
       className="flex justify-between items-center group py-4 px-5 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
       onClick={() => {
-        router.push(`/explore/${favorite.folderId}`);
+        router.push(`/explore/${favorite.id}`);
       }}
     >
       <div className="flex items-center gap-4 flex-1">
         <div className="shrink-0 text-primary-500">
-          <Fd size={24} />
+          <DeckIcon size={24} />
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{favorite.folderName}</h3>
+          <h3 className="font-semibold text-gray-900 truncate">{favorite.name}</h3>
           <p className="text-sm text-gray-500 mt-0.5">
             {t("folderInfo", {
-              userName: favorite.folderOwnerName ?? favorite.folderOwnerUsername ?? t("unknownUser"),
-              totalPairs: favorite.folderTotalPairs,
+              userName: favorite.userName ?? favorite.userUsername ?? t("unknownUser"),
+              totalPairs: favorite.cardCount ?? 0,
             })}
           </p>
         </div>
@@ -86,29 +75,25 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
 };
 
 interface FavoritesClientProps {
-  userId: string;
+  initialFavorites: ActionOutputUserFavoriteDeck[];
 }
 
-export function FavoritesClient({ userId }: FavoritesClientProps) {
+export function FavoritesClient({ initialFavorites }: FavoritesClientProps) {
   const t = useTranslations("favorites");
-  const [favorites, setFavorites] = useState<UserFavorite[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadFavorites();
-  }, [userId]);
+  const [favorites, setFavorites] = useState<ActionOutputUserFavoriteDeck[]>(initialFavorites);
+  const [loading, setLoading] = useState(false);
 
   const loadFavorites = async () => {
     setLoading(true);
-    const result = await actionGetUserFavorites();
+    const result = await actionGetUserFavoriteDecks();
     if (result.success && result.data) {
       setFavorites(result.data);
     }
     setLoading(false);
   };
 
-  const handleRemoveFavorite = (folderId: number) => {
-    setFavorites((prev) => prev.filter((f) => f.folderId !== folderId));
+  const handleRemoveFavorite = (deckId: number) => {
+    setFavorites((prev) => prev.filter((f) => f.id !== deckId));
   };
 
   return (

@@ -169,22 +169,46 @@
     "resetPasswordSuccessHint": "パスワードが正常にリセットされました。新しいパスワードでログインできます。"
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "フォルダーを選択",
-      "noFolders": "フォルダーが見つかりません",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "デッキを選択",
+      "noDecks": "デッキが見つかりません",
+      "goToDecks": "デッキへ移動",
+      "noCards": "カードなし",
+      "new": "新規",
+      "learning": "学習中",
+      "review": "復習",
+      "due": "予定"
     },
-    "memorize": {
-      "answer": "答え",
-      "next": "次へ",
-      "reverse": "逆順",
-      "dictation": "書き取り",
-      "noTextPairs": "利用可能なテキストペアがありません",
-      "disorder": "シャッフル",
-      "previous": "前へ"
+    "review": {
+      "loading": "読み込み中...",
+      "backToDecks": "デッキに戻る",
+      "allDone": "完了！",
+      "allDoneDesc": "すべての復習カードが完了しました。",
+      "reviewedCount": "{count} 枚のカードを復習",
+      "progress": "{current} / {total}",
+      "nextReview": "次の復習",
+      "interval": "間隔",
+      "ease": "易しさ",
+      "lapses": "忘回数",
+      "showAnswer": "答えを表示",
+      "again": "もう一度",
+      "hard": "難しい",
+      "good": "普通",
+      "easy": "簡単",
+      "now": "今",
+      "lessThanMinute": "<1分",
+      "inMinutes": "{count}分",
+      "inHours": "{count}時間",
+      "inDays": "{count}日",
+      "inMonths": "{count}ヶ月",
+      "minutes": "<1分",
+      "days": "{count}日",
+      "months": "{count}ヶ月",
+      "minAbbr": "分",
+      "dayAbbr": "日"
     },
     "page": {
-      "unauthorized": "このフォルダーにアクセスする権限がありません"
+      "unauthorized": "このデッキにアクセスする権限がありません"
     }
   },
   "navbar": {
@@ -203,9 +227,9 @@
     "uploadImage": "画像をアップロード",
     "dragDropHint": "ここに画像をドラッグ＆ドロップ、またはクリックして選択",
     "supportedFormats": "対応形式：JPG、PNG、WebP",
-    "selectFolder": "フォルダを選択",
-    "chooseFolder": "抽出したペアを保存するフォルダを選択",
-    "noFolders": "フォルダがありません。まずフォルダを作成してください。",
+    "selectDeck": "デッキを選択",
+    "chooseDeck": "抽出したペアを保存するデッキを選択",
+    "noDecks": "デッキがありません。まずデッキを作成してください。",
     "languageHints": "言語ヒント（オプション）",
     "sourceLanguageHint": "ソース言語（例：英語）",
     "targetLanguageHint": "ターゲット/翻訳言語（例：中国語）",
@@ -216,12 +240,12 @@
     "word": "単語",
     "definition": "定義",
     "pairsCount": "{count} ペアを抽出",
-    "savePairs": "フォルダに保存",
+    "savePairs": "デッキに保存",
     "saving": "保存中...",
-    "saved": "{count} ペアを {folder} に保存しました",
+    "saved": "{count} ペアを {deck} に保存しました",
     "saveFailed": "保存に失敗しました",
     "noImage": "先に画像をアップロードしてください",
-    "noFolder": "フォルダを選択してください",
+    "noDeck": "デッキを選択してください",
     "processingFailed": "OCR処理に失敗しました",
     "tryAgain": "より鮮明な画像でお試しください",
     "detectedLanguages": "検出：{source} → {target}"
@@ -384,11 +408,11 @@
     "notSet": "未設定",
     "memberSince": "登録日",
     "logout": "ログアウト",
-    "folders": {
-      "title": "フォルダー",
-      "noFolders": "まだフォルダーがありません",
-      "folderName": "フォルダー名",
-      "totalPairs": "合計ペア数",
+    "decks": {
+      "title": "デッキ",
+      "noDecks": "まだデッキがありません",
+      "deckName": "デッキ名",
+      "totalCards": "合計カード数",
       "createdAt": "作成日",
       "actions": "アクション",
       "view": "表示"

@@ -1,37 +1,57 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { isNonNegativeInteger } from "@/utils/random";
-import { FolderSelector } from "./FolderSelector";
+import { DeckSelector } from "./DeckSelector";
 import { Memorize } from "./Memorize";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { actionGetFoldersWithTotalPairsByUserId, actionGetPairsByFolderId } from "@/modules/folder/folder-action";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import { actionGetCardStats } from "@/modules/card/card-action";
 
 export default async function MemorizePage({
   searchParams,
 }: {
-  searchParams: Promise<{ folder_id?: string; }>;
+  searchParams: Promise<{ deck_id?: string; }>;
 }) {
-  const tParam = (await searchParams).folder_id;
+  const deckIdParam = (await searchParams).deck_id;
 
   const t = await getTranslations("memorize.page");
 
-  const folder_id = tParam
-    ? isNonNegativeInteger(tParam)
-      ? parseInt(tParam)
+  const deckId = deckIdParam
+    ? isNonNegativeInteger(deckIdParam)
+      ? parseInt(deckIdParam)
       : null
     : null;
 
-  if (!folder_id) {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session) redirect("/login?redirect=/memorize");
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/login?redirect=/memorize");
+
+  if (!deckId) {
+    const decksResult = await actionGetDecksByUserId(session.user.id);
+    const decks = decksResult.data ?? [];
+    
+    const deckStats = new Map<number, Awaited<ReturnType<typeof actionGetCardStats>>["data"]>();
+    for (const deck of decks) {
+      const statsResult = await actionGetCardStats({ deckId: deck.id });
+      if (statsResult.success && statsResult.data) {
+        deckStats.set(deck.id, statsResult.data);
+      }
+    }
 
     return (
-      <FolderSelector
-        folders={(await actionGetFoldersWithTotalPairsByUserId(session.user.id)).data!}
+      <DeckSelector
+        decks={decks}
+        deckStats={deckStats}
       />
     );
   }
 
-  return <Memorize textPairs={(await actionGetPairsByFolderId(folder_id)).data!} />;
+  const decksResult = await actionGetDecksByUserId(session.user.id);
+  const deck = decksResult.data?.find(d => d.id === deckId);
+  
+  if (!deck) {
+    redirect("/memorize");
+  }
+
+  return <Memorize deckId={deckId} deckName={deck.name} />;
 }

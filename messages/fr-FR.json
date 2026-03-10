@@ -46,6 +46,15 @@
     "unfavorite": "Retirer des favoris",
     "pleaseLogin": "Veuillez vous connecter d'abord"
   },
+  "decks": {
+    "title": "Decks",
+    "noDecks": "Pas encore de decks",
+    "deckName": "Nom du deck",
+    "totalCards": "Total des cartes",
+    "createdAt": "Créé le",
+    "actions": "Actions",
+    "view": "Voir"
+  },
   "folder_id": {
     "unauthorized": "Vous n'êtes pas le propriétaire de ce dossier",
     "back": "Retour",
@@ -169,22 +178,46 @@
     "resetPasswordSuccessHint": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "Sélectionner un dossier",
-      "noFolders": "Aucun dossier trouvé",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "Sélectionner un deck",
+      "noDecks": "Aucun deck trouvé",
+      "goToDecks": "Aller aux decks",
+      "noCards": "Aucune carte",
+      "new": "Nouveau",
+      "learning": "Apprentissage",
+      "review": "Révision",
+      "due": "À faire"
     },
-    "memorize": {
-      "answer": "Réponse",
-      "next": "Suivant",
-      "reverse": "Inverser",
-      "dictation": "Dictée",
-      "noTextPairs": "Aucune paire de texte disponible",
-      "disorder": "Désordre",
-      "previous": "Précédent"
+    "review": {
+      "loading": "Chargement...",
+      "backToDecks": "Retour aux decks",
+      "allDone": "Terminé !",
+      "allDoneDesc": "Vous avez révisé toutes les cartes dues.",
+      "reviewedCount": "{count} cartes révisées",
+      "progress": "{current} / {total}",
+      "nextReview": "Prochaine révision",
+      "interval": "Intervalle",
+      "ease": "Facilité",
+      "lapses": "Oublis",
+      "showAnswer": "Afficher la réponse",
+      "again": "Encore",
+      "hard": "Difficile",
+      "good": "Bien",
+      "easy": "Facile",
+      "now": "maintenant",
+      "lessThanMinute": "<1 min",
+      "inMinutes": "{count} min",
+      "inHours": "{count}h",
+      "inDays": "{count}j",
+      "inMonths": "{count}mois",
+      "minutes": "<1 min",
+      "days": "{count}j",
+      "months": "{count}mois",
+      "minAbbr": "m",
+      "dayAbbr": "j"
     },
     "page": {
-      "unauthorized": "Vous n'êtes pas autorisé à accéder à ce dossier"
+      "unauthorized": "Vous n'êtes pas autorisé à accéder à ce deck"
     }
   },
   "navbar": {
@@ -203,9 +236,9 @@
     "uploadImage": "Télécharger une image",
     "dragDropHint": "Glissez-déposez une image ici, ou cliquez pour sélectionner",
     "supportedFormats": "Supportés : JPG, PNG, WebP",
-    "selectFolder": "Sélectionner un dossier",
-    "chooseFolder": "Choisissez un dossier pour sauvegarder les paires extraites",
-    "noFolders": "Aucun dossier disponible. Veuillez d'abord créer un dossier.",
+    "selectDeck": "Sélectionner un deck",
+    "chooseDeck": "Choisissez a deck to save the extracted pairs",
+    "noDecks": "Aucun deck disponible. Please create a deck first.",
     "languageHints": "Indices de langue (Optionnel)",
     "sourceLanguageHint": "Langue source (ex : Anglais)",
     "targetLanguageHint": "Langue cible/traduction (ex : Chinois)",
@@ -216,14 +249,14 @@
     "word": "Mot",
     "definition": "Définition",
     "pairsCount": "{count} paires extraites",
-    "savePairs": "Sauvegarder dans le dossier",
+    "savePairs": "Sauvegarder dans le deck",
     "saving": "Sauvegarde...",
-    "saved": "{count} paires sauvegardées dans {folder}",
+    "saved": "{count} paires sauvegardées dans {deck}",
     "saveFailed": "Échec de la sauvegarde",
-    "noImage": "Veuillez d'abord télécharger une image",
-    "noFolder": "Veuillez sélectionner un dossier",
+    "noImage": "Veuillez first upload an image",
+    "noDeck": "Please select a deck",
     "processingFailed": "Échec du traitement OCR",
-    "tryAgain": "Veuillez réessayer avec une image plus claire",
+    "tryAgain": "Please try again with a clearer image",
     "detectedLanguages": "Détecté : {source} → {target}"
   },
   "profile": {
@@ -384,11 +417,11 @@
     "notSet": "Non défini",
     "memberSince": "Membre depuis",
     "logout": "Déconnexion",
-    "folders": {
-      "title": "Dossiers",
-      "noFolders": "Pas encore de dossiers",
-      "folderName": "Nom du dossier",
-      "totalPairs": "Total des paires",
+    "decks": {
+      "title": "Decks",
+      "noDecks": "Pas encore de decks",
+      "deckName": "Nom du deck",
+      "totalCards": "Total des cartes",
       "createdAt": "Créé le",
       "actions": "Actions",
       "view": "Voir"

@@ -1,9 +1,9 @@
 import { ExploreClient } from "./ExploreClient";
-import { actionGetPublicFolders } from "@/modules/folder/folder-action";
+import { actionGetPublicDecks } from "@/modules/deck/deck-action";
 
 export default async function ExplorePage() {
-  const publicFoldersResult = await actionGetPublicFolders();
-  const publicFolders = publicFoldersResult.success ? publicFoldersResult.data ?? [] : [];
+  const publicDecksResult = await actionGetPublicDecks();
+  const publicDecks = publicDecksResult.success ? publicDecksResult.data ?? [] : [];
 
-  return <ExploreClient initialPublicFolders={publicFolders} />;
+  return <ExploreClient initialPublicDecks={publicDecks} />;
 }

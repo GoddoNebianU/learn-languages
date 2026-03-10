@@ -7,6 +7,10 @@ datasource db {
   provider = "postgresql"
 }
 
+// ============================================
+// User & Auth
+// ============================================
+
 model User {
   id                   String               @id
   name                 String
@@ -20,8 +24,11 @@ model User {
   bio                  String?
   accounts             Account[]
   dictionaryLookUps    DictionaryLookUp[]
-  folders              Folder[]
-  folderFavorites      FolderFavorite[]
+  // Anki-compatible relations
+  decks                Deck[]
+  deckFavorites        DeckFavorite[]
+  noteTypes            NoteType[]
+  notes                Note[]
   sessions             Session[]
   translationHistories TranslationHistory[]
   followers            Follow[]             @relation("UserFollowers")
@@ -77,59 +84,174 @@ model Verification {
   @@map("verification")
 }
 
-model Pair {
-  id        Int      @id @default(autoincrement())
-  language1 String
-  language2 String
-  text1     String
-  text2     String
-  ipa1      String?
-  ipa2      String?
-  folderId  Int      @map("folder_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+// ============================================
+// Anki-compatible Models
+// ============================================
 
-  @@unique([folderId, language1, language2, text1, text2])
-  @@index([folderId])
-  @@map("pairs")
+/// Card type: 0=new, 1=learning, 2=review, 3=relearning
+enum CardType {
+  NEW
+  LEARNING
+  REVIEW
+  RELEARNING
 }
 
+/// Card queue: -3=user buried, -2=sched buried, -1=suspended, 0=new, 1=learning, 2=review, 3=in learning, 4=preview
+enum CardQueue {
+  USER_BURIED
+  SCHED_BURIED
+  SUSPENDED
+  NEW
+  LEARNING
+  REVIEW
+  IN_LEARNING
+  PREVIEW
+}
+
+/// Note type: 0=standard, 1=cloze
+enum NoteKind {
+  STANDARD
+  CLOZE
+}
+
+/// Deck visibility (our extension, not in Anki)
 enum Visibility {
   PRIVATE
   PUBLIC
 }
 
-model Folder {
-  id         Int              @id @default(autoincrement())
-  name       String
-  userId     String           @map("user_id")
-  visibility Visibility       @default(PRIVATE)
-  createdAt  DateTime         @default(now()) @map("created_at")
-  updatedAt  DateTime         @updatedAt @map("updated_at")
-  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pairs      Pair[]
-  favorites  FolderFavorite[]
+/// NoteType (Anki: models) - Defines fields and templates for notes
+model NoteType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  kind      NoteKind @default(STANDARD)
+  css       String   @default("")
+  fields    Json     @default("[]")
+  templates Json     @default("[]")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes     Note[]
+
+  @@index([userId])
+  @@map("note_types")
+}
+
+/// Deck (Anki: decks) - Container for cards
+model Deck {
+  id          Int           @id @default(autoincrement())
+  name        String
+  desc        String        @default("")
+  userId      String        @map("user_id")
+  visibility  Visibility    @default(PRIVATE)
+  collapsed   Boolean       @default(false)
+  conf        Json          @default("{}")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards       Card[]
+  favorites   DeckFavorite[]
 
   @@index([userId])
   @@index([visibility])
-  @@map("folders")
+  @@map("decks")
 }
 
-model FolderFavorite {
+/// DeckFavorite - Users can favorite public decks
+model DeckFavorite {
   id        Int      @id @default(autoincrement())
   userId    String   @map("user_id")
-  folderId  Int      @map("folder_id")
+  deckId    Int      @map("deck_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  folder Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, folderId])
+  @@unique([userId, deckId])
   @@index([userId])
-  @@index([folderId])
-  @@map("folder_favorites")
+  @@index([deckId])
+  @@map("deck_favorites")
 }
+
+/// Note (Anki: notes) - Contains field data, one note can have multiple cards
+model Note {
+  id         BigInt   @id
+  guid       String   @unique
+  noteTypeId Int      @map("note_type_id")
+  mod        Int
+  usn        Int      @default(-1)
+  tags       String   @default(" ")
+  flds       String
+  sfld       String
+  csum       Int
+  flags      Int      @default(0)
+  data       String   @default("")
+  userId     String   @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  noteType   NoteType @relation(fields: [noteTypeId], references: [id], onDelete: Cascade)
+  cards      Card[]
+
+  @@index([userId])
+  @@index([noteTypeId])
+  @@index([csum])
+  @@map("notes")
+}
+
+/// Card (Anki: cards) - Scheduling information, what you review
+model Card {
+  id        BigInt    @id
+  noteId    BigInt    @map("note_id")
+  deckId    Int       @map("deck_id")
+  ord       Int
+  mod       Int
+  usn       Int       @default(-1)
+  type      CardType  @default(NEW)
+  queue     CardQueue @default(NEW)
+  due       Int
+  ivl       Int       @default(0)
+  factor    Int       @default(2500)
+  reps      Int       @default(0)
+  lapses    Int       @default(0)
+  left      Int       @default(0)
+  odue      Int       @default(0)
+  odid      Int       @default(0)
+  flags     Int       @default(0)
+  data      String    @default("")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  note      Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  deck      Deck      @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  revlogs   Revlog[]
+
+  @@index([noteId])
+  @@index([deckId])
+  @@index([deckId, queue, due])
+  @@map("cards")
+}
+
+/// Revlog (Anki: revlog) - Review history
+model Revlog {
+  id      BigInt @id
+  cardId  BigInt @map("card_id")
+  usn     Int    @default(-1)
+  ease    Int
+  ivl     Int
+  lastIvl Int
+  factor  Int
+  time    Int
+  type    Int
+  card    Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([cardId])
+  @@map("revlogs")
+}
+
+// ============================================
+// Other Models
+// ============================================
 
 model DictionaryLookUp {
   id               Int             @id @default(autoincrement())
@@ -140,8 +262,8 @@ model DictionaryLookUp {
   createdAt        DateTime        @default(now()) @map("created_at")
   dictionaryItemId Int?            @map("dictionary_item_id")
   normalizedText   String          @default("") @map("normalized_text")
-  dictionaryItem   DictionaryItem? @relation(fields: [dictionaryItemId], references: [id])
-  user             User?           @relation(fields: [userId], references: [id])
+  dictionaryItem   DictionaryItem? @relation(fields: [dictionaryItemId], references: [id], onDelete: SetNull)
+  user             User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([createdAt])

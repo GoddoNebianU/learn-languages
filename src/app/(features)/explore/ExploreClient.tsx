@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Folder as Fd,
+  Layers,
   Heart,
   Search,
   ArrowUpDown,
@@ -14,35 +14,35 @@ import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
-  actionSearchPublicFolders,
-  actionToggleFavorite,
-  actionCheckFavorite,
-} from "@/modules/folder/folder-action";
-import { TPublicFolder } from "@/shared/folder-type";
+  actionSearchPublicDecks,
+  actionToggleDeckFavorite,
+  actionCheckDeckFavorite,
+} from "@/modules/deck/deck-action";
+import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
 
-interface PublicFolderCardProps {
-  folder: TPublicFolder;
+interface PublicDeckCardProps {
+  deck: ActionOutputPublicDeck;
   currentUserId?: string;
-  onUpdateFavorite: (folderId: number, isFavorited: boolean, favoriteCount: number) => void;
+  onUpdateFavorite: (deckId: number, isFavorited: boolean, favoriteCount: number) => void;
 }
 
-const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFolderCardProps) => {
+const PublicDeckCard = ({ deck, currentUserId, onUpdateFavorite }: PublicDeckCardProps) => {
   const router = useRouter();
   const t = useTranslations("explore");
   const [isFavorited, setIsFavorited] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(folder.favoriteCount);
+  const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
 
   useEffect(() => {
     if (currentUserId) {
-      actionCheckFavorite(folder.id).then((result) => {
+      actionCheckDeckFavorite({ deckId: deck.id }).then((result) => {
         if (result.success && result.data) {
           setIsFavorited(result.data.isFavorited);
           setFavoriteCount(result.data.favoriteCount);
         }
       });
     }
-  }, [folder.id, currentUserId]);
+  }, [deck.id, currentUserId]);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,11 +50,11 @@ const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFol
       toast.error(t("pleaseLogin"));
       return;
     }
-    const result = await actionToggleFavorite(folder.id);
+    const result = await actionToggleDeckFavorite({ deckId: deck.id });
     if (result.success && result.data) {
       setIsFavorited(result.data.isFavorited);
       setFavoriteCount(result.data.favoriteCount);
-      onUpdateFavorite(folder.id, result.data.isFavorited, result.data.favoriteCount);
+      onUpdateFavorite(deck.id, result.data.isFavorited, result.data.favoriteCount);
     } else {
       toast.error(result.message);
     }
@@ -64,13 +64,13 @@ const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFol
     <div
       className="group bg-white border border-gray-200 sm:border-2 rounded-lg p-3 sm:p-5 hover:border-primary-300 hover:shadow-md cursor-pointer transition-all overflow-hidden"
       onClick={() => {
-        router.push(`/explore/${folder.id}`);
+        router.push(`/explore/${deck.id}`);
       }}
     >
       <div className="flex items-start justify-between mb-2 sm:mb-3">
         <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-500">
-          <Fd size={18} className="sm:hidden" />
-          <Fd size={22} className="hidden sm:block" />
+          <Layers size={18} className="sm:hidden" />
+          <Layers size={22} className="hidden sm:block" />
         </div>
         <CircleButton
           onClick={handleToggleFavorite}
@@ -83,12 +83,12 @@ const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFol
         </CircleButton>
       </div>
 
-      <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base mb-1 sm:mb-2">{folder.name}</h3>
+      <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base mb-1 sm:mb-2">{deck.name}</h3>
       
       <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-2">
-        {t("folderInfo", {
-          userName: folder.userName ?? folder.userUsername ?? t("unknownUser"),
-          totalPairs: folder.totalPairs,
+        {t("deckInfo", {
+          userName: deck.userName ?? deck.userUsername ?? t("unknownUser"),
+          cardCount: deck.cardCount ?? 0,
         })}
       </p>
 
@@ -101,13 +101,13 @@ const PublicFolderCard = ({ folder, currentUserId, onUpdateFavorite }: PublicFol
 };
 
 interface ExploreClientProps {
-  initialPublicFolders: TPublicFolder[];
+  initialPublicDecks: ActionOutputPublicDeck[];
 }
 
-export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
+export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
   const t = useTranslations("explore");
   const router = useRouter();
-  const [publicFolders, setPublicFolders] = useState<TPublicFolder[]>(initialPublicFolders);
+  const [publicDecks, setPublicDecks] = useState<ActionOutputPublicDeck[]>(initialPublicDecks);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortByFavorites, setSortByFavorites] = useState(false);
@@ -117,13 +117,13 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setPublicFolders(initialPublicFolders);
+      setPublicDecks(initialPublicDecks);
       return;
     }
     setLoading(true);
-    const result = await actionSearchPublicFolders(searchQuery.trim());
+    const result = await actionSearchPublicDecks({ query: searchQuery.trim() });
     if (result.success && result.data) {
-      setPublicFolders(result.data);
+      setPublicDecks(result.data);
     }
     setLoading(false);
   };
@@ -132,14 +132,14 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
     setSortByFavorites((prev) => !prev);
   };
 
-  const sortedFolders = sortByFavorites
-    ? [...publicFolders].sort((a, b) => b.favoriteCount - a.favoriteCount)
-    : publicFolders;
+  const sortedDecks = sortByFavorites
+    ? [...publicDecks].sort((a, b) => b.favoriteCount - a.favoriteCount)
+    : publicDecks;
 
-  const handleUpdateFavorite = (folderId: number, _isFavorited: boolean, favoriteCount: number) => {
-    setPublicFolders((prev) =>
-      prev.map((f) =>
-        f.id === folderId ? { ...f, favoriteCount } : f
+  const handleUpdateFavorite = (deckId: number, _isFavorited: boolean, favoriteCount: number) => {
+    setPublicDecks((prev) =>
+      prev.map((d) =>
+        d.id === deckId ? { ...d, favoriteCount } : d
       )
     );
   };
@@ -177,19 +177,19 @@ export function ExploreClient({ initialPublicFolders }: ExploreClientProps) {
           <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-sm text-gray-500">{t("loading")}</p>
         </div>
-      ) : sortedFolders.length === 0 ? (
+      ) : sortedDecks.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
-            <Fd size={24} className="text-gray-400" />
+            <Layers size={24} className="text-gray-400" />
           </div>
-          <p className="text-sm">{t("noFolders")}</p>
+          <p className="text-sm">{t("noDecks")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sortedFolders.map((folder) => (
-            <PublicFolderCard
-              key={folder.id}
-              folder={folder}
+          {sortedDecks.map((deck) => (
+            <PublicDeckCard
+              key={deck.id}
+              deck={deck}
               currentUserId={currentUserId}
               onUpdateFavorite={handleUpdateFavorite}
             />

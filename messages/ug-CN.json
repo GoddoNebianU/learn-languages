@@ -46,6 +46,15 @@
     "unfavorite": "يىغىپ ساقلاشنى بىكار قىل",
     "pleaseLogin": "ئاۋۋال تىزىمغا كىرىڭ"
   },
+  "decks": {
+    "title": "دېكلار",
+    "noDecks": "تېخى دېك يوق",
+    "deckName": "دېك ئاتى",
+    "totalCards": "جەمئىي كارتا",
+    "createdAt": "قۇرۇلغان ۋاقتى",
+    "actions": "مەشغۇلاتلار",
+    "view": "كۆرۈش"
+  },
   "folder_id": {
     "unauthorized": "بۇ قىسقۇچنىڭ ئىگىسى ئەمەسسىز",
     "back": "قايتىش",
@@ -169,22 +178,46 @@
     "resetPasswordSuccessHint": "پارولىڭىز مۇۋەپپەقىيەتلىك ئەسلىگە قايتۇرۇلدى. يېڭى پارول بىلەن كىرسىڭىز بولىدۇ."
   },
   "memorize": {
-    "folder_selector": {
-      "selectFolder": "بىر قىسقۇچ تاللاڭ",
-      "noFolders": "قىسقۇچ تېپىلمىدى",
-      "folderInfo": "{id}. {name} ({count})"
+    "deck_selector": {
+      "selectDeck": "بىر دېك تاللاڭ",
+      "noDecks": "دېك تېپىلمىدى",
+      "goToDecks": "دېكلارغا بېرىڭ",
+      "noCards": "كارتا يوق",
+      "new": "يېڭى",
+      "learning": "ئۆگىنىۋاتىدۇ",
+      "review": "تەكرار",
+      "due": "ۋاقتى كەلدى"
     },
-    "memorize": {
-      "answer": "جاۋاب",
-      "next": "كېيىنكى",
-      "reverse": "تەتۈر",
-      "dictation": "دىكتات",
-      "noTextPairs": "تېكىست جۈپى يوق",
-      "disorder": "قالايمىقانلاشتۇرۇش",
-      "previous": "ئالدىنقى"
+    "review": {
+      "loading": "يۈكلىنىۋاتىدۇ...",
+      "backToDecks": "دېكلارغا قايتىڭ",
+      "allDone": "تامام!",
+      "allDoneDesc": "بارلىق تەكرارلاش كارتلىرى تاماملاندى.",
+      "reviewedCount": "{count} كارتا تەكرارلاندى",
+      "progress": "{current} / {total}",
+      "nextReview": "كېيىنكى تەكرار",
+      "interval": "ئارىلىق",
+      "ease": "ئاسانلىق",
+      "lapses": "ئۇنتۇش سانى",
+      "showAnswer": "جاۋابنى كۆرسەت",
+      "again": "يەنە",
+      "hard": "قىيىن",
+      "good": "ياخشى",
+      "easy": "ئاسان",
+      "now": "ھازىر",
+      "lessThanMinute": "<1 مىنۇت",
+      "inMinutes": "{count} مىنۇت",
+      "inHours": "{count} سائەت",
+      "inDays": "{count} كۈن",
+      "inMonths": "{count} ئاي",
+      "minutes": "<1 مىنۇت",
+      "days": "{count} كۈن",
+      "months": "{count} ئاي",
+      "minAbbr": "م",
+      "dayAbbr": "ك"
     },
     "page": {
-      "unauthorized": "بۇ قىسقۇچنى زىيارەت قىلىش ھوقۇقىڭىز يوق"
+      "unauthorized": "بۇ دېكنى زىيارەت قىلىش ھوقۇقىڭىز يوق"
     }
   },
   "navbar": {
@@ -203,9 +236,9 @@
     "uploadImage": "سۈرەت يۈكلەش",
     "dragDropHint": "سۈرەتنى بۇ يەرگە سۆرەڭ ياكى چېكىپ تاللاڭ",
     "supportedFormats": "قوللايدىغان فورماتلار: JPG، PNG، WebP",
-    "selectFolder": "قىسقۇچ تاللاش",
-    "chooseFolder": "ئاستىرىلغان جۈپلەرنى ساقلاش ئۈچۈن قىسقۇچ تاللاڭ",
-    "noFolders": "قىسقۇچ يوق. ئاۋۋال قىسقۇچ قۇرۇڭ.",
+    "selectDeck": "دېك تاللاش",
+    "chooseDeck": "ئاستىرىلغان جۈپلەرنى ساقلاش ئۈچۈن دېك تاللاڭ",
+    "noDecks": "دېك يوق. ئاۋۋال دېك قۇرۇڭ.",
     "languageHints": "تىل ئۇچۇرلىرى (ئىختىيارىي)",
     "sourceLanguageHint": "مەنبە تىلى (مىسال: ئىنگىلىزچە)",
     "targetLanguageHint": "نىشان/تەرجىمە تىلى (مىسال: خەنزۇچە)",
@@ -216,12 +249,12 @@
     "word": "سۆز",
     "definition": "مەنا",
     "pairsCount": "{count} جۈپ ئاستىرىلدى",
-    "savePairs": "قىسقۇچقا ساقلاش",
+    "savePairs": "دېككە ساقلاش",
     "saving": "ساقلاۋاتىدۇ...",
-    "saved": "{folder} غا {count} جۈپ ساقلاندى",
+    "saved": "{deck} غا {count} جۈپ ساقلاندى",
     "saveFailed": "ساقلاش مەغلۇپ بولدى",
     "noImage": "ئاۋۋال سۈرەت يۈكلەڭ",
-    "noFolder": "قىسقۇچ تاللاڭ",
+    "noDeck": "دېك تاللاڭ",
     "processingFailed": "OCR بىر تەرەپ قىلىش مەغلۇپ بولدى",
     "tryAgain": "تېخىمۇ ئېنىق سۈرەت بىلەن قايتا سىناڭ",
     "detectedLanguages": "بايقالدى: {source} → {target}"
@@ -384,11 +417,11 @@
     "notSet": "تەڭشەلمىگەن",
     "memberSince": "ئەزا بولغاندىن بېرى",
     "logout": "چىكىنىش",
-    "folders": {
-      "title": "قىسقۇچلار",
-      "noFolders": "تېخى قىسقۇچ يوق",
-      "folderName": "قىسقۇچ ئاتى",
-      "totalPairs": "جەمئىي جۈپ",
+    "decks": {
+      "title": "دېكلار",
+      "noDecks": "تېخى دېك يوق",
+      "deckName": "دېك ئاتى",
+      "totalCards": "جەمئىي كارتا",
       "createdAt": "قۇرۇلغان ۋاقتى",
       "actions": "مەشغۇلاتلار",
       "view": "كۆرۈش"

@@ -10,32 +10,42 @@ import { Card } from "@/design-system/base/card";
 import { toast } from "sonner";
 import { Upload, FileImage, Loader2 } from "lucide-react";
 import { actionProcessOCR } from "@/modules/ocr/ocr-action";
-import { TSharedFolder } from "@/shared/folder-type";
-import { OCROutput } from "@/lib/bigmodel/ocr/types";
+import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 
-interface OCRClientProps {
-  initialFolders: TSharedFolder[];
+interface ActionOutputProcessOCR {
+  success: boolean;
+  message: string;
+  data?: {
+    pairsCreated: number;
+    sourceLanguage?: string;
+    targetLanguage?: string;
+  };
 }
 
-export function OCRClient({ initialFolders }: OCRClientProps) {
+interface OCRClientProps {
+  initialDecks: ActionOutputDeck[];
+}
+
+export function OCRClient({ initialDecks }: OCRClientProps) {
   const t = useTranslations("ocr");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [decks, setDecks] = useState<ActionOutputDeck[]>(initialDecks);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(
-    initialFolders.length > 0 ? initialFolders[0].id : null
+  const [selectedDeckId, setSelectedDeckId] = useState<number | null>(
+    initialDecks.length > 0 ? initialDecks[0].id : null
   );
   const [sourceLanguage, setSourceLanguage] = useState<string>("");
   const [targetLanguage, setTargetLanguage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [ocrResult, setOcrResult] = useState<OCROutput | null>(null);
+  const [ocrResult, setOcrResult] = useState<ActionOutputProcessOCR | null>(null);
 
   const handleFileChange = useCallback((file: File | null) => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error(t("processingFailed"));
+      toast.error(t("invalidFileType"));
       return;
     }
 
@@ -74,8 +84,8 @@ export function OCRClient({ initialFolders }: OCRClientProps) {
       return;
     }
 
-    if (!selectedFolderId) {
-      toast.error(t("noFolder"));
+    if (!selectedDeckId) {
+      toast.error(t("noDeck"));
       return;
     }
 
@@ -87,21 +97,36 @@ export function OCRClient({ initialFolders }: OCRClientProps) {
 
       const result = await actionProcessOCR({
         imageBase64: base64,
-        folderId: selectedFolderId,
+        deckId: selectedDeckId,
         sourceLanguage: sourceLanguage || undefined,
         targetLanguage: targetLanguage || undefined,
       });
 
-      if (result.success) {
-        const folderName = initialFolders.find(f => f.id === selectedFolderId)?.name || "";
-        toast.success(t("saved", { count: result.data?.pairsCreated ?? 0, folder: folderName }));
+      if (result.success && result.data) {
+        setOcrResult(result);
+        const deckName = decks.find(d => d.id === selectedDeckId)?.name || "";
+        toast.success(t("ocrSuccess", { count: result.data.pairsCreated, deck: deckName }));
       } else {
-        toast.error(result.message || t("processingFailed"));
+        toast.error(result.message || t("ocrFailed"));
       }
     } catch {
       toast.error(t("processingFailed"));
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!ocrResult || !selectedDeckId) {
+      toast.error(t("noResultsToSave"));
+      return;
+    }
+
+    try {
+      const deckName = decks.find(d => d.id === selectedDeckId)?.name || "Unknown";
+      toast.success(t("savedToDeck", { deckName }));
+    } catch (error) {
+      toast.error(t("saveFailed"));
     }
   };
 
@@ -118,136 +143,144 @@ export function OCRClient({ initialFolders }: OCRClientProps) {
   };
 
   return (
-    <PageLayout>
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">{t("title")}</h1>
-        <p className="text-gray-600">{t("description")}</p>
+    <PageLayout variant="centered-card">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          {t("title")}
+        </h1>
+        <p className="text-gray-700 text-lg">
+          {t("description")}
+        </p>
       </div>
 
-      <div className="space-y-6">
-        <Card variant="bordered" padding="lg">
-          <div className="space-y-4">
-            <div className="font-semibold text-gray-800 flex items-center gap-2">
-              <Upload className="w-5 h-5" />
-              {t("uploadImage")}
-            </div>
-
+      <Card variant="bordered" padding="lg">
+        <div className="space-y-6">
+          {/* Upload Section */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              {t("uploadSection")}
+            </h2>
             <div
-              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                previewUrl
-                  ? "border-primary-300 bg-primary-50"
-                  : "border-gray-300 hover:border-primary-400 hover:bg-gray-50"
-              }`}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
               onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-colors"
             >
               {previewUrl ? (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="max-h-64 mx-auto rounded-lg shadow-md"
+                    className="mx-auto max-w-full h-64 object-contain rounded-lg"
                   />
-                  <div className="flex justify-center gap-2">
-                    <LightButton
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        clearImage();
-                      }}
-                    >
-                      {t("uploadImage")}
-                    </LightButton>
-                  </div>
+                  <p className="text-gray-600">{t("changeImage")}</p>
                 </div>
               ) : (
-                <div className="space-y-3 text-gray-500">
-                  <FileImage className="w-12 h-12 mx-auto text-gray-400" />
-                  <p>{t("dragDropHint")}</p>
-                  <p className="text-sm">{t("supportedFormats")}</p>
+                <div className="space-y-4">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="text-gray-600">{t("dropOrClick")}</p>
+                  <p className="text-sm text-gray-500">{t("supportedFormats")}</p>
                 </div>
               )}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+              className="hidden"
+            />
+          </div>
+
+          {/* Deck Selection */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              {t("deckSelection")}
+            </h2>
+            <Select
+              value={selectedDeckId?.toString() || ""}
+              onChange={(e) => setSelectedDeckId(Number(e.target.value))}
+              className="w-full"
+            >
+              <option value="">{t("selectDeck")}</option>
+              {decks.map((deck) => (
+                <option key={deck.id} value={deck.id}>
+                  {deck.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          {/* Language Hints */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              {t("languageHints")}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                type="text"
+                placeholder={t("sourceLanguagePlaceholder")}
+                value={sourceLanguage}
+                onChange={(e) => setSourceLanguage(e.target.value)}
+                className="w-full"
+              />
+              <Input
+                type="text"
+                placeholder={t("targetLanguagePlaceholder")}
+                value={targetLanguage}
+                onChange={(e) => setTargetLanguage(e.target.value)}
+                className="w-full"
               />
             </div>
           </div>
-        </Card>
 
-        <Card variant="bordered" padding="lg">
-          <div className="space-y-4">
-            <div className="font-semibold text-gray-800">{t("selectFolder")}</div>
-
-            {initialFolders.length > 0 ? (
-              <Select
-                value={selectedFolderId?.toString() || ""}
-                onChange={(e) => setSelectedFolderId(Number(e.target.value))}
-                className="w-full"
-              >
-                {initialFolders.map((folder) => (
-                  <option key={folder.id} value={folder.id}>
-                    {folder.name}
-                  </option>
-                ))}
-              </Select>
-            ) : (
-              <p className="text-gray-500 text-sm">{t("noFolders")}</p>
-            )}
+          {/* Process Button */}
+          <div className="flex justify-center">
+            <PrimaryButton
+              onClick={handleProcess}
+              disabled={!selectedFile || !selectedDeckId || isProcessing}
+              loading={isProcessing}
+              className="px-8 py-3 text-lg"
+            >
+              {t("processButton")}
+            </PrimaryButton>
           </div>
-        </Card>
 
-        <Card variant="bordered" padding="lg">
-          <div className="space-y-4">
-            <div className="font-semibold text-gray-800">{t("languageHints")}</div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">
-                  {t("sourceLanguageHint")}
-                </label>
-                <Input
-                  value={sourceLanguage}
-                  onChange={(e) => setSourceLanguage(e.target.value)}
-                  placeholder="English"
-                />
+          {/* Results Preview */}
+          {ocrResult && ocrResult.data && (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
+                {t("resultsPreview")}
+              </h2>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="space-y-3">
+                  <div className="text-center py-4">
+                    <p className="text-gray-800">{t("extractedPairs", { count: ocrResult.data.pairsCreated })}</p>
+                  </div>
+                </div>
+                {ocrResult.data.sourceLanguage && (
+                  <div className="mt-4 text-sm text-gray-500">
+                    {t("detectedSourceLanguage")}: {ocrResult.data.sourceLanguage}
+                  </div>
+                )}
+                {ocrResult.data.targetLanguage && (
+                  <div className="mt-1 text-sm text-gray-500">
+                    {t("detectedTargetLanguage")}: {ocrResult.data.targetLanguage}
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">
-                  {t("targetLanguageHint")}
-                </label>
-                <Input
-                  value={targetLanguage}
-                  onChange={(e) => setTargetLanguage(e.target.value)}
-                  placeholder="Chinese"
-                />
+              
+              <div className="mt-4 flex justify-center">
+                <LightButton
+                  onClick={handleSave}
+                  disabled={!selectedDeckId}
+                  className="px-6 py-2"
+                >
+                  {t("saveButton")}
+                </LightButton>
               </div>
             </div>
-          </div>
-        </Card>
-
-        <div className="flex justify-center">
-          <PrimaryButton
-            onClick={handleProcess}
-            disabled={isProcessing || !selectedFile || !selectedFolderId}
-            size="lg"
-            className="px-8"
-          >
-            {isProcessing ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                {t("processing")}
-              </>
-            ) : (
-              t("process")
-            )}
-          </PrimaryButton>
+          )}
         </div>
-      </div>
+      </Card>
     </PageLayout>
   );
 }
