@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 import { StrictMode } from "react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -25,11 +26,13 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`antialiased`}>
         <StrictMode>
-          <NextIntlClientProvider>
-            <Navbar></Navbar>
-            {children}
-            <Toaster />
-          </NextIntlClientProvider>
+          <ThemeProvider>
+            <NextIntlClientProvider>
+              <Navbar></Navbar>
+              {children}
+              <Toaster />
+            </NextIntlClientProvider>
+          </ThemeProvider>
         </StrictMode>
       </body>
     </html>

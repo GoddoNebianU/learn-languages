@@ -188,18 +188,24 @@
     }
   },
   "navbar": {
-    "title": "impara-lingue",
+    "title": "learn-languages",
     "sourceCode": "GitHub",
     "sign_in": "Accedi",
     "profile": "Profilo",
     "folders": "Cartelle",
     "explore": "Esplora",
-    "favorites": "Preferiti"
+    "favorites": "Preferiti",
+    "settings": "Impostazioni"
   },
   "profile": {
     "myProfile": "Il Mio Profilo",
     "email": "Email: {email}",
     "logout": "Esci"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "themeColor": "Colore del tema",
+    "themeColorDescription": "Scegli il tuo colore del tema preferito"
   },
   "srt_player": {
     "uploadVideo": "Carica Video",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "rileva lingua",
+    "sourceLanguage": "lingua di origine",
+    "auto": "Auto",
     "generateIPA": "genera ipa",
     "translateInto": "traduci in",
     "chinese": "Cinese",

@@ -6,6 +6,7 @@ export type ServiceInputTranslateText = {
     forceRetranslate: boolean;
     needIpa: boolean;
     userId?: string;
+    sourceLanguage?: string;
 };
 
 export type ServiceOutputTranslateText = TSharedTranslationResult;

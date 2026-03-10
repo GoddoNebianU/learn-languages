@@ -194,12 +194,18 @@
     "profile": "프로필",
     "folders": "폴더",
     "explore": "탐색",
-    "favorites": "즐겨찾기"
+    "favorites": "즐겨찾기",
+    "settings": "설정"
   },
   "profile": {
     "myProfile": "내 프로필",
     "email": "이메일: {email}",
     "logout": "로그아웃"
+  },
+  "settings": {
+    "title": "설정",
+    "themeColor": "테마 색상",
+    "themeColorDescription": "원하는 테마 색상을 선택하세요"
   },
   "srt_player": {
     "uploadVideo": "비디오 업로드",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "언어 감지",
+    "sourceLanguage": "원본 언어",
+    "auto": "자동",
     "generateIPA": "IPA 생성",
     "translateInto": "번역할 언어",
     "chinese": "중국어",

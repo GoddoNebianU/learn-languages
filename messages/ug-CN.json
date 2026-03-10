@@ -188,18 +188,24 @@
     }
   },
   "navbar": {
-    "title": "تىل-ئۆگىنىش",
+    "title": "learn-languages",
     "sourceCode": "GitHub",
     "sign_in": "كىرىش",
     "profile": "شەخسىي ئۇچۇر",
     "folders": "قىسقۇچلار",
     "explore": "ئىزدىنىش",
-    "favorites": "يىغىپ ساقلانغانلار"
+    "favorites": "يىغىپ ساقلاش",
+    "settings": "تەڭشەكلەر"
   },
   "profile": {
     "myProfile": "شەخسىي ئۇچۇرۇم",
     "email": "ئېلخەت: {email}",
     "logout": "چىكىنىش"
+  },
+  "settings": {
+    "title": "تەڭشەكلەر",
+    "themeColor": "تېما رەڭگى",
+    "themeColorDescription": "ياقتۇرىدىغان تېما رەڭگىڭىزنى تاللاڭ"
   },
   "srt_player": {
     "uploadVideo": "ۋىدېئو يۈكلەش",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "تىلنى تونۇش",
+    "sourceLanguage": "مەنبە تىلى",
+    "auto": "ئاپتوماتىك",
     "generateIPA": "ipa ھاسىل قىلىش",
     "translateInto": "تەرجىمە قىلىش",
     "chinese": "خەنزۇچە",

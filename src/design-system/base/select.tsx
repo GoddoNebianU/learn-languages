@@ -31,6 +31,7 @@ const selectVariants = cva(
         default: "border-b-2 border-gray-300 bg-transparent rounded-t-md",
         bordered: "border-gray-300 bg-white",
         filled: "border-transparent bg-gray-100",
+        light: "border-transparent bg-gray-100 shadow-sm hover:bg-gray-200 font-semibold cursor-pointer",
       },
       size: {
         sm: "h-9 px-3 text-sm",
@@ -47,6 +48,11 @@ const selectVariants = cva(
         variant: "filled",
         error: true,
         className: "bg-error-50",
+      },
+      {
+        variant: "light",
+        error: true,
+        className: "bg-error-50 hover:bg-error-100",
       },
     ],
     defaultVariants: {

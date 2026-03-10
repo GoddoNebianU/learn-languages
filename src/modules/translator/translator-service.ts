@@ -8,7 +8,7 @@ const log = createLogger("translator-service");
 export const serviceTranslateText = async (
     dto: ServiceInputTranslateText
 ): Promise<ServiceOutputTranslateText> => {
-    const { sourceText, targetLanguage, forceRetranslate, needIpa, userId } = dto;
+    const { sourceText, targetLanguage, forceRetranslate, needIpa, userId, sourceLanguage } = dto;
 
     // Check for existing translation
     const lastTranslation = await repoSelectLatestTranslation({
@@ -21,7 +21,8 @@ export const serviceTranslateText = async (
         const response = await executeTranslation(
             sourceText,
             targetLanguage,
-            needIpa
+            needIpa,
+            sourceLanguage
         );
 
         // Save translation history asynchronously (don't block response)

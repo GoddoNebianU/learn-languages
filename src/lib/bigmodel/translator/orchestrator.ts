@@ -132,19 +132,28 @@ async function generateIPA(
 export async function executeTranslation(
     sourceText: string,
     targetLanguage: string,
-    needIpa: boolean
+    needIpa: boolean,
+    sourceLanguage?: string
 ): Promise<TranslationLLMResponse> {
     try {
-        log.debug("Starting translation", { sourceText, targetLanguage, needIpa });
+        log.debug("Starting translation", { sourceText, targetLanguage, needIpa, sourceLanguage });
 
-        log.debug("[Stage 1] Detecting source language");
-        const detectionResult = await detectLanguage(sourceText);
-        log.debug("[Stage 1] Detection result", { detectionResult });
+        let detectedLanguage: string;
+        
+        if (sourceLanguage) {
+            log.debug("[Stage 1] Using provided source language", { sourceLanguage });
+            detectedLanguage = sourceLanguage;
+        } else {
+            log.debug("[Stage 1] Detecting source language");
+            const detectionResult = await detectLanguage(sourceText);
+            log.debug("[Stage 1] Detection result", { detectionResult });
+            detectedLanguage = detectionResult.sourceLanguage;
+        }
 
         log.debug("[Stage 2] Performing translation");
         const translatedText = await performTranslation(
             sourceText,
-            detectionResult.sourceLanguage,
+            detectedLanguage,
             targetLanguage
         );
         log.debug("[Stage 2] Translation complete", { translatedText });
@@ -160,7 +169,7 @@ export async function executeTranslation(
 
         if (needIpa) {
             log.debug("[Stage 3] Generating IPA");
-            sourceIpa = await generateIPA(sourceText, detectionResult.sourceLanguage);
+            sourceIpa = await generateIPA(sourceText, detectedLanguage);
             log.debug("[Stage 3] Source IPA", { sourceIpa });
 
             targetIpa = await generateIPA(translatedText, targetLanguage);
@@ -171,7 +180,7 @@ export async function executeTranslation(
         const finalResult: TranslationLLMResponse = {
             sourceText,
             translatedText,
-            sourceLanguage: detectionResult.sourceLanguage,
+            sourceLanguage: detectedLanguage,
             targetLanguage,
             sourceIpa,
             targetIpa,

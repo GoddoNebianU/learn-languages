@@ -194,12 +194,18 @@
     "profile": "个人资料",
     "folders": "文件夹",
     "explore": "探索",
-    "favorites": "收藏"
+    "favorites": "收藏",
+    "settings": "设置"
   },
   "profile": {
     "myProfile": "我的个人资料",
     "email": "邮箱：{email}",
     "logout": "退出登录"
+  },
+  "settings": {
+    "title": "设置",
+    "themeColor": "主题色",
+    "themeColorDescription": "选择您喜欢的主题色"
   },
   "srt_player": {
     "upload": "上传",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "检测语言",
+    "sourceLanguage": "源语言",
+    "auto": "自动",
     "generateIPA": "生成国际音标",
     "translateInto": "翻译为",
     "chinese": "中文",

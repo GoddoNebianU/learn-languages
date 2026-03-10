@@ -194,12 +194,18 @@
     "profile": "Profile",
     "folders": "Folders",
     "explore": "Explore",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "settings": "Settings"
   },
   "profile": {
     "myProfile": "My Profile",
     "email": "Email: {email}",
     "logout": "Logout"
+  },
+  "settings": {
+    "title": "Settings",
+    "themeColor": "Theme Color",
+    "themeColorDescription": "Choose your preferred theme color"
   },
   "srt_player": {
     "uploadVideo": "Upload Video",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "detect language",
+    "sourceLanguage": "source language",
+    "auto": "Auto",
     "generateIPA": "generate ipa",
     "translateInto": "translate into",
     "chinese": "Chinese",

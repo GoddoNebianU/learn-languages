@@ -193,13 +193,19 @@
     "sign_in": "Anmelden",
     "profile": "Profil",
     "folders": "Ordner",
-    "explore": "Entdecken",
-    "favorites": "Favoriten"
+    "explore": "Erkunden",
+    "favorites": "Favoriten",
+    "settings": "Einstellungen"
   },
   "profile": {
     "myProfile": "Mein Profil",
     "email": "E-Mail: {email}",
     "logout": "Abmelden"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "themeColor": "Designfarbe",
+    "themeColorDescription": "Wählen Sie Ihre bevorzugte Designfarbe"
   },
   "srt_player": {
     "uploadVideo": "Video hochladen",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "Sprache erkennen",
+    "sourceLanguage": "Quellsprache",
+    "auto": "Automatisch",
     "generateIPA": "IPA generieren",
     "translateInto": "übersetzen in",
     "chinese": "Chinesisch",

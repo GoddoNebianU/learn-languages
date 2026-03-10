@@ -5,18 +5,17 @@
  * 使用 @theme 指令定义主题变量
  */
 @theme {
-  /* 主色 - Teal */
-  --color-primary-50: #f0f9f8;
-  --color-primary-100: #e0f2f0;
-  --color-primary-200: #bce6e1;
-  --color-primary-300: #8dd4cc;
-  --color-primary-400: #5ec2b7;
-  --color-primary-500: #35786f;
-  --color-primary-600: #2a605b;
-  --color-primary-700: #1f4844;
-  --color-primary-800: #183835;
-  --color-primary-900: #122826;
-  --color-primary-950: #0a1413;
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+  --color-primary-950: var(--primary-950);
 
   /* 中性色 */
   --color-gray-50: #f9fafb;
@@ -100,6 +99,19 @@
  * 定义全局 CSS 变量用于主题切换和动态样式
  */
 :root {
+  /* 主题色 - 默认 Teal */
+  --primary-50: #f0f9f8;
+  --primary-100: #e0f2f0;
+  --primary-200: #bce6e1;
+  --primary-300: #8dd4cc;
+  --primary-400: #5ec2b7;
+  --primary-500: #35786f;
+  --primary-600: #2a605b;
+  --primary-700: #1f4844;
+  --primary-800: #183835;
+  --primary-900: #122826;
+  --primary-950: #0a1413;
+
   /* 基础颜色 */
   --background: #ffffff;
   --foreground: #111827;

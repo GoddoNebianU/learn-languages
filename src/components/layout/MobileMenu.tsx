@@ -1,21 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Languages } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
+import type { NavigationItem } from "./Navbar";
 
-const languages = [
-  { code: "en-US", label: "English" },
-  { code: "zh-CN", label: "中文" },
-  { code: "ja-JP", label: "日本語" },
-  { code: "ko-KR", label: "한국어" },
-  { code: "de-DE", label: "Deutsch" },
-  { code: "fr-FR", label: "Français" },
-  { code: "it-IT", label: "Italiano" },
-  { code: "ug-CN", label: "ئۇيغۇرچە" },
-];
+interface MobileMenuProps {
+  items: NavigationItem[];
+}
 
-export function LanguageSettings() {
+export function MobileMenu({ items }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -28,10 +22,12 @@ export function LanguageSettings() {
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
@@ -46,25 +42,20 @@ export function LanguageSettings() {
     }
   }, [isOpen]);
 
-  const setLocale = async (locale: string) => {
-    document.cookie = `locale=${locale}`;
-    window.location.reload();
-  };
-
   return (
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 transition-colors"
-        aria-label="切换语言"
+        aria-label={isOpen ? "关闭菜单" : "打开菜单"}
         aria-expanded={isOpen}
       >
-        <Languages size={20} />
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       <div
         className={cn(
-          "absolute right-0 top-full mt-2 w-40 rounded-lg bg-white shadow-lg ring-1 ring-black/5 overflow-hidden transition-all duration-200 origin-top-right z-50",
+          "absolute right-0 top-full mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black/5 overflow-hidden transition-all duration-200 origin-top-right z-50",
           isOpen
             ? "opacity-100 scale-100"
             : "opacity-0 scale-95 pointer-events-none"
@@ -72,15 +63,19 @@ export function LanguageSettings() {
         role="menu"
       >
         <div className="py-1">
-          {languages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => setLocale(lang.code)}
-              className="w-full flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors text-left"
+          {items.map((item, index) => (
+            <a
+              key={index}
+              href={item.href}
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
               role="menuitem"
+              onClick={() => setIsOpen(false)}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
             >
-              {lang.label}
-            </button>
+              {item.icon && <span className="shrink-0 text-gray-500">{item.icon}</span>}
+              <span>{item.label}</span>
+            </a>
           ))}
         </div>
       </div>

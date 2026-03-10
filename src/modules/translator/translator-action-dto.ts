@@ -14,6 +14,7 @@ const schemaActionInputTranslateText = z.object({
     forceRetranslate: z.boolean().optional().default(false),
     needIpa: z.boolean().optional().default(true),
     userId: z.string().optional(),
+    sourceLanguage: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE).optional(),
 });
 
 export type ActionInputTranslateText = z.infer<typeof schemaActionInputTranslateText>;

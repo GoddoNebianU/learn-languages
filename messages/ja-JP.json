@@ -194,12 +194,18 @@
     "profile": "プロフィール",
     "folders": "フォルダー",
     "explore": "探索",
-    "favorites": "お気に入り"
+    "favorites": "お気に入り",
+    "settings": "設定"
   },
   "profile": {
     "myProfile": "マイプロフィール",
     "email": "メール: {email}",
     "logout": "ログアウト"
+  },
+  "settings": {
+    "title": "設定",
+    "themeColor": "テーマカラー",
+    "themeColorDescription": "お好みのテーマカラーを選択してください"
   },
   "srt_player": {
     "uploadVideo": "ビデオをアップロード",
@@ -239,6 +245,8 @@
   },
   "translator": {
     "detectLanguage": "言語を検出",
+    "sourceLanguage": "ソース言語",
+    "auto": "自動",
     "generateIPA": "ipaを生成",
     "translateInto": "翻訳先",
     "chinese": "中国語",
