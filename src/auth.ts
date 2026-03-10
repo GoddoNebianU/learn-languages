@@ -30,6 +30,7 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendOnSignUp: true,
+    sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
       const result = await sendEmail({
         to: user.email,
@@ -50,13 +51,34 @@ export const auth = betterAuth({
   plugins: [nextCookies(), username()],
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path !== "/sign-up/email" && ctx.path !== "/update-user") return;
-
-      const body = ctx.body as { username?: string };
-      if (!body.username || body.username.trim() === "") {
-        throw new APIError("BAD_REQUEST", {
-          message: "Username is required",
-        });
+      if (ctx.path === "/sign-up/email" || ctx.path === "/update-user") {
+        const body = ctx.body as { username?: string };
+        if (!body.username || body.username.trim() === "") {
+          throw new APIError("BAD_REQUEST", {
+            message: "Username is required",
+          });
+        }
+      }
+      
+      if (ctx.path === "/sign-in/username") {
+        const body = ctx.body as { username?: string };
+        if (body.username) {
+          const user = await prisma.user.findFirst({
+            where: {
+              OR: [
+                { username: body.username },
+                { email: body.username },
+              ],
+            },
+            select: { emailVerified: true },
+          });
+          
+          if (user && !user.emailVerified) {
+            throw new APIError("FORBIDDEN", {
+              message: "Please verify your email address before signing in",
+            });
+          }
+        }
       }
     }),
   },
