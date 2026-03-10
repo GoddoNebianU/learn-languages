@@ -1,4 +1,4 @@
-import { getAnswer } from "../zhipu";
+import { getAnswer } from "../llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { EntriesGenerationResult } from "./types";
 import { createLogger } from "@/lib/logger";

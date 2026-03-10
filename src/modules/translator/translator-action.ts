@@ -8,7 +8,7 @@ import {
 import { ValidateError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { serviceTranslateText } from "./translator-service";
-import { getAnswer } from "@/lib/bigmodel/zhipu";
+import { getAnswer } from "@/lib/bigmodel/llm";
 
 const log = createLogger("translator-action");
 
