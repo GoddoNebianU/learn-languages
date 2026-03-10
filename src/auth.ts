@@ -18,21 +18,27 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
-      void sendEmail({
+      const result = await sendEmail({
         to: user.email,
         subject: "重置您的密码 - Learn Languages",
         html: generateResetPasswordEmailHtml(url, user.name || "用户"),
       });
+      if (!result.success) {
+        console.error("[email] Failed to send reset password email:", result.error);
+      }
     },
   },
   emailVerification: {
     sendOnSignUp: true,
     sendVerificationEmail: async ({ user, url }) => {
-      void sendEmail({
+      const result = await sendEmail({
         to: user.email,
         subject: "验证您的邮箱 - Learn Languages",
         html: generateVerificationEmailHtml(url, user.name || "用户"),
       });
+      if (!result.success) {
+        console.error("[email] Failed to send verification email:", result.error);
+      }
     },
   },
   socialProviders: {

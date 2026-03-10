@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
-import { PrimaryButton } from "@/design-system/base/button";
+import { PrimaryButton, LinkButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
 export default function LoginPage() {
@@ -16,6 +16,9 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [showResendOption, setShowResendOption] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
@@ -25,9 +28,30 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isPending && session?.user?.username && !redirectTo) {
-      router.push("/folders");
+      router.push("/decks");
     }
   }, [session, isPending, router, redirectTo]);
+
+  const handleResendVerification = async () => {
+    if (!unverifiedEmail) return;
+    
+    setResendLoading(true);
+    try {
+      const { error } = await authClient.sendVerificationEmail({
+        email: unverifiedEmail,
+        callbackURL: "/login",
+      });
+      
+      if (error) {
+        toast.error(t("resendFailed"));
+      } else {
+        toast.success(t("resendSuccess"));
+        setShowResendOption(false);
+      }
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -36,6 +60,7 @@ export default function LoginPage() {
     }
 
     setLoading(true);
+    setShowResendOption(false);
     try {
       if (username.includes("@")) {
         const { error } = await authClient.signIn.email({
@@ -43,7 +68,13 @@ export default function LoginPage() {
           password: password,
         });
         if (error) {
-          toast.error(error.message ?? t("loginFailed"));
+          if (error.status === 403) {
+            setUnverifiedEmail(username);
+            setShowResendOption(true);
+            toast.error(t("emailNotVerified"));
+          } else {
+            toast.error(error.message ?? t("loginFailed"));
+          }
           return;
         }
       } else {
@@ -52,11 +83,15 @@ export default function LoginPage() {
           password: password,
         });
         if (error) {
-          toast.error(error.message ?? t("loginFailed"));
+          if (error.status === 403) {
+            toast.error(t("emailNotVerified"));
+          } else {
+            toast.error(error.message ?? t("loginFailed"));
+          }
           return;
         }
       }
-      router.push(redirectTo ?? "/folders");
+      router.push(redirectTo ?? "/decks");
     } finally {
       setLoading(false);
     }
@@ -90,6 +125,21 @@ export default function LoginPage() {
             >
               {t("forgotPassword")}
             </Link>
+            
+            {showResendOption && (
+              <div className="w-full p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-sm">
+                <p className="text-yellow-800 dark:text-yellow-200 mb-2">
+                  {t("emailNotVerifiedHint")}
+                </p>
+                <LinkButton 
+                  onClick={handleResendVerification}
+                  loading={resendLoading}
+                  size="sm"
+                >
+                  {t("resendVerification")}
+                </LinkButton>
+              </div>
+            )}
             
             <PrimaryButton 
               onClick={handleLogin} 

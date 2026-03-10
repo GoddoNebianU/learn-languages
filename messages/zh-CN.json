@@ -166,7 +166,12 @@
     "requestNewToken": "重新申请重置链接",
     "resetPasswordSuccess": "密码重置成功",
     "resetPasswordSuccessTitle": "密码重置完成",
-    "resetPasswordSuccessHint": "您的密码已成功重置，现在可以使用新密码登录了。"
+    "resetPasswordSuccessHint": "您的密码已成功重置，现在可以使用新密码登录了。",
+    "emailNotVerified": "请验证您的邮箱地址",
+    "emailNotVerifiedHint": "您的邮箱尚未验证。请检查收件箱或重新发送验证邮件。",
+    "resendVerification": "重新发送验证邮件",
+    "resendSuccess": "验证邮件已发送！请检查您的收件箱。",
+    "resendFailed": "发送验证邮件失败"
   },
   "memorize": {
     "deck_selector": {

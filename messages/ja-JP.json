@@ -166,7 +166,12 @@
     "requestNewToken": "新しいリセットリンクをリクエスト",
     "resetPasswordSuccess": "パスワードのリセットに成功しました",
     "resetPasswordSuccessTitle": "パスワードリセット完了",
-    "resetPasswordSuccessHint": "パスワードが正常にリセットされました。新しいパスワードでログインできます。"
+    "resetPasswordSuccessHint": "パスワードが正常にリセットされました。新しいパスワードでログインできます。",
+    "emailNotVerified": "メールアドレスを確認してください",
+    "emailNotVerifiedHint": "メールアドレスが確認されていません。受信トレイをご確認いただくか、新しい確認メールをリクエストしてください。",
+    "resendVerification": "確認メールを再送信",
+    "resendSuccess": "確認メールを送信しました！受信トレイをご確認ください。",
+    "resendFailed": "確認メールの送信に失敗しました"
   },
   "memorize": {
     "deck_selector": {

@@ -175,7 +175,12 @@
     "requestNewToken": "Richiedi Nuovo Link di Reset",
     "resetPasswordSuccess": "Password reimpostata con successo",
     "resetPasswordSuccessTitle": "Reimpostazione Password Completata",
-    "resetPasswordSuccessHint": "La tua password è stata reimpostata con successo. Ora puoi accedere con la tua nuova password."
+    "resetPasswordSuccessHint": "La tua password è stata reimpostata con successo. Ora puoi accedere con la tua nuova password.",
+    "emailNotVerified": "Verifica il tuo indirizzo email",
+    "emailNotVerifiedHint": "Il tuo indirizzo email non è stato verificato. Controlla la tua casella di posta o richiedi una nuova email di verifica.",
+    "resendVerification": "Invia di nuovo email di verifica",
+    "resendSuccess": "Email di verifica inviata! Controlla la tua casella di posta.",
+    "resendFailed": "Impossibile inviare l'email di verifica"
   },
   "memorize": {
     "deck_selector": {

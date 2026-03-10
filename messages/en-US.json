@@ -166,7 +166,12 @@
     "requestNewToken": "Request New Reset Link",
     "resetPasswordSuccess": "Password reset successfully",
     "resetPasswordSuccessTitle": "Password Reset Complete",
-    "resetPasswordSuccessHint": "Your password has been reset successfully. You can now log in with your new password."
+    "resetPasswordSuccessHint": "Your password has been reset successfully. You can now log in with your new password.",
+    "emailNotVerified": "Please verify your email address",
+    "emailNotVerifiedHint": "Your email has not been verified. Please check your inbox or request a new verification email.",
+    "resendVerification": "Resend Verification Email",
+    "resendSuccess": "Verification email sent! Please check your inbox.",
+    "resendFailed": "Failed to send verification email"
   },
   "memorize": {
     "deck_selector": {

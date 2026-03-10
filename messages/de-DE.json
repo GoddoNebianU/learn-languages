@@ -175,7 +175,12 @@
     "requestNewToken": "Neuen Reset-Link anfordern",
     "resetPasswordSuccess": "Passwort erfolgreich zurückgesetzt",
     "resetPasswordSuccessTitle": "Passwort-Zurücksetzung abgeschlossen",
-    "resetPasswordSuccessHint": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
+    "resetPasswordSuccessHint": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+    "emailNotVerified": "Bitte verifizieren Sie Ihre E-Mail-Adresse",
+    "emailNotVerifiedHint": "Ihre E-Mail-Adresse wurde nicht verifiziert. Bitte überprüfen Sie Ihren Posteingang oder fordern Sie eine neue Verifizierungs-E-Mail an.",
+    "resendVerification": "Verifizierungs-E-Mail erneut senden",
+    "resendSuccess": "Verifizierungs-E-Mail gesendet! Bitte überprüfen Sie Ihren Posteingang.",
+    "resendFailed": "Verifizierungs-E-Mail konnte nicht gesendet werden"
   },
   "memorize": {
     "deck_selector": {

@@ -175,7 +175,12 @@
     "requestNewToken": "Demander un nouveau lien de réinitialisation",
     "resetPasswordSuccess": "Mot de passe réinitialisé avec succès",
     "resetPasswordSuccessTitle": "Réinitialisation du mot de passe terminée",
-    "resetPasswordSuccessHint": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
+    "resetPasswordSuccessHint": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+    "emailNotVerified": "Veuillez vérifier votre adresse e-mail",
+    "emailNotVerifiedHint": "Votre adresse e-mail n'a pas été vérifiée. Veuillez vérifier votre boîte de réception ou demander un nouvel e-mail de vérification.",
+    "resendVerification": "Renvoyer l'e-mail de vérification",
+    "resendSuccess": "E-mail de vérification envoyé ! Veuillez vérifier votre boîte de réception.",
+    "resendFailed": "Échec de l'envoi de l'e-mail de vérification"
   },
   "memorize": {
     "deck_selector": {
