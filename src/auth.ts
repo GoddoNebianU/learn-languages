@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
-import { prisma } from "./lib/db";
 import { username } from "better-auth/plugins";
+import { createAuthMiddleware, APIError } from "better-auth/api";
+import { prisma } from "./lib/db";
 import {
   sendEmail,
   generateVerificationEmailHtml,
@@ -41,4 +42,16 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies(), username()],
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/sign-up/email" && ctx.path !== "/update-user") return;
+
+      const body = ctx.body as { username?: string };
+      if (!body.username || body.username.trim() === "") {
+        throw new APIError("BAD_REQUEST", {
+          message: "Username is required",
+        });
+      }
+    }),
+  },
 });

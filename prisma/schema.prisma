@@ -16,7 +16,7 @@ model User {
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
   displayUsername      String?
-  username             String?              @unique
+  username             String               @unique
   accounts             Account[]
   dictionaryLookUps    DictionaryLookUp[]
   folders              Folder[]
