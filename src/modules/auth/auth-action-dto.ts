@@ -56,6 +56,7 @@ export type ActionOutputUserProfile = {
         username: string | null;
         displayUsername: string | null;
         image: string | null;
+        bio: string | null;
         createdAt: Date;
         updatedAt: Date;
     };

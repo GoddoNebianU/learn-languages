@@ -354,6 +354,7 @@
     "displayName": "Display Name",
     "notSet": "Not Set",
     "memberSince": "Member Since",
+    "joined": "Joined",
     "logout": "Logout",
     "folders": {
       "title": "Folders",
@@ -364,5 +365,14 @@
       "actions": "Actions",
       "view": "View"
     }
+  },
+  "follow": {
+    "follow": "Follow",
+    "following": "Following",
+    "followers": "Followers",
+    "followersOf": "{username}'s Followers",
+    "followingOf": "{username}'s Following",
+    "noFollowers": "No followers yet",
+    "noFollowing": "Not following anyone yet"
   }
 }

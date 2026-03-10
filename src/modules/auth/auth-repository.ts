@@ -6,9 +6,6 @@ import {
     RepoOutputUserProfile
 } from "./auth-repository-dto";
 
-/**
- * Find user by username
- */
 export async function repoFindUserByUsername(dto: RepoInputFindUserByUsername): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { username: dto.username },
@@ -19,6 +16,7 @@ export async function repoFindUserByUsername(dto: RepoInputFindUserByUsername): 
             username: true,
             displayUsername: true,
             image: true,
+            bio: true,
             createdAt: true,
             updatedAt: true,
         }
@@ -27,9 +25,6 @@ export async function repoFindUserByUsername(dto: RepoInputFindUserByUsername): 
     return user;
 }
 
-/**
- * Find user by ID
- */
 export async function repoFindUserById(dto: RepoInputFindUserById): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { id: dto.id },
@@ -40,6 +35,7 @@ export async function repoFindUserById(dto: RepoInputFindUserById): Promise<Repo
             username: true,
             displayUsername: true,
             image: true,
+            bio: true,
             createdAt: true,
             updatedAt: true,
         }
@@ -48,9 +44,6 @@ export async function repoFindUserById(dto: RepoInputFindUserById): Promise<Repo
     return user;
 }
 
-/**
- * Find user by email
- */
 export async function repoFindUserByEmail(dto: RepoInputFindUserByEmail): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { email: dto.email },
@@ -61,6 +54,7 @@ export async function repoFindUserByEmail(dto: RepoInputFindUserByEmail): Promis
             username: true,
             displayUsername: true,
             image: true,
+            bio: true,
             createdAt: true,
             updatedAt: true,
         }

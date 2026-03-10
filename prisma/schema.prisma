@@ -17,12 +17,15 @@ model User {
   updatedAt            DateTime             @updatedAt
   displayUsername      String?
   username             String               @unique
+  bio                  String?
   accounts             Account[]
   dictionaryLookUps    DictionaryLookUp[]
   folders              Folder[]
   folderFavorites      FolderFavorite[]
   sessions             Session[]
   translationHistories TranslationHistory[]
+  followers            Follow[]             @relation("UserFollowers")
+  following            Follow[]             @relation("UserFollowing")
 
   @@map("user")
 }
@@ -197,4 +200,19 @@ model TranslationHistory {
   @@index([sourceText, targetLanguage])
   @@index([translatedText, sourceLanguage, targetLanguage])
   @@map("translation_history")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@map("follows")
 }
