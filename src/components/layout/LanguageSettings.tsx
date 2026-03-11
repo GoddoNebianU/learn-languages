@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -17,6 +17,7 @@ const languages = [
 
 export function LanguageSettings() {
   const [isOpen, setIsOpen] = useState(false);
+  const [pendingLocale, setPendingLocale] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,10 +47,16 @@ export function LanguageSettings() {
     }
   }, [isOpen]);
 
-  const setLocale = async (locale: string) => {
-    document.cookie = `locale=${locale}`;
-    window.location.reload();
-  };
+  useEffect(() => {
+    if (pendingLocale) {
+      document.cookie = `locale=${pendingLocale}; path=/`;
+      window.location.reload();
+    }
+  }, [pendingLocale]);
+
+  const setLocale = useCallback((locale: string) => {
+    setPendingLocale(locale);
+  }, []);
 
   return (
     <div className="relative" ref={menuRef}>

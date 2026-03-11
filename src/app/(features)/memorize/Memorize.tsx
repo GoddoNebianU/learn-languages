@@ -34,25 +34,33 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let ignore = false;
+    
+    const loadCards = async () => {
+      setIsLoading(true);
+      setError(null);
+      startTransition(async () => {
+        const result = await actionGetCardsForReview({ deckId, limit: 50 });
+        if (!ignore) {
+          if (result.success && result.data) {
+            setCards(result.data);
+            setCurrentIndex(0);
+            setShowAnswer(false);
+            setLastScheduled(null);
+          } else {
+            setError(result.message);
+          }
+          setIsLoading(false);
+        }
+      });
+    };
+    
     loadCards();
+    
+    return () => {
+      ignore = true;
+    };
   }, [deckId]);
-
-  const loadCards = () => {
-    setIsLoading(true);
-    setError(null);
-    startTransition(async () => {
-      const result = await actionGetCardsForReview({ deckId, limit: 50 });
-      if (result.success && result.data) {
-        setCards(result.data);
-        setCurrentIndex(0);
-        setShowAnswer(false);
-        setLastScheduled(null);
-      } else {
-        setError(result.message);
-      }
-      setIsLoading(false);
-    });
-  };
 
   const getCurrentCard = (): ActionOutputCardWithNote | null => {
     return cards[currentIndex] ?? null;

@@ -22,6 +22,7 @@ import {
   actionDeleteDeck,
   actionGetDecksByUserId,
   actionUpdateDeck,
+  actionGetDeckById,
 } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 
@@ -148,17 +149,25 @@ export function DecksClient({ userId }: DecksClientProps) {
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadDecks = async () => {
-    setLoading(true);
-    const result = await actionGetDecksByUserId(userId);
-    if (result.success && result.data) {
-      setDecks(result.data);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    let ignore = false;
+    
+    const loadDecks = async () => {
+      setLoading(true);
+      const result = await actionGetDecksByUserId(userId);
+      if (!ignore) {
+        if (result.success && result.data) {
+          setDecks(result.data);
+        }
+        setLoading(false);
+      }
+    };
+    
     loadDecks();
+    
+    return () => {
+      ignore = true;
+    };
   }, [userId]);
 
   const handleUpdateDeck = (deckId: number, updates: Partial<ActionOutputDeck>) => {
@@ -176,8 +185,11 @@ export function DecksClient({ userId }: DecksClientProps) {
     if (!deckName?.trim()) return;
 
     const result = await actionCreateDeck({ name: deckName.trim() });
-    if (result.success) {
-      loadDecks();
+    if (result.success && result.deckId) {
+      const deckResult = await actionGetDeckById({ deckId: result.deckId });
+      if (deckResult.success && deckResult.data) {
+        setDecks((prev) => [...prev, deckResult.data!]);
+      }
     } else {
       toast.error(result.message);
     }
