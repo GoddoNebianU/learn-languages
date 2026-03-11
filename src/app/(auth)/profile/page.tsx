@@ -9,5 +9,5 @@ export default async function ProfilePage() {
     redirect("/login?redirect=/profile");
   }
   
-  redirect(session.user.username ? `/users/${session.user.username}` : "/folders");
+  redirect(session.user.username ? `/users/${session.user.username}` : "/decks");
 }

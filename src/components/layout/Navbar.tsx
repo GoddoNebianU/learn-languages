@@ -21,7 +21,7 @@ export async function Navbar() {
   });
 
   const mobileMenuItems: NavigationItem[] = [
-    { label: t("folders"), href: "/folders", icon: <Folder size={18} /> },
+    { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
     { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
     ...(session ? [{ label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> }] : []),
     { label: t("sourceCode"), href: "https://github.com/GoddoNebianU/learn-languages", icon: <Github size={18} />, external: true },
@@ -42,7 +42,7 @@ export async function Navbar() {
       </GhostLightButton>
       <div className="flex gap-0.5 justify-center items-center">
         <LanguageSettings />
-        <GhostLightButton href="/folders" className="md:block! hidden!" size="md">
+        <GhostLightButton href="/decks" className="md:block! hidden!" size="md">
           {t("folders")}
         </GhostLightButton>
         <GhostLightButton href="/explore" className="md:block! hidden!" size="md">

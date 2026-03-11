@@ -28,7 +28,7 @@ export default function SignUpPage() {
 
   useEffect(() => {
     if (!isPending && session?.user?.username && !redirectTo && !verificationSent) {
-      router.push("/folders");
+      router.push("/decks");
     }
   }, [session, isPending, router, redirectTo, verificationSent]);
 

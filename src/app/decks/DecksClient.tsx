@@ -25,6 +25,7 @@ import {
   actionGetDeckById,
 } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
+import { ImportButton, ExportButton } from "@/components/deck/ImportExport";
 
 interface DeckCardProps {
   deck: ActionOutputDeck;
@@ -149,25 +150,17 @@ export function DecksClient({ userId }: DecksClientProps) {
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const loadDecks = async () => {
+    setLoading(true);
+    const result = await actionGetDecksByUserId(userId);
+    if (result.success && result.data) {
+      setDecks(result.data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    let ignore = false;
-    
-    const loadDecks = async () => {
-      setLoading(true);
-      const result = await actionGetDecksByUserId(userId);
-      if (!ignore) {
-        if (result.success && result.data) {
-          setDecks(result.data);
-        }
-        setLoading(false);
-      }
-    };
-    
     loadDecks();
-    
-    return () => {
-      ignore = true;
-    };
   }, [userId]);
 
   const handleUpdateDeck = (deckId: number, updates: Partial<ActionOutputDeck>) => {
@@ -199,11 +192,12 @@ export function DecksClient({ userId }: DecksClientProps) {
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <div className="mb-4">
+      <div className="mb-4 flex gap-2">
         <LightButton onClick={handleCreateDeck}>
           <Plus size={18} />
           {t("newDeck")}
         </LightButton>
+        <ImportButton onImportComplete={loadDecks} />
       </div>
 
       <CardList>
