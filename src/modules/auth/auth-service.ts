@@ -1,15 +1,18 @@
 import { auth } from "@/auth";
 import {
     repoFindUserByUsername,
-    repoFindUserById
+    repoFindUserById,
+    repoDeleteUserCascade
 } from "./auth-repository";
 import {
     ServiceInputGetUserProfileByUsername,
     ServiceInputGetUserProfileById,
     ServiceInputSignIn,
     ServiceInputSignUp,
+    ServiceInputDeleteAccount,
     ServiceOutputAuth,
-    ServiceOutputUserProfile
+    ServiceOutputUserProfile,
+    ServiceOutputDeleteAccount
 } from "./auth-service-dto";
 
 /**
@@ -91,4 +94,8 @@ export async function serviceGetUserProfileByUsername(dto: ServiceInputGetUserPr
  */
 export async function serviceGetUserProfileById(dto: ServiceInputGetUserProfileById): Promise<ServiceOutputUserProfile> {
     return await repoFindUserById(dto);
+}
+
+export async function serviceDeleteAccount(dto: ServiceInputDeleteAccount): Promise<ServiceOutputDeleteAccount> {
+    return await repoDeleteUserCascade({ userId: dto.userId });
 }

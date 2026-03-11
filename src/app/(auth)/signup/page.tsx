@@ -18,6 +18,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect");
@@ -26,10 +27,10 @@ export default function SignUpPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isPending && session?.user?.username && !redirectTo) {
+    if (!isPending && session?.user?.username && !redirectTo && !verificationSent) {
       router.push("/folders");
     }
-  }, [session, isPending, router, redirectTo]);
+  }, [session, isPending, router, redirectTo, verificationSent]);
 
   const handleSignUp = async () => {
     if (!username || !email || !password) {
@@ -49,11 +50,37 @@ export default function SignUpPage() {
         toast.error(error.message ?? t("signUpFailed"));
         return;
       }
-      router.push(redirectTo ?? "/folders");
+      setVerificationSent(true);
+      toast.success(t("verificationEmailSent"));
     } finally {
       setLoading(false);
     }
   };
+
+  if (verificationSent) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Card className="w-96">
+          <CardBody>
+            <VStack gap={4} align="center" justify="center">
+              <h1 className="text-2xl font-bold text-center w-full">
+                {t("verifyYourEmail")}
+              </h1>
+              <p className="text-center text-gray-600">
+                {t("verificationEmailSentHint", { email })}
+              </p>
+              <Link
+                href="/login"
+                className="text-primary-500 hover:underline"
+              >
+                {t("backToLogin")}
+              </Link>
+            </VStack>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen">

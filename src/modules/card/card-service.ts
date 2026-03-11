@@ -11,6 +11,7 @@ import {
   repoGetCardStats,
   repoDeleteCard,
   repoGetCardsByNoteId,
+  repoGetCardDeckOwnerId,
 } from "./card-repository";
 import {
   RepoInputUpdateCard,
@@ -23,11 +24,13 @@ import {
   ServiceInputGetNewCards,
   ServiceInputGetCardsByDeckId,
   ServiceInputGetCardStats,
+  ServiceInputCheckCardOwnership,
   ServiceOutputCard,
   ServiceOutputCardWithNote,
   ServiceOutputCardStats,
   ServiceOutputScheduledCard,
   ServiceOutputReviewResult,
+  ServiceOutputCheckCardOwnership,
   ReviewEase,
   SM2_CONFIG,
 } from "./card-service-dto";
@@ -50,7 +53,11 @@ function calculateNextReviewTime(intervalDays: number): Date {
   return new Date(now + intervalDays * 86400 * 1000);
 }
 
-function scheduleNewCard(ease: ReviewEase, factor: number): {
+function clampInterval(interval: number): number {
+  return Math.min(Math.max(1, interval), SM2_CONFIG.MAXIMUM_INTERVAL);
+}
+
+function scheduleNewCard(ease: ReviewEase, currentFactor: number): {
   type: CardType;
   queue: CardQueue;
   ivl: number;
@@ -63,21 +70,53 @@ function scheduleNewCard(ease: ReviewEase, factor: number): {
       queue: CardQueue.LEARNING,
       ivl: 0,
       due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
-      newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[1]),
+      newFactor: currentFactor,
     };
   }
 
-  const ivl = SM2_CONFIG.INITIAL_INTERVALS[ease];
+  if (ease === 2) {
+    if (SM2_CONFIG.LEARNING_STEPS.length >= 2) {
+      const avgStep = (SM2_CONFIG.LEARNING_STEPS[0] + SM2_CONFIG.LEARNING_STEPS[1]) / 2;
+      return {
+        type: CardType.LEARNING,
+        queue: CardQueue.LEARNING,
+        ivl: 0,
+        due: Math.floor(Date.now() / 1000) + avgStep * 60,
+        newFactor: currentFactor,
+      };
+    }
+    return {
+      type: CardType.LEARNING,
+      queue: CardQueue.LEARNING,
+      ivl: 0,
+      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
+      newFactor: currentFactor,
+    };
+  }
+
+  if (ease === 3) {
+    return {
+      type: CardType.LEARNING,
+      queue: CardQueue.LEARNING,
+      ivl: 0,
+      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
+      newFactor: currentFactor,
+    };
+  }
+
+  const ivl = SM2_CONFIG.EASY_INTERVAL;
+  const newFactor = SM2_CONFIG.DEFAULT_FACTOR + SM2_CONFIG.FACTOR_ADJUSTMENTS[4];
+  
   return {
     type: CardType.REVIEW,
     queue: CardQueue.REVIEW,
     ivl,
     due: calculateDueDate(ivl),
-    newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[ease]),
+    newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, newFactor),
   };
 }
 
-function scheduleLearningCard(ease: ReviewEase, factor: number, left: number): {
+function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: number): {
   type: CardType;
   queue: CardQueue;
   ivl: number;
@@ -85,45 +124,88 @@ function scheduleLearningCard(ease: ReviewEase, factor: number, left: number): {
   newFactor: number;
   newLeft: number;
 } {
+  const steps = SM2_CONFIG.LEARNING_STEPS;
+  const totalSteps = steps.length;
+  
   if (ease === 1) {
     return {
       type: CardType.LEARNING,
       queue: CardQueue.LEARNING,
       ivl: 0,
-      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
-      newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[1]),
-      newLeft: SM2_CONFIG.LEARNING_STEPS.length * 1000 + SM2_CONFIG.LEARNING_STEPS.length,
+      due: Math.floor(Date.now() / 1000) + steps[0] * 60,
+      newFactor: currentFactor,
+      newLeft: totalSteps * 1000,
     };
   }
 
   const stepIndex = Math.floor(left % 1000);
-  if (ease === 2 && stepIndex < SM2_CONFIG.LEARNING_STEPS.length - 1) {
-    const nextStep = stepIndex + 1;
+  
+  if (ease === 2) {
+    if (stepIndex === 0 && steps.length >= 2) {
+      const avgStep = (steps[0] + steps[1]) / 2;
+      return {
+        type: CardType.LEARNING,
+        queue: CardQueue.LEARNING,
+        ivl: 0,
+        due: Math.floor(Date.now() / 1000) + avgStep * 60,
+        newFactor: currentFactor,
+        newLeft: left,
+      };
+    }
+    if (stepIndex < steps.length - 1) {
+      const nextStep = stepIndex + 1;
+      return {
+        type: CardType.LEARNING,
+        queue: CardQueue.LEARNING,
+        ivl: 0,
+        due: Math.floor(Date.now() / 1000) + steps[nextStep] * 60,
+        newFactor: currentFactor,
+        newLeft: nextStep * 1000 + (totalSteps - nextStep),
+      };
+    }
+  }
+
+  if (ease === 3) {
+    if (stepIndex < steps.length - 1) {
+      const nextStep = stepIndex + 1;
+      return {
+        type: CardType.LEARNING,
+        queue: CardQueue.LEARNING,
+        ivl: 0,
+        due: Math.floor(Date.now() / 1000) + steps[nextStep] * 60,
+        newFactor: currentFactor,
+        newLeft: nextStep * 1000 + (totalSteps - nextStep),
+      };
+    }
+    
+    const ivl = SM2_CONFIG.GRADUATING_INTERVAL_GOOD;
     return {
-      type: CardType.LEARNING,
-      queue: CardQueue.LEARNING,
-      ivl: 0,
-      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[nextStep] * 60,
-      newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[2]),
-      newLeft: nextStep * 1000 + (SM2_CONFIG.LEARNING_STEPS.length - nextStep),
+      type: CardType.REVIEW,
+      queue: CardQueue.REVIEW,
+      ivl,
+      due: calculateDueDate(ivl),
+      newFactor: SM2_CONFIG.DEFAULT_FACTOR,
+      newLeft: 0,
     };
   }
 
-  const ivl = ease === 4 ? SM2_CONFIG.GRADUATING_INTERVAL_EASY : SM2_CONFIG.GRADUATING_INTERVAL_GOOD;
+  const ivl = SM2_CONFIG.GRADUATING_INTERVAL_EASY;
+  const newFactor = SM2_CONFIG.DEFAULT_FACTOR + SM2_CONFIG.FACTOR_ADJUSTMENTS[4];
+  
   return {
     type: CardType.REVIEW,
     queue: CardQueue.REVIEW,
     ivl,
     due: calculateDueDate(ivl),
-    newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[ease]),
+    newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, newFactor),
     newLeft: 0,
   };
 }
 
 function scheduleReviewCard(
   ease: ReviewEase,
-  ivl: number,
-  factor: number,
+  currentIvl: number,
+  currentFactor: number,
   lapses: number,
 ): {
   type: CardType;
@@ -134,27 +216,34 @@ function scheduleReviewCard(
   newLapses: number;
 } {
   if (ease === 1) {
+    const newFactor = Math.max(SM2_CONFIG.MINIMUM_FACTOR, currentFactor + SM2_CONFIG.FACTOR_ADJUSTMENTS[1]);
+    const newIvl = Math.max(1, Math.floor(currentIvl * SM2_CONFIG.NEW_INTERVAL));
     return {
       type: CardType.RELEARNING,
       queue: CardQueue.LEARNING,
-      ivl: 0,
-      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
-      newFactor: Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[1]),
+      ivl: newIvl,
+      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.RELEARNING_STEPS[0] * 60,
+      newFactor,
       newLapses: lapses + 1,
     };
   }
 
-  const newFactor = Math.max(SM2_CONFIG.MINIMUM_FACTOR, factor + SM2_CONFIG.FACTOR_ADJUSTMENTS[ease]);
-  const factorMultiplier = newFactor / 1000;
-  let newIvl = Math.floor(ivl * factorMultiplier);
+  let newFactor: number;
+  let newIvl: number;
 
   if (ease === 2) {
-    newIvl = Math.max(1, Math.floor(newIvl * 1.2));
-  } else if (ease === 4) {
-    newIvl = Math.floor(newIvl * 1.3);
+    newFactor = Math.max(SM2_CONFIG.MINIMUM_FACTOR, currentFactor + SM2_CONFIG.FACTOR_ADJUSTMENTS[2]);
+    newIvl = Math.floor(currentIvl * SM2_CONFIG.HARD_INTERVAL * SM2_CONFIG.INTERVAL_MODIFIER);
+  } else if (ease === 3) {
+    newFactor = currentFactor;
+    newIvl = Math.floor(currentIvl * (currentFactor / 1000) * SM2_CONFIG.INTERVAL_MODIFIER);
+  } else {
+    newIvl = Math.floor(currentIvl * (currentFactor / 1000) * SM2_CONFIG.EASY_BONUS * SM2_CONFIG.INTERVAL_MODIFIER);
+    newFactor = Math.max(SM2_CONFIG.MINIMUM_FACTOR, currentFactor + SM2_CONFIG.FACTOR_ADJUSTMENTS[4]);
   }
 
-  newIvl = Math.max(1, newIvl);
+  newIvl = clampInterval(newIvl);
+  newIvl = Math.max(currentIvl + 1, newIvl);
 
   return {
     type: CardType.REVIEW,
@@ -237,7 +326,9 @@ export async function serviceAnswerCard(
       due: result.due,
       factor: result.newFactor,
       reps: card.reps + 1,
-      left: result.type === CardType.LEARNING ? SM2_CONFIG.LEARNING_STEPS.length * 1000 + SM2_CONFIG.LEARNING_STEPS.length : 0,
+      left: result.type === CardType.LEARNING 
+        ? SM2_CONFIG.LEARNING_STEPS.length * 1000
+        : 0,
       mod: Math.floor(Date.now() / 1000),
     };
     scheduled = {
@@ -284,7 +375,9 @@ export async function serviceAnswerCard(
       factor: result.newFactor,
       reps: card.reps + 1,
       lapses: result.newLapses,
-      left: result.type === CardType.RELEARNING ? SM2_CONFIG.LEARNING_STEPS.length * 1000 + SM2_CONFIG.LEARNING_STEPS.length : 0,
+      left: result.type === CardType.RELEARNING 
+        ? SM2_CONFIG.RELEARNING_STEPS.length * 1000
+        : 0,
       mod: Math.floor(Date.now() / 1000),
     };
     scheduled = {
@@ -381,4 +474,12 @@ export async function serviceGetCardStats(
 export async function serviceDeleteCard(cardId: bigint): Promise<void> {
   log.info("Deleting card", { cardId: cardId.toString() });
   await repoDeleteCard(cardId);
+}
+
+export async function serviceCheckCardOwnership(
+  input: ServiceInputCheckCardOwnership,
+): Promise<ServiceOutputCheckCardOwnership> {
+  log.debug("Checking card ownership", { cardId: input.cardId.toString() });
+  const ownerId = await repoGetCardDeckOwnerId(input.cardId);
+  return ownerId === input.userId;
 }

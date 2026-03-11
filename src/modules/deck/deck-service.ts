@@ -1,5 +1,3 @@
-"use server";
-
 import { createLogger } from "@/lib/logger";
 import {
   ServiceInputCreateDeck,

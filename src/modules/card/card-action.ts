@@ -42,8 +42,8 @@ import {
   serviceGetCardStats,
   serviceDeleteCard,
   serviceGetCardByIdWithNote,
+  serviceCheckCardOwnership,
 } from "./card-service";
-import { repoGetCardDeckOwnerId } from "./card-repository";
 import { CardQueue } from "../../../generated/prisma/enums";
 
 const log = createLogger("card-action");
@@ -161,8 +161,7 @@ async function checkCardOwnership(cardId: bigint): Promise<boolean> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return false;
 
-  const ownerId = await repoGetCardDeckOwnerId(cardId);
-  return ownerId === session.user.id;
+  return serviceCheckCardOwnership({ cardId, userId: session.user.id });
 }
 
 async function getCurrentUserId(): Promise<string | null> {

@@ -1,5 +1,7 @@
 "use server";
 
+import { headers } from "next/headers";
+import { auth } from "@/auth";
 import { validate } from "@/utils/validate";
 import { ValidateError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
@@ -13,8 +15,17 @@ export async function actionProcessOCR(
   input: unknown
 ): Promise<ActionOutputProcessOCR> {
   try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (!session?.user?.id) {
+      log.warn("Unauthorized OCR attempt");
+      return { success: false, message: "Unauthorized" };
+    }
+
     const validatedInput = validate(input, schemaActionInputProcessOCR);
-    return serviceProcessOCR(validatedInput);
+    return serviceProcessOCR({
+      ...validatedInput,
+      userId: session.user.id,
+    });
   } catch (e) {
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };

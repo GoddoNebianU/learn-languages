@@ -5,6 +5,7 @@ export const schemaServiceInputProcessOCR = z.object({
   deckId: z.number().int().positive("Deck ID must be positive"),
   sourceLanguage: z.string().optional(),
   targetLanguage: z.string().optional(),
+  userId: z.string().min(1, "User ID is required"),
 });
 
 export type ServiceInputProcessOCR = z.infer<typeof schemaServiceInputProcessOCR>;

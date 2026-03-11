@@ -1,6 +1,5 @@
 import { stringNormalize } from "@/utils/string";
 import {
-    RepoInputCreateDictionaryEntry,
     RepoInputCreateDictionaryEntryWithoutItemId,
     RepoInputCreateDictionaryItem,
     RepoInputCreateDictionaryLookUp,
@@ -30,22 +29,12 @@ export async function repoSelectLastLookUpResult(dto: RepoInputSelectLastLookUpR
             createdAt: 'desc'
         }
     });
-    if (result && result.dictionaryItem) {
-        const item = result.dictionaryItem;
-        return {
-            id: item.id,
-            standardForm: item.standardForm,
-            entries: item.entries.filter(v => !!v).map(v => {
-                return {
-                    ipa: v.ipa || undefined,
-                    definition: v.definition,
-                    partOfSpeech: v.partOfSpeech || undefined,
-                    example: v.example
-                };
-            })
-        };
+
+    if (!result?.dictionaryItem) {
+        return null;
     }
-    return null;
+
+    return result.dictionaryItem;
 }
 
 export async function repoCreateLookUp(content: RepoInputCreateDictionaryLookUp) {

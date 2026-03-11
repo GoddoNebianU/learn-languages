@@ -38,3 +38,11 @@ export type ServiceOutputUserProfile = {
     createdAt: Date;
     updatedAt: Date;
 } | null;
+
+export type ServiceInputDeleteAccount = {
+    userId: string;
+};
+
+export type ServiceOutputDeleteAccount = {
+    success: boolean;
+};

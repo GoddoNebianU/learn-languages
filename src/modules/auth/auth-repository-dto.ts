@@ -25,3 +25,12 @@ export type RepoInputFindUserById = {
 export type RepoInputFindUserByEmail = {
     email: string;
 };
+
+// Delete user cascade types
+export type RepoInputDeleteUserCascade = {
+    userId: string;
+};
+
+export type RepoOutputDeleteUserCascade = {
+    success: boolean;
+};

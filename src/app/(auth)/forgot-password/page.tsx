@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -9,6 +8,7 @@ import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
 import { PrimaryButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
+import { actionRequestPasswordReset } from "@/modules/auth/forgot-password-action";
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("auth");
@@ -23,16 +23,13 @@ export default function ForgotPasswordPage() {
     }
 
     setLoading(true);
-    const { error } = await authClient.requestPasswordReset({
-      email,
-      redirectTo: "/reset-password",
-    });
+    const result = await actionRequestPasswordReset({ email });
 
-    if (error) {
-      toast.error(error.message ?? t("resetPasswordFailed"));
+    if (!result.success) {
+      toast.error(result.message);
     } else {
       setSent(true);
-      toast.success(t("resetPasswordEmailSent"));
+      toast.success(result.message);
     }
     setLoading(false);
   };

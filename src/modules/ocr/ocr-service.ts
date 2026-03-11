@@ -1,12 +1,8 @@
-"use server";
-
 import { executeOCR } from "@/lib/bigmodel/ocr/orchestrator";
-import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
-import { repoCreateNote, repoJoinFields } from "@/modules/note/note-repository";
-import { repoCreateCard } from "@/modules/card/card-repository";
-import { repoGetNoteTypesByUserId, repoCreateNoteType } from "@/modules/note-type/note-type-repository";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { serviceCheckOwnership } from "@/modules/deck/deck-service";
+import { serviceCreateNote } from "@/modules/note/note-service";
+import { serviceCreateCard } from "@/modules/card/card-service";
+import { serviceGetNoteTypesByUserId, serviceCreateNoteType } from "@/modules/note-type/note-type-service";
 import { createLogger } from "@/lib/logger";
 import type { ServiceInputProcessOCR, ServiceOutputProcessOCR } from "./ocr-service-dto";
 import { NoteKind } from "../../../generated/prisma/enums";
@@ -16,7 +12,7 @@ const log = createLogger("ocr-service");
 const VOCABULARY_NOTE_TYPE_NAME = "Vocabulary (OCR)";
 
 async function getOrCreateVocabularyNoteType(userId: string): Promise<number> {
-  const existingTypes = await repoGetNoteTypesByUserId({ userId });
+  const existingTypes = await serviceGetNoteTypesByUserId({ userId });
   const existing = existingTypes.find((nt) => nt.name === VOCABULARY_NOTE_TYPE_NAME);
   
   if (existing) {
@@ -47,7 +43,7 @@ async function getOrCreateVocabularyNoteType(userId: string): Promise<number> {
 
   const css = ".card { font-family: Arial; font-size: 20px; text-align: center; color: black; background-color: white; }";
 
-  const noteTypeId = await repoCreateNoteType({
+  const noteTypeId = await serviceCreateNoteType({
     name: VOCABULARY_NOTE_TYPE_NAME,
     kind: NoteKind.STANDARD,
     css,
@@ -63,19 +59,17 @@ async function getOrCreateVocabularyNoteType(userId: string): Promise<number> {
 export async function serviceProcessOCR(
   input: ServiceInputProcessOCR
 ): Promise<ServiceOutputProcessOCR> {
-  log.info("Processing OCR request", { deckId: input.deckId });
+  log.info("Processing OCR request", { deckId: input.deckId, userId: input.userId });
 
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
-    log.warn("Unauthorized OCR attempt");
-    return { success: false, message: "Unauthorized" };
-  }
-
-  const deckOwner = await repoGetUserIdByDeckId(input.deckId);
-  if (deckOwner !== session.user.id) {
+  const isOwner = await serviceCheckOwnership({ 
+    deckId: input.deckId, 
+    userId: input.userId 
+  });
+  
+  if (!isOwner) {
     log.warn("Deck ownership mismatch", { 
       deckId: input.deckId, 
-      userId: session.user.id 
+      userId: input.userId 
     });
     return { 
       success: false, 
@@ -110,33 +104,28 @@ export async function serviceProcessOCR(
   const sourceLanguage = ocrResult.detectedSourceLanguage || input.sourceLanguage || "Unknown";
   const targetLanguage = ocrResult.detectedTargetLanguage || input.targetLanguage || "Unknown";
 
-  const noteTypeId = await getOrCreateVocabularyNoteType(session.user.id);
+  const noteTypeId = await getOrCreateVocabularyNoteType(input.userId);
 
   let pairsCreated = 0;
   for (const pair of ocrResult.pairs) {
     try {
-      const now = Date.now();
-      const noteId = await repoCreateNote({
+      const { id: noteId } = await serviceCreateNote({
         noteTypeId,
-        userId: session.user.id,
+        userId: input.userId,
         fields: [pair.word, pair.definition, sourceLanguage, targetLanguage],
         tags: ["ocr"],
       });
 
-      await repoCreateCard({
-        id: BigInt(now + pairsCreated),
+      await serviceCreateCard({
         noteId,
         deckId: input.deckId,
         ord: 0,
-        due: pairsCreated + 1,
       });
 
-      await repoCreateCard({
-        id: BigInt(now + pairsCreated + 10000),
+      await serviceCreateCard({
         noteId,
         deckId: input.deckId,
         ord: 1,
-        due: pairsCreated + 1,
       });
 
       pairsCreated++;
