@@ -126,7 +126,7 @@ function scheduleNewCard(ease: ReviewEase, currentFactor: number): {
   };
 }
 
-function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: number): {
+function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: number, isRelearning: boolean): {
   type: CardType;
   queue: CardQueue;
   ivl: number;
@@ -134,12 +134,13 @@ function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: num
   newFactor: number;
   newLeft: number;
 } {
-  const steps = SM2_CONFIG.LEARNING_STEPS;
+  const steps = isRelearning ? SM2_CONFIG.RELEARNING_STEPS : SM2_CONFIG.LEARNING_STEPS;
   const totalSteps = steps.length;
+  const cardType = isRelearning ? CardType.RELEARNING : CardType.LEARNING;
   
   if (ease === 1) {
     return {
-      type: CardType.LEARNING,
+      type: cardType,
       queue: CardQueue.LEARNING,
       ivl: 0,
       due: Math.floor(Date.now() / 1000) + steps[0] * 60,
@@ -152,9 +153,11 @@ function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: num
   
   if (ease === 2) {
     if (stepIndex === 0 && steps.length >= 2) {
-      const avgStep = (steps[0] + steps[1]) / 2;
+      const step0 = steps[0] ?? 1;
+      const step1 = steps[1] ?? step0;
+      const avgStep = (step0 + step1) / 2;
       return {
-        type: CardType.LEARNING,
+        type: cardType,
         queue: CardQueue.LEARNING,
         ivl: 0,
         due: Math.floor(Date.now() / 1000) + avgStep * 60,
@@ -162,35 +165,26 @@ function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: num
         newLeft: left,
       };
     }
-    if (stepIndex < steps.length - 1) {
-      return {
-        type: CardType.LEARNING,
-        queue: CardQueue.LEARNING,
-        ivl: 0,
-        due: Math.floor(Date.now() / 1000) + steps[stepIndex] * 60,
-        newFactor: currentFactor,
-        newLeft: left,
-      };
-    }
-    const ivl = SM2_CONFIG.GRADUATING_INTERVAL_GOOD;
+    const currentStepDelay = steps[stepIndex] ?? steps[0] ?? 1;
     return {
-      type: CardType.REVIEW,
-      queue: CardQueue.REVIEW,
-      ivl,
-      due: calculateDueDate(ivl),
-      newFactor: SM2_CONFIG.DEFAULT_FACTOR,
-      newLeft: 0,
+      type: cardType,
+      queue: CardQueue.LEARNING,
+      ivl: 0,
+      due: Math.floor(Date.now() / 1000) + currentStepDelay * 60,
+      newFactor: currentFactor,
+      newLeft: left,
     };
   }
 
   if (ease === 3) {
     if (stepIndex < steps.length - 1) {
       const nextStep = stepIndex + 1;
+      const nextStepDelay = steps[nextStep] ?? steps[0];
       return {
-        type: CardType.LEARNING,
+        type: cardType,
         queue: CardQueue.LEARNING,
         ivl: 0,
-        due: Math.floor(Date.now() / 1000) + steps[nextStep] * 60,
+        due: Math.floor(Date.now() / 1000) + nextStepDelay * 60,
         newFactor: currentFactor,
         newLeft: nextStep * 1000 + (totalSteps - nextStep),
       };
@@ -361,7 +355,7 @@ export async function serviceAnswerCard(
       nextReviewDate: calculateNextReviewTime(result.ivl),
     };
   } else if (card.type === CardType.LEARNING || card.type === CardType.RELEARNING) {
-    const result = scheduleLearningCard(ease, card.factor, card.left);
+    const result = scheduleLearningCard(ease, card.factor, card.left, card.type === CardType.RELEARNING);
     updateData = {
       type: result.type,
       queue: result.queue,
