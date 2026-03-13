@@ -237,7 +237,7 @@
     "sourceCode": "GitHub",
     "sign_in": "로그인",
     "profile": "프로필",
-    "folders": "폴더",
+    "folders": "덱",
     "explore": "탐색",
     "favorites": "즐겨찾기",
     "settings": "설정"
@@ -453,6 +453,17 @@
       "actions": "작업",
       "view": "보기"
     }
+  },
+  "follow": {
+    "follow": "팔로우",
+    "following": "팔로잉",
+    "followers": "팔로워",
+    "followersOf": "{username}의 팔로워",
+    "followingOf": "{username}의 팔로잉",
+    "noFollowers": "아직 팔로워가 없습니다",
+    "noFollowing": "아직 팔로잉하는 사람이 없습니다"
+  }
+}
   },
   "follow": {
     "follow": "팔로우",

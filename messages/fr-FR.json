@@ -237,7 +237,7 @@
     "sourceCode": "GitHub",
     "sign_in": "Connexion",
     "profile": "Profil",
-    "folders": "Dossiers",
+    "folders": "Decks",
     "explore": "Explorer",
     "favorites": "Favoris",
     "settings": "Paramètres"
@@ -453,6 +453,17 @@
       "actions": "Actions",
       "view": "Voir"
     }
+  },
+  "follow": {
+    "follow": "Suivre",
+    "following": "Abonnements",
+    "followers": "Abonnés",
+    "followersOf": "Abonnés de {username}",
+    "followingOf": "Abonnements de {username}",
+    "noFollowers": "Pas encore d'abonnés",
+    "noFollowing": "Ne suit personne"
+  }
+}
   },
   "follow": {
     "follow": "Suivre",

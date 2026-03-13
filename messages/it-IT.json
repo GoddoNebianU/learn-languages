@@ -237,7 +237,7 @@
     "sourceCode": "GitHub",
     "sign_in": "Accedi",
     "profile": "Profilo",
-    "folders": "Cartelle",
+    "folders": "Mazzi",
     "explore": "Esplora",
     "favorites": "Preferiti",
     "settings": "Impostazioni"
@@ -447,12 +447,23 @@
     "decks": {
       "title": "Mazzi",
       "noDecks": "Nessun mazzo ancora",
-      "deckName": "Nome Mazzo",
-      "totalCards": "Carte Totali",
+      "deckName": "Nome del mazzo",
+      "totalCards": "Totale carte",
       "createdAt": "Creata Il",
       "actions": "Azioni",
       "view": "Visualizza"
     }
+  },
+  "follow": {
+    "follow": "Segui",
+    "following": "Seguiti",
+    "followers": "Seguaci",
+    "followersOf": "Seguaci di {username}",
+    "followingOf": "Seguiti di {username}",
+    "noFollowers": "Nessun seguace ancora",
+    "noFollowing": "Non segui ancora nessuno"
+  }
+}
   },
   "follow": {
     "follow": "Segui",

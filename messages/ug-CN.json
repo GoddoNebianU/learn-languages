@@ -237,7 +237,7 @@
     "sourceCode": "GitHub",
     "sign_in": "كىرىش",
     "profile": "شەخسىي ئۇچۇر",
-    "folders": "قىسقۇچلار",
+    "folders": "دېكلار",
     "explore": "ئىزدىنىش",
     "favorites": "يىغىپ ساقلاش",
     "settings": "تەڭشەكلەر"
@@ -453,6 +453,17 @@
       "actions": "مەشغۇلاتلار",
       "view": "كۆرۈش"
     }
+  },
+  "follow": {
+    "follow": "ئەگىشىش",
+    "following": "ئەگىشىۋاتقانلار",
+    "followers": "ئەگەشكۈچىلەر",
+    "followersOf": "{username} نىڭ ئەگەشكۈچىلىرى",
+    "followingOf": "{username} نىڭ ئەگىشىۋاتقانلىرى",
+    "noFollowers": "تېخى ئەگەشكۈچى يوق",
+    "noFollowing": "تېخى ئەگىشىۋاتقان يوق"
+  }
+}
   },
   "follow": {
     "follow": "ئەگىشىش",
