@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import { Layers, Check, Clock } from "lucide-react";
+import { Layers, Check, Clock, Sparkles } from "lucide-react";
 import type { ActionOutputCardWithNote, ActionOutputScheduledCard } from "@/modules/card/card-action-dto";
 import { actionGetCardsForReview, actionAnswerCard } from "@/modules/card/card-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LightButton } from "@/design-system/base/button";
+import { CardType } from "../../../../generated/prisma/enums";
+import { calculatePreviewIntervals, formatPreviewInterval, type CardPreview } from "./interval-preview";
 
 const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
@@ -70,11 +72,11 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     return card.note.flds.split('\x1f');
   };
 
-  const handleShowAnswer = () => {
+  const handleShowAnswer = useCallback(() => {
     setShowAnswer(true);
-  };
+  }, []);
 
-  const handleAnswer = (ease: ReviewEase) => {
+  const handleAnswer = useCallback((ease: ReviewEase) => {
     const card = getCurrentCard();
     if (!card) return;
 
@@ -101,7 +103,39 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         setError(result.message);
       }
     });
-  };
+  }, [cards, currentIndex]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (!showAnswer) {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          handleShowAnswer();
+        }
+      } else {
+        if (e.key === "1") {
+          e.preventDefault();
+          handleAnswer(1);
+        } else if (e.key === "2") {
+          e.preventDefault();
+          handleAnswer(2);
+        } else if (e.key === "3" || e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          handleAnswer(3);
+        } else if (e.key === "4") {
+          e.preventDefault();
+          handleAnswer(4);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showAnswer, handleShowAnswer, handleAnswer]);
 
   const formatNextReview = (scheduled: ActionOutputScheduledCard): string => {
     const now = new Date();
@@ -125,6 +159,36 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     if (ivl < 1) return t("minutes");
     if (ivl < 30) return t("days", { count: ivl });
     return t("months", { count: Math.floor(ivl / 30) });
+  };
+
+  const getCardTypeLabel = (type: CardType): string => {
+    switch (type) {
+      case CardType.NEW:
+        return t("cardTypeNew");
+      case CardType.LEARNING:
+        return t("cardTypeLearning");
+      case CardType.REVIEW:
+        return t("cardTypeReview");
+      case CardType.RELEARNING:
+        return t("cardTypeRelearning");
+      default:
+        return "";
+    }
+  };
+
+  const getCardTypeColor = (type: CardType): string => {
+    switch (type) {
+      case CardType.NEW:
+        return "bg-blue-100 text-blue-700";
+      case CardType.LEARNING:
+        return "bg-yellow-100 text-yellow-700";
+      case CardType.REVIEW:
+        return "bg-green-100 text-green-700";
+      case CardType.RELEARNING:
+        return "bg-purple-100 text-purple-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
   };
 
   if (isLoading) {
@@ -173,6 +237,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const front = fields[0] ?? "";
   const back = fields[1] ?? "";
 
+  const cardPreview: CardPreview = {
+    type: currentCard.type,
+    ivl: currentCard.ivl,
+    factor: currentCard.factor,
+    left: currentCard.left,
+  };
+  const previewIntervals = calculatePreviewIntervals(cardPreview);
+
   return (
     <PageLayout>
       <div className="flex items-center justify-between mb-4">
@@ -180,8 +252,13 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <Layers className="w-5 h-5" />
           <span className="font-medium">{deckName}</span>
         </div>
-        <div className="text-sm text-gray-500">
-          {t("progress", { current: currentIndex + 1, total: cards.length + currentIndex })}
+        <div className="flex items-center gap-3">
+          <span className={`text-xs px-2 py-0.5 rounded-full ${getCardTypeColor(currentCard.type)}`}>
+            {getCardTypeLabel(currentCard.type)}
+          </span>
+          <span className="text-sm text-gray-500">
+            {t("progress", { current: currentIndex + 1, total: cards.length + currentIndex })}
+          </span>
         </div>
       </div>
 
@@ -238,43 +315,51 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             className="px-8 py-3 text-lg rounded-full"
           >
             {t("showAnswer")}
+            <span className="ml-2 text-xs opacity-60">Space</span>
           </LightButton>
         ) : (
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => handleAnswer(1)}
               disabled={isPending}
-              className="flex flex-col items-center px-6 py-3 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 transition-colors disabled:opacity-50"
+              className="flex flex-col items-center px-5 py-3 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 transition-colors disabled:opacity-50 min-w-[80px]"
             >
               <span className="font-medium">{t("again")}</span>
-              <span className="text-xs opacity-75">&lt;1{t("minAbbr")}</span>
+              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.again)}</span>
+              <span className="text-xs opacity-50 mt-1">1</span>
             </button>
             
             <button
               onClick={() => handleAnswer(2)}
               disabled={isPending}
-              className="flex flex-col items-center px-6 py-3 rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 transition-colors disabled:opacity-50"
+              className="flex flex-col items-center px-5 py-3 rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 transition-colors disabled:opacity-50 min-w-[80px]"
             >
               <span className="font-medium">{t("hard")}</span>
-              <span className="text-xs opacity-75">6{t("minAbbr")}</span>
+              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.hard)}</span>
+              <span className="text-xs opacity-50 mt-1">2</span>
             </button>
             
             <button
               onClick={() => handleAnswer(3)}
               disabled={isPending}
-              className="flex flex-col items-center px-6 py-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-700 transition-colors disabled:opacity-50"
+              className="flex flex-col items-center px-5 py-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-700 transition-colors disabled:opacity-50 min-w-[80px] ring-2 ring-green-300"
             >
-              <span className="font-medium">{t("good")}</span>
-              <span className="text-xs opacity-75">10{t("minAbbr")}</span>
+              <div className="flex items-center gap-1">
+                <span className="font-medium">{t("good")}</span>
+                <Sparkles className="w-3 h-3 opacity-60" />
+              </div>
+              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.good)}</span>
+              <span className="text-xs opacity-50 mt-1">3/Space</span>
             </button>
             
             <button
               onClick={() => handleAnswer(4)}
               disabled={isPending}
-              className="flex flex-col items-center px-6 py-3 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50"
+              className="flex flex-col items-center px-5 py-3 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50 min-w-[80px]"
             >
               <span className="font-medium">{t("easy")}</span>
-              <span className="text-xs opacity-75">4{t("dayAbbr")}</span>
+              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.easy)}</span>
+              <span className="text-xs opacity-50 mt-1">4</span>
             </button>
           </div>
         )}
