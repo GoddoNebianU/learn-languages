@@ -104,6 +104,60 @@ log.info("Fetched folders", { count: folders.length });
 log.error("Failed to fetch folders", { error });
 ```
 
+### i18n 翻译检查
+**注意：翻译缺失不会被 build 检测出来。**
+
+**系统性检查翻译缺失的方法（改进版）：**
+
+#### 步骤 1: 使用 AST-grep 搜索所有翻译模式
+
+```bash
+# 搜索所有 useTranslations 和 getTranslations 声明
+ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
+
+# 搜索所有带插值的 t() 调用
+ast-grep --pattern 't($ARG, $OPTS)' --lang tsx --paths src/
+
+# 搜索所有简单 t() 调用
+ast-grep --pattern 't($ARG)' --lang tsx --paths src/
+```
+
+**AST-grep 能捕获 31 种不同的翻译键模式， 而 grep 只能捕获 1 种模式。**
+
+#### 步骤 2: 按文件提取所有翻译键
+
+逐个 `.tsx` 文件检查使用的翻译键：
+1. 找到该文件使用的 namespace（`useTranslations("namespace")` 或 `getTranslations("namespace")`）
+2. 提取该文件中所有 `t("...")` 调用
+3. 注意动态键模式：
+   - 模板字面量: `t(\`prefix.${variable}\`)` 
+   - 条件键: `t(condition ? "a" : "b")`
+   - 变量键: `t(variable)` 
+4. 对比 `messages/en-US.json`，找出缺失的键
+
+5. 先补全 `en-US.json`（作为基准语言）
+6. 再根据 `en-US.json` 补全其他 7 种语言
+
+#### 步骤 3: 验证 JSON 文件结构
+**注意：JSON 语法错误会导致 build 失败，常见错误：**
+- 重复的键（同一对象中出现两次相同的键名）
+- 缺少逗号或多余的逗号
+- 缺少闭合括号 `}`
+
+```bash
+# 验证 JSON 格式
+node -e "console.log(JSON.parse(require('fs').readFileSync('messages/en-US.json', 'utf8')))"
+```
+
+#### 步骤 4: 对比验证
+```bash
+# 列出代码中使用的所有 namespace
+ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/ | grep -o 'useTranslations\|getTranslations' | sort | uniq
+
+# 对比 messages/en-US.json 中的 namespace 列表
+node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages/en-US.json', 'utf8'))).join('\n'))"
+```
+
 ## 反模式 (本项目)
 
 - ❌ `index.ts` barrel exports

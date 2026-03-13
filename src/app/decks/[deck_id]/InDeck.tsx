@@ -1,15 +1,16 @@
 "use client";
 
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 import { AddCardModal } from "./AddCardModal";
 import { CardItem } from "./CardItem";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton, CircleButton, LinkButton } from "@/design-system/base/button";
+import { PrimaryButton, CircleButton, LinkButton, LightButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
-import { actionGetCardsByDeckIdWithNotes, actionDeleteCard } from "@/modules/card/card-action";
+import { Modal } from "@/design-system/overlay/modal";
+import { actionGetCardsByDeckIdWithNotes, actionDeleteCard, actionResetDeckCards } from "@/modules/card/card-action";
 import type { ActionOutputCardWithNote } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
@@ -18,6 +19,8 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   const [cards, setCards] = useState<ActionOutputCardWithNote[]>([]);
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
+  const [openResetModal, setResetModal] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const router = useRouter();
   const t = useTranslations("deck_id");
 
@@ -54,6 +57,24 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
       });
   };
 
+  const handleResetDeck = async () => {
+    setResetting(true);
+    try {
+      const result = await actionResetDeckCards({ deckId });
+      if (result.success) {
+        toast.success(t("resetSuccess", { count: result.data?.count ?? 0 }));
+        setResetModal(false);
+        await refreshCards();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unknown error");
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <PageLayout>
       <div className="mb-6">
@@ -84,13 +105,21 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
               {t("memorize")}
             </PrimaryButton>
             {!isReadOnly && (
-              <CircleButton
-                onClick={() => {
-                  setAddModal(true);
-                }}
-              >
-                <Plus size={18} className="text-gray-700" />
-              </CircleButton>
+              <>
+                <LightButton
+                  onClick={() => setResetModal(true)}
+                  leftIcon={<RotateCcw size={16} />}
+                >
+                  {t("resetProgress")}
+                </LightButton>
+                <CircleButton
+                  onClick={() => {
+                    setAddModal(true);
+                  }}
+                >
+                  <Plus size={18} className="text-gray-700" />
+                </CircleButton>
+              </>
             )}
           </div>
         </div>
@@ -131,12 +160,30 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
         )}
       </CardList>
 
-      <AddCardModal
+<AddCardModal
         isOpen={openAddModal}
         onClose={() => setAddModal(false)}
         deckId={deckId}
         onAdded={refreshCards}
       />
+
+      {/* Reset Progress Confirmation Modal */}
+      <Modal open={openResetModal} onClose={() => setResetModal(false)} size="sm">
+        <Modal.Header>
+          <Modal.Title>{t("resetProgressTitle")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-gray-600">{t("resetProgressConfirm")}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <LightButton onClick={() => setResetModal(false)}>
+            {t("cancel")}
+          </LightButton>
+          <PrimaryButton onClick={handleResetDeck} loading={resetting}>
+            {resetting ? t("resetting") : t("resetProgress")}
+          </PrimaryButton>
+        </Modal.Footer>
+      </Modal>
     </PageLayout>
   );
 };

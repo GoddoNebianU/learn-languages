@@ -74,6 +74,41 @@
       "deleteFolder": "您没有权限删除此文件夹"
     }
   },
+  "deck_id": {
+    "unauthorized": "您不是此牌组的所有者",
+    "back": "返回",
+    "cards": "卡片",
+    "itemsCount": "{count} 个",
+    "memorize": "记忆",
+    "loadingCards": "加载卡片中...",
+    "noCards": "此牌组中没有卡片",
+    "card": "卡片",
+    "addNewCard": "添加新卡片",
+    "add": "添加",
+    "adding": "添加中...",
+    "updateCard": "更新卡片",
+    "update": "更新",
+    "updating": "更新中...",
+    "word": "单词",
+    "definition": "释义",
+    "ipa": "音标",
+    "example": "例句",
+    "wordAndDefinitionRequired": "单词和释义都是必需的",
+    "edit": "编辑",
+    "delete": "删除",
+    "permissionDenied": "您没有权限执行此操作",
+    "resetProgress": "重置进度",
+    "resetProgressTitle": "重置牌组进度",
+    "resetProgressConfirm": "这将把牌组内所有卡片重置为新卡片状态。您的学习进度将会丢失。确定要继续吗？",
+    "resetSuccess": "成功重置 {count} 张卡片",
+    "resetting": "重置中...",
+    "cancel": "取消",
+    "error": {
+      "update": "您没有权限更新此卡片",
+      "delete": "您没有权限删除此卡片",
+      "add": "您没有权限向此牌组添加卡片"
+    }
+  },
   "home": {
     "title": "学语言",
     "description": "这里是一个非常有用的网站，可以帮助您学习世界上几乎每一种语言，包括人造语言。",
@@ -242,6 +277,7 @@
     "dropOrClick": "拖放图片到此处，或点击选择",
     "changeImage": "点击更换图片",
     "supportedFormats": "支持格式：JPG、PNG、WebP",
+    "invalidFileType": "无效的文件类型，请上传图片文件（JPG、PNG 或 WebP）",
     "deckSelection": "选择牌组",
     "selectDeck": "选择牌组",
     "chooseDeck": "选择保存提取词汇的牌组",
@@ -315,12 +351,28 @@
     "videoUploadFailed": "视频上传失败",
     "subtitleUploadFailed": "字幕上传失败",
     "subtitleLoadSuccess": "字幕加载成功",
-    "subtitleLoadFailed": "字幕加载失败"
+    "subtitleLoadFailed": "字幕加载失败",
+    "settings": "设置",
+    "shortcuts": "快捷键",
+    "keyboardShortcuts": "键盘快捷键",
+    "playPause": "播放/暂停",
+    "autoPauseToggle": "切换自动暂停",
+    "subtitleSettings": "字幕设置",
+    "fontSize": "字体大小",
+    "textColor": "文字颜色",
+    "backgroundColor": "背景颜色",
+    "position": "位置",
+    "opacity": "不透明度",
+    "top": "顶部",
+    "center": "居中",
+    "bottom": "底部"
   },
   "text_speaker": {
     "generateIPA": "生成IPA",
     "viewSavedItems": "查看保存项",
-    "confirmDeleteAll": "确定删光吗？(Y/N)"
+    "confirmDeleteAll": "确定删光吗？(Y/N)",
+    "saved": "已保存",
+    "clearAll": "清空全部"
   },
   "translator": {
     "detectLanguage": "检测语言",

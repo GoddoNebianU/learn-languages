@@ -32,7 +32,8 @@ export function repoGenerateGuid(): string {
 
 export function repoCalculateCsum(text: string): number {
   const hash = createHash("sha1").update(text.normalize("NFC")).digest("hex");
-  return parseInt(hash.substring(0, 8), 16);
+  // Use 7 hex chars to stay within INTEGER range (max 268,435,455 < 2,147,483,647)
+  return parseInt(hash.substring(0, 7), 16);
 }
 
 export function repoJoinFields(fields: string[]): string {

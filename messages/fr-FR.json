@@ -83,7 +83,76 @@
       "deleteFolder": "Vous n'avez pas la permission de supprimer ce dossier."
     }
   },
-  "home": {
+  "deck_id": {
+    "unauthorized": "Vous n'êtes pas le propriétaire de ce deck",
+    "back": "Retour",
+    "cards": "Cartes",
+    "itemsCount": "{count} éléments",
+    "memorize": "Mémoriser",
+    "loadingCards": "Chargement des cartes...",
+    "noCards": "Aucune carte dans ce deck",
+    "card": "Carte",
+    "addNewCard": "Ajouter une nouvelle carte",
+    "add": "Ajouter",
+    "adding": "Ajout en cours...",
+    "updateCard": "Mettre à jour la carte",
+    "update": "Mettre à jour",
+    "updating": "Mise à jour en cours...",
+    "word": "Mot",
+    "definition": "Définition",
+    "ipa": "IPA",
+    "example": "Exemple",
+    "wordAndDefinitionRequired": "Le mot et la définition sont requis",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action",
+    "resetProgress": "Réinitialiser",
+    "resetProgressTitle": "Réinitialiser la progression du deck",
+    "resetProgressConfirm": "Cela réinitialisera toutes les cartes de ce deck à l'état neuf. Votre progression d'apprentissage sera perdue. Êtes-vous sûr?",
+    "resetSuccess": "{count} cartes réinitialisées avec succès",
+    "resetting": "Réinitialisation en cours...",
+    "cancel": "Annuler",
+    "error": {
+      "update": "Vous n'avez pas la permission de mettre à jour cette carte.",
+      "delete": "Vous n'avez pas la permission de supprimer cette carte.",
+      "add": "Vous n'avez pas la permission d'ajouter des cartes à ce deck."
+    }
+  },
+  "deck_id": {
+    "unauthorized": "Vous n'êtes pas le propriétaire de ce paquet",
+    "back": "Retour",
+    "cards": "Cartes",
+    "itemsCount": "{count} éléments",
+    "memorize": "Mémoriser",
+    "loadingCards": "Chargement des cartes...",
+    "noCards": "Aucune carte dans ce paquet",
+    "card": "Carte",
+    "addNewCard": "Ajouter une nouvelle carte",
+    "add": "Ajouter",
+    "adding": "Ajout en cours...",
+    "updateCard": "Mettre à jour la carte",
+    "update": "Mettre à jour",
+    "updating": "Mise à jour en cours...",
+    "word": "Mot",
+    "definition": "Définition",
+    "ipa": "IPA",
+    "example": "Exemple",
+    "wordAndDefinitionRequired": "Le mot et la définition sont requis",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action",
+    "resetProgress": "Réinitialiser",
+    "resetProgressTitle": "Réinitialiser la progression du paquet",
+    "resetProgressConfirm": "Cela réinitialisera toutes les cards in this deck to new state. Your learning progress will be lost. Are you sure?",
+    "resetSuccess": "{count} cards réinitialisées avec succès",
+    "resetting": "Réinitialisation en cours...",
+    "cancel": "Annuler",
+    "error": {
+      "update": "Vous n'avez pas la permission de mettre à jour cette carte.",
+      "delete": "Vous n'avez pas la permission de supprimer cette carte.",
+      "add": "Vous n'avez pas la permission d'ajouter des cartes à ce paquet."
+    }
+  },
     "title": "Apprendre les langues",
     "description": "Voici un site Web très utile pour vous aider à apprendre presque toutes les langues du monde, y compris les langues construites.",
     "explore": "Explorer",
@@ -462,8 +531,6 @@
     "followingOf": "Abonnements de {username}",
     "noFollowers": "Pas encore d'abonnés",
     "noFollowing": "Ne suit personne"
-  }
-}
   },
   "follow": {
     "follow": "Suivre",

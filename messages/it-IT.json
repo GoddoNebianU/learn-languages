@@ -83,7 +83,41 @@
       "deleteFolder": "Non hai il permesso di eliminare questa cartella."
     }
   },
-  "home": {
+  "deck_id": {
+    "unauthorized": "Non sei il proprietario di questo deck",
+    "back": "Indietro",
+    "cards": "Schede",
+    "itemsCount": "{count} elementi",
+    "memorize": "Memorizza",
+    "loadingCards": "Caricamento schede...",
+    "noCards": "Nessuna scheda in questo deck",
+    "card": "Scheda",
+    "addNewCard": "Aggiungi nuova scheda",
+    "add": "Aggiungi",
+    "adding": "Aggiunta in corso...",
+    "updateCard": "Aggiorna scheda",
+    "update": "Aggiorna",
+    "updating": "Aggiornamento in corso...",
+    "word": "Parola",
+    "definition": "Definizione",
+    "ipa": "IPA",
+    "example": "Esempio",
+    "wordAndDefinitionRequired": "Parola e definizione sono obbligatori",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "permissionDenied": "Non hai il permesso per questa accion",
+    "resetProgress": "Ripristina",
+    "resetProgressTitle": "Ripristina progresso del deck",
+    "resetProgressConfirm": "Questo ripristinerá tutte las tarjetas de este deck al nuevo estado. Su progreso de aprendizaje se perderá Are you seguro?",
+    "resetSuccess": "{count} tarjetas ripristinate exitosamente",
+    "resetting": "Ripristazione en curso...",
+    "cancel": "Annulla",
+    "error": {
+      "update": "Non hai il permesso per aggiorn this card.",
+      "delete": "Non hai il permesso per delete this card.",
+      "add": "Non hai il permesso per add cards to this deck."
+    }
+  },
     "title": "Impara le Lingue",
     "description": "Ecco un sito molto utile per aiutarti a imparare quasi tutte le lingue del mondo, incluse quelle costruite.",
     "explore": "Esplora",
@@ -462,8 +496,6 @@
     "followingOf": "Seguiti di {username}",
     "noFollowers": "Nessun seguace ancora",
     "noFollowing": "Non segui ancora nessuno"
-  }
-}
   },
   "follow": {
     "follow": "Segui",

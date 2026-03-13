@@ -102,3 +102,11 @@ export type RepoOutputCardStats = {
   review: number;
   due: number;
 };
+
+export interface RepoInputResetDeckCards {
+  deckId: number;
+}
+
+export type RepoOutputResetDeckCards = {
+  count: number;
+};

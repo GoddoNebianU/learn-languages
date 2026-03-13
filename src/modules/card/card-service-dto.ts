@@ -99,6 +99,24 @@ export type ServiceOutputReviewResult = {
   scheduled: ServiceOutputScheduledCard;
 };
 
+export interface ServiceInputResetDeckCards {
+  deckId: number;
+  userId: string;
+}
+
+export interface ServiceInputCheckDeckOwnership {
+  deckId: number;
+  userId: string;
+}
+
+export type ServiceOutputCheckDeckOwnership = boolean;
+
+export type ServiceOutputResetDeckCards = {
+  success: boolean;
+  count: number;
+  message: string;
+};
+
 export const SM2_CONFIG = {
   LEARNING_STEPS: [1, 10],
   RELEARNING_STEPS: [10],

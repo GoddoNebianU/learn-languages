@@ -462,8 +462,6 @@
     "followingOf": "{username}의 팔로잉",
     "noFollowers": "아직 팔로워가 없습니다",
     "noFollowing": "아직 팔로잉하는 사람이 없습니다"
-  }
-}
   },
   "follow": {
     "follow": "팔로우",

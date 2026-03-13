@@ -13,6 +13,7 @@ import {
   ActionInputGetCardStats,
   ActionInputDeleteCard,
   ActionInputGetCardById,
+  ActionInputResetDeckCards,
   ActionOutputCreateCard,
   ActionOutputAnswerCard,
   ActionOutputGetCards,
@@ -23,6 +24,7 @@ import {
   ActionOutputCard,
   ActionOutputCardWithNote,
   ActionOutputScheduledCard,
+  ActionOutputResetDeckCards,
   validateActionInputCreateCard,
   validateActionInputAnswerCard,
   validateActionInputGetCardsForReview,
@@ -31,6 +33,7 @@ import {
   validateActionInputGetCardStats,
   validateActionInputDeleteCard,
   validateActionInputGetCardById,
+  validateActionInputResetDeckCards,
 } from "./card-action-dto";
 import {
   serviceCreateCard,
@@ -43,6 +46,7 @@ import {
   serviceDeleteCard,
   serviceGetCardByIdWithNote,
   serviceCheckCardOwnership,
+  serviceResetDeckCards,
 } from "./card-service";
 import { CardQueue } from "../../../generated/prisma/enums";
 
@@ -423,5 +427,38 @@ export async function actionGetCardById(
     }
     log.error("Failed to get card by id", { error: e });
     return { success: false, message: "An error occurred while fetching the card" };
+  }
+}
+
+export async function actionResetDeckCards(
+  input: unknown,
+): Promise<ActionOutputResetDeckCards> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    const validated = validateActionInputResetDeckCards(input);
+    const result = await serviceResetDeckCards({
+      deckId: validated.deckId,
+      userId,
+    });
+
+    if (!result.success) {
+      return { success: false, message: result.message };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      data: { count: result.count },
+    };
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to reset deck cards", { error: e });
+    return { success: false, message: "An error occurred while resetting deck cards" };
   }
 }

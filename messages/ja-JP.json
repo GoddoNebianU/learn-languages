@@ -74,6 +74,41 @@
       "deleteFolder": "このフォルダーを削除する権限がありません。"
     }
   },
+  "deck_id": {
+    "unauthorized": "このデッキの所有者ではありません",
+    "back": "戻る",
+    "cards": "カード",
+    "itemsCount": "{count}件",
+    "memorize": "暗記",
+    "loadingCards": "カードを読み込み中...",
+    "noCards": "このデッキにはカードがありません",
+    "card": "カード",
+    "addNewCard": "新しいカードを追加",
+    "add": "追加",
+    "adding": "追加中...",
+    "updateCard": "カードを更新",
+    "update": "更新",
+    "updating": "更新中...",
+    "word": "単語",
+    "definition": "定義",
+    "ipa": "発音記号",
+    "example": "例文",
+    "wordAndDefinitionRequired": "単語と定義は必須です",
+    "edit": "編集",
+    "delete": "削除",
+    "permissionDenied": "この操作を実行する権限がありません",
+    "resetProgress": "リセット",
+    "resetProgressTitle": "デッキの進捗をリセット",
+    "resetProgressConfirm": "このデッキのすべてのカードが新しい状態にリセットされます。学習の進捗は失われます。続行してもよろしいですか？",
+    "resetSuccess": "{count}枚のカードを正常にリセットしました",
+    "resetting": "リセット中...",
+    "cancel": "キャンセル",
+    "error": {
+      "update": "このカードを更新する権限がありません。",
+      "delete": "このカードを削除する権限がありません。",
+      "add": "このデッキにカードを追加する権限がありません。"
+    }
+  },
   "home": {
     "title": "言語を学ぶ",
     "description": "ここは世界のほぼすべての言語（人工言語を含む）を学ぶのに役立つ非常に便利なウェブサイトです。",
@@ -260,7 +295,9 @@
     "noDeck": "デッキを選択してください",
     "processingFailed": "OCR処理に失敗しました",
     "tryAgain": "より鮮明な画像でお試しください",
-    "detectedLanguages": "検出：{source} → {target}"
+    "detectedLanguages": "検出：{source} → {target}",
+    "invalidFileType": "無効なファイルタイプです。画像ファイルをアップロードしてください。",
+    "ocrFailed": "OCR処理に失敗しました。"
   },
   "profile": {
     "myProfile": "マイプロフィール",
@@ -301,12 +338,28 @@
     "videoUploadFailed": "ビデオのアップロードに失敗しました",
     "subtitleUploadFailed": "字幕のアップロードに失敗しました",
     "subtitleLoadSuccess": "字幕の読み込みに成功しました",
-    "subtitleLoadFailed": "字幕の読み込みに失敗しました"
+    "subtitleLoadFailed": "字幕の読み込みに失敗しました",
+    "settings": "設定",
+    "shortcuts": "ショートカット",
+    "keyboardShortcuts": "キーボードショートカット",
+    "playPause": "再生/一時停止",
+    "autoPauseToggle": "自動一時停止の切り替え",
+    "subtitleSettings": "字幕設定",
+    "fontSize": "フォントサイズ",
+    "textColor": "文字色",
+    "backgroundColor": "背景色",
+    "position": "位置",
+    "opacity": "不透明度",
+    "top": "上",
+    "center": "中央",
+    "bottom": "下"
   },
   "text_speaker": {
     "generateIPA": "IPAを生成",
     "viewSavedItems": "保存済み項目を表示",
-    "confirmDeleteAll": "すべて削除してもよろしいですか？ (Y/N)"
+    "confirmDeleteAll": "すべて削除してもよろしいですか？ (Y/N)",
+    "saved": "保存済み",
+    "clearAll": "すべてクリア"
   },
   "translator": {
     "detectLanguage": "言語を検出",
@@ -478,44 +531,6 @@
     "followers": "フォロワー",
     "followersOf": "{username}のフォロワー",
     "followingOf": "{username}のフォロー中",
-    "noFollowers": "まだフォロワーがいません",
-    "noFollowing": "まだ誰もフォローしていません"
-  }
-}
-  },
-  "decks": {
-    "title": "デッキ",
-    "subtitle": "フラッシュカードデッキを管理",
-    "newDeck": "新規デッキ",
-    "noDecksYet": "まだデッキがありません",
-    "loading": "読み込み中...",
-    "deckInfo": "ID: {id} • {totalCards} 枚のカード",
-    "enterDeckName": "デッキ名を入力:",
-    "enterNewName": "新しい名前を入力:",
-    "confirmDelete": "削除するには「{name}」と入力してください:",
-    "public": "公開",
-    "private": "非公開",
-    "setPublic": "公開に設定",
-    "setPrivate": "非公開に設定",
-    "importApkg": "APKGをインポート",
-    "exportApkg": "APKGをエクスポート",
-    "clickToUpload": "クリックしてAPKGファイルをアップロード",
-    "apkgFilesOnly": ".apkgファイルのみ対応",
-    "parsing": "解析中...",
-    "foundDecks": "{count}個のデッキが見つかりました",
-    "deckName": "デッキ名",
-    "back": "戻る",
-    "import": "インポート",
-    "importing": "インポート中...",
-    "exportSuccess": "デッキをエクスポートしました",
-    "goToDecks": "デッキへ移動"
-  },
-  "follow": {
-    "follow": "フォロー",
-    "following": "フォロー中",
-    "followers": "フォロワー",
-    "followersOf": "{username}のフォロワー",
-    "followingOf": "{username}のフォロー",
     "noFollowers": "まだフォロワーがいません",
     "noFollowing": "まだ誰もフォローしていません"
   }

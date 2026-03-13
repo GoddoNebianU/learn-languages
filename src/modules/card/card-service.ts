@@ -12,7 +12,9 @@ import {
   repoDeleteCard,
   repoGetCardsByNoteId,
   repoGetCardDeckOwnerId,
+  repoResetDeckCards,
 } from "./card-repository";
+import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
 import {
   RepoInputUpdateCard,
   RepoOutputCard,
@@ -25,12 +27,15 @@ import {
   ServiceInputGetCardsByDeckId,
   ServiceInputGetCardStats,
   ServiceInputCheckCardOwnership,
+  ServiceInputResetDeckCards,
+  ServiceInputCheckDeckOwnership,
   ServiceOutputCard,
   ServiceOutputCardWithNote,
   ServiceOutputCardStats,
   ServiceOutputScheduledCard,
   ServiceOutputReviewResult,
   ServiceOutputCheckCardOwnership,
+  ServiceOutputResetDeckCards,
   ReviewEase,
   SM2_CONFIG,
 } from "./card-service-dto";
@@ -494,4 +499,28 @@ export async function serviceCheckCardOwnership(
   log.debug("Checking card ownership", { cardId: input.cardId.toString() });
   const ownerId = await repoGetCardDeckOwnerId(input.cardId);
   return ownerId === input.userId;
+}
+
+export async function serviceCheckDeckOwnership(
+  input: ServiceInputCheckDeckOwnership,
+): Promise<ServiceOutputCheckCardOwnership> {
+  log.debug("Checking deck ownership", { deckId: input.deckId });
+  const ownerId = await repoGetUserIdByDeckId(input.deckId);
+  return ownerId === input.userId;
+}
+
+export async function serviceResetDeckCards(
+  input: ServiceInputResetDeckCards,
+): Promise<ServiceOutputResetDeckCards> {
+  log.info("Resetting deck cards", { deckId: input.deckId, userId: input.userId });
+
+  const isOwner = await serviceCheckDeckOwnership({ deckId: input.deckId, userId: input.userId });
+  if (!isOwner) {
+    return { success: false, count: 0, message: "You do not have permission to reset this deck" };
+  }
+
+  const result = await repoResetDeckCards({ deckId: input.deckId });
+
+  log.info("Deck cards reset successfully", { deckId: input.deckId, count: result.count });
+  return { success: true, count: result.count, message: "Deck cards reset successfully" };
 }

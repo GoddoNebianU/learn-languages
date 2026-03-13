@@ -269,7 +269,9 @@
     "noDeck": "Bitte select a deck",
     "processingFailed": "OCR-Verarbeitung fehlgeschlagen",
     "tryAgain": "Bitte try again with a clearer image",
-    "detectedLanguages": "Erkannt: {source} → {target}"
+    "detectedLanguages": "Erkannt: {source} → {target}",
+    "invalidFileType": "Ungültiger Dateityp. Bitte laden Sie eine Bilddatei hoch.",
+    "ocrFailed": "OCR-Verarbeitung fehlgeschlagen."
   },
   "profile": {
     "myProfile": "Mein Profil",
@@ -310,12 +312,28 @@
     "videoUploadFailed": "Video-Upload fehlgeschlagen",
     "subtitleUploadFailed": "Untertitel-Upload fehlgeschlagen",
     "subtitleLoadSuccess": "Untertitel erfolgreich geladen",
-    "subtitleLoadFailed": "Laden der Untertitel fehlgeschlagen"
+    "subtitleLoadFailed": "Laden der Untertitel fehlgeschlagen",
+    "settings": "Einstellungen",
+    "shortcuts": "Tastenkürzel",
+    "keyboardShortcuts": "Tastaturkürzel",
+    "playPause": "Wiedergabe/Pause",
+    "autoPauseToggle": "Auto-Pause umschalten",
+    "subtitleSettings": "Untertiteleinstellungen",
+    "fontSize": "Schriftgröße",
+    "textColor": "Textfarbe",
+    "backgroundColor": "Hintergrundfarbe",
+    "position": "Position",
+    "opacity": "Deckkraft",
+    "top": "Oben",
+    "center": "Mitte",
+    "bottom": "Unten"
   },
   "text_speaker": {
     "generateIPA": "IPA generieren",
     "viewSavedItems": "Gespeicherte Einträge anzeigen",
-    "confirmDeleteAll": "Sind Sie sicher, dass Sie alles löschen möchten? (J/N)"
+    "confirmDeleteAll": "Sind Sie sicher, dass Sie alles löschen möchten? (J/N)",
+    "saved": "Gespeichert",
+    "clearAll": "Alles löschen"
   },
   "translator": {
     "detectLanguage": "Sprache erkennen",
@@ -462,16 +480,40 @@
     "followingOf": "{username} folgt",
     "noFollowers": "Noch keine Follower",
     "noFollowing": "Folgt noch niemandem"
-  }
-}
   },
-  "follow": {
-    "follow": "Folgen",
-    "following": "Folge ich",
-    "followers": "Follower",
-    "followersOf": "{username}s Follower",
-    "followingOf": "{username} folgt",
-    "noFollowers": "Noch keine Follower",
-    "noFollowing": "Folgt noch niemandem"
+  "deck_id": {
+    "unauthorized": "Sie sind nicht der Besitzer dieses Decks",
+    "back": "Zurück",
+    "cards": "Karten",
+    "itemsCount": "{count} Elemente",
+    "memorize": "Auswendig lernen",
+    "loadingCards": "Karten werden geladen...",
+    "noCards": "Keine Karten in diesem Deck",
+    "card": "Karte",
+    "addNewCard": "Neue Karte hinzufügen",
+    "add": "Hinzufügen",
+    "adding": "Wird hinzugefügt...",
+    "updateCard": "Karte aktualisieren",
+    "update": "Aktualisieren",
+    "updating": "Wird aktualisiert...",
+    "word": "Wort",
+    "definition": "Definition",
+    "ipa": "IPA",
+    "example": "Beispiel",
+    "wordAndDefinitionRequired": "Wort und Definition sind erforderlich",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "permissionDenied": "Sie haben keine Berechtigung für diese Aktion",
+    "resetProgress": "Zurücksetzen",
+    "resetProgressTitle": "Deck-Fortschritt zurücksetzen",
+    "resetProgressConfirm": "Dies setzt alle Karten in diesem Deck auf den neuen Zustand zurück. Ihr Lernfortschritt geht verloren. Sind Sie sicher?",
+    "resetSuccess": "{count} Karten erfolgreich zurückgesetzt",
+    "resetting": "Wird zurückgesetzt...",
+    "cancel": "Abbrechen",
+    "error": {
+      "update": "Sie haben keine Berechtigung, diese Karte zu aktualisieren.",
+      "delete": "Sie haben keine Berechtigung, diese Karte zu löschen.",
+      "add": "Sie haben keine Berechtigung, Karten zu diesem Deck hinzuzufügen."
+    }
   }
 }

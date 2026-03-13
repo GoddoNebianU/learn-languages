@@ -162,3 +162,17 @@ export type ActionOutputGetCardById = {
   message: string;
   data?: ActionOutputCardWithNote;
 };
+
+export const schemaActionInputResetDeckCards = z.object({
+  deckId: z.number().int().positive(),
+});
+export type ActionInputResetDeckCards = z.infer<typeof schemaActionInputResetDeckCards>;
+export const validateActionInputResetDeckCards = generateValidator(schemaActionInputResetDeckCards);
+
+export type ActionOutputResetDeckCards = {
+  success: boolean;
+  message: string;
+  data?: {
+    count: number;
+  };
+};

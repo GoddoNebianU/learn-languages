@@ -7,9 +7,11 @@ import {
   RepoInputGetCardsForReview,
   RepoInputGetNewCards,
   RepoInputBulkUpdateCards,
+  RepoInputResetDeckCards,
   RepoOutputCard,
   RepoOutputCardWithNote,
   RepoOutputCardStats,
+  RepoOutputResetDeckCards,
 } from "./card-repository-dto";
 import { CardType, CardQueue } from "../../../generated/prisma/enums";
 
@@ -306,4 +308,30 @@ export async function repoGetCardsByNoteId(noteId: bigint): Promise<RepoOutputCa
     orderBy: { ord: "asc" },
   });
   return cards;
+}
+
+export async function repoResetDeckCards(
+  input: RepoInputResetDeckCards,
+): Promise<RepoOutputResetDeckCards> {
+  log.debug("Resetting deck cards", { deckId: input.deckId });
+
+  const result = await prisma.card.updateMany({
+    where: { deckId: input.deckId },
+    data: {
+      type: CardType.NEW,
+      queue: CardQueue.NEW,
+      due: 0,
+      ivl: 0,
+      factor: 2500,
+      reps: 0,
+      lapses: 0,
+      left: 0,
+      odue: 0,
+      odid: 0,
+      mod: Math.floor(Date.now() / 1000),
+    },
+  });
+
+  log.info("Deck cards reset", { deckId: input.deckId, count: result.count });
+  return { count: result.count };
 }

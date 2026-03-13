@@ -46,7 +46,7 @@
     "unfavorite": "Unfavorite",
     "pleaseLogin": "Please login first"
   },
-  "folder_id": {
+"folder_id": {
     "unauthorized": "You are not the owner of this folder",
     "back": "Back",
     "textPairs": "Text Pairs",
@@ -72,6 +72,41 @@
       "add": "You do not have permission to add items to this folder.",
       "rename": "You do not have permission to rename this folder.",
       "deleteFolder": "You do not have permission to delete this folder."
+    }
+  },
+  "deck_id": {
+    "unauthorized": "You are not the owner of this deck",
+    "back": "Back",
+    "cards": "Cards",
+    "itemsCount": "{count} items",
+    "memorize": "Memorize",
+    "loadingCards": "Loading cards...",
+    "noCards": "No cards in this deck",
+    "card": "Card",
+    "addNewCard": "Add New Card",
+    "add": "Add",
+    "adding": "Adding...",
+    "updateCard": "Update Card",
+    "update": "Update",
+    "updating": "Updating...",
+    "word": "Word",
+    "definition": "Definition",
+    "ipa": "IPA",
+    "example": "Example",
+    "wordAndDefinitionRequired": "Word and definition are required",
+    "edit": "Edit",
+    "delete": "Delete",
+    "permissionDenied": "You do not have permission to perform this action",
+    "resetProgress": "Reset",
+    "resetProgressTitle": "Reset Deck Progress",
+    "resetProgressConfirm": "This will reset all cards in this deck to new state. Your learning progress will be lost. Are you sure?",
+    "resetSuccess": "Successfully reset {count} cards",
+    "resetting": "Resetting...",
+    "cancel": "Cancel",
+    "error": {
+      "update": "You do not have permission to update this card.",
+      "delete": "You do not have permission to delete this card.",
+      "add": "You do not have permission to add cards to this deck."
     }
   },
   "home": {
@@ -233,7 +268,7 @@
     "favorites": "Favorites",
     "settings": "Settings"
   },
-  "ocr": {
+"ocr": {
     "title": "OCR Vocabulary Extractor",
     "description": "Upload vocabulary table screenshots from textbooks to extract word-definition pairs",
     "uploadSection": "Upload Image",
@@ -242,6 +277,7 @@
     "dropOrClick": "Drag and drop an image here, or click to select",
     "changeImage": "Click to change image",
     "supportedFormats": "Supports: JPG, PNG, WebP",
+    "invalidFileType": "Invalid file type. Please upload an image file (JPG, PNG, or WebP).",
     "deckSelection": "Select Deck",
     "selectDeck": "Select a deck",
     "chooseDeck": "Choose a deck to save extracted pairs",
@@ -265,6 +301,7 @@
     "saving": "Saving...",
     "saved": "Successfully saved {count} pairs to {deck}",
     "ocrSuccess": "Successfully extracted {count} pairs to {deck}",
+    "ocrFailed": "OCR processing failed. Please try again.",
     "savedToDeck": "Saved to {deckName}",
     "saveFailed": "Failed to save pairs",
     "noImage": "Please upload an image first",
@@ -315,12 +352,28 @@
     "videoUploadFailed": "Video upload failed",
     "subtitleUploadFailed": "Subtitle upload failed",
     "subtitleLoadSuccess": "Subtitle loaded successfully",
-    "subtitleLoadFailed": "Subtitle load failed"
+    "subtitleLoadFailed": "Subtitle load failed",
+    "settings": "Settings",
+    "shortcuts": "Shortcuts",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "playPause": "Play/Pause",
+    "autoPauseToggle": "Toggle Auto Pause",
+    "subtitleSettings": "Subtitle Settings",
+    "fontSize": "Font Size",
+    "textColor": "Text Color",
+    "backgroundColor": "Background Color",
+    "position": "Position",
+    "opacity": "Opacity",
+    "top": "Top",
+    "center": "Center",
+    "bottom": "Bottom"
   },
   "text_speaker": {
     "generateIPA": "Generate IPA",
     "viewSavedItems": "View Saved Items",
-    "confirmDeleteAll": "Are you sure you want to delete everything? (Y/N)"
+    "confirmDeleteAll": "Are you sure you want to delete everything? (Y/N)",
+    "saved": "Saved",
+    "clearAll": "Clear All"
   },
   "translator": {
     "detectLanguage": "detect language",
