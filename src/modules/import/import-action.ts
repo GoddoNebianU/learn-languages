@@ -2,21 +2,24 @@
 
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { validate } from "@/utils/validate";
-import { z } from "zod";
 import { parseApkg, getDeckNames, getDeckNotesAndCards } from "@/lib/anki/apkg-parser";
 import { prisma } from "@/lib/db";
 import { CardType, CardQueue, NoteKind } from "../../../generated/prisma/enums";
 import { createLogger } from "@/lib/logger";
+import { repoGenerateGuid, repoCalculateCsum } from "@/modules/note/note-repository";
 import type { ParsedApkg } from "@/lib/anki/types";
+
+import { randomBytes } from "crypto";
 
 const log = createLogger("import-action");
 
-const schemaImportApkg = z.object({
-  deckName: z.string().min(1).optional(),
-});
+const MAX_APKG_SIZE = 100 * 1024 * 1024;
 
-export type ActionInputImportApkg = z.infer<typeof schemaImportApkg>;
+export interface ActionOutputPreviewApkg {
+  success: boolean;
+  message: string;
+  decks?: { id: number; name: string; cardCount: number }[];
+}
 
 export interface ActionOutputImportApkg {
   success: boolean;
@@ -24,12 +27,6 @@ export interface ActionOutputImportApkg {
   deckId?: number;
   noteCount?: number;
   cardCount?: number;
-}
-
-export interface ActionOutputPreviewApkg {
-  success: boolean;
-  message: string;
-  decks?: { id: number; name: string; cardCount: number }[];
 }
 
 async function importNoteType(
@@ -75,8 +72,8 @@ async function importNoteType(
       name: ankiNoteType.name,
       kind: ankiNoteType.type === 1 ? NoteKind.CLOZE : NoteKind.STANDARD,
       css: ankiNoteType.css,
-      fields: fields as unknown as object,
-      templates: templates as unknown as object,
+      fields: JSON.parse(JSON.stringify(fields)),
+      templates: JSON.parse(JSON.stringify(templates)),
       userId,
     },
   });
@@ -108,103 +105,110 @@ function mapAnkiCardQueue(queue: number): CardQueue {
   }
 }
 
+function generateUniqueId(): bigint {
+  const bytes = randomBytes(8);
+  const timestamp = BigInt(Date.now());
+  const random = BigInt(`0x${bytes.toString("hex")}`);
+  return timestamp ^ random;
+}
+
 async function importDeck(
   parsed: ParsedApkg,
-  deckId: number,
+  ankiDeckId: number,
   userId: string,
-  deckNameOverride?: string
+  deckName?: string
 ): Promise<{ deckId: number; noteCount: number; cardCount: number }> {
-  const ankiDeck = parsed.decks.get(deckId);
+  const ankiDeck = parsed.decks.get(ankiDeckId);
   if (!ankiDeck) {
-    throw new Error(`Deck ${deckId} not found in APKG`);
+    throw new Error(`Deck ${ankiDeckId} not found in APKG`);
   }
 
-  const deck = await prisma.deck.create({
-    data: {
-      name: deckNameOverride || ankiDeck.name,
-      desc: ankiDeck.desc || "",
-      visibility: "PRIVATE",
-      collapsed: ankiDeck.collapsed,
-      conf: JSON.parse(JSON.stringify(ankiDeck)),
-      userId,
-    },
+  const { notes: ankiNotes, cards: ankiCards } = getDeckNotesAndCards(parsed, ankiDeckId);
+
+  const result = await prisma.$transaction(async (tx) => {
+    const deck = await tx.deck.create({
+      data: {
+        name: deckName || ankiDeck.name,
+        desc: ankiDeck.desc,
+        userId,
+        collapsed: ankiDeck.collapsed,
+        conf: {},
+      },
+    });
+
+    if (ankiNotes.length === 0) {
+      return { deckId: deck.id, noteCount: 0, cardCount: 0 };
+    }
+
+    const noteTypeIdMap = new Map<number, number>();
+    const noteIdMap = new Map<number, bigint>();
+
+    for (const ankiNote of ankiNotes) {
+      let noteTypeId = noteTypeIdMap.get(ankiNote.mid);
+      if (!noteTypeId) {
+        noteTypeId = await importNoteType(parsed, ankiNote.mid, userId);
+        noteTypeIdMap.set(ankiNote.mid, noteTypeId);
+      }
+
+      const noteId = generateUniqueId();
+      noteIdMap.set(ankiNote.id, noteId);
+
+      const guid = ankiNote.guid || repoGenerateGuid();
+      const csum = ankiNote.csum || repoCalculateCsum(ankiNote.sfld);
+
+      await tx.note.create({
+        data: {
+          id: noteId,
+          guid,
+          noteTypeId,
+          mod: ankiNote.mod,
+          usn: ankiNote.usn,
+          tags: ankiNote.tags,
+          flds: ankiNote.flds,
+          sfld: ankiNote.sfld,
+          csum,
+          flags: ankiNote.flags,
+          data: ankiNote.data,
+          userId,
+        },
+      });
+    }
+
+    for (const ankiCard of ankiCards) {
+      const noteId = noteIdMap.get(ankiCard.nid);
+      if (!noteId) {
+        log.warn("Card references non-existent note", { cardId: ankiCard.id, noteId: ankiCard.nid });
+        continue;
+      }
+
+      await tx.card.create({
+        data: {
+          id: generateUniqueId(),
+          noteId,
+          deckId: deck.id,
+          ord: ankiCard.ord,
+          mod: ankiCard.mod,
+          usn: ankiCard.usn,
+          type: mapAnkiCardType(ankiCard.type),
+          queue: mapAnkiCardQueue(ankiCard.queue),
+          due: ankiCard.due,
+          ivl: ankiCard.ivl,
+          factor: ankiCard.factor,
+          reps: ankiCard.reps,
+          lapses: ankiCard.lapses,
+          left: ankiCard.left,
+          odue: ankiCard.odue,
+          odid: ankiCard.odid,
+          flags: ankiCard.flags,
+          data: ankiCard.data,
+        },
+      });
+    }
+
+    return { deckId: deck.id, noteCount: ankiNotes.length, cardCount: ankiCards.length };
   });
 
-  const { notes: ankiNotes, cards: ankiCards } = getDeckNotesAndCards(parsed, deckId);
-
-  if (ankiNotes.length === 0) {
-    return { deckId: deck.id, noteCount: 0, cardCount: 0 };
-  }
-
-  const noteTypeIdMap = new Map<number, number>();
-  const firstNote = ankiNotes[0];
-  if (firstNote) {
-    const importedNoteTypeId = await importNoteType(parsed, firstNote.mid, userId);
-    noteTypeIdMap.set(firstNote.mid, importedNoteTypeId);
-  }
-
-  const noteIdMap = new Map<number, bigint>();
-
-  for (const ankiNote of ankiNotes) {
-    let noteTypeId = noteTypeIdMap.get(ankiNote.mid);
-    if (!noteTypeId) {
-      noteTypeId = await importNoteType(parsed, ankiNote.mid, userId);
-      noteTypeIdMap.set(ankiNote.mid, noteTypeId);
-    }
-
-    const noteId = BigInt(Date.now() + Math.floor(Math.random() * 1000));
-    noteIdMap.set(ankiNote.id, noteId);
-
-    await prisma.note.create({
-      data: {
-        id: noteId,
-        guid: ankiNote.guid,
-        noteTypeId,
-        mod: ankiNote.mod,
-        usn: ankiNote.usn,
-        tags: ankiNote.tags,
-        flds: ankiNote.flds,
-        sfld: ankiNote.sfld,
-        csum: ankiNote.csum,
-        flags: ankiNote.flags,
-        data: ankiNote.data,
-        userId,
-      },
-    });
-  }
-
-  for (const ankiCard of ankiCards) {
-    const noteId = noteIdMap.get(ankiCard.nid);
-    if (!noteId) {
-      log.warn("Card references non-existent note", { cardId: ankiCard.id, noteId: ankiCard.nid });
-      continue;
-    }
-
-    await prisma.card.create({
-      data: {
-        id: BigInt(ankiCard.id),
-        noteId,
-        deckId: deck.id,
-        ord: ankiCard.ord,
-        mod: ankiCard.mod,
-        usn: ankiCard.usn,
-        type: mapAnkiCardType(ankiCard.type),
-        queue: mapAnkiCardQueue(ankiCard.queue),
-        due: ankiCard.due,
-        ivl: ankiCard.ivl,
-        factor: ankiCard.factor,
-        reps: ankiCard.reps,
-        lapses: ankiCard.lapses,
-        left: ankiCard.left,
-        odue: ankiCard.odue,
-        odid: ankiCard.odid,
-        flags: ankiCard.flags,
-        data: ankiCard.data,
-      },
-    });
-  }
-
-  return { deckId: deck.id, noteCount: ankiNotes.length, cardCount: ankiCards.length };
+  return result;
 }
 
 export async function actionPreviewApkg(formData: FormData): Promise<ActionOutputPreviewApkg> {
@@ -222,21 +226,25 @@ export async function actionPreviewApkg(formData: FormData): Promise<ActionOutpu
     return { success: false, message: "Invalid file type. Please upload an .apkg file" };
   }
 
+  if (file.size > MAX_APKG_SIZE) {
+    return { success: false, message: `File size exceeds ${MAX_APKG_SIZE / (1024 * 1024)}MB limit` };
+  }
+
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
     const parsed = await parseApkg(buffer);
     const decks = getDeckNames(parsed);
 
-    return { 
-      success: true, 
-      message: "APKG parsed successfully", 
-      decks: decks.filter(d => d.cardCount > 0)
+    return {
+      success: true,
+      message: `Found ${decks.length} deck(s)`,
+      decks: decks.filter(d => d.cardCount > 0),
     };
   } catch (error) {
-    log.error("Failed to parse APKG", { error });
-    return { 
-      success: false, 
-      message: error instanceof Error ? error.message : "Failed to parse APKG file" 
+    log.error("Failed to preview APKG", { error });
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to parse APKG file",
     };
   }
 }
@@ -261,22 +269,26 @@ export async function actionImportApkg(
     return { success: false, message: "No deck selected" };
   }
 
-  const deckId = parseInt(deckIdStr, 10);
-  if (isNaN(deckId)) {
+  const ankiDeckId = parseInt(deckIdStr, 10);
+  if (isNaN(ankiDeckId)) {
     return { success: false, message: "Invalid deck ID" };
+  }
+
+  if (file.size > MAX_APKG_SIZE) {
+    return { success: false, message: `File size exceeds ${MAX_APKG_SIZE / (1024 * 1024)}MB limit` };
   }
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
     const parsed = await parseApkg(buffer);
-    
-    const result = await importDeck(parsed, deckId, session.user.id, deckName || undefined);
 
-    log.info("APKG imported successfully", { 
-      userId: session.user.id, 
+    const result = await importDeck(parsed, ankiDeckId, session.user.id, deckName || undefined);
+
+    log.info("APKG imported successfully", {
+      userId: session.user.id,
       deckId: result.deckId,
       noteCount: result.noteCount,
-      cardCount: result.cardCount
+      cardCount: result.cardCount,
     });
 
     return {
@@ -288,9 +300,9 @@ export async function actionImportApkg(
     };
   } catch (error) {
     log.error("Failed to import APKG", { error });
-    return { 
-      success: false, 
-      message: error instanceof Error ? error.message : "Failed to import APKG file" 
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to import APKG file",
     };
   }
 }

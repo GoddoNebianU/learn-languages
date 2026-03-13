@@ -20,7 +20,7 @@ async function openDatabase(zip: JSZip): Promise<Database | null> {
   const anki21 = zip.file("collection.anki21");
   const anki2 = zip.file("collection.anki2");
   
-  let dbFile = anki21b || anki21 || anki2;
+  const dbFile = anki21b || anki21 || anki2;
   if (!dbFile) return null;
   
   const dbData = await dbFile.async("uint8array");
@@ -36,17 +36,17 @@ function parseJsonField<T>(jsonStr: string): T {
 }
 
 function queryAll<T>(db: Database, sql: string, params: SqlValue[] = []): T[] {
-  const results: T[] = [];
   const stmt = db.prepare(sql);
-  stmt.bind(params);
-  
-  while (stmt.step()) {
-    const row = stmt.getAsObject();
-    results.push(row as T);
+  try {
+    stmt.bind(params);
+    const results: T[] = [];
+    while (stmt.step()) {
+      results.push(stmt.getAsObject() as T);
+    }
+    return results;
+  } finally {
+    stmt.free();
   }
-  
-  stmt.free();
-  return results;
 }
 
 function queryOne<T>(db: Database, sql: string, params: SqlValue[] = []): T | null {
@@ -62,84 +62,85 @@ export async function parseApkg(buffer: Buffer): Promise<ParsedApkg> {
     throw new Error("No valid Anki database found in APKG file");
   }
   
-  const col = queryOne<{ 
-    crt: number; 
-    mod: number; 
-    ver: number;
-    conf: string;
-    models: string;
-    decks: string;
-    dconf: string;
-    tags: string;
-  }>(db, "SELECT crt, mod, ver, conf, models, decks, dconf, tags FROM col WHERE id = 1");
-  
-  if (!col) {
-    db.close();
-    throw new Error("Invalid APKG: no collection row found");
-  }
-  
-  const decksMap = new Map<number, AnkiDeck>();
-  const decksJson = parseJsonField<Record<string, AnkiDeck>>(col.decks);
-  for (const [id, deck] of Object.entries(decksJson)) {
-    decksMap.set(parseInt(id, 10), deck);
-  }
-  
-  const noteTypesMap = new Map<number, AnkiNoteType>();
-  const modelsJson = parseJsonField<Record<string, AnkiNoteType>>(col.models);
-  for (const [id, model] of Object.entries(modelsJson)) {
-    noteTypesMap.set(parseInt(id, 10), model);
-  }
-  
-  const deckConfigsMap = new Map<number, AnkiDeckConfig>();
-  const dconfJson = parseJsonField<Record<string, AnkiDeckConfig>>(col.dconf);
-  for (const [id, config] of Object.entries(dconfJson)) {
-    deckConfigsMap.set(parseInt(id, 10), config);
-  }
-  
-  const notes = queryAll<AnkiNoteRow>(
-    db, 
-    "SELECT id, guid, mid, mod, usn, tags, flds, sfld, csum, flags, data FROM notes"
-  );
-  
-  const cards = queryAll<AnkiCardRow>(
-    db,
-    "SELECT id, nid, did, ord, mod, usn, type, queue, due, ivl, factor, reps, lapses, left, odue, odid, flags, data FROM cards"
-  );
-  
-  const revlogs = queryAll<AnkiRevlogRow>(
-    db,
-    "SELECT id, cid, usn, ease, ivl, lastIvl, factor, time, type FROM revlog"
-  );
-  
-  const mediaMap = new Map<string, Buffer>();
-  const mediaFile = zip.file("media");
-  if (mediaFile) {
-    const mediaJson = parseJsonField<Record<string, string>>(await mediaFile.async("text"));
-    for (const [num, filename] of Object.entries(mediaJson)) {
-      const mediaData = zip.file(num);
-      if (mediaData) {
-        const data = await mediaData.async("nodebuffer");
-        mediaMap.set(filename, data);
+  try {
+    const col = queryOne<{ 
+      crt: number; 
+      mod: number; 
+      ver: number;
+      conf: string;
+      models: string;
+      decks: string;
+      dconf: string;
+      tags: string;
+    }>(db, "SELECT crt, mod, ver, conf, models, decks, dconf, tags FROM col WHERE id = 1");
+    
+    if (!col) {
+      throw new Error("Invalid APKG: no collection row found");
+    }
+    
+    const decksMap = new Map<number, AnkiDeck>();
+    const decksJson = parseJsonField<Record<string, AnkiDeck>>(col.decks);
+    for (const [id, deck] of Object.entries(decksJson)) {
+      decksMap.set(parseInt(id, 10), deck);
+    }
+    
+    const noteTypesMap = new Map<number, AnkiNoteType>();
+    const modelsJson = parseJsonField<Record<string, AnkiNoteType>>(col.models);
+    for (const [id, model] of Object.entries(modelsJson)) {
+      noteTypesMap.set(parseInt(id, 10), model);
+    }
+    
+    const deckConfigsMap = new Map<number, AnkiDeckConfig>();
+    const dconfJson = parseJsonField<Record<string, AnkiDeckConfig>>(col.dconf);
+    for (const [id, config] of Object.entries(dconfJson)) {
+      deckConfigsMap.set(parseInt(id, 10), config);
+    }
+    
+    const notes = queryAll<AnkiNoteRow>(
+      db, 
+      "SELECT id, guid, mid, mod, usn, tags, flds, sfld, csum, flags, data FROM notes"
+    );
+    
+    const cards = queryAll<AnkiCardRow>(
+      db,
+      "SELECT id, nid, did, ord, mod, usn, type, queue, due, ivl, factor, reps, lapses, left, odue, odid, flags, data FROM cards"
+    );
+    
+    const revlogs = queryAll<AnkiRevlogRow>(
+      db,
+      "SELECT id, cid, usn, ease, ivl, lastIvl, factor, time, type FROM revlog"
+    );
+    
+    const mediaMap = new Map<string, Buffer>();
+    const mediaFile = zip.file("media");
+    if (mediaFile) {
+      const mediaJson = parseJsonField<Record<string, string>>(await mediaFile.async("text"));
+      for (const [num, filename] of Object.entries(mediaJson)) {
+        const mediaData = zip.file(num);
+        if (mediaData) {
+          const data = await mediaData.async("nodebuffer");
+          mediaMap.set(filename, data);
+        }
       }
     }
+    
+    return {
+      decks: decksMap,
+      noteTypes: noteTypesMap,
+      deckConfigs: deckConfigsMap,
+      notes,
+      cards,
+      revlogs,
+      media: mediaMap,
+      collectionMeta: {
+        crt: col.crt,
+        mod: col.mod,
+        ver: col.ver,
+      },
+    };
+  } finally {
+    db.close();
   }
-  
-  db.close();
-  
-  return {
-    decks: decksMap,
-    noteTypes: noteTypesMap,
-    deckConfigs: deckConfigsMap,
-    notes,
-    cards,
-    revlogs,
-    media: mediaMap,
-    collectionMeta: {
-      crt: col.crt,
-      mod: col.mod,
-      ver: col.ver,
-    },
-  };
 }
 
 export function getDeckNotesAndCards(
