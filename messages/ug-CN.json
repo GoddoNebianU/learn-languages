@@ -453,5 +453,14 @@
       "actions": "مەشغۇلاتلار",
       "view": "كۆرۈش"
     }
+  },
+  "follow": {
+    "follow": "ئەگىشىش",
+    "following": "ئەگىشىۋاتىدۇ",
+    "followers": "ئەگەشكۈچىلەر",
+    "followersOf": "{username} نىڭ ئەگەشكۈچىلىرى",
+    "followingOf": "{username} نىڭ ئەگىشىدىغانلىرى",
+    "noFollowers": "تېخى ئەگەشكۈچى يوق",
+    "noFollowing": "تېخى ئەگىشىدىغان ئادەم يوق"
   }
 }

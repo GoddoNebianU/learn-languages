@@ -444,5 +444,41 @@
       "actions": "アクション",
       "view": "表示"
     }
+  },
+  "decks": {
+    "title": "デッキ",
+    "subtitle": "フラッシュカードデッキを管理",
+    "newDeck": "新規デッキ",
+    "noDecksYet": "まだデッキがありません",
+    "loading": "読み込み中...",
+    "deckInfo": "ID: {id} • {totalCards} 枚のカード",
+    "enterDeckName": "デッキ名を入力:",
+    "enterNewName": "新しい名前を入力:",
+    "confirmDelete": "削除するには「{name}」と入力してください:",
+    "public": "公開",
+    "private": "非公開",
+    "setPublic": "公開に設定",
+    "setPrivate": "非公開に設定",
+    "importApkg": "APKGをインポート",
+    "exportApkg": "APKGをエクスポート",
+    "clickToUpload": "クリックしてAPKGファイルをアップロード",
+    "apkgFilesOnly": ".apkgファイルのみ対応",
+    "parsing": "解析中...",
+    "foundDecks": "{count}個のデッキが見つかりました",
+    "deckName": "デッキ名",
+    "back": "戻る",
+    "import": "インポート",
+    "importing": "インポート中...",
+    "exportSuccess": "デッキをエクスポートしました",
+    "goToDecks": "デッキへ移動"
+  },
+  "follow": {
+    "follow": "フォロー",
+    "following": "フォロー中",
+    "followers": "フォロワー",
+    "followersOf": "{username}のフォロワー",
+    "followingOf": "{username}のフォロー",
+    "noFollowers": "まだフォロワーがいません",
+    "noFollowing": "まだ誰もフォローしていません"
   }
 }

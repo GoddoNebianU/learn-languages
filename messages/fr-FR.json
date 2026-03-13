@@ -453,5 +453,14 @@
       "actions": "Actions",
       "view": "Voir"
     }
+  },
+  "follow": {
+    "follow": "Suivre",
+    "following": "Abonné",
+    "followers": "Abonnés",
+    "followersOf": "Abonnés de {username}",
+    "followingOf": "Abonnements de {username}",
+    "noFollowers": "Pas encore d'abonnés",
+    "noFollowing": "Ne suit personne"
   }
 }

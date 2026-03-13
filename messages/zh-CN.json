@@ -460,6 +460,33 @@
       "view": "查看"
     }
   },
+  "decks": {
+    "title": "牌组",
+    "subtitle": "管理您的闪卡牌组",
+    "newDeck": "新建牌组",
+    "noDecksYet": "还没有牌组",
+    "loading": "加载中...",
+    "deckInfo": "ID: {id} • {totalCards} 张卡片",
+    "enterDeckName": "输入牌组名称：",
+    "enterNewName": "输入新名称：",
+    "confirmDelete": "输入 \"{name}\" 以删除：",
+    "public": "公开",
+    "private": "私有",
+    "setPublic": "设为公开",
+    "setPrivate": "设为私有",
+    "importApkg": "导入 APKG",
+    "exportApkg": "导出 APKG",
+    "clickToUpload": "点击上传 APKG 文件",
+    "apkgFilesOnly": "仅支持 .apkg 文件",
+    "parsing": "解析中...",
+    "foundDecks": "找到 {count} 个牌组",
+    "deckName": "牌组名称",
+    "back": "返回",
+    "import": "导入",
+    "importing": "导入中...",
+    "exportSuccess": "牌组导出成功",
+    "goToDecks": "前往牌组"
+  },
   "follow": {
     "follow": "关注",
     "following": "已关注",
