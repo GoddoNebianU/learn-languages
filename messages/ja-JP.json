@@ -213,7 +213,11 @@
       "days": "{count}日",
       "months": "{count}ヶ月",
       "minAbbr": "分",
-      "dayAbbr": "日"
+      "dayAbbr": "日",
+      "cardTypeNew": "新規",
+      "cardTypeLearning": "学習中",
+      "cardTypeReview": "復習",
+      "cardTypeRelearning": "再学習"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

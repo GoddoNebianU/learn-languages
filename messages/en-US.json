@@ -213,7 +213,11 @@
       "days": "{count}d",
       "months": "{count}mo",
       "minAbbr": "m",
-      "dayAbbr": "d"
+      "dayAbbr": "d",
+      "cardTypeNew": "New",
+      "cardTypeLearning": "Learning",
+      "cardTypeReview": "Review",
+      "cardTypeRelearning": "Relearning"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

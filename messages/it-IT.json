@@ -222,7 +222,11 @@
       "days": "{count}g",
       "months": "{count}mesi",
       "minAbbr": "m",
-      "dayAbbr": "g"
+      "dayAbbr": "g",
+      "cardTypeNew": "Nuovo",
+      "cardTypeLearning": "Apprendimento",
+      "cardTypeReview": "Ripasso",
+      "cardTypeRelearning": "Riapprendimento"
     },
     "page": {
       "unauthorized": "Non sei autorizzato ad accedere a questo mazzo"

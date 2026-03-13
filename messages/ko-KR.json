@@ -222,7 +222,11 @@
       "days": "{count}일",
       "months": "{count}개월",
       "minAbbr": "분",
-      "dayAbbr": "일"
+      "dayAbbr": "일",
+      "cardTypeNew": "새 카드",
+      "cardTypeLearning": "학습 중",
+      "cardTypeReview": "복습 중",
+      "cardTypeRelearning": "재학습 중"
     },
     "page": {
       "unauthorized": "이 덱에 접근할 권한이 없습니다"

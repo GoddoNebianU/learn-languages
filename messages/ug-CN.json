@@ -222,7 +222,11 @@
       "days": "{count} كۈن",
       "months": "{count} ئاي",
       "minAbbr": "م",
-      "dayAbbr": "ك"
+      "dayAbbr": "ك",
+      "cardTypeNew": "يېڭى",
+      "cardTypeLearning": "ئۆگىنىۋاتىدۇ",
+      "cardTypeReview": "تەكرارلاش",
+      "cardTypeRelearning": "قايتا ئۆگىنىش"
     },
     "page": {
       "unauthorized": "بۇ دېكنى زىيارەت قىلىش ھوقۇقىڭىز يوق"

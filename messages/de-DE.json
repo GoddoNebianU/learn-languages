@@ -222,7 +222,11 @@
       "days": "{count} Tage",
       "months": "{count} Monate",
       "minAbbr": "m",
-      "dayAbbr": "T"
+      "dayAbbr": "T",
+      "cardTypeNew": "Neu",
+      "cardTypeLearning": "Lernen",
+      "cardTypeReview": "Wiederholung",
+      "cardTypeRelearning": "Neu lernen"
     },
     "page": {
       "unauthorized": "Sie sind nicht berechtigt, auf dieses Deck zuzugreifen"
