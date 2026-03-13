@@ -95,12 +95,22 @@ function scheduleNewCard(ease: ReviewEase, currentFactor: number): {
   }
 
   if (ease === 3) {
+    if (SM2_CONFIG.LEARNING_STEPS.length >= 2) {
+      return {
+        type: CardType.LEARNING,
+        queue: CardQueue.LEARNING,
+        ivl: 0,
+        due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[1] * 60,
+        newFactor: currentFactor,
+      };
+    }
+    const ivl = SM2_CONFIG.GRADUATING_INTERVAL_GOOD;
     return {
-      type: CardType.LEARNING,
-      queue: CardQueue.LEARNING,
-      ivl: 0,
-      due: Math.floor(Date.now() / 1000) + SM2_CONFIG.LEARNING_STEPS[0] * 60,
-      newFactor: currentFactor,
+      type: CardType.REVIEW,
+      queue: CardQueue.REVIEW,
+      ivl,
+      due: calculateDueDate(ivl),
+      newFactor: SM2_CONFIG.DEFAULT_FACTOR,
     };
   }
 
@@ -153,16 +163,24 @@ function scheduleLearningCard(ease: ReviewEase, currentFactor: number, left: num
       };
     }
     if (stepIndex < steps.length - 1) {
-      const nextStep = stepIndex + 1;
       return {
         type: CardType.LEARNING,
         queue: CardQueue.LEARNING,
         ivl: 0,
-        due: Math.floor(Date.now() / 1000) + steps[nextStep] * 60,
+        due: Math.floor(Date.now() / 1000) + steps[stepIndex] * 60,
         newFactor: currentFactor,
-        newLeft: nextStep * 1000 + (totalSteps - nextStep),
+        newLeft: left,
       };
     }
+    const ivl = SM2_CONFIG.GRADUATING_INTERVAL_GOOD;
+    return {
+      type: CardType.REVIEW,
+      queue: CardQueue.REVIEW,
+      ivl,
+      due: calculateDueDate(ivl),
+      newFactor: SM2_CONFIG.DEFAULT_FACTOR,
+      newLeft: 0,
+    };
   }
 
   if (ease === 3) {
