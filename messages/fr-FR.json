@@ -295,7 +295,14 @@
       "cardTypeNew": "Nouveau",
       "cardTypeLearning": "Apprentissage",
       "cardTypeReview": "Révision",
-      "cardTypeRelearning": "Réapprentissage"
+      "cardTypeRelearning": "Réapprentissage",
+      "reverse": "Inverser",
+      "dictation": "Dictée",
+      "clickToPlay": "Cliquez pour jouer",
+      "yourAnswer": "Votre réponse",
+      "typeWhatYouHear": "Tapez ce que vous entendez",
+      "correct": "Correct",
+      "incorrect": "Incorrect"
     },
     "page": {
       "unauthorized": "Vous n'êtes pas autorisé à accéder à ce deck"

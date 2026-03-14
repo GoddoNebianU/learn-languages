@@ -226,7 +226,14 @@
       "cardTypeNew": "Neu",
       "cardTypeLearning": "Lernen",
       "cardTypeReview": "Wiederholung",
-      "cardTypeRelearning": "Neu lernen"
+      "cardTypeRelearning": "Neu lernen",
+      "reverse": "Umkehren",
+      "dictation": "Diktat",
+      "clickToPlay": "Klicken zum Abspielen",
+      "yourAnswer": "Ihre Antwort",
+      "typeWhatYouHear": "Geben Sie ein, was Sie hören",
+      "correct": "Richtig",
+      "incorrect": "Falsch"
     },
     "page": {
       "unauthorized": "Sie sind nicht berechtigt, auf dieses Deck zuzugreifen"

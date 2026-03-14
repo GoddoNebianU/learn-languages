@@ -252,7 +252,14 @@
       "cardTypeNew": "New",
       "cardTypeLearning": "Learning",
       "cardTypeReview": "Review",
-      "cardTypeRelearning": "Relearning"
+      "cardTypeRelearning": "Relearning",
+      "reverse": "Reverse",
+      "dictation": "Dictation",
+      "clickToPlay": "Click to play audio",
+      "yourAnswer": "Your answer",
+      "typeWhatYouHear": "Type what you hear...",
+      "correct": "Correct",
+      "incorrect": "Incorrect"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

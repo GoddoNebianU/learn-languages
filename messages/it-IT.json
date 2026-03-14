@@ -260,7 +260,14 @@
       "cardTypeNew": "Nuovo",
       "cardTypeLearning": "Apprendimento",
       "cardTypeReview": "Ripasso",
-      "cardTypeRelearning": "Riapprendimento"
+      "cardTypeRelearning": "Riapprendimento",
+      "reverse": "Inverti",
+      "dictation": "Dettato",
+      "clickToPlay": "Clicca per riprodurre",
+      "yourAnswer": "La tua risposta",
+      "typeWhatYouHear": "Scrivi ciò che senti",
+      "correct": "Corretto",
+      "incorrect": "Errato"
     },
     "page": {
       "unauthorized": "Non sei autorizzato ad accedere a questo mazzo"

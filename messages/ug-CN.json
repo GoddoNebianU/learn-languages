@@ -226,7 +226,14 @@
       "cardTypeNew": "يېڭى",
       "cardTypeLearning": "ئۆگىنىۋاتىدۇ",
       "cardTypeReview": "تەكرارلاش",
-      "cardTypeRelearning": "قايتا ئۆگىنىش"
+      "cardTypeRelearning": "قايتا ئۆگىنىش",
+      "reverse": "ئەكسى",
+      "dictation": "ئاڭلاپ يېزىش",
+      "clickToPlay": "چېكىپ قويۇش",
+      "yourAnswer": "سىزنىڭ جاۋابىڭىز",
+      "typeWhatYouHear": "ئاڭلىغىنىڭىزنى كىرگۈزۈڭ",
+      "correct": "توغرا",
+      "incorrect": "خاتا"
     },
     "page": {
       "unauthorized": "بۇ دېكنى زىيارەت قىلىش ھوقۇقىڭىز يوق"

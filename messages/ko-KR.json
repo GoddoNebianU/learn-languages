@@ -226,7 +226,14 @@
       "cardTypeNew": "새 카드",
       "cardTypeLearning": "학습 중",
       "cardTypeReview": "복습 중",
-      "cardTypeRelearning": "재학습 중"
+      "cardTypeRelearning": "재학습 중",
+      "reverse": "반전",
+      "dictation": "받아쓰기",
+      "clickToPlay": "클릭하여 재생",
+      "yourAnswer": "당신의 답변",
+      "typeWhatYouHear": "들은 내용을 입력하세요",
+      "correct": "정답",
+      "incorrect": "오답"
     },
     "page": {
       "unauthorized": "이 덱에 접근할 권한이 없습니다"

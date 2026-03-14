@@ -252,7 +252,14 @@
       "cardTypeNew": "新卡片",
       "cardTypeLearning": "学习中",
       "cardTypeReview": "复习中",
-      "cardTypeRelearning": "重学中"
+      "cardTypeRelearning": "重学中",
+      "reverse": "反向",
+      "dictation": "听写",
+      "clickToPlay": "点击播放",
+      "yourAnswer": "你的答案",
+      "typeWhatYouHear": "输入你听到的内容",
+      "correct": "正确",
+      "incorrect": "错误"
     },
     "page": {
       "unauthorized": "您无权访问该牌组"

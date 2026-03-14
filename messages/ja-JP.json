@@ -252,7 +252,14 @@
       "cardTypeNew": "新規",
       "cardTypeLearning": "学習中",
       "cardTypeReview": "復習",
-      "cardTypeRelearning": "再学習"
+      "cardTypeRelearning": "再学習",
+      "reverse": "反転",
+      "dictation": "聴き取り",
+      "clickToPlay": "クリックして再生",
+      "yourAnswer": "あなたの答え",
+      "typeWhatYouHear": "聞こえた内容を入力",
+      "correct": "正解",
+      "incorrect": "不正解"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

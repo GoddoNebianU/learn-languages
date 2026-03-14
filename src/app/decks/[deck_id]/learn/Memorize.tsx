@@ -1,16 +1,18 @@
 "use client";
 
-import { useState, useEffect, useTransition, useCallback } from "react";
+import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import { Layers, Check, Clock, Sparkles } from "lucide-react";
+import { Layers, Check, Clock, Sparkles, RotateCcw, Volume2, Headphones } from "lucide-react";
 import type { ActionOutputCardWithNote, ActionOutputScheduledCard } from "@/modules/card/card-action-dto";
 import { actionGetCardsForReview, actionAnswerCard } from "@/modules/card/card-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LightButton } from "@/design-system/base/button";
 import { CardType } from "../../../../../generated/prisma/enums";
 import { calculatePreviewIntervals, formatPreviewInterval, type CardPreview } from "./interval-preview";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 const myFont = localFont({
   src: "../../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
@@ -34,6 +36,13 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const [lastScheduled, setLastScheduled] = useState<ActionOutputScheduledCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isReversed, setIsReversed] = useState(false);
+  const [isDictation, setIsDictation] = useState(false);
+  const [dictationInput, setDictationInput] = useState("");
+  const [dictationResult, setDictationResult] = useState<"correct" | "incorrect" | null>(null);
+  const { play, stop, load } = useAudioPlayer();
+  const audioUrlRef = useRef<string | null>(null);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -49,6 +58,10 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             setCurrentIndex(0);
             setShowAnswer(false);
             setLastScheduled(null);
+            setIsReversed(false);
+            setIsDictation(false);
+            setDictationInput("");
+            setDictationResult(null);
           } else {
             setError(result.message);
           }
@@ -74,7 +87,18 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const handleShowAnswer = useCallback(() => {
     setShowAnswer(true);
-  }, []);
+    
+    if (isDictation) {
+      const currentCard = getCurrentCard();
+      if (currentCard) {
+        const fields = getNoteFields(currentCard);
+        const answer = isReversed ? (fields[0] ?? "") : (fields[1] ?? "");
+        const normalizedInput = dictationInput.trim().toLowerCase();
+        const normalizedAnswer = answer.trim().toLowerCase();
+        setDictationResult(normalizedInput === normalizedAnswer ? "correct" : "incorrect");
+      }
+    }
+  }, [isDictation, dictationInput, isReversed]);
 
   const handleAnswer = useCallback((ease: ReviewEase) => {
     const card = getCurrentCard();
@@ -99,11 +123,62 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         }
         
         setShowAnswer(false);
+        setIsReversed(false);
+        setIsDictation(false);
+        setDictationInput("");
+        setDictationResult(null);
+        
+        if (audioUrlRef.current) {
+          URL.revokeObjectURL(audioUrlRef.current);
+          audioUrlRef.current = null;
+        }
+        stop();
       } else {
         setError(result.message);
       }
     });
-  }, [cards, currentIndex]);
+  }, [cards, currentIndex, stop]);
+
+  const playTTS = useCallback(async (text: string) => {
+    if (isAudioLoading) return;
+    
+    setIsAudioLoading(true);
+    try {
+      const hasChinese = /[\u4e00-\u9fff]/.test(text);
+      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);
+      const hasKorean = /[\uac00-\ud7af]/.test(text);
+      
+      let lang: TTS_SUPPORTED_LANGUAGES = "Auto";
+      if (hasChinese) lang = "Chinese";
+      else if (hasJapanese) lang = "Japanese";
+      else if (hasKorean) lang = "Korean";
+      else if (/^[a-zA-Z\s]/.test(text)) lang = "English";
+      
+      const audioUrl = await getTTSUrl(text, lang);
+      
+      if (audioUrl && audioUrl !== "error") {
+        audioUrlRef.current = audioUrl;
+        await load(audioUrl);
+        play();
+      }
+    } catch (e) {
+      console.error("TTS playback failed", e);
+    } finally {
+      setIsAudioLoading(false);
+    }
+  }, [isAudioLoading, load, play]);
+
+  const playCurrentCard = useCallback(() => {
+    const currentCard = getCurrentCard();
+    if (!currentCard) return;
+    
+    const fields = getNoteFields(currentCard);
+    const text = isReversed ? (fields[1] ?? "") : (fields[0] ?? "");
+    
+    if (text) {
+      playTTS(text);
+    }
+  }, [isReversed, playTTS]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -236,6 +311,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const fields = getNoteFields(currentCard);
   const front = fields[0] ?? "";
   const back = fields[1] ?? "";
+  
+  const displayFront = isReversed ? back : front;
+  const displayBack = isReversed ? front : back;
 
   const cardPreview: CardPreview = {
     type: currentCard.type,
@@ -280,21 +358,116 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </div>
       )}
 
+      <div className="flex justify-center gap-2 mb-4">
+        <button
+          onClick={() => {
+            setIsReversed(!isReversed);
+            setDictationInput("");
+            setDictationResult(null);
+          }}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+            isReversed 
+              ? "bg-indigo-100 text-indigo-700" 
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          <RotateCcw className="w-4 h-4" />
+          {t("reverse")}
+        </button>
+        <button
+          onClick={() => {
+            setIsDictation(!isDictation);
+            setDictationInput("");
+            setDictationResult(null);
+          }}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+            isDictation 
+              ? "bg-purple-100 text-purple-700" 
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          <Headphones className="w-4 h-4" />
+          {t("dictation")}
+        </button>
+      </div>
+
       <div className={`bg-white border border-gray-200 rounded-xl shadow-sm mb-6 ${myFont.className}`}>
-        <div className="p-8 min-h-[20dvh] flex items-center justify-center">
-          <div className="text-gray-900 text-xl md:text-2xl text-center">
-            {front}
-          </div>
-        </div>
-        
-        {showAnswer && (
+        {isDictation ? (
           <>
-            <div className="border-t border-gray-200" />
-            <div className="p-8 min-h-[20dvh] flex items-center justify-center bg-gray-50 rounded-b-xl">
+            <div className="p-8 min-h-[20dvh] flex flex-col items-center justify-center gap-4">
+              <button
+                onClick={playCurrentCard}
+                disabled={isAudioLoading}
+                className="p-4 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50"
+              >
+                <Volume2 className="w-8 h-8" />
+              </button>
+              <p className="text-gray-500 text-sm">{t("clickToPlay")}</p>
+            </div>
+            
+            {showAnswer ? (
+              <>
+                <div className="border-t border-gray-200" />
+                <div className="p-8 min-h-[20dvh] flex flex-col items-center justify-center bg-gray-50 rounded-b-xl gap-4">
+                  <div className="w-full max-w-md">
+                    <label className="block text-sm text-gray-600 mb-2">{t("yourAnswer")}</label>
+                    <input
+                      type="text"
+                      value={dictationInput}
+                      onChange={(e) => setDictationInput(e.target.value)}
+                      className={`w-full p-3 border rounded-lg text-lg ${
+                        dictationResult === "correct" 
+                          ? "border-green-500 bg-green-50" 
+                          : dictationResult === "incorrect"
+                          ? "border-red-500 bg-red-50"
+                          : "border-gray-300"
+                      }`}
+                      readOnly
+                    />
+                  </div>
+                  <div className="text-center">
+                    <p className={`text-lg font-medium ${
+                      dictationResult === "correct" ? "text-green-600" : "text-red-600"
+                    }`}>
+                      {dictationResult === "correct" ? "✓ " + t("correct") : "✗ " + t("incorrect")}
+                    </p>
+                    {dictationResult === "incorrect" && (
+                      <p className="text-gray-900 text-xl mt-2">{displayBack}</p>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="border-t border-gray-200 p-6 bg-gray-50 rounded-b-xl">
+                <input
+                  type="text"
+                  value={dictationInput}
+                  onChange={(e) => setDictationInput(e.target.value)}
+                  placeholder={t("typeWhatYouHear")}
+                  className="w-full p-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  autoFocus
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="p-8 min-h-[20dvh] flex items-center justify-center">
               <div className="text-gray-900 text-xl md:text-2xl text-center">
-                {back}
+                {displayFront}
               </div>
             </div>
+            
+            {showAnswer && (
+              <>
+                <div className="border-t border-gray-200" />
+                <div className="p-8 min-h-[20dvh] flex items-center justify-center bg-gray-50 rounded-b-xl">
+                  <div className="text-gray-900 text-xl md:text-2xl text-center">
+                    {displayBack}
+                  </div>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
