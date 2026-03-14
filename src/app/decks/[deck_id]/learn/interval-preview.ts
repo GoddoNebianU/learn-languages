@@ -1,4 +1,4 @@
-import { CardType } from "../../../../generated/prisma/enums";
+import { CardType } from "../../../../../generated/prisma/enums";
 import { SM2_CONFIG } from "@/modules/card/card-service-dto";
 
 export interface CardPreview {

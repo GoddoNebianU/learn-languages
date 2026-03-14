@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Plus, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { AddCardModal } from "./AddCardModal";
 import { CardItem } from "./CardItem";
 import { useTranslations } from "next-intl";
@@ -99,7 +99,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
           <div className="flex items-center gap-2">
             <PrimaryButton
               onClick={() => {
-                redirect(`/memorize?deck_id=${deckId}`);
+                router.push(`/decks/${deckId}/learn`);
               }}
             >
               {t("memorize")}

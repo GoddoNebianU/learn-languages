@@ -9,11 +9,11 @@ import type { ActionOutputCardWithNote, ActionOutputScheduledCard } from "@/modu
 import { actionGetCardsForReview, actionAnswerCard } from "@/modules/card/card-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LightButton } from "@/design-system/base/button";
-import { CardType } from "../../../../generated/prisma/enums";
+import { CardType } from "../../../../../generated/prisma/enums";
 import { calculatePreviewIntervals, formatPreviewInterval, type CardPreview } from "./interval-preview";
 
 const myFont = localFont({
-  src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
+  src: "../../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
 interface MemorizeProps {
@@ -207,7 +207,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       <PageLayout>
         <div className="text-center py-12">
           <p className="text-red-600 mb-4">{error}</p>
-          <LightButton onClick={() => router.push("/memorize")} className="px-4 py-2">
+          <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
             {t("backToDecks")}
           </LightButton>
         </div>
@@ -224,7 +224,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("allDone")}</h2>
           <p className="text-gray-600 mb-6">{t("allDoneDesc")}</p>
-          <LightButton onClick={() => router.push("/memorize")} className="px-4 py-2">
+          <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
             {t("backToDecks")}
           </LightButton>
         </div>

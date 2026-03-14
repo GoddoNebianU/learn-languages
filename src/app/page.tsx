@@ -73,7 +73,7 @@ export default async function HomePage() {
           color="#dd7486"
         ></LinkArea>
         <LinkArea
-          href="/memorize"
+          href="/decks"
           name={t("memorize.name")}
           description={t("memorize.description")}
           color="#cc9988"
