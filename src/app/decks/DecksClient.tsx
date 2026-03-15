@@ -10,6 +10,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { CircleButton, LightButton } from "@/design-system/base/button";
+import { Skeleton } from "@/design-system/feedback/skeleton";
+import { VStack } from "@/design-system/layout/stack";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -202,10 +204,10 @@ export function DecksClient({ userId }: DecksClientProps) {
 
       <CardList>
         {loading ? (
-          <div className="p-8 text-center">
-            <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+          <VStack align="center" className="p-8">
+            <Skeleton variant="circular" className="w-8 h-8 mb-3" />
             <p className="text-sm text-gray-500">{t("loading")}</p>
-          </div>
+          </VStack>
         ) : decks.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
             <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">

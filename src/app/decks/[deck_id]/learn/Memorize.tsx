@@ -8,7 +8,11 @@ import { Layers, Check, Clock, Sparkles, RotateCcw, Volume2, Headphones } from "
 import type { ActionOutputCardWithNote, ActionOutputScheduledCard } from "@/modules/card/card-action-dto";
 import { actionGetCardsForReview, actionAnswerCard } from "@/modules/card/card-action";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton } from "@/design-system/base/button";
+import { LightButton, CircleButton } from "@/design-system/base/button";
+import { Badge } from "@/design-system/data-display/badge";
+import { Progress } from "@/design-system/feedback/progress";
+import { Skeleton } from "@/design-system/feedback/skeleton";
+import { HStack, VStack } from "@/design-system/layout/stack";
 import { CardType } from "../../../../../generated/prisma/enums";
 import { calculatePreviewIntervals, formatPreviewInterval, type CardPreview } from "./interval-preview";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -38,8 +42,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
   const [isDictation, setIsDictation] = useState(false);
-  const [dictationInput, setDictationInput] = useState("");
-  const [dictationResult, setDictationResult] = useState<"correct" | "incorrect" | null>(null);
   const { play, stop, load } = useAudioPlayer();
   const audioUrlRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
@@ -60,8 +62,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             setLastScheduled(null);
             setIsReversed(false);
             setIsDictation(false);
-            setDictationInput("");
-            setDictationResult(null);
           } else {
             setError(result.message);
           }
@@ -87,18 +87,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const handleShowAnswer = useCallback(() => {
     setShowAnswer(true);
-    
-    if (isDictation) {
-      const currentCard = getCurrentCard();
-      if (currentCard) {
-        const fields = getNoteFields(currentCard);
-        const answer = isReversed ? (fields[0] ?? "") : (fields[1] ?? "");
-        const normalizedInput = dictationInput.trim().toLowerCase();
-        const normalizedAnswer = answer.trim().toLowerCase();
-        setDictationResult(normalizedInput === normalizedAnswer ? "correct" : "incorrect");
-      }
-    }
-  }, [isDictation, dictationInput, isReversed]);
+  }, []);
 
   const handleAnswer = useCallback((ease: ReviewEase) => {
     const card = getCurrentCard();
@@ -125,8 +114,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         setShowAnswer(false);
         setIsReversed(false);
         setIsDictation(false);
-        setDictationInput("");
-        setDictationResult(null);
         
         if (audioUrlRef.current) {
           URL.revokeObjectURL(audioUrlRef.current);
@@ -251,28 +238,28 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     }
   };
 
-  const getCardTypeColor = (type: CardType): string => {
+  const getCardTypeVariant = (type: CardType): "info" | "warning" | "success" | "primary" => {
     switch (type) {
       case CardType.NEW:
-        return "bg-blue-100 text-blue-700";
+        return "info";
       case CardType.LEARNING:
-        return "bg-yellow-100 text-yellow-700";
+        return "warning";
       case CardType.REVIEW:
-        return "bg-green-100 text-green-700";
+        return "success";
       case CardType.RELEARNING:
-        return "bg-purple-100 text-purple-700";
+        return "primary";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "info";
     }
   };
 
   if (isLoading) {
     return (
       <PageLayout>
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <VStack align="center" className="py-12">
+          <Skeleton variant="circular" className="h-12 w-12 mb-4" />
           <p className="text-gray-600">{t("loading")}</p>
-        </div>
+        </VStack>
       </PageLayout>
     );
   }
@@ -280,12 +267,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   if (error) {
     return (
       <PageLayout>
-        <div className="text-center py-12">
-          <p className="text-red-600 mb-4">{error}</p>
+        <VStack align="center" className="py-12">
+          <div className="text-red-600 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-md">
+            {error}
+          </div>
           <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
             {t("backToDecks")}
           </LightButton>
-        </div>
+        </VStack>
       </PageLayout>
     );
   }
@@ -293,7 +282,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   if (cards.length === 0) {
     return (
       <PageLayout>
-        <div className="text-center py-12">
+        <VStack align="center" className="py-12">
           <div className="text-green-500 mb-4">
             <Check className="w-16 h-16 mx-auto" />
           </div>
@@ -302,7 +291,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
             {t("backToDecks")}
           </LightButton>
-        </div>
+        </VStack>
       </PageLayout>
     );
   }
@@ -325,162 +314,118 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   return (
     <PageLayout>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 text-gray-600">
+      <HStack justify="between" className="mb-4">
+        <HStack gap={2} className="text-gray-600">
           <Layers className="w-5 h-5" />
           <span className="font-medium">{deckName}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className={`text-xs px-2 py-0.5 rounded-full ${getCardTypeColor(currentCard.type)}`}>
+        </HStack>
+        <HStack gap={3}>
+          <Badge variant={getCardTypeVariant(currentCard.type)} size="sm">
             {getCardTypeLabel(currentCard.type)}
-          </span>
+          </Badge>
           <span className="text-sm text-gray-500">
             {t("progress", { current: currentIndex + 1, total: cards.length + currentIndex })}
           </span>
-        </div>
-      </div>
+        </HStack>
+      </HStack>
 
-      <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
-        <div 
-          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-          style={{ width: `${Math.max(0, ((currentIndex) / (cards.length + currentIndex)) * 100)}%` }}
-        />
-      </div>
+      <Progress 
+        value={Math.max(0, ((currentIndex) / (cards.length + currentIndex)) * 100)}
+        showLabel={false}
+        animated={false}
+        className="mb-6"
+      />
 
       {lastScheduled && (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-          <div className="flex items-center gap-2">
+          <HStack gap={2}>
             <Clock className="w-4 h-4" />
             <span>
               {t("nextReview")}: {formatNextReview(lastScheduled)}
             </span>
-          </div>
+          </HStack>
         </div>
       )}
 
-      <div className="flex justify-center gap-2 mb-4">
-        <button
+      <HStack justify="center" gap={2} className="mb-4">
+        <LightButton
           onClick={() => {
             setIsReversed(!isReversed);
-            setDictationInput("");
-            setDictationResult(null);
           }}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-            isReversed 
-              ? "bg-indigo-100 text-indigo-700" 
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
+          selected={isReversed}
+          leftIcon={<RotateCcw className="w-4 h-4" />}
+          size="sm"
         >
-          <RotateCcw className="w-4 h-4" />
           {t("reverse")}
-        </button>
-        <button
+        </LightButton>
+        <LightButton
           onClick={() => {
             setIsDictation(!isDictation);
-            setDictationInput("");
-            setDictationResult(null);
           }}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-            isDictation 
-              ? "bg-purple-100 text-purple-700" 
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-          }`}
+          selected={isDictation}
+          leftIcon={<Headphones className="w-4 h-4" />}
+          size="sm"
         >
-          <Headphones className="w-4 h-4" />
           {t("dictation")}
-        </button>
-      </div>
+        </LightButton>
+      </HStack>
 
       <div className={`bg-white border border-gray-200 rounded-xl shadow-sm mb-6 ${myFont.className}`}>
         {isDictation ? (
           <>
-            <div className="p-8 min-h-[20dvh] flex flex-col items-center justify-center gap-4">
-              <button
+            <VStack align="center" justify="center" gap={4} className="p-8 min-h-[20dvh]">
+              <CircleButton
                 onClick={playCurrentCard}
                 disabled={isAudioLoading}
-                className="p-4 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50"
+                className="p-4 bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50"
               >
                 <Volume2 className="w-8 h-8" />
-              </button>
+              </CircleButton>
               <p className="text-gray-500 text-sm">{t("clickToPlay")}</p>
-            </div>
-            
-            {showAnswer ? (
-              <>
-                <div className="border-t border-gray-200" />
-                <div className="p-8 min-h-[20dvh] flex flex-col items-center justify-center bg-gray-50 rounded-b-xl gap-4">
-                  <div className="w-full max-w-md">
-                    <label className="block text-sm text-gray-600 mb-2">{t("yourAnswer")}</label>
-                    <input
-                      type="text"
-                      value={dictationInput}
-                      onChange={(e) => setDictationInput(e.target.value)}
-                      className={`w-full p-3 border rounded-lg text-lg ${
-                        dictationResult === "correct" 
-                          ? "border-green-500 bg-green-50" 
-                          : dictationResult === "incorrect"
-                          ? "border-red-500 bg-red-50"
-                          : "border-gray-300"
-                      }`}
-                      readOnly
-                    />
-                  </div>
-                  <div className="text-center">
-                    <p className={`text-lg font-medium ${
-                      dictationResult === "correct" ? "text-green-600" : "text-red-600"
-                    }`}>
-                      {dictationResult === "correct" ? "✓ " + t("correct") : "✗ " + t("incorrect")}
-                    </p>
-                    {dictationResult === "incorrect" && (
-                      <p className="text-gray-900 text-xl mt-2">{displayBack}</p>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="border-t border-gray-200 p-6 bg-gray-50 rounded-b-xl">
-                <input
-                  type="text"
-                  value={dictationInput}
-                  onChange={(e) => setDictationInput(e.target.value)}
-                  placeholder={t("typeWhatYouHear")}
-                  className="w-full p-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  autoFocus
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <div className="p-8 min-h-[20dvh] flex items-center justify-center">
-              <div className="text-gray-900 text-xl md:text-2xl text-center">
-                {displayFront}
-              </div>
-            </div>
+            </VStack>
             
             {showAnswer && (
               <>
                 <div className="border-t border-gray-200" />
-                <div className="p-8 min-h-[20dvh] flex items-center justify-center bg-gray-50 rounded-b-xl">
+                <VStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
                   <div className="text-gray-900 text-xl md:text-2xl text-center">
                     {displayBack}
                   </div>
-                </div>
+                </VStack>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <HStack align="center" justify="center" className="p-8 min-h-[20dvh]">
+              <div className="text-gray-900 text-xl md:text-2xl text-center">
+                {displayFront}
+              </div>
+            </HStack>
+            
+            {showAnswer && (
+              <>
+                <div className="border-t border-gray-200" />
+                <HStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
+                  <div className="text-gray-900 text-xl md:text-2xl text-center">
+                    {displayBack}
+                  </div>
+                </HStack>
               </>
             )}
           </>
         )}
       </div>
 
-      <div className="flex justify-center gap-4 mb-6 text-sm text-gray-500">
+      <HStack justify="center" gap={4} className="mb-6 text-sm text-gray-500">
         <span>{t("interval")}: {formatInterval(currentCard.ivl)}</span>
         <span>•</span>
         <span>{t("ease")}: {currentCard.factor / 10}%</span>
         <span>•</span>
         <span>{t("lapses")}: {currentCard.lapses}</span>
-      </div>
+      </HStack>
 
-      <div className="flex justify-center">
+      <HStack justify="center">
         {!showAnswer ? (
           <LightButton
             onClick={handleShowAnswer}
@@ -491,7 +436,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             <span className="ml-2 text-xs opacity-60">Space</span>
           </LightButton>
         ) : (
-          <div className="flex flex-wrap justify-center gap-3">
+          <HStack wrap justify="center" gap={3}>
             <button
               onClick={() => handleAnswer(1)}
               disabled={isPending}
@@ -499,7 +444,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             >
               <span className="font-medium">{t("again")}</span>
               <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.again)}</span>
-              <span className="text-xs opacity-50 mt-1">1</span>
             </button>
             
             <button
@@ -509,7 +453,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             >
               <span className="font-medium">{t("hard")}</span>
               <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.hard)}</span>
-              <span className="text-xs opacity-50 mt-1">2</span>
             </button>
             
             <button
@@ -522,7 +465,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
                 <Sparkles className="w-3 h-3 opacity-60" />
               </div>
               <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.good)}</span>
-              <span className="text-xs opacity-50 mt-1">3/Space</span>
             </button>
             
             <button
@@ -532,11 +474,10 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             >
               <span className="font-medium">{t("easy")}</span>
               <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.easy)}</span>
-              <span className="text-xs opacity-50 mt-1">4</span>
             </button>
-          </div>
+          </HStack>
         )}
-      </div>
+      </HStack>
     </PageLayout>
   );
 };

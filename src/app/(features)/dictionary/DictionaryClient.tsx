@@ -7,6 +7,9 @@ import { useDictionaryStore } from "./stores/dictionaryStore";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LightButton } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
+import { Select } from "@/design-system/base/select";
+import { Skeleton } from "@/design-system/feedback/skeleton";
+import { HStack, VStack } from "@/design-system/layout/stack";
 import { Plus, RefreshCw } from "lucide-react";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
@@ -231,10 +234,10 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
 
       <div className="mt-8">
         {isSearching ? (
-          <div className="text-center py-12">
-            <div className="w-8 h-8 border-2 border-gray-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-3"></div>
+          <VStack align="center" className="py-12">
+            <Skeleton variant="circular" className="w-8 h-8 mb-3" />
             <p className="text-gray-600">{t("searching")}</p>
-          </div>
+          </VStack>
         ) : query && !searchResult ? (
           <div className="text-center py-12 bg-white/20 rounded-lg">
             <p className="text-gray-800 text-xl">{t("noResults")}</p>
@@ -248,18 +251,19 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
                   {searchResult.standardForm}
                 </h2>
               </div>
-              <div className="flex items-center gap-2 ml-4">
+              <HStack align="center" gap={2} className="ml-4">
                 {session && decks.length > 0 && (
-                  <select
+                  <Select
                     id="deck-select"
-                    className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#35786f]"
+                    variant="bordered"
+                    size="sm"
                   >
                     {decks.map((deck) => (
                       <option key={deck.id} value={deck.id}>
                         {deck.name}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 )}
                 <LightButton
                   onClick={handleSave}
@@ -270,7 +274,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
                 >
                   <Plus />
                 </LightButton>
-              </div>
+              </HStack>
             </div>
 
             <div className="space-y-6">

@@ -7,6 +7,9 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { CircleButton } from "@/design-system/base/button";
+import { Input } from "@/design-system/base/input";
+import { Skeleton } from "@/design-system/feedback/skeleton";
+import { HStack } from "@/design-system/layout/stack";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -148,18 +151,16 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <div className="flex items-center gap-2 mb-6">
-        <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder={t("searchPlaceholder")}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
+      <HStack align="center" gap={2} className="mb-6">
+        <Input
+          variant="bordered"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          placeholder={t("searchPlaceholder")}
+          leftIcon={<Search size={18} />}
+          containerClassName="flex-1"
+        />
         <CircleButton
           onClick={handleToggleSort}
           title={sortByFavorites ? t("sortByFavoritesActive") : t("sortByFavorites")}
@@ -170,11 +171,11 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
         <CircleButton onClick={handleSearch}>
           <Search size={18} />
         </CircleButton>
-      </div>
+      </HStack>
 
       {loading ? (
         <div className="p-8 text-center">
-          <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+          <Skeleton variant="circular" className="w-8 h-8 mx-auto mb-3" />
           <p className="text-sm text-gray-500">{t("loading")}</p>
         </div>
       ) : sortedDecks.length === 0 ? (

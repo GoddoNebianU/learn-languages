@@ -177,7 +177,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--background);
+  background: var(--primary-50);
   color: var(--foreground);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   font-size: 1rem;
