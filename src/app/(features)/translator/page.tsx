@@ -1,7 +1,9 @@
 "use client";
 
-import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button";
+import { LightButton, PrimaryButton,
+ IconClick } from "@/design-system/base/button";
 import { Select } from "@/design-system/base/select";
+import { Textarea } from "@/design-system/base/textarea";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
@@ -134,13 +136,13 @@ export default function TranslatorPage() {
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
           {/* ICard1 Component */}
           <div className="border border-gray-200 rounded-lg w-full h-64 p-2">
-            <textarea
-              className="resize-none h-8/12 w-full focus:outline-0"
+            <Textarea
+              className="resize-none h-8/12 w-full"
               ref={taref}
               onKeyDown={(e) => {
                 if (e.ctrlKey && e.key === "Enter") translate();
               }}
-            ></textarea>
+            />
             <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
               {translationResult?.sourceIpa || ""}
             </div>

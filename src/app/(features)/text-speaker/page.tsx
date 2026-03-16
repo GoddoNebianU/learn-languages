@@ -1,7 +1,7 @@
 "use client";
 
-import { LightButton } from "@/design-system/base/button";
-import { IconClick } from "@/design-system/base/button";
+import { LightButton, IconClick } from "@/design-system/base/button";
+import { Textarea } from "@/design-system/base/textarea";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import {
@@ -226,11 +226,12 @@ export default function TextSpeakerPage() {
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         {/* 文本输入框 */}
-        <textarea
-          className="text-2xl resize-none focus:outline-0 min-h-64 w-full border-gray-200 border-b p-4"
+        <Textarea
+          variant="bordered"
+          className="text-2xl min-h-64"
           onChange={handleInputChange}
           ref={textareaRef}
-        ></textarea>
+        />
         {/* IPA 显示区域 */}
         {(ipa.length !== 0 && (
           <div className="overflow-auto text-gray-600 h-18 border-gray-200 border-b px-4">

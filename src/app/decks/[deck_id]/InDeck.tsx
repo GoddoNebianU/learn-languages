@@ -11,7 +11,8 @@ import { PrimaryButton, CircleButton, LinkButton, LightButton } from "@/design-s
 import { CardList } from "@/components/ui/CardList";
 import { Modal } from "@/design-system/overlay/modal";
 import { Input } from "@/design-system/base/input";
-import { HStack } from "@/design-system/layout/stack";
+import { HStack, VStack } from "@/design-system/layout/stack";
+import { Skeleton } from "@/design-system/feedback/skeleton";
 import { actionGetCardsByDeckIdWithNotes, actionDeleteCard, actionResetDeckCards, actionGetTodayStudyStats } from "@/modules/card/card-action";
 import { actionGetDeckById, actionUpdateDeck } from "@/modules/deck/deck-action";
 import type { ActionOutputCardWithNote } from "@/modules/card/card-action-dto";
@@ -188,10 +189,10 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
 
       <CardList>
         {loading ? (
-          <div className="p-8 text-center">
-            <div className="w-8 h-8 border-2 border-gray-200 border-t-gray-400 rounded-full animate-spin mx-auto mb-3"></div>
+          <VStack align="center" className="p-8">
+            <Skeleton variant="circular" className="w-8 h-8" />
             <p className="text-sm text-gray-500">{t("loadingCards")}</p>
-          </div>
+          </VStack>
         ) : cards.length === 0 ? (
           <div className="p-12 text-center">
             <p className="text-sm text-gray-500 mb-2">{t("noCards")}</p>
