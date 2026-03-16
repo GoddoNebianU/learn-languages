@@ -117,6 +117,17 @@ export type ServiceOutputResetDeckCards = {
   message: string;
 };
 
+export type ServiceInputGetTodayStudyStats = {
+  deckId: number;
+};
+
+export type ServiceOutputTodayStudyStats = {
+  newStudied: number;
+  reviewStudied: number;
+  learningStudied: number;
+  totalStudied: number;
+};
+
 export const SM2_CONFIG = {
   LEARNING_STEPS: [1, 10],
   RELEARNING_STEPS: [10],

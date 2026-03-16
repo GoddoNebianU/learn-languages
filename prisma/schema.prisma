@@ -147,6 +147,8 @@ model Deck {
   visibility  Visibility    @default(PRIVATE)
   collapsed   Boolean       @default(false)
   conf        Json          @default("{}")
+  newPerDay   Int           @default(20) @map("new_per_day")
+  revPerDay   Int           @default(200) @map("rev_per_day")
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)

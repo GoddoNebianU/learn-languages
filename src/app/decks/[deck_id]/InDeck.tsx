@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Plus, RotateCcw } from "lucide-react";
+import { ArrowLeft, Plus, RotateCcw, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AddCardModal } from "./AddCardModal";
@@ -10,8 +10,13 @@ import { PageLayout } from "@/components/ui/PageLayout";
 import { PrimaryButton, CircleButton, LinkButton, LightButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
 import { Modal } from "@/design-system/overlay/modal";
-import { actionGetCardsByDeckIdWithNotes, actionDeleteCard, actionResetDeckCards } from "@/modules/card/card-action";
+import { Input } from "@/design-system/base/input";
+import { HStack } from "@/design-system/layout/stack";
+import { actionGetCardsByDeckIdWithNotes, actionDeleteCard, actionResetDeckCards, actionGetTodayStudyStats } from "@/modules/card/card-action";
+import { actionGetDeckById, actionUpdateDeck } from "@/modules/deck/deck-action";
 import type { ActionOutputCardWithNote } from "@/modules/card/card-action-dto";
+import type { ActionOutputTodayStudyStats } from "@/modules/card/card-action-dto";
+import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import { toast } from "sonner";
 
 
@@ -21,25 +26,45 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   const [openAddModal, setAddModal] = useState(false);
   const [openResetModal, setResetModal] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [deckInfo, setDeckInfo] = useState<ActionOutputDeck | null>(null);
+  const [todayStats, setTodayStats] = useState<ActionOutputTodayStudyStats | null>(null);
+  const [openSettingsModal, setSettingsModal] = useState(false);
+  const [settingsForm, setSettingsForm] = useState({ newPerDay: 20, revPerDay: 200 });
+  const [savingSettings, setSavingSettings] = useState(false);
   const router = useRouter();
   const t = useTranslations("deck_id");
 
   useEffect(() => {
     const fetchCards = async () => {
       setLoading(true);
-      await actionGetCardsByDeckIdWithNotes({ deckId })
-        .then(result => {
-          if (!result.success || !result.data) {
-            throw new Error(result.message || "Failed to load cards");
-          }
-          return result.data;
-        }).then(setCards)
-        .catch((error) => {
-          toast.error(error instanceof Error ? error.message : "Unknown error");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      try {
+        const [cardsResult, deckResult, statsResult] = await Promise.all([
+          actionGetCardsByDeckIdWithNotes({ deckId }),
+          actionGetDeckById({ deckId }),
+          actionGetTodayStudyStats({ deckId }),
+        ]);
+        
+        if (!cardsResult.success || !cardsResult.data) {
+          throw new Error(cardsResult.message || "Failed to load cards");
+        }
+        setCards(cardsResult.data);
+        
+        if (deckResult.success && deckResult.data) {
+          setDeckInfo(deckResult.data);
+          setSettingsForm({
+            newPerDay: deckResult.data.newPerDay ?? 20,
+            revPerDay: deckResult.data.revPerDay ?? 200,
+          });
+        }
+        
+        if (statsResult.success && statsResult.data) {
+          setTodayStats(statsResult.data);
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unknown error");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchCards();
   }, [deckId]);
@@ -75,6 +100,28 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
     }
   };
 
+  const handleSaveSettings = async () => {
+    setSavingSettings(true);
+    try {
+      const result = await actionUpdateDeck({
+        deckId,
+        newPerDay: settingsForm.newPerDay,
+        revPerDay: settingsForm.revPerDay,
+      });
+      if (result.success) {
+        setDeckInfo(prev => prev ? { ...prev, newPerDay: settingsForm.newPerDay, revPerDay: settingsForm.revPerDay } : null);
+        setSettingsModal(false);
+        toast.success(t("settingsSaved"));
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unknown error");
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
   return (
     <PageLayout>
       <div className="mb-6">
@@ -94,6 +141,13 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
             <p className="text-sm text-gray-500">
               {t("itemsCount", { count: cards.length })}
             </p>
+            {todayStats && (
+              <HStack gap={3} className="mt-2 text-xs text-gray-600">
+                <span>{t("todayNew")}: {todayStats.newStudied}</span>
+                <span>{t("todayReview")}: {todayStats.reviewStudied}</span>
+                <span>{t("todayLearning")}: {todayStats.learningStudied}</span>
+              </HStack>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -106,6 +160,12 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
             </PrimaryButton>
             {!isReadOnly && (
               <>
+                <CircleButton
+                  onClick={() => setSettingsModal(true)}
+                  title={t("settings")}
+                >
+                  <Settings size={18} className="text-gray-700" />
+                </CircleButton>
                 <LightButton
                   onClick={() => setResetModal(true)}
                   leftIcon={<RotateCcw size={16} />}
@@ -181,6 +241,53 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
           </LightButton>
           <PrimaryButton onClick={handleResetDeck} loading={resetting}>
             {resetting ? t("resetting") : t("resetProgress")}
+          </PrimaryButton>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Settings Modal */}
+      <Modal open={openSettingsModal} onClose={() => setSettingsModal(false)} size="sm">
+        <Modal.Header>
+          <Modal.Title>{t("settingsTitle")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("newPerDay")}
+              </label>
+              <Input
+                type="number"
+                variant="bordered"
+                value={settingsForm.newPerDay}
+                onChange={(e) => setSettingsForm(prev => ({ ...prev, newPerDay: parseInt(e.target.value) || 0 }))}
+                min={0}
+                max={999}
+              />
+              <p className="text-xs text-gray-500 mt-1">{t("newPerDayHint")}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("revPerDay")}
+              </label>
+              <Input
+                type="number"
+                variant="bordered"
+                value={settingsForm.revPerDay}
+                onChange={(e) => setSettingsForm(prev => ({ ...prev, revPerDay: parseInt(e.target.value) || 0 }))}
+                min={0}
+                max={9999}
+              />
+              <p className="text-xs text-gray-500 mt-1">{t("revPerDayHint")}</p>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <LightButton onClick={() => setSettingsModal(false)}>
+            {t("cancel")}
+          </LightButton>
+          <PrimaryButton onClick={handleSaveSettings} loading={savingSettings}>
+            {savingSettings ? t("saving") : t("save")}
           </PrimaryButton>
         </Modal.Footer>
       </Modal>

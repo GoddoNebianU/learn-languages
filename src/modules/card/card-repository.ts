@@ -1,5 +1,3 @@
-import { prisma } from "@/lib/db";
-import { createLogger } from "@/lib/logger";
 import {
   RepoInputCreateCard,
   RepoInputUpdateCard,
@@ -8,12 +6,16 @@ import {
   RepoInputGetNewCards,
   RepoInputBulkUpdateCards,
   RepoInputResetDeckCards,
+  RepoInputGetTodayStudyStats,
   RepoOutputCard,
   RepoOutputCardWithNote,
   RepoOutputCardStats,
+  RepoOutputTodayStudyStats,
   RepoOutputResetDeckCards,
 } from "./card-repository-dto";
 import { CardType, CardQueue } from "../../../generated/prisma/enums";
+import { prisma } from "@/lib/db";
+import { createLogger } from "@/lib/logger";
 
 const log = createLogger("card-repository");
 
@@ -324,8 +326,8 @@ export async function repoResetDeckCards(
       ivl: 0,
       factor: 2500,
       reps: 0,
-      lapses: 0,
-      left: 0,
+      lapses: 1,
+      left: 1,
       odue: 0,
       odid: 0,
       mod: Math.floor(Date.now() / 1000),
@@ -334,4 +336,49 @@ export async function repoResetDeckCards(
 
   log.info("Deck cards reset", { deckId: input.deckId, count: result.count });
   return { count: result.count };
+}
+
+export async function repoGetTodayStudyStats(
+  input: RepoInputGetTodayStudyStats,
+): Promise<RepoOutputTodayStudyStats> {
+  const now = new Date();
+  const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  startOfToday.setUTCHours(0, 0, 0, 0);
+  const todayStart = startOfToday.getTime();
+
+  const revlogs = await prisma.revlog.findMany({
+    where: {
+      card: {
+        deckId: input.deckId,
+      },
+      id: {
+        gte: todayStart,
+      },
+    },
+    select: {
+      id: true,
+      cardId: true,
+      type: true,
+    },
+  });
+
+  const stats: RepoOutputTodayStudyStats = {
+    newStudied: 0,
+    reviewStudied: 0,
+    learningStudied: 0,
+    totalStudied: 0,
+  };
+
+  for (const revlog of revlogs) {
+    stats.totalStudied++;
+    if (revlog.type === 0) {
+      stats.newStudied++;
+    } else if (revlog.type === 1) {
+      stats.learningStudied++;
+    } else if (revlog.type === 2 || revlog.type === 3) {
+      stats.reviewStudied++;
+    }
+  }
+
+  return stats;
 }

@@ -15,6 +15,8 @@ export const schemaActionInputUpdateDeck = z.object({
   desc: z.string().max(500).optional(),
   visibility: z.enum(["PRIVATE", "PUBLIC"]).optional(),
   collapsed: z.boolean().optional(),
+  newPerDay: z.number().int().min(0).max(999).optional(),
+  revPerDay: z.number().int().min(0).max(9999).optional(),
 });
 export type ActionInputUpdateDeck = z.infer<typeof schemaActionInputUpdateDeck>;
 export const validateActionInputUpdateDeck = generateValidator(schemaActionInputUpdateDeck);
@@ -46,6 +48,8 @@ export type ActionOutputDeck = {
   visibility: "PRIVATE" | "PUBLIC";
   collapsed: boolean;
   conf: unknown;
+  newPerDay: number;
+  revPerDay: number;
   createdAt: Date;
   updatedAt: Date;
   cardCount?: number;

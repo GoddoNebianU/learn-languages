@@ -13,6 +13,7 @@ import {
   repoGetCardsByNoteId,
   repoGetCardDeckOwnerId,
   repoResetDeckCards,
+  repoGetTodayStudyStats,
 } from "./card-repository";
 import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
 import {
@@ -29,6 +30,7 @@ import {
   ServiceInputCheckCardOwnership,
   ServiceInputResetDeckCards,
   ServiceInputCheckDeckOwnership,
+  ServiceInputGetTodayStudyStats,
   ServiceOutputCard,
   ServiceOutputCardWithNote,
   ServiceOutputCardStats,
@@ -36,6 +38,7 @@ import {
   ServiceOutputReviewResult,
   ServiceOutputCheckCardOwnership,
   ServiceOutputResetDeckCards,
+  ServiceOutputTodayStudyStats,
   ReviewEase,
   SM2_CONFIG,
 } from "./card-service-dto";
@@ -523,4 +526,18 @@ export async function serviceResetDeckCards(
 
   log.info("Deck cards reset successfully", { deckId: input.deckId, count: result.count });
   return { success: true, count: result.count, message: "Deck cards reset successfully" };
+}
+
+export async function serviceGetTodayStudyStats(
+  input: ServiceInputGetTodayStudyStats,
+): Promise<ServiceOutputTodayStudyStats> {
+  log.debug("Getting today study stats", { deckId: input.deckId });
+  const repoStats = await repoGetTodayStudyStats({ deckId: input.deckId });
+  
+ return {
+    newStudied: repoStats.newStudied,
+    reviewStudied: repoStats.reviewStudied,
+    learningStudied: repoStats.learningStudied,
+    totalStudied: repoStats.totalStudied,
+  };
 }

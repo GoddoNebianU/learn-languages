@@ -169,6 +169,24 @@ export const schemaActionInputResetDeckCards = z.object({
 export type ActionInputResetDeckCards = z.infer<typeof schemaActionInputResetDeckCards>;
 export const validateActionInputResetDeckCards = generateValidator(schemaActionInputResetDeckCards);
 
+export const schemaActionInputGetTodayStudyStats = z.object({
+  deckId: z.number().int().positive(),
+});
+export type ActionInputGetTodayStudyStats = z.infer<typeof schemaActionInputGetTodayStudyStats>;
+export const validateActionInputGetTodayStudyStats = generateValidator(schemaActionInputGetTodayStudyStats);
+
+export type ActionOutputGetTodayStudyStats = {
+  success: boolean;
+  message: string;
+  data?: ActionOutputTodayStudyStats;
+};
+export type ActionOutputTodayStudyStats = {
+  newStudied: number;
+  reviewStudied: number;
+  learningStudied: number;
+  totalStudied: number;
+};
+
 export type ActionOutputResetDeckCards = {
   success: boolean;
   message: string;

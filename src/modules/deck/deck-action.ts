@@ -101,6 +101,8 @@ export async function actionUpdateDeck(input: ActionInputUpdateDeck): Promise<Ac
       desc: validatedInput.desc,
       visibility: validatedInput.visibility as Visibility | undefined,
       collapsed: validatedInput.collapsed,
+      newPerDay: validatedInput.newPerDay,
+      revPerDay: validatedInput.revPerDay,
     });
   } catch (e) {
     if (e instanceof ValidateError) {

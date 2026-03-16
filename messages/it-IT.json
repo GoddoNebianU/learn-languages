@@ -112,12 +112,25 @@
     "resetSuccess": "{count} tarjetas ripristinate exitosamente",
     "resetting": "Ripristazione en curso...",
     "cancel": "Annulla",
+    "settings": "Impostazioni",
+    "settingsTitle": "Impostazioni deck",
+    "newPerDay": "Nuove schede al giorno",
+    "newPerDayHint": "Numero massimo di nuove schede al giorno",
+    "revPerDay": "Ripassi al giorno",
+    "revPerDayHint": "Numero massimo di schede da ripassare al giorno",
+    "save": "Salva",
+    "saving": "Salvataggio...",
+    "settingsSaved": "Impostazioni salvate",
+    "todayNew": "Nuove",
+    "todayReview": "Ripasso",
+    "todayLearning": "In corso",
     "error": {
       "update": "Non hai il permesso per aggiorn this card.",
       "delete": "Non hai il permesso per delete this card.",
       "add": "Non hai il permesso per add cards to this deck."
     }
   },
+  "home": {
     "title": "Impara le Lingue",
     "description": "Ecco un sito molto utile per aiutarti a imparare quasi tutte le lingue del mondo, incluse quelle costruite.",
     "explore": "Esplora",

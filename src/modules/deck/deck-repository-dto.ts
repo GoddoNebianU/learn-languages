@@ -13,6 +13,8 @@ export interface RepoInputUpdateDeck {
   desc?: string;
   visibility?: Visibility;
   collapsed?: boolean;
+  newPerDay?: number;
+  revPerDay?: number;
 }
 
 export interface RepoInputGetDeckById {
@@ -41,6 +43,8 @@ export type RepoOutputDeck = {
   visibility: Visibility;
   collapsed: boolean;
   conf: unknown;
+  newPerDay: number;
+  revPerDay: number;
   createdAt: Date;
   updatedAt: Date;
   cardCount?: number;

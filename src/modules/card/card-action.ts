@@ -14,6 +14,7 @@ import {
   ActionInputDeleteCard,
   ActionInputGetCardById,
   ActionInputResetDeckCards,
+  ActionInputGetTodayStudyStats,
   ActionOutputCreateCard,
   ActionOutputAnswerCard,
   ActionOutputGetCards,
@@ -21,10 +22,11 @@ import {
   ActionOutputGetCardStats,
   ActionOutputDeleteCard,
   ActionOutputGetCardById,
+  ActionOutputResetDeckCards,
   ActionOutputCard,
   ActionOutputCardWithNote,
   ActionOutputScheduledCard,
-  ActionOutputResetDeckCards,
+  ActionOutputGetTodayStudyStats,
   validateActionInputCreateCard,
   validateActionInputAnswerCard,
   validateActionInputGetCardsForReview,
@@ -34,6 +36,7 @@ import {
   validateActionInputDeleteCard,
   validateActionInputGetCardById,
   validateActionInputResetDeckCards,
+  validateActionInputGetTodayStudyStats,
 } from "./card-action-dto";
 import {
   serviceCreateCard,
@@ -47,6 +50,7 @@ import {
   serviceGetCardByIdWithNote,
   serviceCheckCardOwnership,
   serviceResetDeckCards,
+  serviceGetTodayStudyStats,
 } from "./card-service";
 import { CardQueue } from "../../../generated/prisma/enums";
 
@@ -430,13 +434,34 @@ export async function actionGetCardById(
   }
 }
 
+export async function actionGetTodayStudyStats(
+  input: ActionInputGetTodayStudyStats,
+): Promise<ActionOutputGetTodayStudyStats> {
+  try {
+    const validated = validateActionInputGetTodayStudyStats(input);
+    const stats = await serviceGetTodayStudyStats({ deckId: validated.deckId });
+    
+ return {
+      success: true,
+      message: "Today's study stats fetched successfully",
+      data: stats,
+    };
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to get today study stats", { error: e });
+    return { success: false, message: "An error occurred while fetching study stats" };
+  }
+}
+
 export async function actionResetDeckCards(
-  input: unknown,
+  input: ActionInputResetDeckCards,
 ): Promise<ActionOutputResetDeckCards> {
   try {
     const userId = await getCurrentUserId();
     if (!userId) {
-      return { success: false, message: "Unauthorized" };
+      return { success: false, message: "Unauthorized", data: { count: 0 } };
     }
 
     const validated = validateActionInputResetDeckCards(input);
@@ -446,7 +471,7 @@ export async function actionResetDeckCards(
     });
 
     if (!result.success) {
-      return { success: false, message: result.message };
+      return { success: false, message: result.message, data: { count: 0 } };
     }
 
     return {
@@ -456,9 +481,9 @@ export async function actionResetDeckCards(
     };
   } catch (e) {
     if (e instanceof ValidateError) {
-      return { success: false, message: e.message };
+      return { success: false, message: e.message, data: { count: 0 } };
     }
     log.error("Failed to reset deck cards", { error: e });
-    return { success: false, message: "An error occurred while resetting deck cards" };
+    return { success: false, message: "An error occurred while resetting deck cards", data: { count: 0 } };
   }
 }

@@ -59,6 +59,8 @@ export async function serviceUpdateDeck(input: ServiceInputUpdateDeck): Promise<
       desc: input.desc,
       visibility: input.visibility,
       collapsed: input.collapsed,
+      newPerDay: input.newPerDay,
+      revPerDay: input.revPerDay,
     });
     log.info("Deck updated successfully", { deckId: input.deckId });
     return { success: true, message: "Deck updated successfully" };

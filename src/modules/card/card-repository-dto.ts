@@ -103,6 +103,17 @@ export type RepoOutputCardStats = {
   due: number;
 };
 
+export type RepoOutputTodayStudyStats = {
+  newStudied: number;
+  reviewStudied: number;
+  learningStudied: number;
+  totalStudied: number;
+};
+
+export interface RepoInputGetTodayStudyStats {
+  deckId: number;
+}
+
 export interface RepoInputResetDeckCards {
   deckId: number;
 }
@@ -110,3 +121,7 @@ export interface RepoInputResetDeckCards {
 export type RepoOutputResetDeckCards = {
   count: number;
 };
+
+export interface RepoInputGetTodayStudyStats {
+  deckId: number;
+}

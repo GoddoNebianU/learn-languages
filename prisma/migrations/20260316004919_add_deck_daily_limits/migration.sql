@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "decks" ADD COLUMN     "new_per_day" INTEGER NOT NULL DEFAULT 20,
+ADD COLUMN     "rev_per_day" INTEGER NOT NULL DEFAULT 200;
