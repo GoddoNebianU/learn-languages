@@ -1,8 +1,8 @@
 "use client";
 
-import { LightButton, PrimaryButton,
- IconClick } from "@/design-system/base/button";
+import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button";
 import { Select } from "@/design-system/base/select";
+import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -46,6 +46,7 @@ export default function TranslatorPage() {
   const taref = useRef<HTMLTextAreaElement>(null);
   const [sourceLanguage, setSourceLanguage] = useState<string>("Auto");
   const [targetLanguage, setTargetLanguage] = useState<string>("Chinese");
+  const [customTargetLanguage, setCustomTargetLanguage] = useState<string>("");
   const [translationResult, setTranslationResult] = useState<TSharedTranslationResult | null>(null);
   const [needIpa, setNeedIpa] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -93,18 +94,18 @@ export default function TranslatorPage() {
     setProcessing(true);
 
     const sourceText = taref.current.value;
+    const effectiveTargetLanguage = customTargetLanguage.trim() || targetLanguage;
 
     // 判断是否需要强制重新翻译
-    // 只有当源文本、源语言和目标语言都与上次相同时，才强制重新翻译
     const forceRetranslate =
       lastTranslation?.sourceText === sourceText &&
       lastTranslation?.sourceLanguage === sourceLanguage &&
-      lastTranslation?.targetLanguage === targetLanguage;
+      lastTranslation?.targetLanguage === effectiveTargetLanguage;
 
     try {
       const result = await actionTranslateText({
         sourceText,
-        targetLanguage,
+        targetLanguage: effectiveTargetLanguage,
         forceRetranslate,
         needIpa,
         sourceLanguage: sourceLanguage === "Auto" ? undefined : sourceLanguage,
@@ -115,7 +116,7 @@ export default function TranslatorPage() {
         setLastTranslation({
           sourceText,
           sourceLanguage,
-          targetLanguage,
+          targetLanguage: effectiveTargetLanguage,
         });
       } else {
         toast.error(result.message || "翻译失败，请重试");
@@ -246,39 +247,43 @@ export default function TranslatorPage() {
           <div className="option2 w-full flex gap-1 items-center overflow-x-auto">
             <span className="shrink-0">{t("translateInto")}</span>
             <LightButton
-              selected={targetLanguage === "Chinese"}
-              onClick={() => setTargetLanguage("Chinese")}
+              selected={!customTargetLanguage && targetLanguage === "Chinese"}
+              onClick={() => {
+                setTargetLanguage("Chinese");
+                setCustomTargetLanguage("");
+              }}
               className="shrink-0 hidden lg:inline-flex"
             >
               {t("chinese")}
             </LightButton>
             <LightButton
-              selected={targetLanguage === "English"}
-              onClick={() => setTargetLanguage("English")}
+              selected={!customTargetLanguage && targetLanguage === "English"}
+              onClick={() => {
+                setTargetLanguage("English");
+                setCustomTargetLanguage("");
+              }}
               className="shrink-0 hidden lg:inline-flex"
             >
               {t("english")}
             </LightButton>
             <LightButton
-              selected={targetLanguage === "Japanese"}
-              onClick={() => setTargetLanguage("Japanese")}
+              selected={!customTargetLanguage && targetLanguage === "Japanese"}
+              onClick={() => {
+                setTargetLanguage("Japanese");
+                setCustomTargetLanguage("");
+              }}
               className="shrink-0 hidden xl:inline-flex"
             >
               {t("japanese")}
             </LightButton>
-            <Select
-              value={targetLanguage}
-              onChange={(e) => setTargetLanguage(e.target.value)}
-              variant="light"
+            <Input
+              variant="bordered"
               size="sm"
-              className="w-auto min-w-[100px] shrink-0"
-            >
-              {TARGET_LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value}>
-                  {t(lang.labelKey)}
-                </option>
-              ))}
-            </Select>
+              value={customTargetLanguage}
+              onChange={(e) => setCustomTargetLanguage(e.target.value)}
+              placeholder={t("customLanguage")}
+              className="w-auto min-w-[120px] shrink-0"
+            />
           </div>
         </div>
       </div>

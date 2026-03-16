@@ -373,7 +373,8 @@
       "success": "Textpaar zum Ordner hinzugefügt",
       "error": "Fehler beim Hinzufügen des Textpaars zum Ordner"
     },
-    "autoSave": "Autom. Speichern"
+    "autoSave": "Autom. Speichern",
+    "customLanguage": "oder Sprache eingeben..."
   },
   "dictionary": {
     "title": "Wörterbuch",

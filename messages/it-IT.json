@@ -402,7 +402,8 @@
       "success": "Coppia di testo aggiunta alla cartella",
       "error": "Impossibile aggiungere coppia di testo alla cartella"
     },
-    "autoSave": "Salvataggio Automatico"
+    "autoSave": "Salvataggio Automatico",
+    "customLanguage": "o digita lingua..."
   },
   "dictionary": {
     "title": "Dizionario",
@@ -507,15 +508,6 @@
       "actions": "Azioni",
       "view": "Visualizza"
     }
-  },
-  "follow": {
-    "follow": "Segui",
-    "following": "Seguiti",
-    "followers": "Seguaci",
-    "followersOf": "Seguaci di {username}",
-    "followingOf": "Seguiti di {username}",
-    "noFollowers": "Nessun seguace ancora",
-    "noFollowing": "Non segui ancora nessuno"
   },
   "follow": {
     "follow": "Segui",

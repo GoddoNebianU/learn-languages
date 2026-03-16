@@ -46,7 +46,7 @@
     "unfavorite": "Unfavorite",
     "pleaseLogin": "Please login first"
   },
-"folder_id": {
+  "folder_id": {
     "unauthorized": "You are not the owner of this folder",
     "back": "Back",
     "textPairs": "Text Pairs",
@@ -287,7 +287,7 @@
     "favorites": "Favorites",
     "settings": "Settings"
   },
-"ocr": {
+  "ocr": {
     "title": "OCR Vocabulary Extractor",
     "description": "Upload vocabulary table screenshots from textbooks to extract word-definition pairs",
     "uploadSection": "Upload Image",
@@ -400,6 +400,7 @@
     "auto": "Auto",
     "generateIPA": "generate ipa",
     "translateInto": "translate into",
+    "customLanguage": "or type language...",
     "chinese": "Chinese",
     "english": "English",
     "french": "French",

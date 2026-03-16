@@ -411,7 +411,8 @@
       "success": "テキストペアがフォルダーに追加されました",
       "error": "テキストペアをフォルダーに追加できませんでした"
     },
-    "autoSave": "自動保存"
+    "autoSave": "自動保存",
+    "customLanguage": "または言語を入力..."
   },
   "dictionary": {
     "title": "辞書",
