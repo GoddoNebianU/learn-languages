@@ -4,6 +4,10 @@ import { nextCookies } from "better-auth/next-js";
 import { username } from "better-auth/plugins";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { prisma } from "./lib/db";
+import { createLogger } from "./lib/logger";
+
+const log = createLogger("auth");
+
 import {
   sendEmail,
   generateVerificationEmailHtml,
@@ -24,7 +28,7 @@ export const auth = betterAuth({
         html: generateResetPasswordEmailHtml(url, user.name || "用户"),
       });
       if (!result.success) {
-        console.error("[email] Failed to send reset password email:", result.error);
+        log.error("Failed to send reset password email", { error: result.error });
       }
     },
   },
@@ -38,7 +42,7 @@ export const auth = betterAuth({
         html: generateVerificationEmailHtml(url, user.name || "用户"),
       });
       if (!result.success) {
-        console.error("[email] Failed to send verification email:", result.error);
+        log.error("Failed to send verification email", { error: result.error });
       }
     },
   },
