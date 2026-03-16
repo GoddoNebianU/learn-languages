@@ -346,7 +346,8 @@ export async function repoGetTodayStudyStats(
   startOfToday.setUTCHours(0, 0, 0, 0);
   const todayStart = startOfToday.getTime();
 
-  const revlogs = await prisma.revlog.findMany({
+  const stats = await prisma.revlog.groupBy({
+    by: ["type"],
     where: {
       card: {
         deckId: input.deckId,
@@ -355,30 +356,29 @@ export async function repoGetTodayStudyStats(
         gte: todayStart,
       },
     },
-    select: {
-      id: true,
-      cardId: true,
+    _count: {
       type: true,
     },
   });
 
-  const stats: RepoOutputTodayStudyStats = {
-    newStudied: 0,
-    reviewStudied: 0,
-    learningStudied: 0,
-    totalStudied: 0,
-  };
+  let newStudied = 0;
+  let reviewStudied = 0;
+  let learningStudied = 0;
 
-  for (const revlog of revlogs) {
-    stats.totalStudied++;
-    if (revlog.type === 0) {
-      stats.newStudied++;
-    } else if (revlog.type === 1) {
-      stats.learningStudied++;
-    } else if (revlog.type === 2 || revlog.type === 3) {
-      stats.reviewStudied++;
+  for (const stat of stats) {
+    if (stat.type === 0) {
+      newStudied = stat._count.type;
+    } else if (stat.type === 1) {
+      learningStudied = stat._count.type;
+    } else if (stat.type === 2 || stat.type === 3) {
+      reviewStudied += stat._count.type;
     }
   }
 
-  return stats;
+  return {
+    newStudied,
+    reviewStudied,
+    learningStudied,
+    totalStudied: newStudied + reviewStudied + learningStudied,
+  };
 }

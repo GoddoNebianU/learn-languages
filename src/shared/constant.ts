@@ -20,3 +20,17 @@ export const LENGTH_MAX_USERNAME = 30;
 export const LENGTH_MIN_USERNAME = 3;
 export const LENGTH_MAX_PASSWORD = 100;
 export const LENGTH_MIN_PASSWORD = 8;
+
+export const FIELD_SEPARATOR = "\x1f";
+
+export const DEFAULT_NEW_PER_DAY = 20;
+export const DEFAULT_REV_PER_DAY = 200;
+
+export const SECONDS_PER_MINUTE = 60;
+export const SECONDS_PER_HOUR = 3600;
+export const SECONDS_PER_DAY = 86400;
+
+export const MS_PER_SECOND = 1000;
+export const MS_PER_MINUTE = 60000;
+export const MS_PER_HOUR = 3600000;
+export const MS_PER_DAY = 86400000;

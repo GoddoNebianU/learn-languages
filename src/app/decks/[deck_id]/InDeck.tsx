@@ -18,6 +18,7 @@ import type { ActionOutputCardWithNote } from "@/modules/card/card-action-dto";
 import type { ActionOutputTodayStudyStats } from "@/modules/card/card-action-dto";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import { toast } from "sonner";
+import { DEFAULT_NEW_PER_DAY, DEFAULT_REV_PER_DAY } from "@/shared/constant";
 
 
 export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boolean; }) {
@@ -29,7 +30,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   const [deckInfo, setDeckInfo] = useState<ActionOutputDeck | null>(null);
   const [todayStats, setTodayStats] = useState<ActionOutputTodayStudyStats | null>(null);
   const [openSettingsModal, setSettingsModal] = useState(false);
-  const [settingsForm, setSettingsForm] = useState({ newPerDay: 20, revPerDay: 200 });
+  const [settingsForm, setSettingsForm] = useState({ newPerDay: DEFAULT_NEW_PER_DAY, revPerDay: DEFAULT_REV_PER_DAY });
   const [savingSettings, setSavingSettings] = useState(false);
   const router = useRouter();
   const t = useTranslations("deck_id");
