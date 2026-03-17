@@ -168,12 +168,12 @@ export async function executeTranslation(
         let targetIpa: string | undefined;
 
         if (needIpa) {
-            log.debug("[Stage 3] Generating IPA");
-            sourceIpa = await generateIPA(sourceText, detectedLanguage);
-            log.debug("[Stage 3] Source IPA", { sourceIpa });
-
-            targetIpa = await generateIPA(translatedText, targetLanguage);
-            log.debug("[Stage 3] Target IPA", { targetIpa });
+            log.debug("[Stage 3] Generating IPA in parallel");
+            [sourceIpa, targetIpa] = await Promise.all([
+                generateIPA(sourceText, detectedLanguage),
+                generateIPA(translatedText, targetLanguage),
+            ]);
+            log.debug("[Stage 3] IPA complete", { sourceIpa, targetIpa });
         }
 
         // Assemble final result

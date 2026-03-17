@@ -1,50 +1,40 @@
 "use server";
 
+import { serviceGenIPA, serviceGenLanguage, serviceTranslateText } from "./translator-service";
 import {
     ActionInputTranslateText,
     ActionOutputTranslateText,
     validateActionInputTranslateText,
 } from "./translator-action-dto";
-import { ValidateError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { serviceTranslateText, serviceGenIPA, serviceGenLanguage } from "./translator-service";
+import { ValidateError } from "@/lib/errors";
 
 const log = createLogger("translator-action");
 
 export const actionTranslateText = async (
-    dto: ActionInputTranslateText
+    input: unknown,
 ): Promise<ActionOutputTranslateText> => {
     try {
+        const validated = validateActionInputTranslateText(input);
+        const result = await serviceTranslateText(validated);
         return {
-            message: "success",
             success: true,
-            data: await serviceTranslateText(validateActionInputTranslateText(dto)),
+            message: "Translation completed",
+            data: result,
         };
     } catch (e) {
         if (e instanceof ValidateError) {
-            return {
-                success: false,
-                message: e.message,
-            };
+            return { success: false, message: e.message };
         }
-        log.error("Translation action failed", { error: e });
-        return {
-            success: false,
-            message: "Unknown error occurred.",
-        };
+        log.error("Translation failed", { error: e instanceof Error ? e.message : String(e) });
+        return { success: false, message: "Translation failed" };
     }
 };
 
-/**
- * @deprecated 保留此函数以支持旧代码（text-speaker 功能）
- */
-export const genIPA = async (text: string) => {
+export const genIPA = async (text: string): Promise<string> => {
     return serviceGenIPA({ text });
 };
 
-/**
- * @deprecated 保留此函数以支持旧代码（text-speaker 功能）
- */
-export const genLanguage = async (text: string) => {
+export const genLanguage = async (text: string): Promise<string> => {
     return serviceGenLanguage({ text });
 };

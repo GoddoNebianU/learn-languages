@@ -1,17 +1,23 @@
 "use client";
 
-import { LightButton, PrimaryButton, IconClick } from "@/design-system/base/button";
-import { Select } from "@/design-system/base/select";
+import { LightButton, PrimaryButton, IconClick, CircleButton } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
+import { Select } from "@/design-system/base/select";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { actionTranslateText } from "@/modules/translator/translator-action";
+import { actionCreateCard } from "@/modules/card/card-action";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
+import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
+import { Plus } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const SOURCE_LANGUAGES = [
   { value: "Auto", labelKey: "auto" },
@@ -40,12 +46,21 @@ const TARGET_LANGUAGES = [
   { value: "Russian", labelKey: "russian" },
 ] as const;
 
+// Estimated button width in pixels (including gap)
+const BUTTON_WIDTH = 80;
+const LABEL_WIDTH = 100;
+const INPUT_WIDTH = 140;
+const IPA_BUTTON_WIDTH = 100;
+
 export default function TranslatorPage() {
   const t = useTranslations("translator");
 
   const taref = useRef<HTMLTextAreaElement>(null);
+  const sourceContainerRef = useRef<HTMLDivElement>(null);
+  const targetContainerRef = useRef<HTMLDivElement>(null);
   const [sourceLanguage, setSourceLanguage] = useState<string>("Auto");
   const [targetLanguage, setTargetLanguage] = useState<string>("Chinese");
+  const [customSourceLanguage, setCustomSourceLanguage] = useState<string>("");
   const [customTargetLanguage, setCustomTargetLanguage] = useState<string>("");
   const [translationResult, setTranslationResult] = useState<TSharedTranslationResult | null>(null);
   const [needIpa, setNeedIpa] = useState(true);
@@ -55,38 +70,72 @@ export default function TranslatorPage() {
     sourceLanguage: string;
     targetLanguage: string;
   } | null>(null);
+  const [sourceButtonCount, setSourceButtonCount] = useState(2);
+  const [targetButtonCount, setTargetButtonCount] = useState(2);
   const { load, play } = useAudioPlayer();
-  const lastTTS = useRef({
-    text: "",
-    url: "",
-  });
+  
+  const { data: session } = authClient.useSession();
+  const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const tts = async (text: string, locale: string) => {
-    if (lastTTS.current.text !== text) {
-      try {
-        // Map language name to TTS format
-        let theLanguage = locale.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
-
-        // Check if language is in TTS supported list
-        const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-          "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
-          "Spanish", "Japanese", "Korean", "French", "Russian"
-        ];
-
-        if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
-          theLanguage = "Auto";
+  useEffect(() => {
+    if (session?.user?.id) {
+      actionGetDecksByUserId(session.user.id).then((result) => {
+        if (result.success && result.data) {
+          setDecks(result.data);
         }
-
-        const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
-        await load(url);
-        await play();
-        lastTTS.current.text = text;
-        lastTTS.current.url = url;
-      } catch (error) {
-        toast.error("Failed to generate audio");
-      }
+      });
     }
-  };
+  }, [session?.user?.id]);
+
+  // Calculate how many buttons to show based on container width
+  const calculateButtonCount = useCallback((containerWidth: number, hasIpa: boolean) => {
+    // Reserve space for label, input, and IPA button (for source)
+    const reservedWidth = LABEL_WIDTH + INPUT_WIDTH + (hasIpa ? IPA_BUTTON_WIDTH : 0);
+    const availableWidth = containerWidth - reservedWidth;
+    return Math.max(0, Math.floor(availableWidth / BUTTON_WIDTH));
+  }, []);
+
+  useEffect(() => {
+    const updateButtonCounts = () => {
+      if (sourceContainerRef.current) {
+        const width = sourceContainerRef.current.offsetWidth;
+        setSourceButtonCount(calculateButtonCount(width, true));
+      }
+      if (targetContainerRef.current) {
+        const width = targetContainerRef.current.offsetWidth;
+        setTargetButtonCount(calculateButtonCount(width, false));
+      }
+    };
+
+    updateButtonCounts();
+    window.addEventListener("resize", updateButtonCounts);
+    return () => window.removeEventListener("resize", updateButtonCounts);
+  }, [calculateButtonCount]);
+
+  const tts = useCallback(async (text: string, locale: string) => {
+    try {
+      // Map language name to TTS format
+      let theLanguage = locale.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
+
+      // Check if language is in TTS supported list
+      const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
+        "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
+        "Spanish", "Japanese", "Korean", "French", "Russian"
+      ];
+
+      if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
+        theLanguage = "Auto";
+      }
+
+      const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
+      await load(url);
+      await play();
+    } catch (error) {
+      toast.error("Failed to generate audio");
+    }
+  }, [load, play]);
 
   const translate = async () => {
     if (!taref.current || processing) return;
@@ -94,12 +143,13 @@ export default function TranslatorPage() {
     setProcessing(true);
 
     const sourceText = taref.current.value;
+    const effectiveSourceLanguage = customSourceLanguage.trim() || sourceLanguage;
     const effectiveTargetLanguage = customTargetLanguage.trim() || targetLanguage;
 
     // 判断是否需要强制重新翻译
     const forceRetranslate =
       lastTranslation?.sourceText === sourceText &&
-      lastTranslation?.sourceLanguage === sourceLanguage &&
+      lastTranslation?.sourceLanguage === effectiveSourceLanguage &&
       lastTranslation?.targetLanguage === effectiveTargetLanguage;
 
     try {
@@ -108,14 +158,14 @@ export default function TranslatorPage() {
         targetLanguage: effectiveTargetLanguage,
         forceRetranslate,
         needIpa,
-        sourceLanguage: sourceLanguage === "Auto" ? undefined : sourceLanguage,
+        sourceLanguage: effectiveSourceLanguage === "Auto" ? undefined : effectiveSourceLanguage,
       });
 
       if (result.success && result.data) {
         setTranslationResult(result.data);
         setLastTranslation({
           sourceText,
-          sourceLanguage,
+          sourceLanguage: effectiveSourceLanguage,
           targetLanguage: effectiveTargetLanguage,
         });
       } else {
@@ -126,6 +176,66 @@ export default function TranslatorPage() {
       console.error("翻译错误:", error);
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const visibleSourceButtons = SOURCE_LANGUAGES.slice(0, sourceButtonCount);
+  const visibleTargetButtons = TARGET_LANGUAGES.slice(0, targetButtonCount);
+
+  const handleSaveCard = async () => {
+    if (!session) {
+      toast.error(t("pleaseLogin"));
+      return;
+    }
+    if (decks.length === 0) {
+      toast.error(t("pleaseCreateDeck"));
+      return;
+    }
+    if (!lastTranslation?.sourceText || !translationResult?.translatedText) {
+      toast.error(t("noTranslationToSave"));
+      return;
+    }
+
+    const deckSelect = document.getElementById("deck-select-translator") as HTMLSelectElement;
+    const deckId = deckSelect?.value ? Number(deckSelect.value) : decks[0]?.id;
+
+    if (!deckId) {
+      toast.error(t("noDeckSelected"));
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      const sourceText = lastTranslation.sourceText;
+      const hasSpaces = sourceText.includes(" ");
+      let cardType: CardType = "WORD";
+      if (!translationResult.sourceIpa) {
+        cardType = "SENTENCE";
+      } else if (hasSpaces) {
+        cardType = "PHRASE";
+      }
+
+      await actionCreateCard({
+        deckId,
+        word: sourceText,
+        ipa: translationResult.sourceIpa || null,
+        queryLang: lastTranslation.sourceLanguage,
+        cardType,
+        meanings: [{
+          partOfSpeech: null,
+          definition: translationResult.translatedText,
+          example: null,
+        }],
+      });
+
+      const deckName = decks.find((d) => d.id === deckId)?.name || "Unknown";
+      toast.success(t("savedToDeck", { deckName }));
+      setShowSaveModal(false);
+    } catch (error) {
+      toast.error(t("saveFailed"));
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -161,49 +271,36 @@ export default function TranslatorPage() {
                 src={IMAGES.play_arrow}
                 alt="play"
                 onClick={() => {
-                  const t = taref.current?.value;
-                  if (!t) return;
-                  tts(t, translationResult?.sourceLanguage || "");
+                  const text = taref.current?.value;
+                  if (!text) return;
+                  tts(text, translationResult?.sourceLanguage || "");
                 }}
               ></IconClick>
             </div>
           </div>
-          <div className="option1 w-full flex gap-1 items-center overflow-x-auto">
+          <div ref={sourceContainerRef} className="option1 w-full flex gap-1 items-center overflow-x-auto">
             <span className="shrink-0">{t("sourceLanguage")}</span>
-            <LightButton
-              selected={sourceLanguage === "Auto"}
-              onClick={() => setSourceLanguage("Auto")}
-              className="shrink-0 hidden lg:inline-flex"
-            >
-              {t("auto")}
-            </LightButton>
-            <LightButton
-              selected={sourceLanguage === "Chinese"}
-              onClick={() => setSourceLanguage("Chinese")}
-              className="shrink-0 hidden lg:inline-flex"
-            >
-              {t("chinese")}
-            </LightButton>
-            <LightButton
-              selected={sourceLanguage === "English"}
-              onClick={() => setSourceLanguage("English")}
-              className="shrink-0 hidden xl:inline-flex"
-            >
-              {t("english")}
-            </LightButton>
-            <Select
-              value={sourceLanguage}
-              onChange={(e) => setSourceLanguage(e.target.value)}
-              variant="light"
+            {visibleSourceButtons.map((lang) => (
+              <LightButton
+                key={lang.value}
+                selected={!customSourceLanguage && sourceLanguage === lang.value}
+                onClick={() => {
+                  setSourceLanguage(lang.value);
+                  setCustomSourceLanguage("");
+                }}
+                className="shrink-0"
+              >
+                {t(lang.labelKey)}
+              </LightButton>
+            ))}
+            <Input
+              variant="bordered"
               size="sm"
-              className="w-auto min-w-[100px] shrink-0"
-            >
-              {SOURCE_LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value}>
-                  {t(lang.labelKey)}
-                </option>
-              ))}
-            </Select>
+              value={customSourceLanguage}
+              onChange={(e) => setCustomSourceLanguage(e.target.value)}
+              placeholder={t("customLanguage")}
+              className="w-auto min-w-[120px] shrink-0"
+            />
             <div className="flex-1"></div>
             <LightButton
               selected={needIpa}
@@ -244,38 +341,21 @@ export default function TranslatorPage() {
               ></IconClick>
             </div>
           </div>
-          <div className="option2 w-full flex gap-1 items-center overflow-x-auto">
+          <div ref={targetContainerRef} className="option2 w-full flex gap-1 items-center overflow-x-auto">
             <span className="shrink-0">{t("translateInto")}</span>
-            <LightButton
-              selected={!customTargetLanguage && targetLanguage === "Chinese"}
-              onClick={() => {
-                setTargetLanguage("Chinese");
-                setCustomTargetLanguage("");
-              }}
-              className="shrink-0 hidden lg:inline-flex"
-            >
-              {t("chinese")}
-            </LightButton>
-            <LightButton
-              selected={!customTargetLanguage && targetLanguage === "English"}
-              onClick={() => {
-                setTargetLanguage("English");
-                setCustomTargetLanguage("");
-              }}
-              className="shrink-0 hidden lg:inline-flex"
-            >
-              {t("english")}
-            </LightButton>
-            <LightButton
-              selected={!customTargetLanguage && targetLanguage === "Japanese"}
-              onClick={() => {
-                setTargetLanguage("Japanese");
-                setCustomTargetLanguage("");
-              }}
-              className="shrink-0 hidden xl:inline-flex"
-            >
-              {t("japanese")}
-            </LightButton>
+            {visibleTargetButtons.map((lang) => (
+              <LightButton
+                key={lang.value}
+                selected={!customTargetLanguage && targetLanguage === lang.value}
+                onClick={() => {
+                  setTargetLanguage(lang.value);
+                  setCustomTargetLanguage("");
+                }}
+                className="shrink-0"
+              >
+                {t(lang.labelKey)}
+              </LightButton>
+            ))}
             <Input
               variant="bordered"
               size="sm"
@@ -289,7 +369,7 @@ export default function TranslatorPage() {
       </div>
 
       {/* TranslateButton Component */}
-      <div className="w-screen flex justify-center items-center">
+      <div className="w-screen flex justify-center items-center gap-4">
         <PrimaryButton
           onClick={translate}
           disabled={processing}
@@ -298,7 +378,49 @@ export default function TranslatorPage() {
         >
           {t("translate")}
         </PrimaryButton>
+        {translationResult && session && decks.length > 0 && (
+          <CircleButton
+            onClick={() => setShowSaveModal(true)}
+            title={t("saveAsCard")}
+          >
+            <Plus size={20} />
+          </CircleButton>
+        )}
       </div>
+
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <h2 className="text-xl font-semibold mb-4">{t("saveAsCard")}</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("selectDeck")}
+              </label>
+              <Select id="deck-select-translator" className="w-full">
+                {decks.map((deck) => (
+                  <option key={deck.id} value={deck.id}>
+                    {deck.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="mb-4 p-3 bg-gray-50 rounded text-sm">
+              <div className="font-medium mb-1">{t("front")}:</div>
+              <div className="text-gray-700 mb-2">{lastTranslation?.sourceText}</div>
+              <div className="font-medium mb-1">{t("back")}:</div>
+              <div className="text-gray-700">{translationResult?.translatedText}</div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <LightButton onClick={() => setShowSaveModal(false)}>
+                {t("cancel")}
+              </LightButton>
+              <PrimaryButton onClick={handleSaveCard} loading={isSaving}>
+                {t("save")}
+              </PrimaryButton>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

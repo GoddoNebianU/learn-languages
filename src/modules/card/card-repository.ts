@@ -1,273 +1,131 @@
 import {
   RepoInputCreateCard,
   RepoInputUpdateCard,
+  RepoInputDeleteCard,
   RepoInputGetCardsByDeckId,
-  RepoInputGetCardsForReview,
-  RepoInputGetNewCards,
-  RepoInputBulkUpdateCards,
-  RepoInputResetDeckCards,
-  RepoInputGetTodayStudyStats,
+  RepoInputGetRandomCard,
+  RepoInputCheckCardOwnership,
   RepoOutputCard,
-  RepoOutputCardWithNote,
   RepoOutputCardStats,
-  RepoOutputTodayStudyStats,
-  RepoOutputResetDeckCards,
+  CardMeaning,
 } from "./card-repository-dto";
-import { CardType, CardQueue } from "../../../generated/prisma/enums";
 import { prisma } from "@/lib/db";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("card-repository");
 
-export async function repoCreateCard(
-  input: RepoInputCreateCard,
-): Promise<bigint> {
-  log.debug("Creating card", { noteId: input.noteId.toString(), deckId: input.deckId });
+export async function repoCreateCard(input: RepoInputCreateCard): Promise<number> {
+  log.debug("Creating card", { deckId: input.deckId, word: input.word });
   const card = await prisma.card.create({
     data: {
-      id: input.id,
-      noteId: input.noteId,
       deckId: input.deckId,
-      ord: input.ord,
-      due: input.due,
-      mod: Math.floor(Date.now() / 1000),
-      type: input.type ?? CardType.NEW,
-      queue: input.queue ?? CardQueue.NEW,
-      ivl: input.ivl ?? 0,
-      factor: input.factor ?? 2500,
-      reps: input.reps ?? 0,
-      lapses: input.lapses ?? 0,
-      left: input.left ?? 0,
-      odue: input.odue ?? 0,
-      odid: input.odid ?? 0,
-      flags: input.flags ?? 0,
-      data: input.data ?? "",
+      word: input.word,
+      ipa: input.ipa,
+      queryLang: input.queryLang,
+      cardType: input.cardType,
+      meanings: {
+        create: input.meanings.map((m: CardMeaning) => ({
+          partOfSpeech: m.partOfSpeech,
+          definition: m.definition,
+          example: m.example,
+        })),
+      },
     },
   });
-  log.info("Card created", { cardId: card.id.toString() });
+  log.info("Card created", { cardId: card.id });
   return card.id;
 }
 
-export async function repoUpdateCard(
-  id: bigint,
-  input: RepoInputUpdateCard,
-): Promise<void> {
-  log.debug("Updating card", { cardId: id.toString() });
-  await prisma.card.update({
-    where: { id },
-    data: {
-      ...input,
-      updatedAt: new Date(),
-    },
+export async function repoUpdateCard(input: RepoInputUpdateCard): Promise<void> {
+  log.debug("Updating card", { cardId: input.cardId });
+  await prisma.$transaction(async (tx) => {
+    if (input.word !== undefined) {
+      await tx.card.update({
+        where: { id: input.cardId },
+        data: { word: input.word },
+      });
+    }
+    if (input.ipa !== undefined) {
+      await tx.card.update({
+        where: { id: input.cardId },
+        data: { ipa: input.ipa },
+      });
+    }
+    if (input.meanings !== undefined) {
+      await tx.cardMeaning.deleteMany({
+        where: { cardId: input.cardId },
+      });
+      await tx.cardMeaning.createMany({
+        data: input.meanings.map((m: CardMeaning) => ({
+          cardId: input.cardId,
+          partOfSpeech: m.partOfSpeech,
+          definition: m.definition,
+          example: m.example,
+        })),
+      });
+    }
+    await tx.card.update({
+      where: { id: input.cardId },
+      data: { updatedAt: new Date() },
+    });
   });
-  log.info("Card updated", { cardId: id.toString() });
+  log.info("Card updated", { cardId: input.cardId });
 }
 
-export async function repoGetCardById(id: bigint): Promise<RepoOutputCard | null> {
-  const card = await prisma.card.findUnique({
-    where: { id },
-  });
-  return card;
-}
-
-export async function repoGetCardByIdWithNote(
-  id: bigint,
-): Promise<RepoOutputCardWithNote | null> {
-  const card = await prisma.card.findUnique({
-    where: { id },
-    include: {
-      note: {
-        select: {
-          id: true,
-          flds: true,
-          sfld: true,
-          tags: true,
-        },
-      },
-    },
-  });
-  return card;
-}
-
-export async function repoGetCardsByDeckId(
-  input: RepoInputGetCardsByDeckId,
-): Promise<RepoOutputCard[]> {
-  const { deckId, limit = 50, offset = 0, queue } = input;
-
-  const queueFilter = queue
-    ? Array.isArray(queue)
-      ? { in: queue }
-      : queue
-    : undefined;
-
-  const cards = await prisma.card.findMany({
-    where: {
-      deckId,
-      queue: queueFilter,
-    },
-    orderBy: { due: "asc" },
-    take: limit,
-    skip: offset,
-  });
-
-  log.debug("Fetched cards by deck", { deckId, count: cards.length });
-  return cards;
-}
-
-export async function repoGetCardsByDeckIdWithNotes(
-  input: RepoInputGetCardsByDeckId,
-): Promise<RepoOutputCardWithNote[]> {
-  const { deckId, limit = 100, offset = 0, queue } = input;
-
-  const queueFilter = queue
-    ? Array.isArray(queue)
-      ? { in: queue }
-      : queue
-    : undefined;
-
-  const cards = await prisma.card.findMany({
-    where: {
-      deckId,
-      queue: queueFilter,
-    },
-    include: {
-      note: {
-        select: {
-          id: true,
-          flds: true,
-          sfld: true,
-          tags: true,
-        },
-      },
-    },
-    orderBy: { id: "asc" },
-    take: limit,
-    skip: offset,
-  });
-
-  log.debug("Fetched cards by deck with notes", { deckId, count: cards.length });
-  return cards;
-}
-
-export async function repoGetCardsForReview(
-  input: RepoInputGetCardsForReview,
-): Promise<RepoOutputCardWithNote[]> {
-  const { deckId, limit = 20 } = input;
-  const now = Math.floor(Date.now() / 1000);
-  const todayDays = Math.floor(now / 86400);
-
-  const cards = await prisma.card.findMany({
-    where: {
-      deckId,
-      queue: { in: [CardQueue.NEW, CardQueue.LEARNING, CardQueue.REVIEW] },
-      OR: [
-        { type: CardType.NEW },
-        {
-          type: { in: [CardType.LEARNING, CardType.REVIEW] },
-          due: { lte: todayDays },
-        },
-      ],
-    },
-    include: {
-      note: {
-        select: {
-          id: true,
-          flds: true,
-          sfld: true,
-          tags: true,
-        },
-      },
-    },
-    orderBy: [
-      { type: "asc" },
-      { due: "asc" },
-    ],
-    take: limit,
-  });
-
-  log.debug("Fetched cards for review", { deckId, count: cards.length });
-  return cards;
-}
-
-export async function repoGetNewCards(
-  input: RepoInputGetNewCards,
-): Promise<RepoOutputCardWithNote[]> {
-  const { deckId, limit = 20 } = input;
-
-  const cards = await prisma.card.findMany({
-    where: {
-      deckId,
-      type: CardType.NEW,
-      queue: CardQueue.NEW,
-    },
-    include: {
-      note: {
-        select: {
-          id: true,
-          flds: true,
-          sfld: true,
-          tags: true,
-        },
-      },
-    },
-    orderBy: { due: "asc" },
-    take: limit,
-  });
-
-  log.debug("Fetched new cards", { deckId, count: cards.length });
-  return cards;
-}
-
-export async function repoDeleteCard(id: bigint): Promise<void> {
-  log.debug("Deleting card", { cardId: id.toString() });
+export async function repoDeleteCard(input: RepoInputDeleteCard): Promise<void> {
+  log.debug("Deleting card", { cardId: input.cardId });
   await prisma.card.delete({
-    where: { id },
+    where: { id: input.cardId },
   });
-  log.info("Card deleted", { cardId: id.toString() });
+  log.info("Card deleted", { cardId: input.cardId });
 }
 
-export async function repoBulkUpdateCards(
-  input: RepoInputBulkUpdateCards,
-): Promise<void> {
-  log.debug("Bulk updating cards", { count: input.cards.length });
-
-  await prisma.$transaction(
-    input.cards.map((item) =>
-      prisma.card.update({
-        where: { id: item.id },
-        data: {
-          ...item.data,
-          updatedAt: new Date(),
-        },
-      }),
-    ),
-  );
-
-  log.info("Bulk update completed", { count: input.cards.length });
+export async function repoGetCardById(cardId: number): Promise<RepoOutputCard | null> {
+  const card = await prisma.card.findUnique({
+    where: { id: cardId },
+    include: { meanings: { orderBy: { createdAt: "asc" } } },
+  });
+  return card as RepoOutputCard | null;
 }
 
-export async function repoGetCardStats(deckId: number): Promise<RepoOutputCardStats> {
-  const now = Math.floor(Date.now() / 1000);
-  const todayDays = Math.floor(now / 86400);
-
-  const [total, newCards, learning, review, due] = await Promise.all([
-    prisma.card.count({ where: { deckId } }),
-    prisma.card.count({ where: { deckId, type: CardType.NEW } }),
-    prisma.card.count({ where: { deckId, type: CardType.LEARNING } }),
-    prisma.card.count({ where: { deckId, type: CardType.REVIEW } }),
-    prisma.card.count({
-      where: {
-        deckId,
-        type: { in: [CardType.LEARNING, CardType.REVIEW] },
-        due: { lte: todayDays },
-      },
-    }),
-  ]);
-
-  return { total, new: newCards, learning, review, due };
+export async function repoGetCardsByDeckId(input: RepoInputGetCardsByDeckId): Promise<RepoOutputCard[]> {
+  const { deckId, limit = 50, offset = 0 } = input;
+  const cards = await prisma.card.findMany({
+    where: { deckId },
+    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    skip: offset,
+  });
+  log.debug("Fetched cards by deck", { deckId, count: cards.length });
+  return cards as RepoOutputCard[];
 }
 
-export async function repoGetCardDeckOwnerId(cardId: bigint): Promise<string | null> {
+export async function repoGetRandomCard(input: RepoInputGetRandomCard): Promise<RepoOutputCard | null> {
+  const { deckId, excludeIds = [] } = input;
+  const whereClause = excludeIds.length > 0
+    ? { deckId, id: { notIn: excludeIds } }
+    : { deckId };
+  const count = await prisma.card.count({ where: whereClause });
+  if (count === 0) {
+    return null;
+  }
+  const skip = Math.floor(Math.random() * count);
+  const cards = await prisma.card.findMany({
+    where: whereClause,
+    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    skip,
+    take: 1,
+  });
+  const card = cards[0];
+  if (!card) {
+    return null;
+  }
+  log.debug("Got random card", { cardId: card.id, deckId });
+  return card as RepoOutputCard;
+}
+
+export async function repoGetCardDeckOwnerId(cardId: number): Promise<string | null> {
   const card = await prisma.card.findUnique({
     where: { id: cardId },
     include: {
@@ -279,106 +137,12 @@ export async function repoGetCardDeckOwnerId(cardId: bigint): Promise<string | n
   return card?.deck.userId ?? null;
 }
 
-export async function repoGetNextDueCard(deckId: number): Promise<RepoOutputCard | null> {
-  const now = Math.floor(Date.now() / 1000);
-  const todayDays = Math.floor(now / 86400);
-
-  const card = await prisma.card.findFirst({
-    where: {
-      deckId,
-      queue: { in: [CardQueue.NEW, CardQueue.LEARNING, CardQueue.REVIEW] },
-      OR: [
-        { type: CardType.NEW },
-        {
-          type: { in: [CardType.LEARNING, CardType.REVIEW] },
-          due: { lte: todayDays },
-        },
-      ],
-    },
-    orderBy: [
-      { type: "asc" },
-      { due: "asc" },
-    ],
-  });
-
-  return card;
+export async function repoCheckCardOwnership(input: RepoInputCheckCardOwnership): Promise<boolean> {
+  const ownerId = await repoGetCardDeckOwnerId(input.cardId);
+  return ownerId === input.userId;
 }
 
-export async function repoGetCardsByNoteId(noteId: bigint): Promise<RepoOutputCard[]> {
-  const cards = await prisma.card.findMany({
-    where: { noteId },
-    orderBy: { ord: "asc" },
-  });
-  return cards;
-}
-
-export async function repoResetDeckCards(
-  input: RepoInputResetDeckCards,
-): Promise<RepoOutputResetDeckCards> {
-  log.debug("Resetting deck cards", { deckId: input.deckId });
-
-  const result = await prisma.card.updateMany({
-    where: { deckId: input.deckId },
-    data: {
-      type: CardType.NEW,
-      queue: CardQueue.NEW,
-      due: 0,
-      ivl: 0,
-      factor: 2500,
-      reps: 0,
-      lapses: 1,
-      left: 1,
-      odue: 0,
-      odid: 0,
-      mod: Math.floor(Date.now() / 1000),
-    },
-  });
-
-  log.info("Deck cards reset", { deckId: input.deckId, count: result.count });
-  return { count: result.count };
-}
-
-export async function repoGetTodayStudyStats(
-  input: RepoInputGetTodayStudyStats,
-): Promise<RepoOutputTodayStudyStats> {
-  const now = new Date();
-  const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  startOfToday.setUTCHours(0, 0, 0, 0);
-  const todayStart = startOfToday.getTime();
-
-  const stats = await prisma.revlog.groupBy({
-    by: ["type"],
-    where: {
-      card: {
-        deckId: input.deckId,
-      },
-      id: {
-        gte: todayStart,
-      },
-    },
-    _count: {
-      type: true,
-    },
-  });
-
-  let newStudied = 0;
-  let reviewStudied = 0;
-  let learningStudied = 0;
-
-  for (const stat of stats) {
-    if (stat.type === 0) {
-      newStudied = stat._count.type;
-    } else if (stat.type === 1) {
-      learningStudied = stat._count.type;
-    } else if (stat.type === 2 || stat.type === 3) {
-      reviewStudied += stat._count.type;
-    }
-  }
-
-  return {
-    newStudied,
-    reviewStudied,
-    learningStudied,
-    totalStudied: newStudied + reviewStudied + learningStudied,
-  };
+export async function repoGetCardStats(deckId: number): Promise<RepoOutputCardStats> {
+  const total = await prisma.card.count({ where: { deckId } });
+  return { total };
 }

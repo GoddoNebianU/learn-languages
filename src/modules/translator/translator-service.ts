@@ -1,6 +1,5 @@
 import { executeTranslation } from "@/lib/bigmodel/translator/orchestrator";
 import { getAnswer } from "@/lib/bigmodel/llm";
-import { repoCreateTranslationHistory, repoSelectLatestTranslation } from "./translator-repository";
 import {
     ServiceInputTranslateText,
     ServiceOutputTranslateText,
@@ -16,68 +15,23 @@ const log = createLogger("translator-service");
 export const serviceTranslateText = async (
     dto: ServiceInputTranslateText
 ): Promise<ServiceOutputTranslateText> => {
-    const { sourceText, targetLanguage, forceRetranslate, needIpa, userId, sourceLanguage } = dto;
+    const { sourceText, targetLanguage, sourceLanguage, needIpa } = dto;
 
-    // Check for existing translation
-    const lastTranslation = await repoSelectLatestTranslation({
+    const response = await executeTranslation(
         sourceText,
         targetLanguage,
-    });
+        needIpa,
+        sourceLanguage
+    );
 
-    if (forceRetranslate || !lastTranslation) {
-        // Call AI for translation
-        const response = await executeTranslation(
-            sourceText,
-            targetLanguage,
-            needIpa,
-            sourceLanguage
-        );
-
-        // Save translation history asynchronously (don't block response)
-        repoCreateTranslationHistory({
-            userId,
-            sourceText,
-            sourceLanguage: response.sourceLanguage,
-            targetLanguage: response.targetLanguage,
-            translatedText: response.translatedText,
-            sourceIpa: needIpa ? response.sourceIpa : undefined,
-            targetIpa: needIpa ? response.targetIpa : undefined,
-        }).catch((error) => {
-            log.error("Failed to save translation data", { error });
-        });
-
-        return {
-            sourceText: response.sourceText,
-            translatedText: response.translatedText,
-            sourceLanguage: response.sourceLanguage,
-            targetLanguage: response.targetLanguage,
-            sourceIpa: response.sourceIpa || "",
-            targetIpa: response.targetIpa || "",
-        };
-    } else {
-        // Return cached translation
-        // Still save a history record for analytics
-        repoCreateTranslationHistory({
-            userId,
-            sourceText,
-            sourceLanguage: lastTranslation.sourceLanguage,
-            targetLanguage: lastTranslation.targetLanguage,
-            translatedText: lastTranslation.translatedText,
-            sourceIpa: lastTranslation.sourceIpa || undefined,
-            targetIpa: lastTranslation.targetIpa || undefined,
-        }).catch((error) => {
-            log.error("Failed to save translation data", { error });
-        });
-
-        return {
-            sourceText,
-            translatedText: lastTranslation.translatedText,
-            sourceLanguage: lastTranslation.sourceLanguage,
-            targetLanguage: lastTranslation.targetLanguage,
-            sourceIpa: lastTranslation.sourceIpa || "",
-            targetIpa: lastTranslation.targetIpa || "",
-        };
-    }
+    return {
+        sourceText: response.sourceText,
+        translatedText: response.translatedText,
+        sourceLanguage: response.sourceLanguage,
+        targetLanguage: response.targetLanguage,
+        sourceIpa: response.sourceIpa || "",
+        targetIpa: response.targetIpa || "",
+    };
 };
 
 export const serviceGenIPA = async (
@@ -96,7 +50,7 @@ export const serviceGenIPA = async (
 不要附带任何说明
 不要擅自增减符号
 不许用"/"或者"[]"包裹
-`.trim(),
+            `.trim(),
             )
         )
             .replaceAll("[", "")
@@ -139,7 +93,7 @@ export const serviceGenLanguage = async (
 2. 首字母大写，其余小写
 3. 不要附带任何说明
 4. 不要擅自增减符号
-      `.trim()
+            `.trim()
         },
         {
             role: "user",

@@ -1,6 +1,7 @@
 "use client";
 
 import { LightButton, IconClick } from "@/design-system/base/button";
+import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -18,6 +19,20 @@ import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
+const TTS_LANGUAGES = [
+  { value: "Auto", labelKey: "auto" },
+  { value: "Chinese", labelKey: "chinese" },
+  { value: "English", labelKey: "english" },
+  { value: "Japanese", labelKey: "japanese" },
+  { value: "Korean", labelKey: "korean" },
+  { value: "French", labelKey: "french" },
+  { value: "German", labelKey: "german" },
+  { value: "Italian", labelKey: "italian" },
+  { value: "Spanish", labelKey: "spanish" },
+  { value: "Portuguese", labelKey: "portuguese" },
+  { value: "Russian", labelKey: "russian" },
+] as const;
+
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -30,6 +45,8 @@ export default function TextSpeakerPage() {
   const [autopause, setAutopause] = useState(true);
   const textRef = useRef("");
   const [language, setLanguage] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("Auto");
+  const [customLanguage, setCustomLanguage] = useState<string>("");
   const [ipa, setIPA] = useState<string>("");
   const objurlRef = useRef<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -93,8 +110,15 @@ export default function TextSpeakerPage() {
         } else {
           // 第一次播放
           try {
-            let theLanguage = language;
-            if (!theLanguage) {
+            let theLanguage: string;
+            
+            if (customLanguage.trim()) {
+              theLanguage = customLanguage.trim();
+            } else if (selectedLanguage !== "Auto") {
+              theLanguage = selectedLanguage;
+            } else if (language) {
+              theLanguage = language;
+            } else {
               const tmp_language = await genLanguage(textRef.current.slice(0, 30));
               setLanguage(tmp_language);
               theLanguage = tmp_language;
@@ -102,7 +126,6 @@ export default function TextSpeakerPage() {
 
             theLanguage = theLanguage.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
 
-            // 检查语言是否在 TTS 支持列表中
             const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
               "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
               "Spanish", "Japanese", "Korean", "French", "Russian"
@@ -138,6 +161,8 @@ export default function TextSpeakerPage() {
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     textRef.current = e.target.value.trim();
     setLanguage(null);
+    setSelectedLanguage("Auto");
+    setCustomLanguage("");
     setIPA("");
     if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
     objurlRef.current = null;
@@ -318,6 +343,40 @@ export default function TextSpeakerPage() {
             alt="save"
             className={`${saving ? "bg-gray-200" : ""}`}
           ></IconClick>
+          {/* 语言选择器 */}
+          <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+            <span className="text-sm text-gray-600">{t("language")}</span>
+            {TTS_LANGUAGES.slice(0, 6).map((lang) => (
+              <LightButton
+                key={lang.value}
+                selected={!customLanguage && selectedLanguage === lang.value}
+                onClick={() => {
+                  setSelectedLanguage(lang.value);
+                  setCustomLanguage("");
+                  if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
+                  objurlRef.current = null;
+                  setPause(true);
+                }}
+                size="sm"
+              >
+                {t(`languages.${lang.labelKey}`)}
+              </LightButton>
+            ))}
+            <Input
+              variant="bordered"
+              size="sm"
+              value={customLanguage}
+              onChange={(e) => {
+                setCustomLanguage(e.target.value);
+                setSelectedLanguage("Auto");
+                if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
+                objurlRef.current = null;
+                setPause(true);
+              }}
+              placeholder={t("customLanguage")}
+              className="w-auto min-w-[120px]"
+            />
+          </div>
           {/* 功能开关按钮 */}
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
             <LightButton

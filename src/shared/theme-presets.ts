@@ -280,7 +280,7 @@ export const THEME_PRESETS: ThemePreset[] = [
   },
 ];
 
-export const DEFAULT_THEME = "teal";
+export const DEFAULT_THEME = "mist";
 
 export function getThemePreset(id: string): ThemePreset | undefined {
   return THEME_PRESETS.find((preset) => preset.id === id);

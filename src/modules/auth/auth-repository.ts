@@ -74,20 +74,8 @@ export async function repoDeleteUserCascade(dto: RepoInputDeleteUserCascade): Pr
     log.info("Starting cascade delete for user", { userId });
 
     await prisma.$transaction(async (tx) => {
-        await tx.revlog.deleteMany({
-            where: { card: { note: { userId } } }
-        });
-
         await tx.card.deleteMany({
-            where: { note: { userId } }
-        });
-
-        await tx.note.deleteMany({
-            where: { userId }
-        });
-
-        await tx.noteType.deleteMany({
-            where: { userId }
+            where: { deck: { userId } }
         });
 
         await tx.deckFavorite.deleteMany({
@@ -105,14 +93,6 @@ export async function repoDeleteUserCascade(dto: RepoInputDeleteUserCascade): Pr
                     { followingId: userId }
                 ]
             }
-        });
-
-        await tx.dictionaryLookUp.deleteMany({
-            where: { userId }
-        });
-
-        await tx.translationHistory.deleteMany({
-            where: { userId }
         });
 
         await tx.session.deleteMany({

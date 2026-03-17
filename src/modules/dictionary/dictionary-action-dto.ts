@@ -1,22 +1,25 @@
-import { TSharedItem } from "@/shared/dictionary-type";
-import { LENGTH_MAX_DICTIONARY_TEXT, LENGTH_MAX_LANGUAGE, LENGTH_MIN_DICTIONARY_TEXT, LENGTH_MIN_LANGUAGE } from "@/shared/constant";
-import { generateValidator } from "@/utils/validate";
 import z from "zod";
+import { generateValidator } from "@/utils/validate";
 
-const schemaActionInputLookUpDictionary = z.object({
-    text: z.string().min(LENGTH_MIN_DICTIONARY_TEXT).max(LENGTH_MAX_DICTIONARY_TEXT),
-    queryLang: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE),
-    forceRelook: z.boolean(),
-    definitionLang: z.string().min(LENGTH_MIN_LANGUAGE).max(LENGTH_MAX_LANGUAGE),
-    userId: z.string().optional()
+export const schemaActionLookUpDictionary = z.object({
+  text: z.string().min(1),
+  queryLang: z.string().min(1),
+  definitionLang: z.string().min(1),
 });
 
-export type ActionInputLookUpDictionary = z.infer<typeof schemaActionInputLookUpDictionary>;
-
-export const validateActionInputLookUpDictionary = generateValidator(schemaActionInputLookUpDictionary);
+export type ActionInputLookUpDictionary = z.infer<typeof schemaActionLookUpDictionary>;
+export const validateActionInputLookUpDictionary = generateValidator(schemaActionLookUpDictionary);
 
 export type ActionOutputLookUpDictionary = {
-    message: string,
-    success: boolean;
-    data?: TSharedItem;
+  success: boolean;
+  message: string;
+  data?: {
+    standardForm: string;
+    entries: Array<{
+      ipa?: string;
+      definition: string;
+      partOfSpeech?: string;
+      example: string;
+    }>;
+  };
 };

@@ -15,14 +15,14 @@ import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
-import { actionCreateNote } from "@/modules/note/note-action";
 import { actionCreateCard } from "@/modules/card/card-action";
-import { actionGetNoteTypesByUserId, actionCreateDefaultBasicNoteType } from "@/modules/note-type/note-type-action";
-import type { TSharedDeck } from "@/shared/anki-type";
+import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
+import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
+import { getNativeName } from "./stores/dictionaryStore";
 
 interface DictionaryClientProps {
-  initialDecks: TSharedDeck[];
+  initialDecks: ActionOutputDeck[];
 }
 
 export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
@@ -45,8 +45,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
   } = useDictionaryStore();
 
   const { data: session } = authClient.useSession();
-  const [decks, setDecks] = useState<TSharedDeck[]>(initialDecks);
-  const [defaultNoteTypeId, setDefaultNoteTypeId] = useState<number | null>(null);
+  const [decks, setDecks] = useState<ActionOutputDeck[]>(initialDecks);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -65,29 +64,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
     if (session?.user?.id) {
       actionGetDecksByUserId(session.user.id).then((result) => {
         if (result.success && result.data) {
-          setDecks(result.data as TSharedDeck[]);
-        }
-      });
-    }
-  }, [session?.user?.id]);
-
-  useEffect(() => {
-    if (session?.user?.id) {
-      actionGetNoteTypesByUserId().then(async (result) => {
-        if (result.success && result.data) {
-          const basicNoteType = result.data.find(
-            (nt) => nt.name === "Basic Vocabulary"
-          );
-          if (basicNoteType) {
-            setDefaultNoteTypeId(basicNoteType.id);
-          } else if (result.data.length > 0) {
-            setDefaultNoteTypeId(result.data[0].id);
-          } else {
-            const createResult = await actionCreateDefaultBasicNoteType();
-            if (createResult.success && createResult.data) {
-              setDefaultNoteTypeId(createResult.data.id);
-            }
-          }
+          setDecks(result.data);
         }
       });
     }
@@ -116,11 +93,10 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
       toast.error(t("pleaseCreateFolder"));
       return;
     }
-    if (!defaultNoteTypeId) {
-      toast.error("No note type available. Please try again.");
+    if (!searchResult?.entries?.length) {
+      toast.error("No dictionary item to save. Please search first.");
       return;
     }
-    if (!searchResult?.entries?.length) return;
 
     const deckSelect = document.getElementById("deck-select") as HTMLSelectElement;
     const deckId = deckSelect?.value ? Number(deckSelect.value) : decks[0]?.id;
@@ -132,42 +108,37 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
 
     setIsSaving(true);
 
-    const definition = searchResult.entries
-      .map((e) => e.definition)
-      .join(" | ");
-    
-    const ipa = searchResult.entries[0]?.ipa || "";
-    const example = searchResult.entries
-      .map((e) => e.example)
-      .filter(Boolean)
-      .join(" | ") || "";
-
     try {
-      const noteResult = await actionCreateNote({
-        noteTypeId: defaultNoteTypeId,
-        fields: [searchResult.standardForm, definition, ipa, example],
-        tags: ["dictionary"],
+      const hasIpa = searchResult.entries.some((e) => e.ipa);
+      const hasSpaces = searchResult.standardForm.includes(" ");
+      let cardType: CardType = "WORD";
+      if (!hasIpa) {
+        cardType = "SENTENCE";
+      } else if (hasSpaces) {
+        cardType = "PHRASE";
+      }
+
+      const ipa = searchResult.entries.find((e) => e.ipa)?.ipa || null;
+      const meanings = searchResult.entries.map((e) => ({
+        partOfSpeech: e.partOfSpeech || null,
+        definition: e.definition,
+        example: e.example || null,
+      }));
+
+      const cardResult = await actionCreateCard({
+        deckId,
+        word: searchResult.standardForm,
+        ipa,
+        queryLang: getNativeName(queryLang),
+        cardType,
+        meanings,
       });
 
-      if (!noteResult.success || !noteResult.data) {
-        toast.error(t("saveFailed"));
+      if (!cardResult.success) {
+        toast.error(cardResult.message || t("saveFailed"));
         setIsSaving(false);
         return;
       }
-
-      const noteId = BigInt(noteResult.data.id);
-
-      await actionCreateCard({
-        noteId,
-        deckId,
-        ord: 0,
-      });
-
-      await actionCreateCard({
-        noteId,
-        deckId,
-        ord: 1,
-      });
 
       const deckName = decks.find((d) => d.id === deckId)?.name || "Unknown";
       toast.success(t("savedToFolder", { folderName: deckName }));

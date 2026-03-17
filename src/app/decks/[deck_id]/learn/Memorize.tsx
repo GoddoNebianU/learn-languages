@@ -4,17 +4,14 @@ import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import { Layers, Check, Clock, Sparkles, RotateCcw, Volume2, Headphones } from "lucide-react";
-import type { ActionOutputCardWithNote, ActionOutputScheduledCard } from "@/modules/card/card-action-dto";
-import { actionGetCardsForReview, actionAnswerCard } from "@/modules/card/card-action";
+import { Layers, Check, RotateCcw, Volume2, Headphones, ChevronLeft, ChevronRight } from "lucide-react";
+import { actionGetCardsByDeckId } from "@/modules/card/card-action";
+import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LightButton, CircleButton } from "@/design-system/base/button";
-import { Badge } from "@/design-system/data-display/badge";
 import { Progress } from "@/design-system/feedback/progress";
 import { Skeleton } from "@/design-system/feedback/skeleton";
 import { HStack, VStack } from "@/design-system/layout/stack";
-import { CardType } from "../../../../../generated/prisma/enums";
-import { calculatePreviewIntervals, formatPreviewInterval, type CardPreview } from "./interval-preview";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
@@ -27,17 +24,14 @@ interface MemorizeProps {
   deckName: string;
 }
 
-type ReviewEase = 1 | 2 | 3 | 4;
-
 const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const t = useTranslations("memorize.review");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   
-  const [cards, setCards] = useState<ActionOutputCardWithNote[]>([]);
+  const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [lastScheduled, setLastScheduled] = useState<ActionOutputScheduledCard | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
@@ -53,13 +47,12 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       setIsLoading(true);
       setError(null);
       startTransition(async () => {
-        const result = await actionGetCardsForReview({ deckId, limit: 50 });
+        const result = await actionGetCardsByDeckId({ deckId, limit: 100 });
         if (!ignore) {
           if (result.success && result.data) {
             setCards(result.data);
             setCurrentIndex(0);
             setShowAnswer(false);
-            setLastScheduled(null);
             setIsReversed(false);
             setIsDictation(false);
           } else {
@@ -77,54 +70,59 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     };
   }, [deckId]);
 
-  const getCurrentCard = (): ActionOutputCardWithNote | null => {
+  const getCurrentCard = (): ActionOutputCard | null => {
     return cards[currentIndex] ?? null;
   };
 
-  const getNoteFields = (card: ActionOutputCardWithNote): string[] => {
-    return card.note.flds.split('\x1f');
+  const getFrontText = (card: ActionOutputCard): string => {
+    if (isReversed) {
+      return card.meanings.map((m) => 
+        m.partOfSpeech ? `${m.partOfSpeech}: ${m.definition}` : m.definition
+      ).join("; ");
+    }
+    return card.word;
+  };
+
+  const getBackText = (card: ActionOutputCard): string => {
+    if (isReversed) {
+      return card.word;
+    }
+    return card.meanings.map((m) => 
+      m.partOfSpeech ? `${m.partOfSpeech}: ${m.definition}` : m.definition
+    ).join("; ");
   };
 
   const handleShowAnswer = useCallback(() => {
     setShowAnswer(true);
   }, []);
 
-  const handleAnswer = useCallback((ease: ReviewEase) => {
-    const card = getCurrentCard();
-    if (!card) return;
+  const handleNextCard = useCallback(() => {
+    if (currentIndex < cards.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setShowAnswer(false);
+      setIsReversed(false);
+      setIsDictation(false);
+      cleanupAudio();
+    }
+  }, [currentIndex, cards.length]);
 
-    startTransition(async () => {
-      const result = await actionAnswerCard({
-        cardId: BigInt(card.id),
-        ease,
-      });
+  const handlePrevCard = useCallback(() => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      setShowAnswer(false);
+      setIsReversed(false);
+      setIsDictation(false);
+      cleanupAudio();
+    }
+  }, [currentIndex]);
 
-      if (result.success && result.data) {
-        setLastScheduled(result.data.scheduled);
-        
-        const remainingCards = cards.filter((_, idx) => idx !== currentIndex);
-        setCards(remainingCards);
-        
-        if (remainingCards.length === 0) {
-          setCurrentIndex(0);
-        } else if (currentIndex >= remainingCards.length) {
-          setCurrentIndex(remainingCards.length - 1);
-        }
-        
-        setShowAnswer(false);
-        setIsReversed(false);
-        setIsDictation(false);
-        
-        if (audioUrlRef.current) {
-          URL.revokeObjectURL(audioUrlRef.current);
-          audioUrlRef.current = null;
-        }
-        stop();
-      } else {
-        setError(result.message);
-      }
-    });
-  }, [cards, currentIndex, stop]);
+  const cleanupAudio = useCallback(() => {
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+    stop();
+  }, [stop]);
 
   const playTTS = useCallback(async (text: string) => {
     if (isAudioLoading) return;
@@ -159,8 +157,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     const currentCard = getCurrentCard();
     if (!currentCard) return;
     
-    const fields = getNoteFields(currentCard);
-    const text = isReversed ? (fields[1] ?? "") : (fields[0] ?? "");
+    const text = isReversed 
+      ? currentCard.meanings.map((m) => m.definition).join("; ")
+      : currentCard.word;
     
     if (text) {
       playTTS(text);
@@ -179,79 +178,19 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           handleShowAnswer();
         }
       } else {
-        if (e.key === "1") {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter") {
           e.preventDefault();
-          handleAnswer(1);
-        } else if (e.key === "2") {
+          handleNextCard();
+        } else if (e.key === "ArrowLeft") {
           e.preventDefault();
-          handleAnswer(2);
-        } else if (e.key === "3" || e.key === " " || e.key === "Enter") {
-          e.preventDefault();
-          handleAnswer(3);
-        } else if (e.key === "4") {
-          e.preventDefault();
-          handleAnswer(4);
+          handlePrevCard();
         }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showAnswer, handleShowAnswer, handleAnswer]);
-
-  const formatNextReview = (scheduled: ActionOutputScheduledCard): string => {
-    const now = new Date();
-    const nextReview = new Date(scheduled.nextReviewDate);
-    const diffMs = nextReview.getTime() - now.getTime();
-    
-    if (diffMs < 0) return t("now");
-    
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 1) return t("lessThanMinute");
-    if (diffMins < 60) return t("inMinutes", { count: diffMins });
-    if (diffHours < 24) return t("inHours", { count: diffHours });
-    if (diffDays < 30) return t("inDays", { count: diffDays });
-    return t("inMonths", { count: Math.floor(diffDays / 30) });
-  };
-
-  const formatInterval = (ivl: number): string => {
-    if (ivl < 1) return t("minutes");
-    if (ivl < 30) return t("days", { count: ivl });
-    return t("months", { count: Math.floor(ivl / 30) });
-  };
-
-  const getCardTypeLabel = (type: CardType): string => {
-    switch (type) {
-      case CardType.NEW:
-        return t("cardTypeNew");
-      case CardType.LEARNING:
-        return t("cardTypeLearning");
-      case CardType.REVIEW:
-        return t("cardTypeReview");
-      case CardType.RELEARNING:
-        return t("cardTypeRelearning");
-      default:
-        return "";
-    }
-  };
-
-  const getCardTypeVariant = (type: CardType): "info" | "warning" | "success" | "primary" => {
-    switch (type) {
-      case CardType.NEW:
-        return "info";
-      case CardType.LEARNING:
-        return "warning";
-      case CardType.REVIEW:
-        return "success";
-      case CardType.RELEARNING:
-        return "primary";
-      default:
-        return "info";
-    }
-  };
+  }, [showAnswer, handleShowAnswer, handleNextCard, handlePrevCard]);
 
   if (isLoading) {
     return (
@@ -297,20 +236,8 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   }
 
   const currentCard = getCurrentCard()!;
-  const fields = getNoteFields(currentCard);
-  const front = fields[0] ?? "";
-  const back = fields[1] ?? "";
-  
-  const displayFront = isReversed ? back : front;
-  const displayBack = isReversed ? front : back;
-
-  const cardPreview: CardPreview = {
-    type: currentCard.type,
-    ivl: currentCard.ivl,
-    factor: currentCard.factor,
-    left: currentCard.left,
-  };
-  const previewIntervals = calculatePreviewIntervals(cardPreview);
+  const displayFront = getFrontText(currentCard);
+  const displayBack = getBackText(currentCard);
 
   return (
     <PageLayout>
@@ -319,38 +246,23 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <Layers className="w-5 h-5" />
           <span className="font-medium">{deckName}</span>
         </HStack>
-        <HStack gap={3}>
-          <Badge variant={getCardTypeVariant(currentCard.type)} size="sm">
-            {getCardTypeLabel(currentCard.type)}
-          </Badge>
-          <span className="text-sm text-gray-500">
-            {t("progress", { current: currentIndex + 1, total: cards.length + currentIndex })}
-          </span>
-        </HStack>
+        <span className="text-sm text-gray-500">
+          {t("progress", { current: currentIndex + 1, total: cards.length })}
+        </span>
       </HStack>
 
       <Progress 
-        value={Math.max(0, ((currentIndex) / (cards.length + currentIndex)) * 100)}
+        value={((currentIndex + 1) / cards.length) * 100}
         showLabel={false}
         animated={false}
         className="mb-6"
       />
 
-      {lastScheduled && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-          <HStack gap={2}>
-            <Clock className="w-4 h-4" />
-            <span>
-              {t("nextReview")}: {formatNextReview(lastScheduled)}
-            </span>
-          </HStack>
-        </div>
-      )}
-
       <HStack justify="center" gap={2} className="mb-4">
         <LightButton
           onClick={() => {
             setIsReversed(!isReversed);
+            setShowAnswer(false);
           }}
           selected={isReversed}
           leftIcon={<RotateCcw className="w-4 h-4" />}
@@ -388,7 +300,15 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               <>
                 <div className="border-t border-gray-200" />
                 <VStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
-                  <div className="text-gray-900 text-xl md:text-2xl text-center">
+                  <div className="text-gray-900 text-xl md:text-2xl text-center whitespace-pre-line">
+                    {displayFront}
+                  </div>
+                  {currentCard.ipa && (
+                    <div className="text-gray-500 text-sm mt-2">
+                      {currentCard.ipa}
+                    </div>
+                  )}
+                  <div className="text-gray-600 text-lg mt-4 text-center whitespace-pre-line">
                     {displayBack}
                   </div>
                 </VStack>
@@ -398,7 +318,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         ) : (
           <>
             <HStack align="center" justify="center" className="p-8 min-h-[20dvh]">
-              <div className="text-gray-900 text-xl md:text-2xl text-center">
+              <div className="text-gray-900 text-xl md:text-2xl text-center whitespace-pre-line">
                 {displayFront}
               </div>
             </HStack>
@@ -407,7 +327,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               <>
                 <div className="border-t border-gray-200" />
                 <HStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
-                  <div className="text-gray-900 text-xl md:text-2xl text-center">
+                  <div className="text-gray-900 text-xl md:text-2xl text-center whitespace-pre-line">
                     {displayBack}
                   </div>
                 </HStack>
@@ -416,14 +336,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </>
         )}
       </div>
-
-      <HStack justify="center" gap={4} className="mb-6 text-sm text-gray-500">
-        <span>{t("interval")}: {formatInterval(currentCard.ivl)}</span>
-        <span>•</span>
-        <span>{t("ease")}: {currentCard.factor / 10}%</span>
-        <span>•</span>
-        <span>{t("lapses")}: {currentCard.lapses}</span>
-      </HStack>
 
       <HStack justify="center">
         {!showAnswer ? (
@@ -436,45 +348,25 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             <span className="ml-2 text-xs opacity-60">Space</span>
           </LightButton>
         ) : (
-          <HStack wrap justify="center" gap={3}>
-            <button
-              onClick={() => handleAnswer(1)}
-              disabled={isPending}
-              className="flex flex-col items-center px-5 py-3 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 transition-colors disabled:opacity-50 min-w-[80px]"
+          <HStack gap={4}>
+            <LightButton
+              onClick={handlePrevCard}
+              disabled={currentIndex === 0}
+              className="px-4 py-2"
             >
-              <span className="font-medium">{t("again")}</span>
-              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.again)}</span>
-            </button>
-            
-            <button
-              onClick={() => handleAnswer(2)}
-              disabled={isPending}
-              className="flex flex-col items-center px-5 py-3 rounded-xl bg-orange-100 hover:bg-orange-200 text-orange-700 transition-colors disabled:opacity-50 min-w-[80px]"
+              <ChevronLeft className="w-5 h-5" />
+            </LightButton>
+            <span className="text-gray-500 text-sm">
+              {t("nextCard", { default: "Next" })}
+              <span className="ml-2 text-xs opacity-60">Space</span>
+            </span>
+            <LightButton
+              onClick={handleNextCard}
+              disabled={currentIndex === cards.length - 1}
+              className="px-4 py-2"
             >
-              <span className="font-medium">{t("hard")}</span>
-              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.hard)}</span>
-            </button>
-            
-            <button
-              onClick={() => handleAnswer(3)}
-              disabled={isPending}
-              className="flex flex-col items-center px-5 py-3 rounded-xl bg-green-100 hover:bg-green-200 text-green-700 transition-colors disabled:opacity-50 min-w-[80px] ring-2 ring-green-300"
-            >
-              <div className="flex items-center gap-1">
-                <span className="font-medium">{t("good")}</span>
-                <Sparkles className="w-3 h-3 opacity-60" />
-              </div>
-              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.good)}</span>
-            </button>
-            
-            <button
-              onClick={() => handleAnswer(4)}
-              disabled={isPending}
-              className="flex flex-col items-center px-5 py-3 rounded-xl bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50 min-w-[80px]"
-            >
-              <span className="font-medium">{t("easy")}</span>
-              <span className="text-xs opacity-75">{formatPreviewInterval(previewIntervals.easy)}</span>
-            </button>
+              <ChevronRight className="w-5 h-5" />
+            </LightButton>
           </HStack>
         )}
       </HStack>

@@ -12,9 +12,6 @@ export type ServiceInputUpdateDeck = {
   name?: string;
   desc?: string;
   visibility?: Visibility;
-  collapsed?: boolean;
-  newPerDay?: number;
-  revPerDay?: number;
 };
 
 export type ServiceInputDeleteDeck = {
@@ -45,10 +42,6 @@ export type ServiceOutputDeck = {
   desc: string;
   userId: string;
   visibility: Visibility;
-  collapsed: boolean;
-  conf: unknown;
-  newPerDay: number;
-  revPerDay: number;
   createdAt: Date;
   updatedAt: Date;
   cardCount?: number;

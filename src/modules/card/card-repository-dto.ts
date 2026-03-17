@@ -1,127 +1,65 @@
-import { CardType, CardQueue } from "../../../generated/prisma/enums";
+export type CardMeaning = {
+  partOfSpeech: string | null;
+  definition: string;
+  example?: string | null;
+}
+
+export const CardTypeEnum = {
+  WORD: "WORD",
+  PHRASE: "PHRASE",
+  SENTENCE: "SENTENCE",
+} as const;
+
+export type CardType = keyof typeof CardTypeEnum;
 
 export interface RepoInputCreateCard {
-  id: bigint;
-  noteId: bigint;
   deckId: number;
-  ord: number;
-  due: number;
-  type?: CardType;
-  queue?: CardQueue;
-  ivl?: number;
-  factor?: number;
-  reps?: number;
-  lapses?: number;
-  left?: number;
-  odue?: number;
-  odid?: number;
-  flags?: number;
-  data?: string;
+  word: string;
+  ipa?: string | null;
+  queryLang: string;
+  cardType: CardType;
+  meanings: CardMeaning[];
 }
 
 export interface RepoInputUpdateCard {
-  ord?: number;
-  mod?: number;
-  usn?: number;
-  type?: CardType;
-  queue?: CardQueue;
-  due?: number;
-  ivl?: number;
-  factor?: number;
-  reps?: number;
-  lapses?: number;
-  left?: number;
-  odue?: number;
-  odid?: number;
-  flags?: number;
-  data?: string;
+  cardId: number;
+  word?: string;
+  ipa?: string | null;
+  meanings?: CardMeaning[];
+}
+
+export interface RepoInputDeleteCard {
+  cardId: number;
 }
 
 export interface RepoInputGetCardsByDeckId {
   deckId: number;
   limit?: number;
   offset?: number;
-  queue?: CardQueue | CardQueue[];
 }
 
-export interface RepoInputGetCardsForReview {
+export interface RepoInputGetRandomCard {
   deckId: number;
-  limit?: number;
+  excludeIds?: number[];
 }
 
-export interface RepoInputGetNewCards {
-  deckId: number;
-  limit?: number;
-}
-
-export interface RepoInputBulkUpdateCard {
-  id: bigint;
-  data: RepoInputUpdateCard;
-}
-
-export interface RepoInputBulkUpdateCards {
-  cards: RepoInputBulkUpdateCard[];
+export interface RepoInputCheckCardOwnership {
+  cardId: number;
+  userId: string;
 }
 
 export type RepoOutputCard = {
-  id: bigint;
-  noteId: bigint;
+  id: number;
   deckId: number;
-  ord: number;
-  mod: number;
-  usn: number;
-  type: CardType;
-  queue: CardQueue;
-  due: number;
-  ivl: number;
-  factor: number;
-  reps: number;
-  lapses: number;
-  left: number;
-  odue: number;
-  odid: number;
-  flags: number;
-  data: string;
+  word: string;
+  ipa: string | null;
+  queryLang: string;
+  cardType: CardType;
+  meanings: CardMeaning[];
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type RepoOutputCardWithNote = RepoOutputCard & {
-  note: {
-    id: bigint;
-    flds: string;
-    sfld: string;
-    tags: string;
-  };
-};
+}
 
 export type RepoOutputCardStats = {
   total: number;
-  new: number;
-  learning: number;
-  review: number;
-  due: number;
-};
-
-export type RepoOutputTodayStudyStats = {
-  newStudied: number;
-  reviewStudied: number;
-  learningStudied: number;
-  totalStudied: number;
-};
-
-export interface RepoInputGetTodayStudyStats {
-  deckId: number;
-}
-
-export interface RepoInputResetDeckCards {
-  deckId: number;
-}
-
-export type RepoOutputResetDeckCards = {
-  count: number;
-};
-
-export interface RepoInputGetTodayStudyStats {
-  deckId: number;
 }

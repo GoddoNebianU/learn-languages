@@ -27,7 +27,6 @@ import {
   actionGetDeckById,
 } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
-import { ImportButton, ExportButton } from "@/components/deck/ImportExport";
 
 interface DeckCardProps {
   deck: ActionOutputDeck;
@@ -199,7 +198,6 @@ export function DecksClient({ userId }: DecksClientProps) {
           <Plus size={18} />
           {t("newDeck")}
         </LightButton>
-        <ImportButton onImportComplete={loadDecks} />
       </div>
 
       <CardList>

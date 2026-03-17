@@ -6,6 +6,7 @@ export type TSharedEntry = {
 };
 
 export type TSharedItem = {
+    id?: number;
     standardForm: string,
     entries: TSharedEntry[];
 };
