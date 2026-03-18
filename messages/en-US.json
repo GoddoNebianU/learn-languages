@@ -301,7 +301,8 @@
       "orderLimited": "Order",
       "orderInfinite": "Loop",
       "randomLimited": "Random",
-      "randomInfinite": "Random Loop"
+      "randomInfinite": "Random Loop",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

@@ -302,7 +302,7 @@
       "orderInfinite": "順序無限",
       "randomLimited": "ランダム制限",
       "randomInfinite": "ランダム無限",
-      "noIpa": "No IPA available"
+      "noIpa": "IPAなし"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

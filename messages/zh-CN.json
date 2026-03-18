@@ -302,7 +302,7 @@
       "orderInfinite": "顺序无限",
       "randomLimited": "随机有限",
       "randomInfinite": "随机无限",
-      "noIpa": "No IPA available"
+      "noIpa": "无音标"
     },
     "page": {
       "unauthorized": "您无权访问该牌组"

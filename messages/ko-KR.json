@@ -309,7 +309,7 @@
       "orderInfinite": "순서 무제한",
       "randomLimited": "무작위 제한",
       "randomInfinite": "무작위 무제한",
-      "noIpa": "No IPA available"
+      "noIpa": "IPA 없음"
     },
     "page": {
       "unauthorized": "권한이 없습니다"
