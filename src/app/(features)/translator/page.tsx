@@ -20,31 +20,49 @@ import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 const SOURCE_LANGUAGES = [
-  { value: "Auto", labelKey: "auto" },
-  { value: "Chinese", labelKey: "chinese" },
-  { value: "English", labelKey: "english" },
-  { value: "Japanese", labelKey: "japanese" },
-  { value: "Korean", labelKey: "korean" },
-  { value: "French", labelKey: "french" },
-  { value: "German", labelKey: "german" },
-  { value: "Italian", labelKey: "italian" },
-  { value: "Spanish", labelKey: "spanish" },
-  { value: "Portuguese", labelKey: "portuguese" },
-  { value: "Russian", labelKey: "russian" },
+  { value: "Auto", label: "auto" },
+  { value: "Chinese", label: "chinese" },
+  { value: "English", label: "english" },
+  { value: "Japanese", label: "japanese" },
+  { value: "Korean", label: "korean" },
+  { value: "French", label: "french" },
+  { value: "German", label: "german" },
+  { value: "Italian", label: "italian" },
+  { value: "Spanish", label: "spanish" },
+  { value: "Portuguese", label: "portuguese" },
+  { value: "Russian", label: "russian" },
 ] as const;
 
 const TARGET_LANGUAGES = [
-  { value: "Chinese", labelKey: "chinese" },
-  { value: "English", labelKey: "english" },
-  { value: "Japanese", labelKey: "japanese" },
-  { value: "Korean", labelKey: "korean" },
-  { value: "French", labelKey: "french" },
-  { value: "German", labelKey: "german" },
-  { value: "Italian", labelKey: "italian" },
-  { value: "Spanish", labelKey: "spanish" },
-  { value: "Portuguese", labelKey: "portuguese" },
-  { value: "Russian", labelKey: "russian" },
+  { value: "Chinese", label: "chinese" },
+  { value: "English", label: "english" },
+  { value: "Japanese", label: "japanese" },
+  { value: "Korean", label: "korean" },
+  { value: "French", label: "french" },
+  { value: "German", label: "german" },
+  { value: "Italian", label: "italian" },
+  { value: "Spanish", label: "spanish" },
+  { value: "Portuguese", label: "portuguese" },
+  { value: "Russian", label: "russian" },
 ] as const;
+
+type LangLabel = typeof SOURCE_LANGUAGES[number]["label"];
+
+function getLangLabel(t: (key: string) => string, label: LangLabel): string {
+  switch (label) {
+    case "auto": return t("auto");
+    case "chinese": return t("chinese");
+    case "english": return t("english");
+    case "japanese": return t("japanese");
+    case "korean": return t("korean");
+    case "french": return t("french");
+    case "german": return t("german");
+    case "italian": return t("italian");
+    case "spanish": return t("spanish");
+    case "portuguese": return t("portuguese");
+    case "russian": return t("russian");
+  }
+}
 
 // Estimated button width in pixels (including gap)
 const BUTTON_WIDTH = 80;
@@ -290,7 +308,7 @@ export default function TranslatorPage() {
                 }}
                 className="shrink-0"
               >
-                {t(lang.labelKey)}
+                {getLangLabel(t, lang.label)}
               </LightButton>
             ))}
             <Input
@@ -353,7 +371,7 @@ export default function TranslatorPage() {
                 }}
                 className="shrink-0"
               >
-                {t(lang.labelKey)}
+                {getLangLabel(t, lang.label)}
               </LightButton>
             ))}
             <Input

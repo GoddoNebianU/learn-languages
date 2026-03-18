@@ -20,18 +20,36 @@ import { PageLayout } from "@/components/ui/PageLayout";
 import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 const TTS_LANGUAGES = [
-  { value: "Auto", labelKey: "auto" },
-  { value: "Chinese", labelKey: "chinese" },
-  { value: "English", labelKey: "english" },
-  { value: "Japanese", labelKey: "japanese" },
-  { value: "Korean", labelKey: "korean" },
-  { value: "French", labelKey: "french" },
-  { value: "German", labelKey: "german" },
-  { value: "Italian", labelKey: "italian" },
-  { value: "Spanish", labelKey: "spanish" },
-  { value: "Portuguese", labelKey: "portuguese" },
-  { value: "Russian", labelKey: "russian" },
+  { value: "Auto", label: "auto" },
+  { value: "Chinese", label: "chinese" },
+  { value: "English", label: "english" },
+  { value: "Japanese", label: "japanese" },
+  { value: "Korean", label: "korean" },
+  { value: "French", label: "french" },
+  { value: "German", label: "german" },
+  { value: "Italian", label: "italian" },
+  { value: "Spanish", label: "spanish" },
+  { value: "Portuguese", label: "portuguese" },
+  { value: "Russian", label: "russian" },
 ] as const;
+
+type TTSLabel = typeof TTS_LANGUAGES[number]["label"];
+
+function getLanguageLabel(t: (key: string) => string, label: TTSLabel): string {
+  switch (label) {
+    case "auto": return t("languages.auto");
+    case "chinese": return t("languages.chinese");
+    case "english": return t("languages.english");
+    case "japanese": return t("languages.japanese");
+    case "korean": return t("languages.korean");
+    case "french": return t("languages.french");
+    case "german": return t("languages.german");
+    case "italian": return t("languages.italian");
+    case "spanish": return t("languages.spanish");
+    case "portuguese": return t("languages.portuguese");
+    case "russian": return t("languages.russian");
+  }
+}
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
@@ -359,7 +377,7 @@ export default function TextSpeakerPage() {
                 }}
                 size="sm"
               >
-                {t(`languages.${lang.labelKey}`)}
+                {getLanguageLabel(t, lang.label)}
               </LightButton>
             ))}
             <Input

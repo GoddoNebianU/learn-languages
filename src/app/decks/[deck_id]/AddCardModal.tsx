@@ -13,11 +13,18 @@ import { actionCreateCard } from "@/modules/card/card-action";
 import type { CardType, CardMeaning } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
+const QUERY_LANGUAGE_LABELS = {
+  english: "english",
+  chinese: "chinese",
+  japanese: "japanese",
+  korean: "korean",
+} as const;
+
 const QUERY_LANGUAGES = [
-  { value: "en", labelKey: "english" },
-  { value: "zh", labelKey: "chinese" },
-  { value: "ja", labelKey: "japanese" },
-  { value: "ko", labelKey: "korean" },
+  { value: "en", label: "english" as const },
+  { value: "zh", label: "chinese" as const },
+  { value: "ja", label: "japanese" as const },
+  { value: "ko", label: "korean" as const },
 ] as const;
 
 interface AddCardModalProps {
@@ -169,7 +176,7 @@ export function AddCardModal({
                 }}
                 size="sm"
               >
-                {t(lang.labelKey)}
+                {t(lang.label)}
               </LightButton>
             ))}
             <Input

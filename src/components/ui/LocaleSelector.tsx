@@ -21,7 +21,25 @@ const COMMON_LANGUAGES = [
   { label: "portuguese", value: "portuguese" },
   { label: "russian", value: "russian" },
   { label: "other", value: "other" },
-];
+] as const;
+
+type LocaleLabel = typeof COMMON_LANGUAGES[number]["label"];
+
+function getLocaleLabel(t: (key: string) => string, label: LocaleLabel): string {
+  switch (label) {
+    case "chinese": return t("translator.chinese");
+    case "english": return t("translator.english");
+    case "italian": return t("translator.italian");
+    case "japanese": return t("translator.japanese");
+    case "korean": return t("translator.korean");
+    case "french": return t("translator.french");
+    case "german": return t("translator.german");
+    case "spanish": return t("translator.spanish");
+    case "portuguese": return t("translator.portuguese");
+    case "russian": return t("translator.russian");
+    case "other": return t("translator.other");
+  }
+}
 
 interface LocaleSelectorProps {
   value: string;
@@ -62,7 +80,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
       >
         {COMMON_LANGUAGES.map((lang) => (
           <option key={lang.value} value={lang.value}>
-            {t(`translator.${lang.label}`)}
+            {getLocaleLabel(t, lang.label)}
           </option>
         ))}
       </Select>

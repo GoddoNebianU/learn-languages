@@ -10,207 +10,141 @@ const SRC_DIR = "./src";
 const MESSAGES_DIR = "./messages";
 const ALL_LOCALES = ["en-US", "zh-CN", "ja-JP", "ko-KR", "de-DE", "fr-FR", "it-IT", "ug-CN"];
 
-function parseStringLiteral(s: string): string | null {
+function parseString(s: string): string | null {
   s = s.trim();
-  if (s.startsWith('"') && s.endsWith('"')) return s.slice(1, -1);
-  if (s.startsWith("'") && s.endsWith("'")) return s.slice(1, -1);
-  if (s.startsWith("`") && s.endsWith("`")) {
-    return s.includes("${") || s.includes("+") ? null : s.slice(1, -1);
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+    return s.slice(1, -1);
+  }
+  if (s.startsWith("`") && s.endsWith("`") && !s.includes("${")) {
+    return s.slice(1, -1);
   }
   return null;
 }
 
-function extractTranslationBindings(content: string): Map<string, string> {
+function getBindings(content: string): Map<string, string> {
   const bindings = new Map<string, string>();
+  const pattern = /(?:const|let|var)\s+(\w+)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\s*\(\s*([^)]*)\s*\)/g;
   
-  const patterns = [
-    /(?:const|let|var)\s+(\w+)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\s*\(\s*([^)]*)\s*\)/g,
-    /(?:const|let|var)\s*\{\s*(\w+)\s*\}\s*=\s*await\s+getTranslations\s*\(\s*([^)]*)\s*\)/g,
-  ];
-  
-  for (const pattern of patterns) {
-    let match;
-    while ((match = pattern.exec(content)) !== null) {
-      const varName = match[1];
-      const arg = match[2].trim();
-      if (arg === "") {
-        bindings.set(varName, "__ROOT__");
-      } else {
-        const ns = parseStringLiteral(arg);
-        if (ns !== null) bindings.set(varName, ns);
-      }
-    }
+  let match;
+  while ((match = pattern.exec(content)) !== null) {
+    const varName = match[1];
+    const arg = match[2].trim();
+    bindings.set(varName, arg ? parseString(arg) || "" : "__ROOT__");
   }
   
   return bindings;
 }
 
-function extractUsedKeys(content: string, bindings: Map<string, string>): Map<string, Set<string>> {
-  const usedKeys = new Map<string, Set<string>>();
+function getUsedKeys(content: string): Map<string, Set<string>> {
+  const used = new Map<string, Set<string>>();
+  const bindings = getBindings(content);
   
-  for (const [varName, namespace] of bindings) {
-    const callPattern = new RegExp(
-      `\\b${varName}\\s*\\(\\s*("[^"]*"|'[^']*'|\`[^\`]*\`)(?:\\s*,|\\s*\\))`,
-      "g"
-    );
-    
+  for (const [varName, ns] of bindings) {
+    const pattern = new RegExp(`\\b${varName}\\s*\\(\\s*("[^"]*"|'[^']*'|\`[^\`]*\`)(?:\\s*,|\\s*\\))`, "g");
     let match;
-    while ((match = callPattern.exec(content)) !== null) {
-      const arg = match[1];
-      const key = parseStringLiteral(arg);
-      
-      if (key !== null) {
-        if (!usedKeys.has(namespace)) {
-          usedKeys.set(namespace, new Set());
-        }
-        usedKeys.get(namespace)!.add(key);
+    while ((match = pattern.exec(content)) !== null) {
+      const key = parseString(match[1]);
+      if (key) {
+        if (!used.has(ns)) used.set(ns, new Set());
+        used.get(ns)!.add(key);
       }
     }
   }
   
-  return usedKeys;
+  return used;
 }
 
-function getAllFiles(dir: string, extensions: string[]): string[] {
+function getFiles(dir: string): string[] {
   const files: string[] = [];
   if (!fs.existsSync(dir)) return files;
   
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      files.push(...getAllFiles(fullPath, extensions));
-    } else if (entry.isFile() && extensions.some(ext => entry.name.endsWith(ext))) {
-      files.push(fullPath);
-    }
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...getFiles(p));
+    else if (entry.isFile() && /\.(tsx?|ts)$/.test(entry.name)) files.push(p);
   }
-  
   return files;
 }
 
-function flattenTranslations(
-  obj: Record<string, unknown>,
-  prefix = ""
-): string[] {
+function flattenKeys(obj: Record<string, unknown>, prefix = ""): string[] {
   const keys: string[] = [];
-  
   for (const key of Object.keys(obj)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
-    const value = obj[key];
-    
-    if (typeof value === "object" && value !== null) {
-      keys.push(...flattenTranslations(value as Record<string, unknown>, fullKey));
-    } else if (typeof value === "string") {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      keys.push(...flattenKeys(obj[key] as Record<string, unknown>, fullKey));
+    } else if (typeof obj[key] === "string") {
       keys.push(fullKey);
     }
   }
-  
   return keys;
 }
 
-function isKeyUsed(
-  fullKey: string,
-  usedKeys: Map<string, Set<string>>
-): boolean {
+function isUsed(fullKey: string, used: Map<string, Set<string>>): boolean {
   const parts = fullKey.split(".");
   
   for (let i = 1; i < parts.length; i++) {
-    const namespace = parts.slice(0, i).join(".");
-    const keyInNamespace = parts.slice(i).join(".");
+    const ns = parts.slice(0, i).join(".");
+    const key = parts.slice(i).join(".");
     
-    const nsKeys = usedKeys.get(namespace);
+    const nsKeys = used.get(ns);
     if (nsKeys) {
-      if (nsKeys.has(keyInNamespace)) return true;
-      
-      for (const usedKey of nsKeys) {
-        if (keyInNamespace.startsWith(usedKey + ".")) return true;
+      if (nsKeys.has(key)) return true;
+      for (const k of nsKeys) {
+        if (key.startsWith(k + ".")) return true;
       }
     }
   }
   
-  const rootKeys = usedKeys.get("__ROOT__");
-  if (rootKeys && rootKeys.has(fullKey)) return true;
-  
-  return false;
+  const rootKeys = used.get("__ROOT__");
+  return rootKeys?.has(fullKey) ?? false;
 }
 
 function main() {
-  const targetLocale = process.argv[2];
-  const localesToCheck = targetLocale ? [targetLocale] : ALL_LOCALES;
+  const locales = process.argv[2] ? [process.argv[2]] : ALL_LOCALES;
   
-  console.log("Scanning source files...\n");
+  const files = getFiles(SRC_DIR);
+  const allUsed = new Map<string, Set<string>>();
   
-  const sourceFiles = getAllFiles(SRC_DIR, [".tsx", ".ts"]);
-  const allUsedKeys = new Map<string, Set<string>>();
-  
-  for (const filePath of sourceFiles) {
-    const content = fs.readFileSync(filePath, "utf-8");
-    const bindings = extractTranslationBindings(content);
-    const usedKeys = extractUsedKeys(content, bindings);
-    
-    for (const [ns, keys] of usedKeys) {
-      if (!allUsedKeys.has(ns)) {
-        allUsedKeys.set(ns, new Set());
-      }
-      for (const key of keys) {
-        allUsedKeys.get(ns)!.add(key);
-      }
+  for (const f of files) {
+    const used = getUsedKeys(fs.readFileSync(f, "utf-8"));
+    for (const [ns, keys] of used) {
+      if (!allUsed.has(ns)) allUsed.set(ns, new Set());
+      for (const k of keys) allUsed.get(ns)!.add(k);
     }
   }
   
-  console.log(`Scanned ${sourceFiles.length} files`);
-  console.log(`Found ${allUsedKeys.size} namespaces used\n`);
+  console.log(`Scanned ${files.length} files, ${allUsed.size} namespaces\n`);
   
-  for (const locale of localesToCheck) {
-    console.log(`\n${"=".repeat(60)}`);
-    console.log(`Locale: ${locale}`);
-    console.log("=".repeat(60));
+  for (const locale of locales) {
+    console.log(`\n${"=".repeat(50)}\nLocale: ${locale}\n${"=".repeat(50)}`);
     
-    const translationPath = path.join(MESSAGES_DIR, `${locale}.json`);
-    
-    if (!fs.existsSync(translationPath)) {
-      console.log(`File not found: ${translationPath}`);
+    const filePath = path.join(MESSAGES_DIR, `${locale}.json`);
+    if (!fs.existsSync(filePath)) {
+      console.log(`File not found: ${filePath}`);
       continue;
     }
     
-    let translations: Record<string, unknown>;
-    try {
-      translations = JSON.parse(fs.readFileSync(translationPath, "utf-8"));
-    } catch (e) {
-      console.log(`Failed to parse: ${translationPath}`);
-      continue;
-    }
+    const trans = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    const allKeys = flattenKeys(trans);
+    const unused = allKeys.filter(k => !isUsed(k, allUsed));
     
-    const allKeys = flattenTranslations(translations);
-    console.log(`Total ${allKeys.length} translation keys`);
+    console.log(`Total: ${allKeys.length} keys`);
     
-    const unusedKeys = allKeys.filter(key => !isKeyUsed(key, allUsedKeys));
-    
-    if (unusedKeys.length === 0) {
+    if (unused.length === 0) {
       console.log("No unused translations!");
     } else {
-      console.log(`\n${unusedKeys.length} potentially unused translations:\n`);
-      
-      const groupedByNs = new Map<string, string[]>();
-      for (const key of unusedKeys) {
-        const firstDot = key.indexOf(".");
-        const ns = firstDot > 0 ? key.substring(0, firstDot) : key;
-        const subKey = firstDot > 0 ? key.substring(firstDot + 1) : "";
-        
-        if (!groupedByNs.has(ns)) {
-          groupedByNs.set(ns, []);
-        }
-        groupedByNs.get(ns)!.push(subKey || "(root)");
+      console.log(`\n${unused.length} potentially unused:\n`);
+      const grouped = new Map<string, string[]>();
+      for (const k of unused) {
+        const [ns, ...rest] = k.split(".");
+        if (!grouped.has(ns)) grouped.set(ns, []);
+        grouped.get(ns)!.push(rest.join("."));
       }
-      
-      for (const [ns, keys] of groupedByNs) {
+      for (const [ns, keys] of grouped) {
         console.log(`${ns}`);
-        for (const key of keys) {
-          console.log(`  ${key}`);
-        }
+        for (const k of keys) console.log(`  ${k}`);
         console.log();
       }
-      
-      console.log("Note: These may be used dynamically (e.g., t(`prefix.${var}`)). Review before deleting.");
     }
   }
   
