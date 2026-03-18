@@ -70,7 +70,7 @@ export default function SrtPlayerPage() {
     uploadVideo((url) => {
       setVideoUrl(url);
     }, (error) => {
-      toast.error(t('videoUploadFailed') + ': ' + error.message);
+      toast.error(srtT('videoUploadFailed') + ': ' + error.message);
     });
   };
 
@@ -78,7 +78,7 @@ export default function SrtPlayerPage() {
     uploadSubtitle((url) => {
       setSubtitleUrl(url);
     }, (error) => {
-      toast.error(t('subtitleUploadFailed') + ': ' + error.message);
+      toast.error(srtT('subtitleUploadFailed') + ': ' + error.message);
     });
   };
 

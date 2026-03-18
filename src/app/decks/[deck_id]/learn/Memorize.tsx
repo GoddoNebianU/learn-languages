@@ -357,7 +357,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               <ChevronLeft className="w-5 h-5" />
             </LightButton>
             <span className="text-gray-500 text-sm">
-              {t("nextCard", { default: "Next" })}
+              {t("nextCard")}
               <span className="ml-2 text-xs opacity-60">Space</span>
             </span>
             <LightButton
