@@ -83,13 +83,25 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     return card.word;
   };
 
-  const getBackText = (card: ActionOutputCard): string => {
+  const getBackContent = (card: ActionOutputCard): React.ReactNode => {
     if (isReversed) {
-      return card.word;
+      return <span className="text-gray-900 text-xl md:text-2xl text-center">{card.word}</span>;
     }
-    return card.meanings.map((m) => 
-      m.partOfSpeech ? `${m.partOfSpeech}: ${m.definition}` : m.definition
-    ).join("; ");
+    
+    return (
+      <VStack align="stretch" gap={2} className="w-full max-w-lg">
+        {card.meanings.map((m, idx) => (
+          <div key={idx} className="flex gap-3 text-left">
+            {m.partOfSpeech && (
+              <span className="text-primary-600 text-sm font-medium min-w-[60px] shrink-0">
+                {m.partOfSpeech}
+              </span>
+            )}
+            <span className="text-gray-800">{m.definition}</span>
+          </div>
+        ))}
+      </VStack>
+    );
   };
 
   const handleShowAnswer = useCallback(() => {
@@ -237,7 +249,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const currentCard = getCurrentCard()!;
   const displayFront = getFrontText(currentCard);
-  const displayBack = getBackText(currentCard);
 
   return (
     <PageLayout>
@@ -308,9 +319,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
                       {currentCard.ipa}
                     </div>
                   )}
-                  <div className="text-gray-600 text-lg mt-4 text-center whitespace-pre-line">
-                    {displayBack}
-                  </div>
+                  {getBackContent(currentCard)}
                 </VStack>
               </>
             )}
@@ -326,11 +335,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             {showAnswer && (
               <>
                 <div className="border-t border-gray-200" />
-                <HStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
-                  <div className="text-gray-900 text-xl md:text-2xl text-center whitespace-pre-line">
-                    {displayBack}
-                  </div>
-                </HStack>
+                <VStack align="center" justify="center" className="p-8 min-h-[20dvh] bg-gray-50 rounded-b-xl">
+                  {getBackContent(currentCard)}
+                </VStack>
               </>
             )}
           </>
