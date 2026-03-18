@@ -366,8 +366,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </HStack>
       </VStack>
 
-      <div className={`bg-white border border-gray-200 rounded-xl shadow-sm mb-6 ${myFont.className}`}>
-        {isDictation ? (
+      <div className={`bg-white border border-gray-200 rounded-xl shadow-sm mb-6 h-[50dvh] flex flex-col ${myFont.className}`}>
+        <div className="flex-1 overflow-y-auto">
+          {isDictation ? (
           <>
             <VStack align="center" justify="center" gap={4} className="p-8 min-h-[20dvh]">
               {currentCard.ipa ? (
@@ -411,6 +412,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             )}
           </>
         )}
+        </div>
       </div>
 
       <HStack justify="center">
