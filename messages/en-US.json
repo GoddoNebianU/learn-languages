@@ -138,10 +138,7 @@
     "todayNew": "New",
     "todayReview": "Review",
     "todayLearning": "Learning",
-    "updating": "Updating...",
     "cardUpdated": "Card updated",
-    "wordRequired": "Word is required",
-    "definitionRequired": "At least one definition is required",
     "error": {
       "update": "You do not have permission to update this card.",
       "delete": "You do not have permission to delete this card.",
@@ -296,15 +293,15 @@
       "reverse": "Reverse",
       "dictation": "Dictation",
       "clickToPlay": "Click to play audio",
-      "modeOrderLimited": "Order",
-      "modeOrderInfinite": "Loop",
-      "modeRandomLimited": "Random",
-      "modeRandomInfinite": "Random Loop",
       "restart": "Restart",
       "yourAnswer": "Your answer",
       "typeWhatYouHear": "Type what you hear...",
       "correct": "Correct",
-      "incorrect": "Incorrect"
+      "incorrect": "Incorrect",
+      "orderLimited": "Order",
+      "orderInfinite": "Loop",
+      "randomLimited": "Random",
+      "randomInfinite": "Random Loop"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

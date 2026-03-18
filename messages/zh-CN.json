@@ -297,12 +297,12 @@
       "typeWhatYouHear": "输入你听到的内容",
       "correct": "正确",
       "incorrect": "错误",
-      "nextCard": "下一张",
-      "modeOrderLimited": "顺序",
-      "modeOrderInfinite": "循环",
-      "modeRandomLimited": "随机",
-      "modeRandomInfinite": "随机循环",
-      "restart": "重新开始"
+      "restart": "重新开始",
+      "orderLimited": "顺序有限",
+      "orderInfinite": "顺序无限",
+      "randomLimited": "随机有限",
+      "randomInfinite": "随机无限",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "您无权访问该牌组"

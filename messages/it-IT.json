@@ -304,10 +304,6 @@
       "showAnswer": "Mostra risposta",
       "nextCard": "Prossima",
       "again": "Ancora",
-      "modeOrderLimited": "Ordine",
-      "modeOrderInfinite": "Ciclo",
-      "modeRandomLimited": "Casuale",
-      "modeRandomInfinite": "Casuale Ciclo",
       "restart": "Ricomincia",
       "hard": "Difficile",
       "good": "Buono",
@@ -334,7 +330,11 @@
       "typeWhatYouHear": "Scrivi cosa senti",
       "correct": "Corretto!",
       "incorrect": "Errato",
-      "nextCard": "Prossima"
+      "orderLimited": "Ordine limitato",
+      "orderInfinite": "Ordine infinito",
+      "randomLimited": "Casuale limitato",
+      "randomInfinite": "Casuale infinito",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "Non autorizzato"

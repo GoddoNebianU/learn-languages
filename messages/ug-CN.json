@@ -329,11 +329,12 @@
       "typeWhatYouHear": "ئاڭلىغىنىڭىزنى يېزىڭ",
       "correct": "توغرا!",
       "incorrect": "خاتا",
-      "modeOrderLimited": "تەرتىپ",
-      "modeOrderInfinite": "دەۋرىيە",
-      "modeRandomLimited": "ئىختىيارى",
-      "modeRandomInfinite": "ئىختىيارى دەۋرىيە",
-      "restart": "قايتا باشلا"
+      "restart": "قايتا باشلا",
+      "orderLimited": "تەرتىپلى چەكلەنگەن",
+      "orderInfinite": "تەرتىپلى چەكسىز",
+      "randomLimited": "ئىختىيارى چەكلەنگەن",
+      "randomInfinite": "ئىختىيارى چەكسىز",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "ھوقۇقسىز"

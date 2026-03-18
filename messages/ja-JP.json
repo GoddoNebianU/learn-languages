@@ -297,12 +297,12 @@
       "typeWhatYouHear": "聞こえた内容を入力",
       "correct": "正解",
       "incorrect": "不正解",
-      "nextCard": "次へ",
-      "modeOrderLimited": "順序",
-      "modeOrderInfinite": "ループ",
-      "modeRandomLimited": "ランダム",
-      "modeRandomInfinite": "ランダムループ",
-      "restart": "最初から"
+      "restart": "最初から",
+      "orderLimited": "順序制限",
+      "orderInfinite": "順序無限",
+      "randomLimited": "ランダム制限",
+      "randomInfinite": "ランダム無限",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

@@ -304,11 +304,12 @@
       "showAnswer": "Montrer réponse",
       "nextCard": "Suivant",
       "again": "Encore",
-      "modeOrderLimited": "Ordre",
-      "modeOrderInfinite": "Boucle",
-      "modeRandomLimited": "Aléatoire",
-      "modeRandomInfinite": "Aléatoire Boucle",
-      "restart": "Recommencer"
+      "restart": "Recommencer",
+      "orderLimited": "Ordre limité",
+      "orderInfinite": "Ordre infini",
+      "randomLimited": "Aléatoire limité",
+      "randomInfinite": "Aléatoire infini",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "Non autorisé"

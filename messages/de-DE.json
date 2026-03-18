@@ -233,11 +233,12 @@
       "showAnswer": "Antwort zeigen",
       "nextCard": "Weiter",
       "again": "Nochmal",
-      "modeOrderLimited": "Reihenfolge",
-      "modeOrderInfinite": "Schleife",
-      "modeRandomLimited": "Zufällig",
-      "modeRandomInfinite": "Zufällig Schleife",
-      "restart": "Neustart"
+      "restart": "Neustart",
+      "orderLimited": "Reihenfolge begrenzt",
+      "orderInfinite": "Reihenfolge unbegrenzt",
+      "randomLimited": "Zufällig begrenzt",
+      "randomInfinite": "Zufällig unbegrenzt",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "Nicht autorisiert"

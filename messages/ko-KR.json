@@ -304,11 +304,12 @@
       "showAnswer": "정답 보기",
       "nextCard": "다음",
       "again": "다시",
-      "modeOrderLimited": "순서",
-      "modeOrderInfinite": "반복",
-      "modeRandomLimited": "무작위",
-      "modeRandomInfinite": "무작위 반복",
-      "restart": "다시 시작"
+      "restart": "다시 시작",
+      "orderLimited": "순서 제한",
+      "orderInfinite": "순서 무제한",
+      "randomLimited": "무작위 제한",
+      "randomInfinite": "무작위 무제한",
+      "noIpa": "No IPA available"
     },
     "page": {
       "unauthorized": "권한이 없습니다"
