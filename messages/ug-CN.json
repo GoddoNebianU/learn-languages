@@ -329,7 +329,11 @@
       "typeWhatYouHear": "ئاڭلىغىنىڭىزنى يېزىڭ",
       "correct": "توغرا!",
       "incorrect": "خاتا",
-      "nextCard": "كېيىنكى"
+      "modeOrderLimited": "تەرتىپ",
+      "modeOrderInfinite": "دەۋرىيە",
+      "modeRandomLimited": "ئىختىيارى",
+      "modeRandomInfinite": "ئىختىيارى دەۋرىيە",
+      "restart": "قايتا باشلا"
     },
     "page": {
       "unauthorized": "ھوقۇقسىز"

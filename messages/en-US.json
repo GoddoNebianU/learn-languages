@@ -296,6 +296,11 @@
       "reverse": "Reverse",
       "dictation": "Dictation",
       "clickToPlay": "Click to play audio",
+      "modeOrderLimited": "Order",
+      "modeOrderInfinite": "Loop",
+      "modeRandomLimited": "Random",
+      "modeRandomInfinite": "Random Loop",
+      "restart": "Restart"
       "yourAnswer": "Your answer",
       "typeWhatYouHear": "Type what you hear...",
       "correct": "Correct",

@@ -4,7 +4,7 @@ import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import localFont from "next/font/local";
-import { Layers, Check, RotateCcw, Volume2, Headphones, ChevronLeft, ChevronRight } from "lucide-react";
+import { Layers, Check, RotateCcw, Volume2, Headphones, ChevronLeft, ChevronRight, Shuffle, List, Repeat, Infinity } from "lucide-react";
 import { actionGetCardsByDeckId } from "@/modules/card/card-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -19,6 +19,8 @@ const myFont = localFont({
   src: "../../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
+type StudyMode = "order-limited" | "order-infinite" | "random-limited" | "random-infinite";
+
 interface MemorizeProps {
   deckId: number;
   deckName: string;
@@ -29,6 +31,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   
+  const [originalCards, setOriginalCards] = useState<ActionOutputCard[]>([]);
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -36,9 +39,19 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
   const [isDictation, setIsDictation] = useState(false);
+  const [studyMode, setStudyMode] = useState<StudyMode>("order-limited");
   const { play, stop, load } = useAudioPlayer();
   const audioUrlRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
+
+  const shuffleCards = useCallback((cardArray: ActionOutputCard[]): ActionOutputCard[] => {
+    const shuffled = [...cardArray];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -50,6 +63,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         const result = await actionGetCardsByDeckId({ deckId, limit: 100 });
         if (!ignore) {
           if (result.success && result.data) {
+            setOriginalCards(result.data);
             setCards(result.data);
             setCurrentIndex(0);
             setShowAnswer(false);
@@ -69,6 +83,16 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       ignore = true;
     };
   }, [deckId]);
+
+  useEffect(() => {
+    if (studyMode.startsWith("random")) {
+      setCards(shuffleCards(originalCards));
+    } else {
+      setCards(originalCards);
+    }
+    setCurrentIndex(0);
+    setShowAnswer(false);
+  }, [studyMode, originalCards, shuffleCards]);
 
   const getCurrentCard = (): ActionOutputCard | null => {
     return cards[currentIndex] ?? null;
@@ -108,25 +132,46 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     setShowAnswer(true);
   }, []);
 
+  const isInfinite = studyMode.endsWith("infinite");
+
   const handleNextCard = useCallback(() => {
-    if (currentIndex < cards.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setShowAnswer(false);
-      setIsReversed(false);
-      setIsDictation(false);
-      cleanupAudio();
+    if (isInfinite) {
+      if (currentIndex >= cards.length - 1) {
+        if (studyMode.startsWith("random")) {
+          setCards(shuffleCards(originalCards));
+        }
+        setCurrentIndex(0);
+      } else {
+        setCurrentIndex(currentIndex + 1);
+      }
+    } else {
+      if (currentIndex < cards.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
     }
-  }, [currentIndex, cards.length]);
+    setShowAnswer(false);
+    setIsReversed(false);
+    setIsDictation(false);
+    cleanupAudio();
+  }, [currentIndex, cards.length, isInfinite, studyMode, originalCards, shuffleCards]);
 
   const handlePrevCard = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-      setShowAnswer(false);
-      setIsReversed(false);
-      setIsDictation(false);
-      cleanupAudio();
+    if (isInfinite) {
+      if (currentIndex <= 0) {
+        setCurrentIndex(cards.length - 1);
+      } else {
+        setCurrentIndex(currentIndex - 1);
+      }
+    } else {
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
     }
-  }, [currentIndex]);
+    setShowAnswer(false);
+    setIsReversed(false);
+    setIsDictation(false);
+    cleanupAudio();
+  }, [currentIndex, cards.length, isInfinite]);
 
   const cleanupAudio = useCallback(() => {
     if (audioUrlRef.current) {
@@ -249,6 +294,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const currentCard = getCurrentCard()!;
   const displayFront = getFrontText(currentCard);
+  const isFinished = !isInfinite && currentIndex === cards.length - 1 && showAnswer;
+
+  const studyModeOptions: { value: StudyMode; label: string; icon: React.ReactNode }[] = [
+    { value: "order-limited", label: t("orderLimited"), icon: <List className="w-4 h-4" /> },
+    { value: "order-infinite", label: t("orderInfinite"), icon: <Repeat className="w-4 h-4" /> },
+    { value: "random-limited", label: t("randomLimited"), icon: <Shuffle className="w-4 h-4" /> },
+    { value: "random-infinite", label: t("randomInfinite"), icon: <Infinity className="w-4 h-4" /> },
+  ];
 
   return (
     <PageLayout>
@@ -257,54 +310,75 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <Layers className="w-5 h-5" />
           <span className="font-medium">{deckName}</span>
         </HStack>
-        <span className="text-sm text-gray-500">
-          {t("progress", { current: currentIndex + 1, total: cards.length })}
-        </span>
+        {!isInfinite && (
+          <span className="text-sm text-gray-500">
+            {t("progress", { current: currentIndex + 1, total: cards.length })}
+          </span>
+        )}
       </HStack>
 
-      <Progress 
-        value={((currentIndex + 1) / cards.length) * 100}
-        showLabel={false}
-        animated={false}
-        className="mb-6"
-      />
+      {!isInfinite && (
+        <Progress 
+          value={((currentIndex + 1) / cards.length) * 100}
+          showLabel={false}
+          animated={false}
+          className="mb-6"
+        />
+      )}
 
-      <HStack justify="center" gap={2} className="mb-4">
-        <LightButton
-          onClick={() => {
-            setIsReversed(!isReversed);
-            setShowAnswer(false);
-          }}
-          selected={isReversed}
-          leftIcon={<RotateCcw className="w-4 h-4" />}
-          size="sm"
-        >
-          {t("reverse")}
-        </LightButton>
-        <LightButton
-          onClick={() => {
-            setIsDictation(!isDictation);
-          }}
-          selected={isDictation}
-          leftIcon={<Headphones className="w-4 h-4" />}
-          size="sm"
-        >
-          {t("dictation")}
-        </LightButton>
-      </HStack>
+      <VStack gap={2} className="mb-4">
+        <HStack justify="center" gap={1} className="flex-wrap">
+          {studyModeOptions.map((option) => (
+            <LightButton
+              key={option.value}
+              onClick={() => setStudyMode(option.value)}
+              selected={studyMode === option.value}
+              leftIcon={option.icon}
+              size="sm"
+            >
+              {option.label}
+            </LightButton>
+          ))}
+        </HStack>
+        
+        <HStack justify="center" gap={2}>
+          <LightButton
+            onClick={() => {
+              setIsReversed(!isReversed);
+              setShowAnswer(false);
+            }}
+            selected={isReversed}
+            leftIcon={<RotateCcw className="w-4 h-4" />}
+            size="sm"
+          >
+            {t("reverse")}
+          </LightButton>
+          <LightButton
+            onClick={() => {
+              setIsDictation(!isDictation);
+            }}
+            selected={isDictation}
+            leftIcon={<Headphones className="w-4 h-4" />}
+            size="sm"
+          >
+            {t("dictation")}
+          </LightButton>
+        </HStack>
+      </VStack>
 
       <div className={`bg-white border border-gray-200 rounded-xl shadow-sm mb-6 ${myFont.className}`}>
         {isDictation ? (
           <>
             <VStack align="center" justify="center" gap={4} className="p-8 min-h-[20dvh]">
-              <CircleButton
-                onClick={playCurrentCard}
-                disabled={isAudioLoading}
-                className="p-4 bg-blue-100 hover:bg-blue-200 text-blue-700 transition-colors disabled:opacity-50"
-              >
-                <Volume2 className="w-8 h-8" />
-              </CircleButton>
-              <p className="text-gray-500 text-sm">{t("clickToPlay")}</p>
+              {currentCard.ipa ? (
+                <div className="text-gray-700 text-2xl text-center font-mono">
+                  {currentCard.ipa}
+                </div>
+              ) : (
+                <div className="text-gray-400 text-lg">
+                  {t("noIpa")}
+                </div>
+              )}
             </VStack>
             
             {showAnswer && (
@@ -314,11 +388,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
                   <div className="text-gray-900 text-xl md:text-2xl text-center whitespace-pre-line">
                     {displayFront}
                   </div>
-                  {currentCard.ipa && (
-                    <div className="text-gray-500 text-sm mt-2">
-                      {currentCard.ipa}
-                    </div>
-                  )}
                   {getBackContent(currentCard)}
                 </VStack>
               </>
@@ -354,11 +423,25 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             {t("showAnswer")}
             <span className="ml-2 text-xs opacity-60">Space</span>
           </LightButton>
+        ) : isFinished ? (
+          <VStack align="center" gap={4}>
+            <div className="text-green-500">
+              <Check className="w-12 h-12" />
+            </div>
+            <p className="text-gray-600">{t("allDoneDesc")}</p>
+            <HStack gap={2}>
+              <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
+                {t("backToDecks")}
+              </LightButton>
+              <LightButton onClick={() => setCurrentIndex(0)} className="px-4 py-2">
+                {t("restart")}
+              </LightButton>
+            </HStack>
+          </VStack>
         ) : (
           <HStack gap={4}>
             <LightButton
               onClick={handlePrevCard}
-              disabled={currentIndex === 0}
               className="px-4 py-2"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -369,7 +452,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </span>
             <LightButton
               onClick={handleNextCard}
-              disabled={currentIndex === cards.length - 1}
               className="px-4 py-2"
             >
               <ChevronRight className="w-5 h-5" />
