@@ -18,6 +18,7 @@ import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { OverflowDropdown } from "@/design-system/overlay/overflow-dropdown";
 
 const SOURCE_LANGUAGES = [
   { value: "Auto", label: "auto" },
@@ -64,18 +65,13 @@ function getLangLabel(t: (key: string) => string, label: LangLabel): string {
   }
 }
 
-// Estimated button width in pixels (including gap)
-const BUTTON_WIDTH = 80;
-const LABEL_WIDTH = 100;
-const INPUT_WIDTH = 140;
-const IPA_BUTTON_WIDTH = 100;
+// Fixed number of language buttons to display
+const FIXED_BUTTON_COUNT = 2;
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
 
   const taref = useRef<HTMLTextAreaElement>(null);
-  const sourceContainerRef = useRef<HTMLDivElement>(null);
-  const targetContainerRef = useRef<HTMLDivElement>(null);
   const [sourceLanguage, setSourceLanguage] = useState<string>("Auto");
   const [targetLanguage, setTargetLanguage] = useState<string>("Chinese");
   const [customSourceLanguage, setCustomSourceLanguage] = useState<string>("");
@@ -88,8 +84,6 @@ export default function TranslatorPage() {
     sourceLanguage: string;
     targetLanguage: string;
   } | null>(null);
-  const [sourceButtonCount, setSourceButtonCount] = useState(2);
-  const [targetButtonCount, setTargetButtonCount] = useState(2);
   const { load, play } = useAudioPlayer();
   
   const { data: session } = authClient.useSession();
@@ -107,30 +101,8 @@ export default function TranslatorPage() {
     }
   }, [session?.user?.id]);
 
-  // Calculate how many buttons to show based on container width
-  const calculateButtonCount = useCallback((containerWidth: number, hasIpa: boolean) => {
-    // Reserve space for label, input, and IPA button (for source)
-    const reservedWidth = LABEL_WIDTH + INPUT_WIDTH + (hasIpa ? IPA_BUTTON_WIDTH : 0);
-    const availableWidth = containerWidth - reservedWidth;
-    return Math.max(0, Math.floor(availableWidth / BUTTON_WIDTH));
-  }, []);
-
-  useEffect(() => {
-    const updateButtonCounts = () => {
-      if (sourceContainerRef.current) {
-        const width = sourceContainerRef.current.offsetWidth;
-        setSourceButtonCount(calculateButtonCount(width, true));
-      }
-      if (targetContainerRef.current) {
-        const width = targetContainerRef.current.offsetWidth;
-        setTargetButtonCount(calculateButtonCount(width, false));
-      }
-    };
-
-    updateButtonCounts();
-    window.addEventListener("resize", updateButtonCounts);
-    return () => window.removeEventListener("resize", updateButtonCounts);
-  }, [calculateButtonCount]);
+  const sourceButtonCount = FIXED_BUTTON_COUNT;
+  const targetButtonCount = FIXED_BUTTON_COUNT;
 
   const tts = useCallback(async (text: string, locale: string) => {
     try {
@@ -296,29 +268,52 @@ export default function TranslatorPage() {
               ></IconClick>
             </div>
           </div>
-          <div ref={sourceContainerRef} className="option1 w-full flex gap-1 items-center overflow-x-auto">
+          <div className="option1 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("sourceLanguage")}</span>
-            {visibleSourceButtons.map((lang) => (
-              <LightButton
-                key={lang.value}
-                selected={!customSourceLanguage && sourceLanguage === lang.value}
-                onClick={() => {
-                  setSourceLanguage(lang.value);
-                  setCustomSourceLanguage("");
-                }}
-                className="shrink-0"
-              >
-                {getLangLabel(t, lang.label)}
-              </LightButton>
-            ))}
-            <Input
-              variant="bordered"
-              size="sm"
-              value={customSourceLanguage}
-              onChange={(e) => setCustomSourceLanguage(e.target.value)}
-              placeholder={t("customLanguage")}
-              className="w-auto min-w-[120px] shrink-0"
-            />
+{visibleSourceButtons.map((lang) => (
+  <LightButton
+    key={lang.value}
+    selected={!customSourceLanguage && sourceLanguage === lang.value}
+    onClick={() => {
+      setSourceLanguage(lang.value);
+      setCustomSourceLanguage("");
+    }}
+    className="shrink-0"
+  >
+    {getLangLabel(t, lang.label)}
+  </LightButton>
+))}
+<OverflowDropdown
+  items={SOURCE_LANGUAGES.slice()}
+  visibleCount={sourceButtonCount}
+  renderItem={(lang) => (
+    <LightButton
+      key={lang.value}
+      selected={!customSourceLanguage && sourceLanguage === lang.value}
+      onClick={() => {
+        setSourceLanguage(lang.value);
+        setCustomSourceLanguage("");
+      }}
+      className="shrink-0"
+    >
+      {getLangLabel(t, lang.label)}
+    </LightButton>
+  )}
+  onItemClick={(lang) => {
+    setSourceLanguage(lang.value);
+    setCustomSourceLanguage("");
+  }}
+  getKey={(lang) => lang.value}
+  label={t("nMore", { count: SOURCE_LANGUAGES.length - sourceButtonCount })}
+/>
+<Input
+  variant="bordered"
+  size="sm"
+  value={customSourceLanguage}
+  onChange={(e) => setCustomSourceLanguage(e.target.value)}
+  placeholder={t("customLanguage")}
+  className="w-auto min-w-[120px] shrink-0"
+/>
             <div className="flex-1"></div>
             <LightButton
               selected={needIpa}
@@ -359,29 +354,52 @@ export default function TranslatorPage() {
               ></IconClick>
             </div>
           </div>
-          <div ref={targetContainerRef} className="option2 w-full flex gap-1 items-center overflow-x-auto">
+          <div className="option2 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("translateInto")}</span>
-            {visibleTargetButtons.map((lang) => (
-              <LightButton
-                key={lang.value}
-                selected={!customTargetLanguage && targetLanguage === lang.value}
-                onClick={() => {
-                  setTargetLanguage(lang.value);
-                  setCustomTargetLanguage("");
-                }}
-                className="shrink-0"
-              >
-                {getLangLabel(t, lang.label)}
-              </LightButton>
-            ))}
-            <Input
-              variant="bordered"
-              size="sm"
-              value={customTargetLanguage}
-              onChange={(e) => setCustomTargetLanguage(e.target.value)}
-              placeholder={t("customLanguage")}
-              className="w-auto min-w-[120px] shrink-0"
-            />
+{visibleTargetButtons.map((lang) => (
+  <LightButton
+    key={lang.value}
+    selected={!customTargetLanguage && targetLanguage === lang.value}
+    onClick={() => {
+      setTargetLanguage(lang.value);
+      setCustomTargetLanguage("");
+    }}
+    className="shrink-0"
+  >
+    {getLangLabel(t, lang.label)}
+  </LightButton>
+))}
+<OverflowDropdown
+  items={TARGET_LANGUAGES.slice()}
+  visibleCount={targetButtonCount}
+  renderItem={(lang) => (
+    <LightButton
+      key={lang.value}
+      selected={!customTargetLanguage && targetLanguage === lang.value}
+      onClick={() => {
+        setTargetLanguage(lang.value);
+        setCustomTargetLanguage("");
+      }}
+      className="shrink-0"
+    >
+      {getLangLabel(t, lang.label)}
+    </LightButton>
+  )}
+  onItemClick={(lang) => {
+    setTargetLanguage(lang.value);
+    setCustomTargetLanguage("");
+  }}
+  getKey={(lang) => lang.value}
+  label={t("nMore", { count: TARGET_LANGUAGES.length - targetButtonCount })}
+/>
+<Input
+  variant="bordered"
+  size="sm"
+  value={customTargetLanguage}
+  onChange={(e) => setCustomTargetLanguage(e.target.value)}
+  placeholder={t("customLanguage")}
+  className="w-auto min-w-[120px] shrink-0"
+/>
           </div>
         </div>
       </div>

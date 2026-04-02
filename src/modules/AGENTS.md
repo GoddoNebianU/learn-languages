@@ -1,47 +1,73 @@
 # 模块层架构指南
 
-**生成时间:** 2026-03-08
+**生成时间:** 2026-03-31
 
 ## 概述
 
-业务模块采用 Action-Service-Repository 三层架构，每模块 6 个文件。
+业务模块采用 Action-Service-Repository 三层架构。7 个模块 + 1 个共享工具。
 
-## 结构
+## 模块清单
+
+| 模块 | 文件数 | Actions | 模式完整性 | 备注 |
+|------|--------|---------|-----------|------|
+| auth | 12 | 5+1 | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件 |
+| deck | 6 | 12 | ✅ 完整 | 最复杂模块, 315 行 repository |
+| card | 6 | 7 | ✅ 完整 | 跨模块依赖 deck |
+| follow | 6 | 4 | ✅ 完整 | 自包含, 无外部依赖 |
+| dictionary | 3 | 1 | ⚠️ 不完整 | 无 service/repo — AI 管道直接调用 |
+| translator | 4 | 3 | ⚠️ 不完整 | 无 repo — AI 管道, 含废弃函数 |
+| shared | 1 | 0 | N/A | getCurrentUserId, requireAuth |
+
+## 文件结构 (完整 6 文件模式)
 
 ```
 {name}/
-├── {name}-action.ts       # Server Actions
-├── {name}-action-dto.ts   # Zod 验证 + 类型
-├── {name}-service.ts      # 业务逻辑
-├── {name}-service-dto.ts  # Service 类型
-├── {name}-repository.ts   # 数据库操作
+├── {name}-action.ts       # Server Actions, "use server"
+├── {name}-action-dto.ts   # Zod schemas + 类型 + validate 函数
+├── {name}-service.ts      # 业务逻辑, 跨模块调用
+├── {name}-service-dto.ts  # Service 类型 (纯 TS, 无 Zod)
+├── {name}-repository.ts   # Prisma 查询
 └── {name}-repository-dto.ts # Repository 类型
 ```
 
-## 文件职责
+## 不完整模块说明
 
-| 层级 | 文件 | 职责 |
-|------|------|------|
-| Action | `*-action.ts` | 表单处理、Zod 验证、重定向、返回 ActionOutput |
-| Service | `*-service.ts` | 业务逻辑、跨模块调用、调用 Repository |
-| Repository | `*-repository.ts` | Prisma 查询、纯数据访问 |
+### dictionary (3 文件)
+- 有: action + action-dto + service-dto
+- 无: service, repository, repository-dto
+- 原因: 纯 AI 查询, 无数据库持久化
+- action 直接调用 `@/lib/bigmodel/dictionary/orchestrator`
+
+### translator (4 文件)
+- 有: action + action-dto + service + service-dto
+- 无: repository, repository-dto
+- 原因: 翻译通过 AI 管道, 无数据库操作
+- 废弃: genIPA(), genLanguage() — 保留用于 text-speaker 兼容
+
+## 跨模块依赖
+
+```
+card-service ──> deck-repository (repoGetUserIdByDeckId 用于所有权检查)
+```
+
+**仅有这一条跨模块依赖。** 其余模块完全自包含。
 
 ## 命名约定
 
 ```typescript
-// 类型命名
-type ActionInputSignUp = { ... };
-type ActionOutputSignUp = { ... };
-type ServiceInputSignUp = { ... };
-type RepoOutputUser = { ... };
+// 类型: {Layer}{Input|Output}{Feature}
+type ActionInputCreateDeck = { ... };
+type RepoOutputDeck = { ... };
 
-// 函数命名
-async function actionSignUp(input: ActionInputSignUp): Promise<ActionOutputSignUp>
-async function serviceSignUp(input: ServiceInputSignUp): Promise<ServiceOutputSignUp>
-async function repoFindUserByUsername(username: string): Promise<RepoOutputUser | null>
+// 函数: {layer}{Feature}
+async function actionCreateDeck(input: unknown): Promise<ActionOutputCreateDeck>
+async function serviceCreateDeck(input: ServiceInputCreateDeck): Promise<ServiceOutputCreateDeck>
+async function repoCreateDeck(input: RepoInputCreateDeck): Promise<RepoOutputDeck>
 
-// 验证函数
-function validateActionInputSignUp(input: unknown): ActionInputSignUp
+// Zod schema + validate (DTO 文件三件套)
+export const schemaActionInputCreateDeck = z.object({ ... });
+export type ActionInputCreateDeck = z.infer<typeof schemaActionInputCreateDeck>;
+export const validateActionInputCreateDeck = generateValidator(schemaActionInputCreateDeck);
 ```
 
 ## Action 模板
@@ -50,39 +76,64 @@ function validateActionInputSignUp(input: unknown): ActionInputSignUp
 "use server";
 
 import { validate } from "@/utils/validate";
-import { ActionInputSignUp, ActionOutputSignUp, schemaActionInputSignUp } from "./auth-action-dto";
-import { serviceSignUp } from "./auth-service";
+import { schemaActionInputCreateDeck, type ActionInputCreateDeck, type ActionOutputCreateDeck } from "./deck-action-dto";
+import { serviceCreateDeck } from "./deck-service";
+import { createLogger } from "@/lib/logger";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { ValidateError } from "@/lib/errors";
 
-export async function actionSignUp(input: unknown): Promise<ActionOutputSignUp> {
-  const validated = validate(schemaActionInputSignUp, input);
-  if (!validated.success) return { success: false, message: validated.message };
-  
-  return serviceSignUp(validated.data);
+const log = createLogger("deck-action");
+
+export async function actionCreateDeck(input: unknown): Promise<ActionOutputCreateDeck> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, message: "未授权" };
+
+    const validated = validate(schemaActionInputCreateDeck, input);
+    if (!validated.success) return { success: false, message: validated.message };
+
+    return serviceCreateDeck({ ...validated.data, userId });
+  } catch (e) {
+    if (e instanceof ValidateError) return { success: false, message: e.message };
+    log.error("Failed to create deck", { error: e });
+    return { success: false, message: "Unknown error occurred" };
+  }
 }
 ```
 
 ## 受保护操作
 
 ```typescript
-// 在 Action 中检查会话
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+// 推荐: 使用 shared 工具
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+const userId = await getCurrentUserId();
+if (!userId) return { success: false, message: "未授权" };
 
-const session = await auth.api.getSession({ headers: await headers() });
-if (!session?.user?.id) {
-  return { success: false, message: "未授权" };
-}
-
-// 变更前检查所有权
-const isOwner = await checkOwnership(resourceId, session.user.id);
-if (!isOwner) {
-  return { success: false, message: "无权限" };
-}
+// 变更前检查所有权 (示例: card 检查 deck 归属)
+const deckOwnerId = await repoGetUserIdByDeckId(deckId);
+if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 ```
 
-## 注意事项
+## 返回格式
 
-- 所有 action 文件必须有 `"use server"` 指令
-- DTO 文件只放 Zod schema 和类型定义
-- Repository 层不处理业务逻辑，只做数据访问
-- 跨模块调用通过 Service 层
+所有 action 统一返回:
+```typescript
+{ success: boolean; message: string; data?: T }
+```
+
+## 消费者地图
+
+| 模块 | 主要消费者 |
+|------|-----------|
+| deck | decks/*, dictionary, translator, explore, favorites, users/[username] |
+| card | decks/[deck_id]/*, dictionary/DictionaryClient, translator |
+| auth | login, signup, forgot-password, profile, users/[username] |
+| follow | users/[username]/*, FollowButton |
+| translator | translator/page, text-speaker/page |
+| dictionary | dictionary/DictionaryClient |
+
+## 已知问题
+
+- `shared/action-utils.ts` 导出 getCurrentUserId/requireAuth 但 card 和 deck 仍内联重复此逻辑
+- `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层 (违反架构)
+- 所有 action/service/repository 文件各自创建 `createLogger("{module}-{layer}")` 实例

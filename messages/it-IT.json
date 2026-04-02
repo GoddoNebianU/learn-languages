@@ -473,6 +473,7 @@
     }
   },
   "translator": {
+    "nMore": "+{count} altri",
     "detectLanguage": "rileva lingua",
     "sourceLanguage": "lingua di origine",
     "auto": "Auto",

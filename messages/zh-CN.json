@@ -441,6 +441,7 @@
     }
   },
   "translator": {
+    "nMore": "还有 {count} 个",
     "detectLanguage": "检测语言",
     "sourceLanguage": "源语言",
     "auto": "自动",

@@ -441,6 +441,7 @@
     }
   },
   "translator": {
+    "nMore": "+{count} more",
     "detectLanguage": "detect language",
     "sourceLanguage": "source language",
     "auto": "Auto",

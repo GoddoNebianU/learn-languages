@@ -1,40 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { cn } from "@/utils/cn";
-
-/**
- * Modal 模态框组件
- *
- * 全屏遮罩的模态对话框组件。
- *
- * @example
- * ```tsx
- * function MyComponent() {
- *   const [open, setOpen] = useState(false);
- *
- *   return (
- *     <>
- *       <Button onClick={() => setOpen(true)}>打开模态框</Button>
- *       <Modal open={open} onClose={() => setOpen(false)}>
- *         <Modal.Header>
- *           <Modal.Title>标题</Modal.Title>
- *         </Modal.Header>
- *         <Modal.Body>
- *           <p>模态框内容</p>
- *         </Modal.Body>
- *         <Modal.Footer>
- *           <Button variant="secondary" onClick={() => setOpen(false)}>
- *             取消
- *           </Button>
- *           <Button variant="primary">确定</Button>
- *         </Modal.Footer>
- *       </Modal>
- *     </>
- *   );
- * }
- * ```
- */
 
 export interface ModalProps {
   open: boolean;
@@ -54,9 +21,6 @@ const sizeClasses = {
   full: "max-w-full mx-4",
 };
 
-/**
- * Modal 组件
- */
 export function Modal({
   open,
   onClose,
@@ -66,7 +30,10 @@ export function Modal({
   closeOnEscape = true,
   className,
 }: ModalProps) {
-  // ESC 键关闭
+  const [isClosing, setIsClosing] = useState(false);
+  const prevOpenRef = useRef(open);
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (!open || !closeOnEscape) return;
 
@@ -78,7 +45,6 @@ export function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [open, closeOnEscape, onClose]);
 
-  // 禁止背景滚动
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -88,24 +54,58 @@ export function Modal({
     }
   }, [open]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (prevOpenRef.current && !open) {
+      const closeRaf = requestAnimationFrame(() => {
+        setIsClosing(true);
+        animationTimeoutRef.current = setTimeout(() => {
+          setIsClosing(false);
+        }, 200);
+      });
+      return () => {
+        cancelAnimationFrame(closeRaf);
+        if (animationTimeoutRef.current) {
+          clearTimeout(animationTimeoutRef.current);
+        }
+      };
+    }
+    prevOpenRef.current = open;
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, [open]);
+
+  const isVisible = open || isClosing;
+  const shouldRender = open || isClosing;
+
+  if (!shouldRender) return null;
 
   return (
     <div
-      className="fixed inset-0 z-modal flex items-center justify-center p-4"
+      className={cn(
+        "fixed inset-0 z-modal flex items-center justify-center p-4",
+        "transition-opacity duration-200 ease-out",
+        isVisible ? "opacity-100" : "opacity-0"
+      )}
       role="dialog"
       aria-modal="true"
     >
-      {/* 遮罩层 */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className={cn(
+          "absolute inset-0 bg-black/50 backdrop-blur-sm",
+          "transition-opacity duration-200",
+          isVisible ? "opacity-100" : "opacity-0"
+        )}
         onClick={closeOnOverlayClick ? onClose : undefined}
       />
 
-      {/* 模态框内容 */}
       <div
         className={cn(
           "relative z-10 w-full bg-white rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
+          "transition-all duration-200 ease-out",
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95",
           sizeClasses[size],
           className
         )}
@@ -116,9 +116,6 @@ export function Modal({
   );
 }
 
-/**
- * Modal.Header - 模态框头部
- */
 export interface ModalHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
@@ -138,9 +135,6 @@ Modal.Header = function ModalHeader({
   );
 };
 
-/**
- * Modal.Title - 模态框标题
- */
 export interface ModalTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
   children: React.ReactNode;
 }
@@ -157,9 +151,6 @@ Modal.Title = function ModalTitle({
   );
 };
 
-/**
- * Modal.Body - 模态框主体
- */
 export interface ModalBodyProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
@@ -176,9 +167,6 @@ Modal.Body = function ModalBody({
   );
 };
 
-/**
- * Modal.Footer - 模态框底部
- */
 export interface ModalFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   align?: "left" | "center" | "right";
@@ -210,9 +198,6 @@ Modal.Footer = function ModalFooter({
   );
 };
 
-/**
- * Modal.CloseButton - 关闭按钮
- */
 export interface ModalCloseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 Modal.CloseButton = function ModalCloseButton({

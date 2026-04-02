@@ -47,6 +47,7 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-md",
         secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 shadow-sm",
+        selectable: "bg-gray-100 text-gray-900 hover:bg-gray-200 data-[variant='selectable'][selected=true]:bg-primary-500 data-[variant='selectable'][selected=true]:text-white data-[variant='selectable'][selected=true]:ring-2 data-[variant='selectable'][selected=true]:ring-primary-500 data-[variant='selectable'][selected=false]:bg-gray-100 data-[variant='selectable'][selected=false]:text-gray-900 data-[variant='selectable'][selected=false]:hover:bg-gray-200",
         success: "bg-success-500 text-white hover:bg-success-600 shadow-md",
         warning: "bg-warning-500 text-white hover:bg-warning-600 shadow-md",
         error: "bg-error-500 text-white hover:bg-error-600 shadow-md",

@@ -473,6 +473,7 @@
     }
   },
   "translator": {
+    "nMore": "+{count} نى باشقا",
     "detectLanguage": "تىلنى تونۇش",
     "sourceLanguage": "مەنبە تىلى",
     "auto": "ئاپتوماتىك",

@@ -441,6 +441,7 @@
     }
   },
   "translator": {
+    "nMore": "他 {count}",
     "detectLanguage": "言語を検出",
     "sourceLanguage": "ソース言語",
     "auto": "自動",

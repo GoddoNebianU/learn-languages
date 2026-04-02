@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton, PrimaryButton } from "@/design-system/base/button";
+import { Button, PrimaryButton } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Select } from "@/design-system/base/select";
 import { Textarea } from "@/design-system/base/textarea";
@@ -144,31 +144,35 @@ export function AddCardModal({
       </Modal.Header>
       
       <Modal.Body className="space-y-4">
-        <HStack gap={3}>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("cardType")}
-            </label>
-            <Select 
-              value={cardType} 
-              onChange={(e) => setCardType(e.target.value as CardType)}
-              className="w-full"
-            >
-              <option value="WORD">{t("wordCard")}</option>
-              <option value="PHRASE">{t("phraseCard")}</option>
-              <option value="SENTENCE">{t("sentenceCard")}</option>
-            </Select>
-          </div>
-        </HStack>
+        <div className="pt-4">
+          <HStack gap={3}>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
+                {t("cardType")}
+              </label>
+              <Select 
+                value={cardType} 
+                onChange={(e) => setCardType(e.target.value as CardType)}
+                className="w-full"
+              >
+                <option value="WORD">{t("wordCard")}</option>
+                <option value="PHRASE">{t("phraseCard")}</option>
+                <option value="SENTENCE">{t("sentenceCard")}</option>
+              </Select>
+            </div>
+          </HStack>
+        </div>
+        <div className="border-t border-gray-100 pt-4"></div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+<div className="pt-4">
+          <label className="block text-sm font-medium text-gray-800 mb-2">
             {t("queryLang")}
           </label>
           <HStack gap={2} className="flex-wrap">
             {QUERY_LANGUAGES.map((lang) => (
-              <LightButton
+              <Button
                 key={lang.value}
+                variant="selectable"
                 selected={!customQueryLang && queryLang === lang.value}
                 onClick={() => {
                   setQueryLang(lang.value);
@@ -177,7 +181,7 @@ export function AddCardModal({
                 size="sm"
               >
                 {t(lang.label)}
-              </LightButton>
+              </Button>
             ))}
             <Input
               value={customQueryLang}
@@ -189,8 +193,8 @@ export function AddCardModal({
           </HStack>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="border-t border-gray-100 pt-4">
+          <label className="block text-sm font-medium text-gray-800 mb-2">
             {cardType === "SENTENCE" ? t("sentence") : t("word")} *
           </label>
           <Input 
@@ -202,8 +206,8 @@ export function AddCardModal({
         </div>
 
         {showIpa && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="border-t border-gray-100 pt-4">
+            <label className="block text-sm font-medium text-gray-800 mb-2">
               {t("ipa")}
             </label>
             <Input 
@@ -215,9 +219,9 @@ export function AddCardModal({
           </div>
         )}
 
-        <div>
+        <div className="border-t border-gray-100 pt-4">
           <HStack justify="between" className="mb-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-800">
               {t("meanings")} *
             </label>
             <button
@@ -273,9 +277,9 @@ export function AddCardModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <LightButton onClick={handleClose}>
-          {t("cancel")}
-        </LightButton>
+<Button variant="secondary" onClick={handleClose}>
+                {t("cancel")}
+              </Button>
         <PrimaryButton onClick={handleAdd} loading={isSubmitting}>
           {isSubmitting ? t("adding") : t("add")}
         </PrimaryButton>
