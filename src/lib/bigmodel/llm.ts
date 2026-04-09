@@ -13,7 +13,7 @@ async function getAnswer(prompt: string | Messages): Promise<string> {
     ? [{ role: "user", content: prompt }]
     : prompt;
 
-  const response = await fetch("https://open.bigmodel.cn/api/paas/v4/chat/completions", {
+  const response = await fetch(process.env.ZHIPU_API_URL || "https://open.bigmodel.cn/api/paas/v4/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
