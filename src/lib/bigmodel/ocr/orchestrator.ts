@@ -1,3 +1,5 @@
+"use server";
+
 import OpenAI from "openai";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { createLogger } from "@/lib/logger";
@@ -5,10 +7,19 @@ import { OCRInput, OCROutput, OCRRawResponse } from "./types";
 
 const log = createLogger("ocr-orchestrator");
 
-const openai = new OpenAI({
-  apiKey: process.env.ZHIPU_API_KEY,
-  baseURL: "https://open.bigmodel.cn/api/paas/v4",
-});
+let _openai: OpenAI | null = null;
+function getOpenAIClient() {
+  if (!_openai) {
+    if (!process.env.ZHIPU_API_KEY) {
+      throw new Error("ZHIPU_API_KEY environment variable is not set");
+    }
+    _openai = new OpenAI({
+      apiKey: process.env.ZHIPU_API_KEY,
+      baseURL: "https://open.bigmodel.cn/api/paas/v4",
+    });
+  }
+  return _openai;
+}
 
 /**
  * Executes OCR on an image to extract vocabulary word-definition pairs.
@@ -76,7 +87,7 @@ ${languageHints.length > 0 ? `语言提示：\n${languageHints.join("\n")}\n` : 
 `.trim();
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAIClient().chat.completions.create({
       model: "glm-4.6v",
       messages: [
         {

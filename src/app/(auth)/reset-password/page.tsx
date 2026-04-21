@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,7 +11,7 @@ import { Input } from "@/design-system/base/input";
 import { PrimaryButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
-export default function ResetPasswordPage() {
+function ResetPasswordPageInner() {
   const t = useTranslations("auth");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -150,5 +150,13 @@ export default function ResetPasswordPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+      <ResetPasswordPageInner />
+    </Suspense>
   );
 }

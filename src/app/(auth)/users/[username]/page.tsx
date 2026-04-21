@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -6,11 +7,19 @@ import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { FollowStats } from "@/components/follow/FollowStats";
 import { DeleteAccountButton } from "./DeleteAccountButton";
+
+export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
+  const { username } = await params;
+  return {
+    title: `${username}'s Profile | Learn Languages`,
+    description: `View ${username}'s profile, decks, and activity on Learn Languages.`,
+  };
+}
 
 interface UserPageProps {
     params: Promise<{ username: string; }>;
@@ -19,6 +28,7 @@ interface UserPageProps {
 export default async function UserPage({ params }: UserPageProps) {
     const { username } = await params;
     const t = await getTranslations("user_profile");
+    const locale = await getLocale();
 
     const session = await auth.api.getSession({ headers: await headers() });
 
@@ -90,7 +100,7 @@ export default async function UserPage({ params }: UserPageProps) {
                         )}
                         <div className="flex flex-wrap items-center gap-4 text-sm mt-3">
                             <span className="text-gray-500">
-                                {t("joined")}: {new Date(user.createdAt).toLocaleDateString()}
+                                {t("joined")}: {new Date(user.createdAt).toLocaleDateString(locale)}
                             </span>
                             {user.emailVerified && (
                                 <span className="flex items-center text-green-600">
@@ -138,7 +148,7 @@ export default async function UserPage({ params }: UserPageProps) {
                     <div>
                         <dt className="text-sm font-medium text-gray-500">{t("memberSince")}</dt>
                         <dd className="mt-1 text-sm text-gray-900">
-                            {new Date(user.createdAt).toLocaleDateString()}
+                            {new Date(user.createdAt).toLocaleDateString(locale)}
                         </dd>
                     </div>
                 </dl>
@@ -178,7 +188,7 @@ export default async function UserPage({ params }: UserPageProps) {
                                             <div className="text-sm text-gray-900">{deck.cardCount ?? 0}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {new Date(deck.createdAt).toLocaleDateString()}
+                                            {new Date(deck.createdAt).toLocaleDateString(locale)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <Link href={`/decks/${deck.id}`}>

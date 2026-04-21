@@ -4,7 +4,7 @@ import { Layers, Heart, ExternalLink, ArrowLeft } from "lucide-react";
 import { CircleButton } from "@/design-system/base/button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import Link from "next/link";
 import {
@@ -21,6 +21,7 @@ interface ExploreDetailClientProps {
 export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
   const router = useRouter();
   const t = useTranslations("exploreDetail");
+  const locale = useLocale();
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
 
@@ -56,7 +57,7 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("zh-CN", {
+    return new Intl.DateTimeFormat(locale, {
       year: "numeric",
       month: "long",
       day: "numeric",

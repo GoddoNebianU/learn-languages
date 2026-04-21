@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDictionaryStore } from "./stores/dictionaryStore";
@@ -25,7 +25,7 @@ interface DictionaryClientProps {
   initialDecks: ActionOutputDeck[];
 }
 
-export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
+function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const t = useTranslations("dictionary");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -62,7 +62,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
 
   useEffect(() => {
     if (session?.user?.id) {
-      actionGetDecksByUserId(session.user.id).then((result) => {
+      actionGetDecksByUserId({ userId: session.user.id }).then((result) => {
         if (result.success && result.data) {
           setDecks(result.data);
         }
@@ -94,7 +94,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
       return;
     }
     if (!searchResult?.entries?.length) {
-      toast.error("No dictionary item to save. Please search first.");
+      toast.error(t("noDictionaryItemToSave"));
       return;
     }
 
@@ -102,7 +102,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
     const deckId = deckSelect?.value ? Number(deckSelect.value) : decks[0]?.id;
 
     if (!deckId) {
-      toast.error("No deck selected");
+      toast.error(t("noDeckSelected"));
       return;
     }
 
@@ -174,7 +174,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
         />
         <LightButton
           type="submit"
-          className="h-10 px-6 rounded-full whitespace-nowrap"
+          className="px-6 rounded-full whitespace-nowrap"
           loading={isSearching}
         >
           {t("search")}
@@ -238,7 +238,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
                 )}
                 <LightButton
                   onClick={handleSave}
-                  className="w-10 h-10 shrink-0"
+                  className="w-10 shrink-0"
                   title={t("saveToFolder")}
                   loading={isSaving}
                   disabled={isSaving}
@@ -259,7 +259,7 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
             <div className="border-t border-gray-200 pt-4 mt-4">
               <LightButton
                 onClick={relookup}
-                className="flex items-center gap-2 px-4 py-2 text-sm"
+                className="text-sm"
                 loading={isSearching}
               >
                 <RefreshCw className="w-4 h-4" />
@@ -276,5 +276,13 @@ export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
         )}
       </div>
     </PageLayout>
+  );
+}
+
+export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
+  return (
+    <Suspense fallback={<PageLayout><div className="flex min-h-[50vh] items-center justify-center"><p>Loading...</p></div></PageLayout>}>
+      <DictionaryClientInner initialDecks={initialDecks} />
+    </Suspense>
   );
 }

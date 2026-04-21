@@ -438,7 +438,10 @@
       "spanish": "スペイン語",
       "portuguese": "ポルトガル語",
       "russian": "ロシア語"
-    }
+    },
+    "ipaGenerationFailed": "IPAの生成に失敗しました",
+    "audioPlaybackFailed": "音声の再生に失敗しました",
+    "saveFailed": "ローカルストレージへの保存に失敗しました"
   },
   "translator": {
     "nMore": "他 {count}",
@@ -485,7 +488,8 @@
     "cancel": "キャンセル",
     "save": "保存",
     "savedToDeck": "{deckName}に保存",
-    "saveFailed": "保存失敗"
+    "saveFailed": "保存失敗",
+    "translationFailed": "翻訳に失敗しました。もう一度お試しください"
   },
   "dictionary": {
     "title": "辞書",
@@ -516,7 +520,9 @@
     "savedToFolder": "フォルダーに保存しました: {folderName}",
     "saveFailed": "保存に失敗しました。後でもう一度お試しください",
     "definition": "定義",
-    "example": "例文"
+    "example": "例文",
+    "noDictionaryItemToSave": "保存する辞書項目がありません。先に検索してください。",
+    "noDeckSelected": "デッキが選択されていません"
   },
   "explore": {
     "title": "探索",
@@ -629,6 +635,7 @@
     "followersOf": "{username}のフォロワー",
     "followingOf": "{username}のフォロー中",
     "noFollowers": "まだフォロワーがいません",
-    "noFollowing": "まだ誰もフォローしていません"
+    "noFollowing": "まだ誰もフォローしていません",
+    "followFailed": "フォロー状態の更新に失敗しました"
   }
 }

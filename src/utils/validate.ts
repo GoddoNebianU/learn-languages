@@ -10,4 +10,4 @@ export const validate = <T, U extends z.ZodType>(dto: T, schema: U) => {
     throw new ValidateError(`Validation failed: ${errorMessages}`);
 };
 
-export const generateValidator = <T extends z.ZodType>(schema: T) => <T>(dto: T) => validate(dto, schema);
+export const generateValidator = <S extends z.ZodType>(schema: S) => (dto: unknown) => validate(dto, schema);

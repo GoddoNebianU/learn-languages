@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
@@ -104,6 +104,28 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
       onChange?.(e);
     };
 
+    const toggleChecked = useCallback(() => {
+      if (disabled) return;
+      const nextChecked = !isChecked;
+      if (!isControlled) {
+        setInternalChecked(nextChecked);
+      }
+      const syntheticEvent = {
+        target: { checked: nextChecked },
+      } as React.ChangeEvent<HTMLInputElement>;
+      onChange?.(syntheticEvent);
+    }, [disabled, isChecked, isControlled, onChange]);
+
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === " " || e.key === "Enter") {
+          e.preventDefault();
+          toggleChecked();
+        }
+      },
+      [toggleChecked]
+    );
+
     // 确保 size 有默认值
     const actualSize = size ?? "md";
 
@@ -122,7 +144,14 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     }[actualSize];
 
     const renderSwitch = () => (
-      <div className="relative inline-block">
+      <div
+        className="relative inline-block"
+        role="switch"
+        aria-checked={isChecked}
+        tabIndex={disabled ? -1 : 0}
+        onKeyDown={handleKeyDown}
+        onClick={toggleChecked}
+      >
         <input
           ref={ref}
           type="checkbox"
@@ -130,6 +159,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           disabled={disabled}
           checked={isChecked}
           onChange={handleChange}
+          aria-hidden="true"
           className={cn(
             switchVariants({ variant, size }),
             "peer/switch",

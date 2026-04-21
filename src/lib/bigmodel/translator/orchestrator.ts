@@ -5,12 +5,21 @@ import { createLogger } from "@/lib/logger";
 
 const log = createLogger("translator-orchestrator");
 
+function escapeXml(str: string): string {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
+
 async function detectLanguage(text: string): Promise<LanguageDetectionResult> {
     const prompt = `
 你是一个语言识别专家。分析用户输入并返回 JSON 结果。
 
 用户输入位于 <text> 标签内：
-<text>${text}</text>
+<text>${escapeXml(text)}</text>
 
 你的任务是：
 1. 识别输入文本的语言
@@ -57,7 +66,7 @@ async function performTranslation(
 你是一个专业翻译。将文本翻译成目标语言。
 
 源文本位于 <source_text> 标签内：
-<source_text>${sourceText}</source_text>
+<source_text>${escapeXml(sourceText)}</source_text>
 
 源语言：${sourceLanguage}
 目标语言：${targetLanguage}
@@ -98,7 +107,7 @@ async function generateIPA(
 你是一个语音学专家。为文本生成国际音标（IPA）标注。
 
 文本位于 <text> 标签内：
-<text>${text}</text>
+<text>${escapeXml(text)}</text>
 
 语言：${language}
 
@@ -191,6 +200,6 @@ export async function executeTranslation(
     } catch (error) {
         log.error("Translation failed", { error });
         const errorMessage = error instanceof Error ? error.message : "未知错误";
-        throw new Error(errorMessage);
+        throw new Error(errorMessage, { cause: error });
     }
 }

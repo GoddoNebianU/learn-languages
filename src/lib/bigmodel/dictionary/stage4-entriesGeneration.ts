@@ -5,6 +5,15 @@ import { createLogger } from "@/lib/logger";
 
 const log = createLogger("dictionary-entries");
 
+function escapeXml(str: string): string {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
+
 export async function generateEntries(
     standardForm: string,
     queryLang: string,
@@ -14,7 +23,7 @@ export async function generateEntries(
     const isWord = inputType === "word";
 
     const prompt = `
-你是专业词典编纂专家。为词条"${standardForm}"（${queryLang}）生成${definitionLang}释义。
+你是专业词典编纂专家。为词条"${escapeXml(standardForm)}"（${queryLang}）生成${definitionLang}释义。
 
 【核心要求】
 生成尽可能完整、全面的词典条目，包括：

@@ -76,6 +76,12 @@ export type ActionOutputGetDeckById = {
   data?: ActionOutputDeck;
 };
 
+export const schemaActionInputGetDecksByUserId = z.object({
+  userId: z.string(),
+});
+export type ActionInputGetDecksByUserId = z.infer<typeof schemaActionInputGetDecksByUserId>;
+export const validateActionInputGetDecksByUserId = generateValidator(schemaActionInputGetDecksByUserId);
+
 export type ActionOutputGetDecksByUserId = {
   message: string;
   success: boolean;

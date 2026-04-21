@@ -6,7 +6,7 @@ import {
   TextSpeakerArraySchema,
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
-import { IconClick } from "@/design-system/base/button";
+import { Button, IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
@@ -86,12 +86,13 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
       >
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-600">{t("saved")}</p>
-          <button
+          <Button
+            variant="link"
             onClick={handleDeleteAll}
             className="text-xs text-gray-500 hover:text-gray-800"
           >
             {t("clearAll")}
-          </button>
+          </Button>
         </div>
         <ul className="divide-y divide-gray-100">
           {data.map((item, i) => (

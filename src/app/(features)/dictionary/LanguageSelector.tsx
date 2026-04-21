@@ -52,7 +52,7 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
             type="button"
             selected={isPresetLanguage && value === lang.code}
             onClick={() => handlePresetSelect(lang.code)}
-            className="text-sm px-3 py-1"
+            className="text-sm px-3"
           >
             {lang.nativeName}
           </LightButton>

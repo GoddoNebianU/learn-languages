@@ -44,12 +44,13 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
 
   return (
     <>
-      <button 
+      <Button
+        variant="link"
         onClick={() => setShowModal(true)}
-        className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+        className="text-xs text-gray-400 hover:text-red-500"
       >
         {t("deleteAccount.button")}
-      </button>
+      </Button>
 
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <div className="p-6">

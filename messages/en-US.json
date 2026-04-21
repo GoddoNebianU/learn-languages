@@ -438,7 +438,10 @@
       "spanish": "Spanish",
       "portuguese": "Portuguese",
       "russian": "Russian"
-    }
+    },
+    "ipaGenerationFailed": "Failed to generate IPA",
+    "audioPlaybackFailed": "Failed to play audio",
+    "saveFailed": "Failed to save to local storage"
   },
   "translator": {
     "nMore": "+{count} more",
@@ -485,7 +488,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "savedToDeck": "Card saved to {deckName}",
-    "saveFailed": "Failed to save card"
+    "saveFailed": "Failed to save card",
+    "translationFailed": "Translation failed, please try again"
   },
   "dictionary": {
     "title": "Dictionary",
@@ -516,7 +520,9 @@
     "savedToFolder": "Saved to folder: {folderName}",
     "saveFailed": "Save failed, please try again later",
     "definition": "Definition",
-    "example": "Example"
+    "example": "Example",
+    "noDictionaryItemToSave": "No dictionary item to save. Please search first.",
+    "noDeckSelected": "No deck selected"
   },
   "explore": {
     "title": "Explore",
@@ -626,6 +632,7 @@
     "followersOf": "{username}'s Followers",
     "followingOf": "{username}'s Following",
     "noFollowers": "No followers yet",
-    "noFollowing": "Not following anyone yet"
+    "noFollowing": "Not following anyone yet",
+    "followFailed": "Failed to update follow status"
   }
 }

@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
 import { Memorize } from "./Memorize";
+
+export async function generateMetadata({ params }: { params: Promise<{ deck_id: string }> }): Promise<Metadata> {
+  const { deck_id } = await params;
+  const deckInfo = (await actionGetDeckById({ deckId: Number(deck_id) })).data;
+  return {
+    title: deckInfo ? `Study: ${deckInfo.name} | Learn Languages` : "Study Mode | Learn Languages",
+    description: "Study and memorize flashcards in this deck.",
+  };
+}
 
 export default async function LearnPage({
   params,

@@ -286,6 +286,7 @@ export function getThemePreset(id: string): ThemePreset | undefined {
   return THEME_PRESETS.find((preset) => preset.id === id);
 }
 
+// TODO: Move to src/lib/theme/ — this function manipulates DOM and doesn't belong in src/shared/
 export function applyThemeColors(preset: ThemePreset): void {
   const root = document.documentElement;
   Object.entries(preset.colors).forEach(([shade, color]) => {

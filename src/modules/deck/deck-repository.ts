@@ -19,6 +19,34 @@ import {
 } from "./deck-repository-dto";
 import { Visibility } from "../../../generated/prisma/enums";
 
+type DeckWithPublicIncludes = {
+  id: number;
+  name: string;
+  desc: string;
+  userId: string;
+  visibility: Visibility;
+  createdAt: Date;
+  updatedAt: Date;
+  _count?: { cards?: number; favorites?: number };
+  user?: { name: string; username: string } | null;
+};
+
+function mapDeckToPublicOutput(deck: DeckWithPublicIncludes): RepoOutputPublicDeck {
+  return {
+    id: deck.id,
+    name: deck.name,
+    desc: deck.desc,
+    userId: deck.userId,
+    visibility: deck.visibility,
+    createdAt: deck.createdAt,
+    updatedAt: deck.updatedAt,
+    cardCount: deck._count?.cards ?? 0,
+    userName: deck.user?.name ?? null,
+    userUsername: deck.user?.username ?? null,
+    favoriteCount: deck._count?.favorites ?? 0,
+  };
+}
+
 export async function repoCreateDeck(data: RepoInputCreateDeck): Promise<number> {
   const deck = await prisma.deck.create({
     data: {
@@ -106,19 +134,7 @@ export async function repoGetPublicDecks(input: RepoInputGetPublicDecks = {}): P
     skip: offset,
   });
 
-  return decks.map((deck) => ({
-    id: deck.id,
-    name: deck.name,
-    desc: deck.desc,
-    userId: deck.userId,
-    visibility: deck.visibility,
-    createdAt: deck.createdAt,
-    updatedAt: deck.updatedAt,
-    cardCount: deck._count?.cards ?? 0,
-    userName: deck.user?.name ?? null,
-    userUsername: deck.user?.username ?? null,
-    favoriteCount: deck._count?.favorites ?? 0,
-  }));
+  return decks.map(mapDeckToPublicOutput);
 }
 
 export async function repoDeleteDeck(input: RepoInputDeleteDeck): Promise<void> {
@@ -161,43 +177,30 @@ export async function repoGetPublicDeckById(input: RepoInputGetPublicDeckById): 
 
   if (!deck) return null;
 
-  return {
-    id: deck.id,
-    name: deck.name,
-    desc: deck.desc,
-    userId: deck.userId,
-    visibility: deck.visibility,
-    createdAt: deck.createdAt,
-    updatedAt: deck.updatedAt,
-    cardCount: deck._count?.cards ?? 0,
-    userName: deck.user?.name ?? null,
-    userUsername: deck.user?.username ?? null,
-    favoriteCount: deck._count?.favorites ?? 0,
-  };
+  return mapDeckToPublicOutput(deck);
 }
 
 export async function repoToggleDeckFavorite(input: RepoInputToggleDeckFavorite): Promise<RepoOutputDeckFavorite> {
-  const existing = await prisma.deckFavorite.findUnique({
-    where: {
-      userId_deckId: {
+  const isFavorited = await prisma.$transaction(async (tx) => {
+    const deleted = await tx.deckFavorite.deleteMany({
+      where: {
         userId: input.userId,
         deckId: input.deckId,
       },
-    },
-  });
-
-  if (existing) {
-    await prisma.deckFavorite.delete({
-      where: { id: existing.id },
     });
-  } else {
-    await prisma.deckFavorite.create({
+
+    if (deleted.count > 0) {
+      return false;
+    }
+
+    await tx.deckFavorite.create({
       data: {
         userId: input.userId,
         deckId: input.deckId,
       },
     });
-  }
+    return true;
+  });
 
   const deck = await prisma.deck.findUnique({
     where: { id: input.deckId },
@@ -209,7 +212,7 @@ export async function repoToggleDeckFavorite(input: RepoInputToggleDeckFavorite)
   });
 
   return {
-    isFavorited: !existing,
+    isFavorited,
     favoriteCount: deck?._count?.favorites ?? 0,
   };
 }
@@ -263,19 +266,7 @@ export async function repoSearchPublicDecks(input: RepoInputSearchPublicDecks): 
     skip: offset,
   });
 
-  return decks.map((deck) => ({
-    id: deck.id,
-    name: deck.name,
-    desc: deck.desc,
-    userId: deck.userId,
-    visibility: deck.visibility,
-    createdAt: deck.createdAt,
-    updatedAt: deck.updatedAt,
-    cardCount: deck._count?.cards ?? 0,
-    userName: deck.user?.name ?? null,
-    userUsername: deck.user?.username ?? null,
-    favoriteCount: deck._count?.favorites ?? 0,
-  }));
+  return decks.map(mapDeckToPublicOutput);
 }
 
 export async function repoGetUserFavoriteDecks(
@@ -299,17 +290,7 @@ export async function repoGetUserFavoriteDecks(
   });
 
   return favorites.map((fav) => ({
-    id: fav.deck.id,
-    name: fav.deck.name,
-    desc: fav.deck.desc,
-    userId: fav.deck.userId,
-    visibility: fav.deck.visibility,
-    createdAt: fav.deck.createdAt,
-    updatedAt: fav.deck.updatedAt,
-    cardCount: fav.deck._count?.cards ?? 0,
-    userName: fav.deck.user?.name ?? null,
-    userUsername: fav.deck.user?.username ?? null,
-    favoriteCount: fav.deck._count?.favorites ?? 0,
+    ...mapDeckToPublicOutput(fav.deck),
     favoritedAt: fav.createdAt,
   }));
 }

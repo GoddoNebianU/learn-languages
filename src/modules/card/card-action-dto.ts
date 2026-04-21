@@ -52,3 +52,11 @@ export const schemaActionInputGetRandomCard = z.object({
 });
 export type ActionInputGetRandomCard = z.infer<typeof schemaActionInputGetRandomCard>;
 export const validateActionInputGetRandomCard = generateValidator(schemaActionInputGetRandomCard);
+
+export const schemaActionInputGetCardById = z.object({ cardId: z.number().int().positive() });
+export type ActionInputGetCardById = z.infer<typeof schemaActionInputGetCardById>;
+export const validateActionInputGetCardById = generateValidator(schemaActionInputGetCardById);
+
+export const schemaActionInputGetCardStats = z.object({ deckId: z.number().int().positive() });
+export type ActionInputGetCardStats = z.infer<typeof schemaActionInputGetCardStats>;
+export const validateActionInputGetCardStats = generateValidator(schemaActionInputGetCardStats);

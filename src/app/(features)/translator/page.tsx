@@ -93,7 +93,7 @@ export default function TranslatorPage() {
 
   useEffect(() => {
     if (session?.user?.id) {
-      actionGetDecksByUserId(session.user.id).then((result) => {
+      actionGetDecksByUserId({ userId: session.user.id }).then((result) => {
         if (result.success && result.data) {
           setDecks(result.data);
         }
@@ -120,6 +120,9 @@ export default function TranslatorPage() {
       }
 
       const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
+      if (!url) {
+        throw new Error("TTS returned no audio URL");
+      }
       await load(url);
       await play();
     } catch (error) {
@@ -159,10 +162,10 @@ export default function TranslatorPage() {
           targetLanguage: effectiveTargetLanguage,
         });
       } else {
-        toast.error(result.message || "翻译失败，请重试");
+        toast.error(result.message || t("translationFailed"));
       }
     } catch (error) {
-      toast.error("翻译失败，请重试");
+      toast.error(t("translationFailed"));
       console.error("翻译错误:", error);
     } finally {
       setProcessing(false);

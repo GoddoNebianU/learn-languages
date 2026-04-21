@@ -109,7 +109,7 @@ export default function TextSpeakerPage() {
           setIPA(data.ipa);
         })
         .catch((e) => {
-          console.error("生成 IPA 失败", e);
+          console.error(t("ipaGenerationFailed"), e);
           setIPA("");
         });
     }
@@ -157,10 +157,13 @@ export default function TextSpeakerPage() {
               textRef.current,
               theLanguage as TTS_SUPPORTED_LANGUAGES
             );
+            if (!objurlRef.current) {
+              throw new Error("TTS returned no audio URL");
+            }
             load(objurlRef.current);
             play();
           } catch (e) {
-            console.error("播放音频失败", e);
+            console.error(t("audioPlaybackFailed"), e);
             setPause(true);
             setLanguage(null);
             setProcessing(false);
@@ -254,7 +257,7 @@ export default function TextSpeakerPage() {
       }
       setIntoLocalStorage(save);
     } catch (e) {
-      console.error("保存到本地存储失败", e);
+      console.error(t("saveFailed"), e);
       setLanguage(null);
     } finally {
       setSaving(false);

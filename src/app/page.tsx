@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Learn Languages — AI-Powered Language Learning",
+  description: "A modern language learning platform with AI-powered translation, dictionary, text-to-speech, and flashcard tools.",
+};
 
 interface LinkAreaProps {
   href: string;
@@ -35,7 +41,7 @@ export default async function HomePage() {
           <p className="text-2xl md:text-5xl font-medium">{t("description")}</p>
         </div>
       </div>
-      <div className="w-full flex justify-center font-serif items-center flex-col min-h-64 h-[25vdh]">
+      <div className="w-full flex justify-center font-serif items-center flex-col min-h-64 h-[25dvh]">
         <p className="text-3xl">{t("fortune.quote")}</p>
         <cite className="text-[#e9b353] text-xl">{t("fortune.author")}</cite>
       </div>

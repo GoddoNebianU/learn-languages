@@ -153,7 +153,7 @@ export function DecksClient({ userId }: DecksClientProps) {
 
   const loadDecks = async () => {
     setLoading(true);
-    const result = await actionGetDecksByUserId(userId);
+    const result = await actionGetDecksByUserId({ userId });
     if (result.success && result.data) {
       setDecks(result.data);
     }

@@ -10,6 +10,7 @@ import {
   ActionInputUpdateDeck,
   ActionInputDeleteDeck,
   ActionInputGetDeckById,
+  ActionInputGetDecksByUserId,
   ActionInputGetPublicDecks,
   ActionInputSearchPublicDecks,
   ActionInputGetPublicDeckById,
@@ -32,6 +33,7 @@ import {
   validateActionInputUpdateDeck,
   validateActionInputDeleteDeck,
   validateActionInputGetDeckById,
+  validateActionInputGetDecksByUserId,
   validateActionInputGetPublicDecks,
   validateActionInputSearchPublicDecks,
   validateActionInputGetPublicDeckById,
@@ -55,6 +57,14 @@ import {
 
 const log = createLogger("deck-action");
 
+function mapVisibility(v: string): "PRIVATE" | "PUBLIC" {
+  return v as "PRIVATE" | "PUBLIC";
+}
+
+function mapVisibilityToService(v: string | undefined): Visibility | undefined {
+  return v as Visibility | undefined;
+}
+
 async function checkDeckOwnership(deckId: number): Promise<boolean> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return false;
@@ -73,7 +83,7 @@ export async function actionCreateDeck(input: ActionInputCreateDeck): Promise<Ac
       name: validatedInput.name,
       desc: validatedInput.desc,
       userId: session.user.id,
-      visibility: validatedInput.visibility as Visibility | undefined,
+      visibility: mapVisibilityToService(validatedInput.visibility),
     });
 
     return result;
@@ -99,7 +109,7 @@ export async function actionUpdateDeck(input: ActionInputUpdateDeck): Promise<Ac
       deckId: validatedInput.deckId,
       name: validatedInput.name,
       desc: validatedInput.desc,
-      visibility: validatedInput.visibility as Visibility | undefined,
+      visibility: mapVisibilityToService(validatedInput.visibility),
     });
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -138,12 +148,19 @@ export async function actionGetDeckById(input: ActionInputGetDeckById): Promise<
       return { success: false, message: result.message };
     }
 
+    if (result.data.visibility === "PRIVATE") {
+      const session = await auth.api.getSession({ headers: await headers() });
+      if (!session?.user?.id || session.user.id !== result.data.userId) {
+        return { success: false, message: "You do not have permission to view this deck" };
+      }
+    }
+
     return {
       success: true,
       message: result.message,
       data: {
         ...result.data,
-        visibility: result.data.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(result.data.visibility),
       },
     };
   } catch (e) {
@@ -152,23 +169,36 @@ export async function actionGetDeckById(input: ActionInputGetDeckById): Promise<
   }
 }
 
-export async function actionGetDecksByUserId(userId: string): Promise<ActionOutputGetDecksByUserId> {
+export async function actionGetDecksByUserId(input: ActionInputGetDecksByUserId): Promise<ActionOutputGetDecksByUserId> {
   try {
+    const validatedInput = validateActionInputGetDecksByUserId(input);
+    const { userId } = validatedInput;
+
     const result = await serviceGetDecksByUserId({ userId });
     
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
 
+    const session = await auth.api.getSession({ headers: await headers() });
+    const isSelf = session?.user?.id === userId;
+
+    const decks = isSelf
+      ? result.data
+      : result.data.filter((deck) => deck.visibility !== "PRIVATE");
+
     return {
       success: true,
       message: result.message,
-      data: result.data.map((deck) => ({
+      data: decks.map((deck) => ({
         ...deck,
-        visibility: deck.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(deck.visibility),
       })),
     };
   } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
     log.error("Failed to get decks", { error: e });
     return { success: false, message: "Unknown error occurred" };
   }
@@ -188,7 +218,7 @@ export async function actionGetPublicDecks(input: ActionInputGetPublicDecks = {}
       message: result.message,
       data: result.data.map((deck) => ({
         ...deck,
-        visibility: deck.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(deck.visibility),
       })),
     };
   } catch (e) {
@@ -214,7 +244,7 @@ export async function actionGetPublicDeckById(input: ActionInputGetPublicDeckByI
       message: result.message,
       data: {
         ...result.data,
-        visibility: result.data.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(result.data.visibility),
       },
     };
   } catch (e) {
@@ -240,7 +270,7 @@ export async function actionSearchPublicDecks(input: ActionInputSearchPublicDeck
       message: result.message,
       data: result.data.map((deck) => ({
         ...deck,
-        visibility: deck.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(deck.visibility),
       })),
     };
   } catch (e) {
@@ -316,7 +346,7 @@ export async function actionGetUserFavoriteDecks(): Promise<ActionOutputGetUserF
       message: result.message,
       data: result.data.map((deck) => ({
         ...deck,
-        visibility: deck.visibility as "PRIVATE" | "PUBLIC",
+        visibility: mapVisibility(deck.visibility),
       })),
     };
   } catch (e) {

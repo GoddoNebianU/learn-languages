@@ -1,9 +1,19 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { InDeck } from "./InDeck";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
+
+export async function generateMetadata({ params }: { params: Promise<{ deck_id: string }> }): Promise<Metadata> {
+  const { deck_id } = await params;
+  const deckInfo = (await actionGetDeckById({ deckId: Number(deck_id) })).data;
+  return {
+    title: deckInfo ? `${deckInfo.name} | Learn Languages` : "Deck | Learn Languages",
+    description: "View and study flashcards in this deck.",
+  };
+}
 
 export default async function DecksPage({
   params,

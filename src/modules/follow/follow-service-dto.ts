@@ -16,7 +16,7 @@ export type ServiceInputGetFollowing = {
 };
 
 export type ServiceInputCheckFollow = {
-  currentUserId: string;
+  currentUserId: string | null;
   targetUserId: string;
 };
 

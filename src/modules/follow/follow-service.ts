@@ -1,8 +1,7 @@
 import { createLogger } from "@/lib/logger";
 import {
   repoCheckFollow,
-  repoCreateFollow,
-  repoDeleteFollow,
+  repoToggleFollow,
   repoGetFollowers,
   repoGetFollowersCount,
   repoGetFollowing,
@@ -29,29 +28,17 @@ export async function serviceToggleFollow(
     throw new Error("Cannot follow yourself");
   }
 
-  const isFollowing = await repoCheckFollow({
+  const isFollowing = await repoToggleFollow({
     followerId: currentUserId,
     followingId: targetUserId,
   });
 
-  if (isFollowing) {
-    await repoDeleteFollow({
-      followerId: currentUserId,
-      followingId: targetUserId,
-    });
-    log.info("Unfollowed user", { currentUserId, targetUserId });
-  } else {
-    await repoCreateFollow({
-      followerId: currentUserId,
-      followingId: targetUserId,
-    });
-    log.info("Followed user", { currentUserId, targetUserId });
-  }
+  log.info("Follow toggled", { currentUserId, targetUserId, isFollowing });
 
   const followersCount = await repoGetFollowersCount(targetUserId);
 
   return {
-    isFollowing: !isFollowing,
+    isFollowing,
     followersCount,
   };
 }

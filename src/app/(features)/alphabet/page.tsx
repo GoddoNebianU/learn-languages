@@ -63,7 +63,7 @@ export default function Alphabet() {
           {/* 日语假名选项 */}
           <LightButton
             onClick={() => setChosenAlphabet("japanese")}
-            className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
             <div className="flex flex-col items-center">
               <span className="text-2xl mb-2">あいうえお</span>
@@ -74,7 +74,7 @@ export default function Alphabet() {
           {/* 英语字母选项 */}
           <LightButton
             onClick={() => setChosenAlphabet("english")}
-            className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
             <div className="flex flex-col items-center">
               <span className="text-2xl mb-2">ABC</span>
@@ -85,7 +85,7 @@ export default function Alphabet() {
           {/* 维吾尔语字母选项 */}
           <LightButton
             onClick={() => setChosenAlphabet("uyghur")}
-            className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
             <div className="flex flex-col items-center">
               <span className="text-2xl mb-2">ئۇيغۇر</span>
@@ -96,7 +96,7 @@ export default function Alphabet() {
           {/* 世界语字母选项 */}
           <LightButton
             onClick={() => setChosenAlphabet("esperanto")}
-            className="p-6 text-lg font-medium hover:scale-105 transition-transform"
+            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
             <div className="flex flex-col items-center">
               <span className="text-2xl mb-2">ABCĜĤ</span>

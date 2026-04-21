@@ -4,6 +4,13 @@ import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
+// Static border-style lookup map for Tailwind v4 JIT compatibility
+const BORDER_STYLE_MAP: Record<string, string> = {
+  solid: "border-solid",
+  dashed: "border-dashed",
+  dotted: "border-dotted",
+};
+
 /**
  * Divider 分隔线组件
  *
@@ -84,9 +91,9 @@ export function Divider({
 
     return (
       <div className={cn("flex items-center gap-4 w-full", className)} {...props}>
-        <div className={cn("flex-1 border-t", `border-${variant}`)} />
+        <div className={cn("flex-1 border-t", BORDER_STYLE_MAP[variant ?? "solid"] ?? "border-solid")} />
         <span className="text-sm text-gray-500 whitespace-nowrap">{children}</span>
-        <div className={cn("flex-1 border-t", `border-${variant}`)} />
+        <div className={cn("flex-1 border-t", BORDER_STYLE_MAP[variant ?? "solid"] ?? "border-solid")} />
       </div>
     );
   }

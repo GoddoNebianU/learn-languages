@@ -5,6 +5,7 @@
  */
 import { Card } from "@/design-system/base/card";
 import { Container } from "@/design-system/layout/container";
+import { cn } from "@/utils/cn";
 
 type PageLayoutVariant = "centered-card" | "full-width" | "fullscreen";
 
@@ -19,18 +20,18 @@ const alignClasses = {
   center: "items-center",
   start: "items-start",
   end: "items-end",
-};
+} as const;
 
 export function PageLayout({
   children,
-  className = "",
+  className,
   variant = "centered-card",
   align = "center",
 }: PageLayoutProps) {
   // 居中卡片布局
   if (variant === "centered-card") {
     return (
-      <div className={`min-h-[calc(100vh-64px)] bg-primary-500 flex ${alignClasses[align]} justify-center px-4 py-8 ${className}`}>
+      <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500 flex justify-center px-4 py-8", alignClasses[align], className)}>
         <div className="w-full max-w-2xl">
           <Card padding="lg" className="p-6 md:p-8">
             {children}
@@ -43,7 +44,7 @@ export function PageLayout({
   // 全宽布局
   if (variant === "full-width") {
     return (
-      <div className={`min-h-[calc(100vh-64px)] bg-primary-500 px-4 py-8 ${className}`}>
+      <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500 px-4 py-8", className)}>
         <Container size="2xl">
           {children}
         </Container>
@@ -51,14 +52,9 @@ export function PageLayout({
     );
   }
 
-  // 全屏布局
-  if (variant === "fullscreen") {
-    return (
-      <div className={`min-h-[calc(100vh-64px)] bg-primary-500 ${className}`}>
-        {children}
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500", className)}>
+      {children}
+    </div>
+  );
 }

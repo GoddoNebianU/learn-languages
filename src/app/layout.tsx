@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import type { Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 import { StrictMode } from "react";
@@ -22,8 +23,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`antialiased`}>
         <StrictMode>
           <ThemeProvider>

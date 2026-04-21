@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
@@ -72,8 +74,8 @@ export type CardPadding = VariantProps<typeof cardVariants>["padding"];
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
-  // 子元素
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 /**
@@ -85,11 +87,33 @@ export function Card({
   clickable = false,
   className,
   children,
+  onClick,
+  onKeyDown,
+  disabled,
   ...props
 }: CardProps) {
+  const isClickable = clickable || !!onClick;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (isClickable && !disabled && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+    }
+    onKeyDown?.(e);
+  };
+
   return (
     <div
-      className={cn(cardVariants({ variant, padding, clickable }), className)}
+      className={cn(
+        cardVariants({ variant, padding, clickable: isClickable }),
+        disabled && "pointer-events-none opacity-50",
+        className
+      )}
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable && !disabled ? 0 : undefined}
+      aria-disabled={isClickable && disabled ? true : undefined}
+      onClick={onClick}
+      onKeyDown={isClickable ? handleKeyDown : onKeyDown}
       {...props}
     >
       {children}

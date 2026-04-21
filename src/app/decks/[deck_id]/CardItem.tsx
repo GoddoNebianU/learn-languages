@@ -1,6 +1,6 @@
 import { Trash2, Pencil } from "lucide-react";
 import { useState } from "react";
-import { CircleButton } from "@/design-system/base/button";
+import { Button, CircleButton } from "@/design-system/base/button";
 import { useTranslations } from "next-intl";
 import type { ActionOutputCard, CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
@@ -14,10 +14,10 @@ interface CardItemProps {
   onUpdated: () => void;
 }
 
-const CARD_TYPE_LABELS: Record<CardType, string> = {
-  WORD: "Word",
-  PHRASE: "Phrase",
-  SENTENCE: "Sentence",
+const CARD_TYPE_KEYS: Record<CardType, string> = {
+  WORD: "wordCard",
+  PHRASE: "phraseCard",
+  SENTENCE: "sentenceCard",
 };
 
 export function CardItem({
@@ -60,7 +60,7 @@ export function CardItem({
                 {t("card")}
               </span>
               <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-md">
-                {CARD_TYPE_LABELS[card.cardType]}
+                {t(CARD_TYPE_KEYS[card.cardType])}
               </span>
             </div>
 
@@ -105,18 +105,20 @@ export function CardItem({
           <div className="bg-white rounded-lg p-4 max-w-sm mx-4">
             <p className="text-gray-700 mb-4">{t("deleteConfirm")}</p>
             <div className="flex gap-2 justify-end">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded"
               >
                 {t("cancel")}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="error"
+                size="sm"
                 onClick={handleDelete}
-                className="px-3 py-1 text-red-600 hover:bg-red-50 rounded"
               >
                 {t("delete")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

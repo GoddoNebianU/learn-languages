@@ -11,20 +11,22 @@ import {
 
 const log = createLogger("auth-repository");
 
+const USER_PUBLIC_SELECT = {
+    id: true,
+    email: true,
+    emailVerified: true,
+    username: true,
+    displayUsername: true,
+    image: true,
+    bio: true,
+    createdAt: true,
+    updatedAt: true,
+} as const;
+
 export async function repoFindUserByUsername(dto: RepoInputFindUserByUsername): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { username: dto.username },
-        select: {
-            id: true,
-            email: true,
-            emailVerified: true,
-            username: true,
-            displayUsername: true,
-            image: true,
-            bio: true,
-            createdAt: true,
-            updatedAt: true,
-        }
+        select: USER_PUBLIC_SELECT,
     });
 
     return user;
@@ -33,17 +35,7 @@ export async function repoFindUserByUsername(dto: RepoInputFindUserByUsername): 
 export async function repoFindUserById(dto: RepoInputFindUserById): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { id: dto.id },
-        select: {
-            id: true,
-            email: true,
-            emailVerified: true,
-            username: true,
-            displayUsername: true,
-            image: true,
-            bio: true,
-            createdAt: true,
-            updatedAt: true,
-        }
+        select: USER_PUBLIC_SELECT,
     });
 
     return user;
@@ -52,17 +44,7 @@ export async function repoFindUserById(dto: RepoInputFindUserById): Promise<Repo
 export async function repoFindUserByEmail(dto: RepoInputFindUserByEmail): Promise<RepoOutputUserProfile> {
     const user = await prisma.user.findUnique({
         where: { email: dto.email },
-        select: {
-            id: true,
-            email: true,
-            emailVerified: true,
-            username: true,
-            displayUsername: true,
-            image: true,
-            bio: true,
-            createdAt: true,
-            updatedAt: true,
-        }
+        select: USER_PUBLIC_SELECT,
     });
 
     return user;

@@ -4,6 +4,7 @@
  * 使用 Design System 重写的页面标题组件
  */
 import { VStack } from "@/design-system/layout/stack";
+import { cn } from "@/utils/cn";
 
 interface PageHeaderProps {
   title: string;
@@ -11,9 +12,9 @@ interface PageHeaderProps {
   className?: string;
 }
 
-export function PageHeader({ title, subtitle, className = "" }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, className }: PageHeaderProps) {
   return (
-    <VStack gap={2} className={`mb-6 ${className}`}>
+    <VStack gap={2} className={cn("mb-6", className)}>
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
         {title}
       </h1>

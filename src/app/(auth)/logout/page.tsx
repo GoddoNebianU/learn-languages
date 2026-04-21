@@ -21,5 +21,4 @@ export default async function LogoutPage(
     } else {
         redirect("/profile");
     }
-    return (<></>);
 }

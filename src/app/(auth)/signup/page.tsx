@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -12,7 +12,7 @@ import { Input } from "@/design-system/base/input";
 import { PrimaryButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
-export default function SignUpPage() {
+function SignUpPageInner() {
   const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -129,5 +129,13 @@ export default function SignUpPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+      <SignUpPageInner />
+    </Suspense>
   );
 }

@@ -15,7 +15,7 @@
  */
 
 import * as React from "react";
-import { cn } from "@/design-system/lib/utils";
+import { cn } from "@/utils/cn";
 
 export interface RangeProps extends Omit<React.ComponentPropsWithoutRef<"input">, "onChange"> {
   /** 当前值 */
@@ -67,7 +67,7 @@ export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
           className
         )}
         style={{
-          background: `linear-gradient(to right, #374151 0%, #374151 ${progressPercentage}%, #e5e7eb ${progressPercentage}%, #e5e7eb 100%)`
+          background: `linear-gradient(to right, var(--color-primary-700, #374151) 0%, var(--color-primary-700, #374151) ${progressPercentage}%, var(--color-border, #e5e7eb) ${progressPercentage}%, var(--color-border, #e5e7eb) 100%)`
         }}
         {...props}
       />

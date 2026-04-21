@@ -3,6 +3,7 @@
 import { useTheme } from "@/components/theme-provider";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/cn";
+import { Button } from "@/design-system/base/button";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
@@ -26,11 +27,12 @@ export default function SettingsPage() {
             
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
               {availableThemes.map((theme) => (
-                <button
+                <Button
                   key={theme.id}
+                  variant="ghost"
                   onClick={() => setTheme(theme.id)}
                   className={cn(
-                    "group relative flex flex-col items-center gap-2 p-2 rounded-lg transition-all",
+                    "h-auto group relative flex flex-col items-center gap-2 p-2 rounded-lg transition-all",
                     currentTheme === theme.id
                       ? "ring-2 ring-offset-2"
                       : "hover:bg-gray-50"
@@ -46,7 +48,7 @@ export default function SettingsPage() {
                   <span className="text-xs text-gray-600 group-hover:text-gray-900">
                     {theme.name}
                   </span>
-                </button>
+                </Button>
               ))}
             </div>
           </div>

@@ -200,6 +200,8 @@ export async function actionDeleteAccount(): Promise<ActionOutputDeleteAccount> 
             return { success: false, message: "Failed to delete account" };
         }
 
+        await auth.api.signOut({ headers: await headers() });
+
         return { success: true, message: "Account deleted successfully" };
     } catch (e) {
         log.error("Delete account failed", { error: e });

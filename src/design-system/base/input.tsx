@@ -106,7 +106,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       return (
         <div className={cn("relative", containerClassName)}>
           {/* 左侧图标 */}
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true">
             {leftIcon}
           </div>
           {/* 输入框 */}
@@ -117,11 +117,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               inputVariants({ variant, size, error }),
               leftIcon && "pl-10"
             )}
+            aria-invalid={error ? "true" : undefined}
             {...props}
           />
           {/* 右侧图标 */}
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
               {rightIcon}
             </div>
           )}
@@ -136,10 +137,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           className={cn(inputVariants({ variant, size, error }), className)}
+          aria-invalid={error ? "true" : undefined}
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
             {rightIcon}
           </div>
         )}

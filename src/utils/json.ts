@@ -1,6 +1,6 @@
 export function parseAIGeneratedJSON<T>(aiResponse: string): T {
-  // 匹配 ```json ... ``` 包裹的内容
-  const jsonMatch = aiResponse.match(/```json\s*([\s\S]*?)\s*```/);
+  // 匹配 ```json ... ``` 或 ```JSON ... ``` 或 ``` ... ``` 包裹的内容
+  const jsonMatch = aiResponse.match(/```(?:json|JSON)?\s*([\s\S]*?)\s*```/i);
 
   if (jsonMatch && jsonMatch[1]) {
     try {

@@ -3,15 +3,42 @@ import { createLogger } from "@/lib/logger";
 
 const log = createLogger("email");
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function validateUrl(url: string): string {
+  if (!/^https?:\/\//i.test(url)) {
+    throw new Error("Invalid URL: must start with http:// or https://");
+  }
+  return url;
+}
+
+let _transporter: nodemailer.Transporter | null = null;
+
+function getTransporter(): nodemailer.Transporter {
+  if (!_transporter) {
+    if (!process.env.SMTP_HOST) {
+      throw new Error("SMTP_HOST environment variable is not set");
+    }
+    log.info("Initializing SMTP transporter", { host: process.env.SMTP_HOST });
+    _transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+  return _transporter;
+}
 
 interface SendEmailOptions {
   to: string;
@@ -22,7 +49,7 @@ interface SendEmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   try {
-    const info = await transporter.sendMail({
+    const info = await getTransporter().sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to,
       subject,
@@ -38,6 +65,8 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
 }
 
 export function generateVerificationEmailHtml(url: string, userName: string) {
+  const safeUserName = escapeHtml(userName);
+  const safeUrl = escapeHtml(validateUrl(url));
   return `
     <!DOCTYPE html>
     <html>
@@ -53,13 +82,13 @@ export function generateVerificationEmailHtml(url: string, userName: string) {
     <body>
       <div class="container">
         <h1>验证您的邮箱地址</h1>
-        <p>您好，${userName}！</p>
+        <p>您好，${safeUserName}！</p>
         <p>感谢您注册。请点击下方按钮验证您的邮箱地址：</p>
         <p>
-          <a href="${url}" class="button">验证邮箱</a>
+          <a href="${safeUrl}" class="button">验证邮箱</a>
         </p>
         <p>或者复制以下链接到浏览器：</p>
-        <p style="word-break: break-all; color: #666;">${url}</p>
+        <p style="word-break: break-all; color: #666;">${safeUrl}</p>
         <p>此链接将在 24 小时后过期。</p>
         <div class="footer">
           <p>如果您没有注册此账户，请忽略此邮件。</p>
@@ -71,6 +100,8 @@ export function generateVerificationEmailHtml(url: string, userName: string) {
 }
 
 export function generateResetPasswordEmailHtml(url: string, userName: string) {
+  const safeUserName = escapeHtml(userName);
+  const safeUrl = escapeHtml(validateUrl(url));
   return `
     <!DOCTYPE html>
     <html>
@@ -86,13 +117,13 @@ export function generateResetPasswordEmailHtml(url: string, userName: string) {
     <body>
       <div class="container">
         <h1>重置您的密码</h1>
-        <p>您好，${userName}！</p>
+        <p>您好，${safeUserName}！</p>
         <p>我们收到了重置您账户密码的请求。请点击下方按钮设置新密码：</p>
         <p>
-          <a href="${url}" class="button">重置密码</a>
+          <a href="${safeUrl}" class="button">重置密码</a>
         </p>
         <p>或者复制以下链接到浏览器：</p>
-        <p style="word-break: break-all; color: #666;">${url}</p>
+        <p style="word-break: break-all; color: #666;">${safeUrl}</p>
         <p>此链接将在 1 小时后过期。</p>
         <div class="footer">
           <p>如果您没有请求重置密码，请忽略此邮件，您的密码不会被更改。</p>

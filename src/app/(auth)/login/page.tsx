@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,7 +11,7 @@ import { Input } from "@/design-system/base/input";
 import { PrimaryButton, LinkButton } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
-export default function LoginPage() {
+function LoginPageInner() {
   const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -159,5 +159,13 @@ export default function LoginPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+      <LoginPageInner />
+    </Suspense>
   );
 }

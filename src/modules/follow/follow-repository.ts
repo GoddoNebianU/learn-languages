@@ -63,6 +63,39 @@ export async function repoCheckFollow(
   return !!follow;
 }
 
+export async function repoToggleFollow(
+  dto: RepoInputCheckFollow
+): Promise<RepoOutputIsFollowing> {
+  const isNowFollowing = await prisma.$transaction(async (tx) => {
+    const deleted = await tx.follow.deleteMany({
+      where: {
+        followerId: dto.followerId,
+        followingId: dto.followingId,
+      },
+    });
+
+    if (deleted.count > 0) {
+      return false;
+    }
+
+    await tx.follow.create({
+      data: {
+        followerId: dto.followerId,
+        followingId: dto.followingId,
+      },
+    });
+    return true;
+  });
+
+  log.info("Follow toggled atomically", {
+    followerId: dto.followerId,
+    followingId: dto.followingId,
+    isNowFollowing,
+  });
+
+  return isNowFollowing;
+}
+
 export async function repoGetFollowersCount(userId: string): Promise<RepoOutputFollowerCount> {
   return prisma.follow.count({
     where: { followingId: userId },

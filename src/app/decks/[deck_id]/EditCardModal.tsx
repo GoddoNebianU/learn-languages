@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton, PrimaryButton } from "@/design-system/base/button";
+import { Button, LightButton, PrimaryButton } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { Modal } from "@/design-system/overlay/modal";
@@ -164,13 +164,14 @@ export function EditCardModal({
             <label className="block text-sm font-medium text-gray-700">
               {t("meanings")} *
             </label>
-            <button
+            <Button
+              variant="link"
               onClick={addMeaning}
-              className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              className="text-sm text-blue-600 hover:text-blue-700"
+              leftIcon={<Plus size={14} />}
             >
-              <Plus size={14} />
               {t("addMeaning")}
-            </button>
+            </Button>
           </HStack>
           
           <VStack gap={4}>
@@ -196,12 +197,13 @@ export function EditCardModal({
                     />
                   </div>
                   {meanings.length > 1 && (
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={() => removeMeaning(index)}
-                      className="p-2 text-gray-400 hover:text-red-500"
+                      className="h-auto p-2 text-gray-400 hover:text-red-500"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </Button>
                   )}
                 </HStack>
                 <Textarea

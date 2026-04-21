@@ -3,8 +3,10 @@
 import { useRef, useEffect, forwardRef } from 'react';
 import { useSrtPlayerStore } from '../stores/srtPlayerStore';
 import { setVideoRef } from '../stores/srtPlayerStore';
+import { useTranslations } from 'next-intl';
 
 export const VideoPlayerPanel = forwardRef<HTMLVideoElement>((_, ref) => {
+  const t = useTranslations("srt_player");
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const videoRef = (ref as React.RefObject<HTMLVideoElement>) || localVideoRef;
 
@@ -25,15 +27,15 @@ export const VideoPlayerPanel = forwardRef<HTMLVideoElement>((_, ref) => {
           <div className="text-center text-white">
             <p className="text-lg mb-2">
               {!videoUrl && !subtitleUrl
-                ? '请上传视频和字幕文件'
+                ? t('uploadVideoAndSubtitle')
                 : !videoUrl
-                  ? '请上传视频文件'
+                  ? t('uploadVideoFile')
                   : !subtitleUrl
-                    ? '请上传字幕文件'
-                    : '正在处理字幕...'}
+                    ? t('uploadSubtitleFile')
+                    : t('processingSubtitle')}
             </p>
             {(!videoUrl || !subtitleUrl) && (
-              <p className="text-sm text-gray-300">需要同时上传视频和字幕文件才能播放</p>
+              <p className="text-sm text-gray-300">{t('needBothFiles')}</p>
             )}
           </div>
         </div>

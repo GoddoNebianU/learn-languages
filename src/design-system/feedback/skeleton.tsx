@@ -66,6 +66,8 @@ export function Skeleton({
 }: SkeletonProps) {
   return (
     <div
+      role="status"
+      aria-busy="true"
       className={cn(
         "bg-gray-200",
         skeletonVariants({ variant, animated }),

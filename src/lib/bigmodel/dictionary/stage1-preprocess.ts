@@ -5,6 +5,15 @@ import { createLogger } from "@/lib/logger";
 
 const log = createLogger("dictionary-preprocess");
 
+function escapeXml(str: string): string {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
+
 export async function preprocessInput(
     text: string,
     queryLang: string
@@ -12,7 +21,7 @@ export async function preprocessInput(
     const prompt = `
 你是一个词典预处理系统。分析输入并生成标准形式。
 
-用户输入：<input>${text}</input>
+用户输入：<input>${escapeXml(text)}</input>
 查询语言：<queryLang>${queryLang}</queryLang>
 
 任务：
@@ -72,6 +81,7 @@ export async function preprocessInput(
         const cv = result.confidence?.toLowerCase();
         if (cv === "高" || cv === "high") confidence = "high";
         else if (cv === "中" || cv === "medium") confidence = "medium";
+        else log.warn("Unexpected confidence value from LLM", { confidence: result.confidence });
 
         return {
             isValid: result.isValid,

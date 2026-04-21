@@ -59,6 +59,8 @@ export function OverflowDropdown<T>({
 }: OverflowDropdownProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const hiddenCount = items.length - visibleCount;
 
   // 点击外部关闭
@@ -78,21 +80,19 @@ export function OverflowDropdown<T>({
     };
   }, [isOpen]);
 
-  // ESC 键关闭
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
-
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
+      // 延迟一帧等待 DOM 渲染
+      requestAnimationFrame(() => {
+        const firstItem = menuRef.current?.querySelector('[role="menuitem"]');
+        (firstItem as HTMLElement | null)?.focus();
+      });
     }
   }, [isOpen]);
 
   const toggleDropdown = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
+    setIsOpen((prev) => !prev);
+  }, []);
 
   const handleItemClick = useCallback(
     (item: T) => {
@@ -102,6 +102,43 @@ export function OverflowDropdown<T>({
     [onItemClick]
   );
 
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const menuItems = menuRef.current?.querySelectorAll('[role="menuitem"]');
+    if (!menuItems || !menuItems.length) return;
+
+    const currentIndex = Array.from(menuItems).indexOf(document.activeElement as Element);
+
+    switch (e.key) {
+      case "ArrowDown": {
+        e.preventDefault();
+        const nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+        (menuItems[nextIndex] as HTMLElement).focus();
+        break;
+      }
+      case "ArrowUp": {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+        (menuItems[prevIndex] as HTMLElement).focus();
+        break;
+      }
+      case "Home": {
+        e.preventDefault();
+        (menuItems[0] as HTMLElement).focus();
+        break;
+      }
+      case "End": {
+        e.preventDefault();
+        (menuItems[menuItems.length - 1] as HTMLElement).focus();
+        break;
+      }
+      case "Escape": {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+        break;
+      }
+    }
+  }, []);
+
   if (items.length <= visibleCount) {
     return <div className={cn("flex", className)}>{items.map(renderItem)}</div>;
   }
@@ -109,6 +146,7 @@ export function OverflowDropdown<T>({
   return (
     <div className={cn("relative", className)} ref={dropdownRef}>
       <button
+        ref={triggerRef}
         onClick={toggleDropdown}
         className="flex items-center justify-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
         aria-label="显示更多选项"
@@ -121,11 +159,13 @@ export function OverflowDropdown<T>({
       </button>
 
       <div
+        ref={menuRef}
         className={cn(
           "absolute z-50 mt-1.5 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[100px] transition-all duration-200",
           isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
         )}
         role="menu"
+        onKeyDown={handleMenuKeyDown}
       >
 <div className="py-1">
           {items.slice(visibleCount).map((item) => (

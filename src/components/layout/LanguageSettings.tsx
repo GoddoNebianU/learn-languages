@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { Button, GhostLightButton } from "@/design-system/base/button";
 
 const languages = [
   { code: "en-US", label: "English" },
@@ -19,6 +20,7 @@ export function LanguageSettings() {
   const [isOpen, setIsOpen] = useState(false);
   const [pendingLocale, setPendingLocale] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<Element | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,19 +39,19 @@ export function LanguageSettings() {
   }, [isOpen]);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
-
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
+      previousActiveElement.current = document.activeElement;
+      const firstItem = menuRef.current?.querySelector<HTMLButtonElement>('[role="menuitem"]');
+      firstItem?.focus();
+    } else if (previousActiveElement.current instanceof HTMLElement) {
+      previousActiveElement.current.focus();
+      previousActiveElement.current = null;
     }
   }, [isOpen]);
 
   useEffect(() => {
     if (pendingLocale) {
-      document.cookie = `locale=${pendingLocale}; path=/`;
+      document.cookie = `locale=${pendingLocale}; path=/; max-age=31536000; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
       window.location.reload();
     }
   }, [pendingLocale]);
@@ -58,16 +60,49 @@ export function LanguageSettings() {
     setPendingLocale(locale);
   }, []);
 
+  const handleMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      const items = menuRef.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+      if (!items) return;
+
+      const currentIndex = Array.from(items).indexOf(e.currentTarget);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+        items[nextIndex]?.focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+        items[prevIndex]?.focus();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setIsOpen(false);
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        e.currentTarget.click();
+      }
+    },
+    []
+  );
+
   return (
     <div className="relative" ref={menuRef}>
-      <button
+      <GhostLightButton
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 transition-colors"
+        onKeyDown={(e) => {
+          if (e.key === "Escape" && isOpen) {
+            e.preventDefault();
+            setIsOpen(false);
+          }
+        }}
+        className="h-auto p-2"
         aria-label="切换语言"
         aria-expanded={isOpen}
+        aria-haspopup="menu"
       >
         <Languages size={20} />
-      </button>
+      </GhostLightButton>
 
       <div
         className={cn(
@@ -80,14 +115,17 @@ export function LanguageSettings() {
       >
         <div className="py-1">
           {languages.map((lang) => (
-            <button
+            <Button
               key={lang.code}
+              variant="ghost"
               onClick={() => setLocale(lang.code)}
-              className="w-full flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors text-left"
+              onKeyDown={handleMenuKeyDown}
+              tabIndex={isOpen ? 0 : -1}
+              className="h-auto w-full justify-start px-4 py-2.5 text-left"
               role="menuitem"
             >
               {lang.label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

@@ -170,25 +170,36 @@ export function CircularProgress({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clampedValue / 100) * circumference;
 
-  const colors = {
-    default: "#35786f",
-    success: "#22c55e",
-    warning: "#f59e0b",
-    error: "#ef4444",
+  const colorClasses: Record<string, string> = {
+    default: "text-primary-500",
+    success: "text-green-500",
+    warning: "text-amber-500",
+    error: "text-red-500",
   };
-  const strokeColor = colors[variant ?? "default"];
 
   return (
-    <div className={cn("inline-flex items-center justify-center", className)}>
-      <svg width={size} height={size} {...props}>
+    <div
+      className={cn("relative inline-flex items-center justify-center", colorClasses[variant ?? "default"], className)}
+      role="progressbar"
+      aria-valuenow={clampedValue}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
+      <svg
+        width={size}
+        height={size}
+        aria-hidden="true"
+        {...props}
+      >
         {/* 背景圆 */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#e5e7eb"
+          stroke="currentColor"
           strokeWidth={strokeWidth}
+          className="text-gray-200"
         />
         {/* 进度圆 */}
         <circle
@@ -196,7 +207,7 @@ export function CircularProgress({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={strokeColor}
+          stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}

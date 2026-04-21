@@ -470,7 +470,10 @@
       "spanish": "Spagnolo",
       "portuguese": "Portoghese",
       "russian": "Russo"
-    }
+    },
+    "ipaGenerationFailed": "Generazione IPA fallita",
+    "audioPlaybackFailed": "Riproduzione audio fallita",
+    "saveFailed": "Salvataggio nella memoria locale fallito"
   },
   "translator": {
     "nMore": "+{count} altri",
@@ -517,7 +520,8 @@
     "cancel": "Annulla",
     "save": "Salva",
     "savedToDeck": "Carta salvata in {deckName}",
-    "saveFailed": "Salvataggio fallito"
+    "saveFailed": "Salvataggio fallito",
+    "translationFailed": "Traduzione fallita, riprova"
   },
   "dictionary": {
     "title": "Dizionario",
@@ -548,7 +552,9 @@
     "savedToFolder": "Salvato nella cartella: {folderName}",
     "saveFailed": "Salvataggio fallito, riprova più tardi",
     "definition": "Definizione",
-    "example": "Esempio"
+    "example": "Esempio",
+    "noDictionaryItemToSave": "Nessun elemento del dizionario da salvare. Cerca prima.",
+    "noDeckSelected": "Nessun deck selezionato"
   },
   "explore": {
     "title": "Esplora",
@@ -634,6 +640,7 @@
     "followersOf": "Seguaci di {username}",
     "followingOf": "Seguiti da {username}",
     "noFollowers": "Nessun seguace ancora",
-    "noFollowing": "Non segui ancora nessuno"
+    "noFollowing": "Non segui ancora nessuno",
+    "followFailed": "Impossibile aggiornare lo stato di seguire"
   }
 }

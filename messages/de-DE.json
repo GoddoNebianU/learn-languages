@@ -399,7 +399,10 @@
       "spanish": "Spanisch",
       "portuguese": "Portugiesisch",
       "russian": "Russisch"
-    }
+    },
+    "ipaGenerationFailed": "IPA-Generierung fehlgeschlagen",
+    "audioPlaybackFailed": "Audio-Wiedergabe fehlgeschlagen",
+    "saveFailed": "Speichern im lokalen Speicher fehlgeschlagen"
   },
   "translator": {
     "nMore": "+{count} weitere",
@@ -446,7 +449,8 @@
     "cancel": "Abbrechen",
     "save": "Speichern",
     "savedToDeck": "Karte in {deckName} gespeichert",
-    "saveFailed": "Karte speichern fehlgeschlagen"
+    "saveFailed": "Karte speichern fehlgeschlagen",
+    "translationFailed": "Übersetzung fehlgeschlagen, bitte versuchen Sie es erneut"
   },
   "dictionary": {
     "title": "Wörterbuch",
@@ -477,7 +481,9 @@
     "savedToFolder": "In Ordner gespeichert: {folderName}",
     "saveFailed": "Speichern fehlgeschlagen, bitte versuchen Sie es später erneut",
     "definition": "Definition",
-    "example": "Beispiel"
+    "example": "Beispiel",
+    "noDictionaryItemToSave": "Kein Wörterbucheintrag zum Speichern. Bitte suchen Sie zuerst.",
+    "noDeckSelected": "Kein Deck ausgewählt"
   },
   "explore": {
     "title": "Entdecken",
@@ -572,7 +578,8 @@
     "followersOf": "{username}s Follower",
     "followingOf": "{username} folgt",
     "noFollowers": "Noch keine Follower",
-    "noFollowing": "Folgt noch niemandem"
+    "noFollowing": "Folgt noch niemandem",
+    "followFailed": "Folgstatus konnte nicht aktualisiert werden"
   },
   "deck_id": {
     "unauthorized": "Sie sind nicht der Besitzer dieses Decks",

@@ -57,9 +57,9 @@ const buttonVariants = cva(
         link: "text-primary-500 hover:text-primary-600 hover:underline shadow-none px-0",
       },
       size: {
-        sm: "px-2.5 py-1.5 text-sm",
-        md: "px-4 py-2 text-base",
-        lg: "px-6 py-3 text-lg",
+        sm: "h-8 px-2.5 text-sm",
+        md: "h-10 px-4 text-base",
+        lg: "h-12 px-6 text-lg",
       },
       fullWidth: {
         true: "w-full",
@@ -157,7 +157,7 @@ export function Button({
   const renderSvgIcon = (icon: React.ReactNode, position: "left" | "right") => {
     if (!icon) return null;
     return (
-      <span className={`flex items-center shrink-0 ${position === "left" ? "-ml-1 mr-2" : "-mr-1 ml-2"}`}>
+      <span className={`flex items-center shrink-0 ${position === "left" ? "-ml-1 mr-2" : "-mr-1 ml-2"}`} aria-hidden="true">
         {icon}
       </span>
     );
@@ -186,6 +186,7 @@ export function Button({
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <circle
           className="opacity-25"

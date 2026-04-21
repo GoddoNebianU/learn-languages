@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod";
 
 const schemaActionInputToggleFollow = z.object({
   targetUserId: z.string().min(1),

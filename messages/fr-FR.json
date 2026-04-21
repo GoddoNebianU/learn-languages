@@ -470,7 +470,10 @@
       "spanish": "Espagnol",
       "portuguese": "Portugais",
       "russian": "Russe"
-    }
+    },
+    "ipaGenerationFailed": "Échec de la génération de l'IPA",
+    "audioPlaybackFailed": "Échec de la lecture audio",
+    "saveFailed": "Échec de l'enregistrement dans le stockage local"
   },
   "translator": {
     "nMore": "+{count} autres",
@@ -517,7 +520,8 @@
     "cancel": "Annuler",
     "save": "Sauvegarder",
     "savedToDeck": "Carte sauvegardée dans {deckName}",
-    "saveFailed": "Échec de la sauvegarde"
+    "saveFailed": "Échec de la sauvegarde",
+    "translationFailed": "La traduction a échoué, veuillez réessayer"
   },
   "dictionary": {
     "title": "Dictionnaire",
@@ -548,7 +552,9 @@
     "savedToFolder": "Enregistré dans le dossier : {folderName}",
     "saveFailed": "Échec de l'enregistrement, veuillez réessayer plus tard",
     "definition": "Définition",
-    "example": "Exemple"
+    "example": "Exemple",
+    "noDictionaryItemToSave": "Aucun élément de dictionnaire à sauvegarder. Veuillez d'abord rechercher.",
+    "noDeckSelected": "Aucun deck sélectionné"
   },
   "explore": {
     "title": "Explorer",
@@ -634,6 +640,7 @@
     "followersOf": "Abonnés de {username}",
     "followingOf": "Abonnements de {username}",
     "noFollowers": "Pas encore d'abonnés",
-    "noFollowing": "Ne suit personne"
+    "noFollowing": "Ne suit personne",
+    "followFailed": "Échec de la mise à jour du statut de suivi"
   }
 }

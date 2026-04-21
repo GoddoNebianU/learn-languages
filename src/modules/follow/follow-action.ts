@@ -26,7 +26,7 @@ export async function actionToggleFollow(input: unknown) {
       currentUserId: session.user.id,
       targetUserId: dto.targetUserId,
     });
-    return { success: true, data: result };
+    return { success: true, message: "Follow toggled successfully", data: result };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to toggle follow";
     log.error("Failed to toggle follow", { error });
@@ -40,10 +40,10 @@ export async function actionGetFollowStatus(input: unknown) {
   try {
     const dto = validate(input, schemaActionInputGetFollowStatus);
     const result = await serviceGetFollowStatus({
-      currentUserId: session?.user?.id || "",
+      currentUserId: session?.user?.id ?? null,
       targetUserId: dto.targetUserId,
     });
-    return { success: true, data: result };
+    return { success: true, message: "Follow status retrieved successfully", data: result };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to get follow status";
     log.error("Failed to get follow status", { error });
@@ -59,7 +59,7 @@ export async function actionGetFollowers(input: unknown) {
       page: dto.page,
       limit: dto.limit,
     });
-    return { success: true, data: result };
+    return { success: true, message: "Followers retrieved successfully", data: result };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to get followers";
     log.error("Failed to get followers", { error });
@@ -75,7 +75,7 @@ export async function actionGetFollowing(input: unknown) {
       page: dto.page,
       limit: dto.limit,
     });
-    return { success: true, data: result };
+    return { success: true, message: "Following retrieved successfully", data: result };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Failed to get following";
     log.error("Failed to get following", { error });

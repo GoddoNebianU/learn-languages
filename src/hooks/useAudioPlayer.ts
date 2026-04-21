@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 type AudioPlayerError = Error | null;
 
@@ -68,7 +68,7 @@ export function useAudioPlayer() {
     };
   }, []);
 
-  const play = async () => {
+  const play = useCallback(async () => {
     if (!audioRef.current) return;
 
     try {
@@ -86,32 +86,32 @@ export function useAudioPlayer() {
       setState((prev) => ({ ...prev, isPlaying: false }));
       throw error;
     }
-  }
+  }, []);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       setState((prev) => ({ ...prev, isPlaying: false }));
     }
-  }
+  }, []);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       setState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
     }
-  }
+  }, []);
 
-  const setVolume = (volume: number) => {
+  const setVolume = useCallback((volume: number) => {
     if (audioRef.current) {
       const clampedVolume = Math.max(0, Math.min(1, volume));
       audioRef.current.volume = clampedVolume;
       setState((prev) => ({ ...prev, volume: clampedVolume }));
     }
-  }
+  }, []);
 
-  const seek = (time: number) => {
+  const seek = useCallback((time: number) => {
     if (audioRef.current) {
       const clampedTime = Math.max(
         0,
@@ -120,9 +120,9 @@ export function useAudioPlayer() {
       audioRef.current.currentTime = clampedTime;
       setState((prev) => ({ ...prev, currentTime: clampedTime }));
     }
-  }
+  }, []);
 
-  const load = async (audioUrl: string) => {
+  const load = useCallback(async (audioUrl: string) => {
     if (!audioRef.current) return;
 
     // 中止之前的加载操作
@@ -221,13 +221,13 @@ export function useAudioPlayer() {
         abortControllerRef.current = null;
       }
     }
-  }
+  }, []);
 
   // 同时加载和播放的便捷方法
-  const playAudio = async (audioUrl: string) => {
+  const playAudio = useCallback(async (audioUrl: string) => {
     await load(audioUrl);
     await play();
-  }
+  }, [load, play]);
 
   return {
     ...state,

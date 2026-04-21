@@ -184,7 +184,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         {/* 底部导航控制区域 */}
         <div className="flex justify-between items-center">
           {/* 上一个按钮 */}
-          <CircleButton onClick={goToPrevious} aria-label="上一个字母">
+          <CircleButton onClick={goToPrevious} aria-label={t("previousLetter")}>
             <ChevronLeft size={20} />
           </CircleButton>
 
@@ -201,7 +201,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           </div>
 
           {/* 下一个按钮 */}
-          <CircleButton onClick={goToNext} aria-label="下一个字母">
+          <CircleButton onClick={goToNext} aria-label={t("nextLetter")}>
             <ChevronRight size={20} />
           </CircleButton>
         </div>
@@ -211,8 +211,8 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
       <div className="text-center mt-6 text-white text-sm">
         <p>
           {isRandomMode
-            ? "使用左右箭头键或空格键随机切换字母，ESC键返回"
-            : "使用左右箭头键或滑动切换字母，ESC键返回"
+            ? t("keyboardHint")
+            : t("swipeHint")
           }
         </p>
       </div>

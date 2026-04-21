@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { FollowButton } from "./FollowButton";
 
 interface FollowStatsProps {
@@ -23,9 +24,12 @@ export function FollowStats({
   username,
 }: FollowStatsProps) {
   const [followersCount, setFollowersCount] = useState(initialFollowersCount);
+  const [followingCount, setFollowingCount] = useState(initialFollowingCount);
+  const t = useTranslations("follow");
 
   const handleFollowChange = (isFollowing: boolean, count: number) => {
     setFollowersCount(count);
+    setFollowingCount((prev) => (isFollowing ? prev + 1 : prev - 1));
   };
 
   return (
@@ -34,13 +38,13 @@ export function FollowStats({
         href={`/users/${username}/followers`}
         className="text-sm text-gray-600 hover:text-primary-500 transition-colors"
       >
-        <span className="font-semibold text-gray-900">{followersCount}</span> followers
+        <span className="font-semibold text-gray-900">{followersCount}</span> {t("followers")}
       </a>
       <a
         href={`/users/${username}/following`}
         className="text-sm text-gray-600 hover:text-primary-500 transition-colors"
       >
-        <span className="font-semibold text-gray-900">{initialFollowingCount}</span> following
+        <span className="font-semibold text-gray-900">{followingCount}</span> {t("following")}
       </a>
       {currentUserId && !isOwnProfile && (
         <FollowButton

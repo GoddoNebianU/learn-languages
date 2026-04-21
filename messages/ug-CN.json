@@ -470,7 +470,10 @@
       "spanish": "ئىسپانچە",
       "portuguese": "پورتۇگالچە",
       "russian": "رۇسچە"
-    }
+    },
+    "ipaGenerationFailed": "IPA ھاسىل قىلىش مەغلۇپ بولدى",
+    "audioPlaybackFailed": "ئاۋاز قويۇش مەغلۇپ بولدى",
+    "saveFailed": "يەرلىك ساقلىغۇچقا ساقلاش مەغلۇپ بولدى"
   },
   "translator": {
     "nMore": "+{count} نى باشقا",
@@ -517,7 +520,8 @@
     "cancel": "بىكار قىلىش",
     "save": "ساقلاش",
     "savedToDeck": "{deckName} غا ساقلاندى",
-    "saveFailed": "ساقلاش مەغلۇپ"
+    "saveFailed": "ساقلاش مەغلۇپ",
+    "translationFailed": "تەرجىمە مەغلۇپ بولدى، قايتا سىناڭ"
   },
   "dictionary": {
     "title": "لۇغەت",
@@ -548,7 +552,9 @@
     "savedToFolder": "قىسقۇچقا ساقلاندى: {folderName}",
     "saveFailed": "ساقلاش مەغلۇپ بولدى، كېيىن قايتا سىناڭ",
     "definition": "ئېنىقلىما",
-    "example": "مىسال"
+    "example": "مىسال",
+    "noDictionaryItemToSave": "ساقلايدىغان لۇغەت تۈرى يوق. ئاۋۋال ئىزدەڭ.",
+    "noDeckSelected": "دېك تاللانمىدى"
   },
   "explore": {
     "title": "ئىزدىنىش",
@@ -634,6 +640,7 @@
     "followersOf": "{username} نىڭ ئەگەشكۈچىلىرى",
     "followingOf": "{username} نىڭ ئەگىشىدىغانلىرى",
     "noFollowers": "تېخى ئەگەشكۈچى يوق",
-    "noFollowing": "تېخى ئەگىشىدىغان ئادەم يوق"
+    "noFollowing": "تېخى ئەگىشىدىغان ئادەم يوق",
+    "followFailed": "ئەگىشىش ھالىتىنى يېڭىلاش مەغلۇپ بولدى"
   }
 }

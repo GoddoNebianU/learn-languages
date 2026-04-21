@@ -144,7 +144,7 @@ class QwenTTSService {
 
             // 4. 错误处理
             if (response.status !== 200) {
-                throw new Error(`TTS API错误: [${response.status}] ${response.statusText}}`);
+                throw new Error(`TTS API错误: [${response.status}] ${response.statusText}`);
             }
 
             const data: TTSResponse = await response.json();
@@ -158,15 +158,17 @@ class QwenTTSService {
 }
 
 export type TTS_SUPPORTED_LANGUAGES = 'Auto' | 'Chinese' | 'English' | 'German' | 'Italian' | 'Portuguese' | 'Spanish' | 'Japanese' | 'Korean' | 'French' | 'Russian';
-export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES) {
+
+const ttsService = process.env.DASHSCORE_API_KEY
+    ? new QwenTTSService(process.env.DASHSCORE_API_KEY)
+    : null;
+
+export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES): Promise<string | null> {
     try {
-        if (!process.env.DASHSCORE_API_KEY) {
+        if (!ttsService) {
             log.warn("DASHSCORE_API_KEY not set");
-            throw "API Key设置错误";
+            throw new Error("API Key设置错误");
         }
-        const ttsService = new QwenTTSService(
-            process.env.DASHSCORE_API_KEY
-        );
         const result = await ttsService.synthesize(
             text,
             {
@@ -177,6 +179,6 @@ export async function getTTSUrl(text: string, lang: TTS_SUPPORTED_LANGUAGES) {
         return result.output.audio.url;
     } catch (error) {
         log.error("TTS synthesis failed", { error: error instanceof Error ? error.message : error });
-        return "error";
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { PrimaryButton, LightButton } from "@/design-system/base/button";
 import { actionToggleFollow } from "@/modules/follow/follow-action";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 interface FollowButtonProps {
   targetUserId: string;
@@ -18,6 +19,7 @@ export function FollowButton({
 }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("follow");
 
   const handleToggleFollow = () => {
     startTransition(async () => {
@@ -26,7 +28,7 @@ export function FollowButton({
         setIsFollowing(result.data.isFollowing);
         onFollowChange?.(result.data.isFollowing, result.data.followersCount);
       } else {
-        toast.error(result.message || "Failed to update follow status");
+        toast.error(result.message || t("followFailed"));
       }
     });
   };
@@ -34,14 +36,14 @@ export function FollowButton({
   if (isFollowing) {
     return (
       <LightButton onClick={handleToggleFollow} disabled={isPending}>
-        {isPending ? "..." : "Following"}
+        {isPending ? "..." : t("following")}
       </LightButton>
     );
   }
 
   return (
     <PrimaryButton onClick={handleToggleFollow} disabled={isPending}>
-      {isPending ? "..." : "Follow"}
+      {isPending ? "..." : t("follow")}
     </PrimaryButton>
   );
 }

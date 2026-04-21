@@ -198,7 +198,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       
       const audioUrl = await getTTSUrl(text, lang);
       
-      if (audioUrl && audioUrl !== "error") {
+      if (audioUrl) {
         audioUrlRef.current = audioUrl;
         await load(audioUrl);
         play();
@@ -267,7 +267,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <div className="text-red-600 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-md">
             {error}
           </div>
-          <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
+          <LightButton onClick={() => router.push("/decks")}>
             {t("backToDecks")}
           </LightButton>
         </VStack>
@@ -284,7 +284,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("allDone")}</h2>
           <p className="text-gray-600 mb-6">{t("allDoneDesc")}</p>
-          <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
+          <LightButton onClick={() => router.push("/decks")}>
             {t("backToDecks")}
           </LightButton>
         </VStack>
@@ -420,7 +420,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <LightButton
             onClick={handleShowAnswer}
             disabled={isPending}
-            className="px-8 py-3 text-lg rounded-full"
+            className="px-8 text-lg rounded-full"
           >
             {t("showAnswer")}
             <span className="ml-2 text-xs opacity-60">Space</span>
@@ -432,10 +432,10 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </div>
             <p className="text-gray-600">{t("allDoneDesc")}</p>
             <HStack gap={2}>
-              <LightButton onClick={() => router.push("/decks")} className="px-4 py-2">
+              <LightButton onClick={() => router.push("/decks")}>
                 {t("backToDecks")}
               </LightButton>
-              <LightButton onClick={() => setCurrentIndex(0)} className="px-4 py-2">
+              <LightButton onClick={() => setCurrentIndex(0)}>
                 {t("restart")}
               </LightButton>
             </HStack>
@@ -444,7 +444,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <HStack gap={4}>
             <LightButton
               onClick={handlePrevCard}
-              className="px-4 py-2"
             >
               <ChevronLeft className="w-5 h-5" />
             </LightButton>
@@ -454,7 +453,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </span>
             <LightButton
               onClick={handleNextCard}
-              className="px-4 py-2"
             >
               <ChevronRight className="w-5 h-5" />
             </LightButton>

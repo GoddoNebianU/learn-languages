@@ -1,19 +1,13 @@
-import { prisma } from "@/lib/db";
-import { createLogger } from "@/lib/logger";
+import { repoFindUserByEmail as _repoFindUserByEmail } from "./auth-repository";
 import {
     RepoInputFindUserByEmail,
     RepoOutputFindUserByEmail
 } from "./forgot-password-repository-dto";
 
-const log = createLogger("forgot-password-repository");
-
 export async function repoFindUserByEmail(dto: RepoInputFindUserByEmail): Promise<RepoOutputFindUserByEmail> {
-    log.debug("Finding user by email", { email: dto.email });
+    const user = await _repoFindUserByEmail(dto);
 
-    const user = await prisma.user.findUnique({
-        where: { email: dto.email },
-        select: { id: true },
-    });
+    if (!user) return null;
 
-    return user;
+    return { id: user.id };
 }

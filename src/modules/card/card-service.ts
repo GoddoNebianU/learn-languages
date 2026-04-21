@@ -1,8 +1,6 @@
 import type {
   RepoOutputCard,
   RepoOutputCardStats,
-  CardMeaning,
-  CardType,
 } from "./card-repository-dto";
 import type {
   RepoInputCreateCard,
@@ -10,7 +8,6 @@ import type {
   RepoInputDeleteCard,
   RepoInputGetCardsByDeckId,
   RepoInputGetRandomCard,
-  RepoInputCheckCardOwnership,
 } from "./card-repository-dto";
 import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
 import { createLogger } from "@/lib/logger";
@@ -22,19 +19,15 @@ import {
   repoGetCardsByDeckId,
   repoGetRandomCard,
   repoGetCardStats,
-  repoCheckCardOwnership,
 } from "./card-repository";
 
 const log = createLogger("card-service");
-
-export type { CardMeaning as ServiceCardMeaning, CardType as ServiceCardType };
 
 export type ServiceInputCreateCard = RepoInputCreateCard;
 export type ServiceInputUpdateCard = RepoInputUpdateCard;
 export type ServiceInputDeleteCard = RepoInputDeleteCard;
 export type ServiceInputGetCardsByDeckId = RepoInputGetCardsByDeckId;
 export type ServiceInputGetRandomCard = RepoInputGetRandomCard;
-export type ServiceInputCheckCardOwnership = RepoInputCheckCardOwnership;
 
 export type ServiceInputCheckDeckOwnership = {
   deckId: number;
@@ -90,11 +83,6 @@ export async function serviceGetRandomCard(input: ServiceInputGetRandomCard): Pr
 export async function serviceGetCardStats(deckId: number): Promise<ServiceOutputCardStats> {
   log.debug("Getting card stats", { deckId });
   return repoGetCardStats(deckId);
-}
-
-export async function serviceCheckCardOwnership(input: ServiceInputCheckCardOwnership): Promise<boolean> {
-  log.debug("Checking card ownership", { cardId: input.cardId });
-  return repoCheckCardOwnership(input);
 }
 
 export async function serviceCheckDeckOwnership(input: ServiceInputCheckDeckOwnership): Promise<boolean> {

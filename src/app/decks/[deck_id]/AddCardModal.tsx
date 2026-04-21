@@ -13,13 +13,6 @@ import { actionCreateCard } from "@/modules/card/card-action";
 import type { CardType, CardMeaning } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
-const QUERY_LANGUAGE_LABELS = {
-  english: "english",
-  chinese: "chinese",
-  japanese: "japanese",
-  korean: "korean",
-} as const;
-
 const QUERY_LANGUAGES = [
   { value: "en", label: "english" as const },
   { value: "zh", label: "chinese" as const },
@@ -224,13 +217,14 @@ export function AddCardModal({
             <label className="block text-sm font-medium text-gray-800">
               {t("meanings")} *
             </label>
-            <button
+            <Button
+              variant="link"
               onClick={addMeaning}
-              className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              className="text-sm text-blue-600 hover:text-blue-700"
+              leftIcon={<Plus size={14} />}
             >
-              <Plus size={14} />
               {t("addMeaning")}
-            </button>
+            </Button>
           </HStack>
           
           <VStack gap={4}>
@@ -256,12 +250,13 @@ export function AddCardModal({
                     />
                   </div>
                   {meanings.length > 1 && (
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={() => removeMeaning(index)}
-                      className="p-2 text-gray-400 hover:text-red-500"
+                      className="h-auto p-2 text-gray-400 hover:text-red-500"
                     >
                       <Trash2 size={16} />
-                    </button>
+                    </Button>
                   )}
                 </HStack>
                 <Textarea

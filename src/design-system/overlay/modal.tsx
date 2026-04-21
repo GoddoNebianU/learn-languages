@@ -1,7 +1,24 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/utils/cn";
+
+const FOCUSABLE_SELECTORS =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+interface ModalContextValue {
+  titleId: string;
+}
+
+const ModalContext = createContext<ModalContextValue | null>(null);
 
 export interface ModalProps {
   open: boolean;
@@ -33,6 +50,74 @@ export function Modal({
   const [isClosing, setIsClosing] = useState(false);
   const prevOpenRef = useRef(open);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+
+  const getFocusableElements = useCallback(() => {
+    if (!dialogRef.current) return [];
+    return Array.from(
+      dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
+    ).filter((el) => !el.hasAttribute("disabled") && el.tabIndex >= 0);
+  }, []);
+
+  const handleTrapFocus = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [getFocusableElements]
+  );
+
+  useEffect(() => {
+    if (open) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement;
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (open && dialogRef.current) {
+      const focusable = getFocusableElements();
+      requestAnimationFrame(() => {
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        } else {
+          dialogRef.current?.focus();
+        }
+      });
+    }
+
+    if (!open && previouslyFocusedRef.current) {
+      previouslyFocusedRef.current.focus();
+      previouslyFocusedRef.current = null;
+    }
+  }, [open, getFocusableElements]);
+
+  useEffect(() => {
+    if (!open) return;
+    document.addEventListener("keydown", handleTrapFocus);
+    return () => document.removeEventListener("keydown", handleTrapFocus);
+  }, [open, handleTrapFocus]);
 
   useEffect(() => {
     if (!open || !closeOnEscape) return;
@@ -83,36 +168,41 @@ export function Modal({
   if (!shouldRender) return null;
 
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-modal flex items-center justify-center p-4",
-        "transition-opacity duration-200 ease-out",
-        isVisible ? "opacity-100" : "opacity-0"
-      )}
-      role="dialog"
-      aria-modal="true"
-    >
+    <ModalContext.Provider value={{ titleId }}>
       <div
         className={cn(
-          "absolute inset-0 bg-black/50 backdrop-blur-sm",
-          "transition-opacity duration-200",
+          "fixed inset-0 z-modal flex items-center justify-center p-4",
+          "transition-opacity duration-200 ease-out",
           isVisible ? "opacity-100" : "opacity-0"
         )}
-        onClick={closeOnOverlayClick ? onClose : undefined}
-      />
-
-      <div
-        className={cn(
-          "relative z-10 w-full bg-white rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
-          "transition-all duration-200 ease-out",
-          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95",
-          sizeClasses[size],
-          className
-        )}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
       >
-        {children}
+        <div
+          className={cn(
+            "absolute inset-0 bg-black/50 backdrop-blur-sm",
+            "transition-opacity duration-200",
+            isVisible ? "opacity-100" : "opacity-0"
+          )}
+          onClick={closeOnOverlayClick ? onClose : undefined}
+        />
+
+        <div
+          ref={dialogRef}
+          tabIndex={-1}
+          className={cn(
+            "relative z-10 w-full bg-white rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
+            "transition-all duration-200 ease-out",
+            isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95",
+            sizeClasses[size],
+            className
+          )}
+        >
+          {children}
+        </div>
       </div>
-    </div>
+    </ModalContext.Provider>
   );
 }
 
@@ -144,8 +234,13 @@ Modal.Title = function ModalTitle({
   className,
   ...props
 }: ModalTitleProps) {
+  const ctx = useContext(ModalContext);
   return (
-    <h2 className={cn("text-xl font-semibold text-gray-900", className)} {...props}>
+    <h2
+      id={ctx?.titleId}
+      className={cn("text-xl font-semibold text-gray-900", className)}
+      {...props}
+    >
       {children}
     </h2>
   );
@@ -208,6 +303,7 @@ Modal.CloseButton = function ModalCloseButton({
   return (
     <button
       type="button"
+      aria-label="Close"
       className={cn(
         "rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors",
         className

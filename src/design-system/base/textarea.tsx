@@ -95,6 +95,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         rows={rows}
         className={cn(textareaVariants({ variant, error }), className)}
         onChange={handleChange}
+        aria-invalid={error ? "true" : undefined}
         {...props}
       />
     );

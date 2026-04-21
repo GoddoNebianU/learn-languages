@@ -438,7 +438,10 @@
       "spanish": "西班牙语",
       "portuguese": "葡萄牙语",
       "russian": "俄语"
-    }
+    },
+    "ipaGenerationFailed": "生成 IPA 失败",
+    "audioPlaybackFailed": "播放音频失败",
+    "saveFailed": "保存到本地存储失败"
   },
   "translator": {
     "nMore": "还有 {count} 个",
@@ -485,7 +488,8 @@
     "cancel": "取消",
     "save": "保存",
     "savedToDeck": "已保存到 {deckName}",
-    "saveFailed": "保存失败"
+    "saveFailed": "保存失败",
+    "translationFailed": "翻译失败，请重试"
   },
   "dictionary": {
     "title": "词典",
@@ -516,7 +520,9 @@
     "savedToFolder": "已保存到文件夹：{folderName}",
     "saveFailed": "保存失败，请稍后重试",
     "definition": "释义",
-    "example": "例句"
+    "example": "例句",
+    "noDictionaryItemToSave": "没有可保存的词典项，请先搜索。",
+    "noDeckSelected": "未选择卡组"
   },
   "explore": {
     "title": "探索",
@@ -626,6 +632,7 @@
     "followersOf": "{username} 的粉丝",
     "followingOf": "{username} 的关注",
     "noFollowers": "还没有粉丝",
-    "noFollowing": "还没有关注任何人"
+    "noFollowing": "还没有关注任何人",
+    "followFailed": "更新关注状态失败"
   }
 }

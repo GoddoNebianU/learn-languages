@@ -10,7 +10,7 @@ export default async function DictionaryPage() {
   let decks: ActionOutputDeck[] = [];
   
   if (session?.user?.id) {
-    const result = await actionGetDecksByUserId(session.user.id as string);
+    const result = await actionGetDecksByUserId({ userId: session.user.id as string });
     if (result.success && result.data) {
       decks = result.data;
     }
