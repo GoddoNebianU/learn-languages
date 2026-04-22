@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { AlphabetCard } from "./AlphabetCard";
 
 export default function Alphabet() {
@@ -61,7 +61,8 @@ export default function Alphabet() {
         {/* 语言选择按钮网格 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* 日语假名选项 */}
-          <LightButton
+          <Button
+            variant="secondary"
             onClick={() => setChosenAlphabet("japanese")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -69,10 +70,11 @@ export default function Alphabet() {
               <span className="text-2xl mb-2">あいうえお</span>
               <span>{t("japanese")}</span>
             </div>
-          </LightButton>
+          </Button>
 
           {/* 英语字母选项 */}
-          <LightButton
+          <Button
+            variant="secondary"
             onClick={() => setChosenAlphabet("english")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -80,10 +82,11 @@ export default function Alphabet() {
               <span className="text-2xl mb-2">ABC</span>
               <span>{t("english")}</span>
             </div>
-          </LightButton>
+          </Button>
 
           {/* 维吾尔语字母选项 */}
-          <LightButton
+          <Button
+            variant="secondary"
             onClick={() => setChosenAlphabet("uyghur")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -91,10 +94,11 @@ export default function Alphabet() {
               <span className="text-2xl mb-2">ئۇيغۇر</span>
               <span>{t("uyghur")}</span>
             </div>
-          </LightButton>
+          </Button>
 
           {/* 世界语字母选项 */}
-          <LightButton
+          <Button
+            variant="secondary"
             onClick={() => setChosenAlphabet("esperanto")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -102,7 +106,7 @@ export default function Alphabet() {
               <span className="text-2xl mb-2">ABCĜĤ</span>
               <span>{t("esperanto")}</span>
             </div>
-          </LightButton>
+          </Button>
         </div>
       </PageLayout>
     );

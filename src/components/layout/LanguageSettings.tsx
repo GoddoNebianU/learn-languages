@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { Button, GhostLightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 
 const languages = [
   { code: "en-US", label: "English" },
@@ -88,7 +88,8 @@ export function LanguageSettings() {
 
   return (
     <div className="relative" ref={menuRef}>
-      <GhostLightButton
+      <Button
+        variant="ghost-light"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === "Escape" && isOpen) {
@@ -102,7 +103,7 @@ export function LanguageSettings() {
         aria-haspopup="menu"
       >
         <Languages size={20} />
-      </GhostLightButton>
+      </Button>
 
       <div
         className={cn(

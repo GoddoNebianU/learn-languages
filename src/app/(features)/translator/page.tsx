@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton, PrimaryButton, IconClick, CircleButton } from "@/design-system/base/button";
+import { Button, IconClick, CircleButton } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { Select } from "@/design-system/base/select";
@@ -274,7 +274,8 @@ export default function TranslatorPage() {
           <div className="option1 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("sourceLanguage")}</span>
 {visibleSourceButtons.map((lang) => (
-  <LightButton
+  <Button
+    variant="secondary"
     key={lang.value}
     selected={!customSourceLanguage && sourceLanguage === lang.value}
     onClick={() => {
@@ -284,13 +285,14 @@ export default function TranslatorPage() {
     className="shrink-0"
   >
     {getLangLabel(t, lang.label)}
-  </LightButton>
+  </Button>
 ))}
 <OverflowDropdown
   items={SOURCE_LANGUAGES.slice()}
   visibleCount={sourceButtonCount}
   renderItem={(lang) => (
-    <LightButton
+    <Button
+      variant="secondary"
       key={lang.value}
       selected={!customSourceLanguage && sourceLanguage === lang.value}
       onClick={() => {
@@ -300,7 +302,7 @@ export default function TranslatorPage() {
       className="shrink-0"
     >
       {getLangLabel(t, lang.label)}
-    </LightButton>
+    </Button>
   )}
   onItemClick={(lang) => {
     setSourceLanguage(lang.value);
@@ -318,13 +320,14 @@ export default function TranslatorPage() {
   className="w-auto min-w-[120px] shrink-0"
 />
             <div className="flex-1"></div>
-            <LightButton
+            <Button
+              variant="secondary"
               selected={needIpa}
               onClick={() => setNeedIpa((prev) => !prev)}
               className="shrink-0"
             >
               {t("generateIPA")}
-            </LightButton>
+            </Button>
           </div>
         </div>
 
@@ -360,7 +363,8 @@ export default function TranslatorPage() {
           <div className="option2 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("translateInto")}</span>
 {visibleTargetButtons.map((lang) => (
-  <LightButton
+  <Button
+    variant="secondary"
     key={lang.value}
     selected={!customTargetLanguage && targetLanguage === lang.value}
     onClick={() => {
@@ -370,13 +374,14 @@ export default function TranslatorPage() {
     className="shrink-0"
   >
     {getLangLabel(t, lang.label)}
-  </LightButton>
+  </Button>
 ))}
 <OverflowDropdown
   items={TARGET_LANGUAGES.slice()}
   visibleCount={targetButtonCount}
   renderItem={(lang) => (
-    <LightButton
+    <Button
+      variant="secondary"
       key={lang.value}
       selected={!customTargetLanguage && targetLanguage === lang.value}
       onClick={() => {
@@ -386,7 +391,7 @@ export default function TranslatorPage() {
       className="shrink-0"
     >
       {getLangLabel(t, lang.label)}
-    </LightButton>
+    </Button>
   )}
   onItemClick={(lang) => {
     setTargetLanguage(lang.value);
@@ -409,14 +414,15 @@ export default function TranslatorPage() {
 
       {/* TranslateButton Component */}
       <div className="w-screen flex justify-center items-center gap-4">
-        <PrimaryButton
+        <Button
+          variant="primary"
           onClick={translate}
           disabled={processing}
           size="lg"
           className="text-xl"
         >
           {t("translate")}
-        </PrimaryButton>
+        </Button>
         {translationResult && session && decks.length > 0 && (
           <CircleButton
             onClick={() => setShowSaveModal(true)}
@@ -450,12 +456,12 @@ export default function TranslatorPage() {
               <div className="text-gray-700">{translationResult?.translatedText}</div>
             </div>
             <div className="flex justify-end gap-2">
-              <LightButton onClick={() => setShowSaveModal(false)}>
+              <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
                 {t("cancel")}
-              </LightButton>
-              <PrimaryButton onClick={handleSaveCard} loading={isSaving}>
+              </Button>
+              <Button variant="primary" onClick={handleSaveCard} loading={isSaving}>
                 {t("save")}
-              </PrimaryButton>
+              </Button>
             </div>
           </div>
         </div>

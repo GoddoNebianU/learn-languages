@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { HStack } from "@/design-system/layout/stack";
 import { Video, FileText, ChevronLeft, ChevronRight, RotateCcw, Pause, Play } from "lucide-react";
 import { useVideoSync } from "./hooks/useVideoSync";
@@ -14,6 +14,7 @@ import { loadSubtitle } from "./utils/subtitleParser";
 import { useSrtPlayerStore } from "./stores/srtPlayerStore";
 import { useFileUpload } from "./hooks/useFileUpload";
 import { setVideoRef } from "./stores/srtPlayerStore";
+import { SubtitleProgressBar } from "./components/SubtitleProgressBar";
 import Link from "next/link";
 
 export default function SrtPlayerPage() {
@@ -109,6 +110,10 @@ export default function SrtPlayerPage() {
         playsInline
       />
 
+      {canPlay && (
+        <SubtitleProgressBar className="w-[85%] mx-auto mt-2" />
+      )}
+
       <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
         {currentSubtitle && currentSubtitle.text.split(" ").map((s, i) => (
           <Link
@@ -129,9 +134,9 @@ export default function SrtPlayerPage() {
             <Video size={16} />
             <span className="text-sm">{srtT("videoFile")}</span>
           </div>
-          <LightButton onClick={handleVideoUpload} disabled={!!videoUrl}>
+          <Button variant="secondary" onClick={handleVideoUpload} disabled={!!videoUrl}>
             {videoUrl ? srtT("uploaded") : srtT("uploadVideoButton")}
-          </LightButton>
+          </Button>
         </div>
         <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
           <div className="flex items-center flex-col">
@@ -140,38 +145,38 @@ export default function SrtPlayerPage() {
               {subtitleData.length > 0 ? srtT("subtitleUploaded", { count: subtitleData.length }) : srtT("subtitleNotUploaded")}
             </span>
           </div>
-          <LightButton onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
+          <Button variant="secondary" onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
             {subtitleUrl ? srtT("uploaded") : srtT("uploadSubtitleButton")}
-          </LightButton>
+          </Button>
         </div>
       </div>
 
       {canPlay && (
         <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
           {isPlaying ? (
-            <LightButton onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
+            <Button variant="secondary" onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
               {srtT('pause')}
-            </LightButton>
+            </Button>
           ) : (
-            <LightButton onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
+            <Button variant="secondary" onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
               {srtT('play')}
-            </LightButton>
+            </Button>
           )}
-          <LightButton onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
+          <Button variant="secondary" onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
             {srtT('previous')}
-          </LightButton>
-          <LightButton onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
+          </Button>
+          <Button variant="secondary" onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
             {srtT('next')}
-          </LightButton>
-          <LightButton onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
+          </Button>
+          <Button variant="secondary" onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
             {srtT('restart')}
-          </LightButton>
-          <LightButton onClick={handlePlaybackRateChange}>
+          </Button>
+          <Button variant="secondary" onClick={handlePlaybackRateChange}>
             {playbackRate}x
-          </LightButton>
-          <LightButton onClick={toggleAutoPause}>
+          </Button>
+          <Button variant="secondary" onClick={toggleAutoPause}>
             {srtT('autoPause', { enabled: autoPause ? srtT('on') : srtT('off') })}
-          </LightButton>
+          </Button>
         </HStack>
       )}
     </PageLayout>

@@ -448,7 +448,8 @@
     "opacity": "Opacité",
     "top": "Haut",
     "center": "Centre",
-    "bottom": "Bas"
+    "bottom": "Bas",
+    "subtitleProgress": "Progression des sous-titres"
   },
   "text_speaker": {
     "generateIPA": "Générer l'API",

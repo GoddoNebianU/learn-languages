@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { POPULAR_LANGUAGES } from "./constants";
 import { useTranslations } from "next-intl";
@@ -47,7 +47,8 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
       </label>
       <div className="flex flex-wrap gap-2 mb-2">
         {POPULAR_LANGUAGES.map((lang) => (
-          <LightButton
+          <Button
+            variant="secondary"
             key={lang.code}
             type="button"
             selected={isPresetLanguage && value === lang.code}
@@ -55,16 +56,17 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
             className="text-sm px-3"
           >
             {lang.nativeName}
-          </LightButton>
+          </Button>
         ))}
-        <LightButton
+        <Button
+          variant="secondary"
           type="button"
           selected={!isPresetLanguage && !!value}
           onClick={handleCustomToggle}
           className="text-sm px-3 py-1"
         >
           {t("other")}
-        </LightButton>
+        </Button>
       </div>
       {(showCustomInput || (!isPresetLanguage && value)) && (
         <Input

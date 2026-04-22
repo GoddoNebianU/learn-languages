@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDictionaryStore } from "./stores/dictionaryStore";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Select } from "@/design-system/base/select";
 import { Skeleton } from "@/design-system/feedback/skeleton";
@@ -172,13 +172,14 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
           required
           containerClassName="flex-1"
         />
-        <LightButton
+        <Button
+          variant="secondary"
           type="submit"
           className="px-6 rounded-full whitespace-nowrap"
           loading={isSearching}
         >
           {t("search")}
-        </LightButton>
+        </Button>
       </form>
 
       <div className="mt-4 bg-white/20 rounded-lg p-4">
@@ -236,7 +237,8 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                     ))}
                   </Select>
                 )}
-                <LightButton
+                <Button
+                  variant="secondary"
                   onClick={handleSave}
                   className="w-10 shrink-0"
                   title={t("saveToFolder")}
@@ -244,7 +246,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                   disabled={isSaving}
                 >
                   <Plus />
-                </LightButton>
+                </Button>
               </HStack>
             </div>
 
@@ -257,14 +259,15 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
             </div>
 
             <div className="border-t border-gray-200 pt-4 mt-4">
-              <LightButton
+              <Button
+                variant="secondary"
                 onClick={relookup}
                 className="text-sm"
                 loading={isSearching}
               >
                 <RefreshCw className="w-4 h-4" />
                 {t("relookup")}
-              </LightButton>
+              </Button>
             </div>
           </div>
         ) : (

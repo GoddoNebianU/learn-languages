@@ -1,9 +1,8 @@
 import z from "zod";
 import { generateValidator } from "@/utils/validate";
-import type { RepoOutputCard, RepoOutputCardStats, CardMeaning, CardType } from "./card-repository-dto";
+import type { RepoOutputCard, CardMeaning, CardType } from "./card-repository-dto";
 
 export type ActionOutputCard = RepoOutputCard;
-export type ActionOutputCardStats = RepoOutputCardStats;
 export type { CardMeaning, CardType };
 
 const CardMeaningSchema = z.object({
@@ -52,11 +51,3 @@ export const schemaActionInputGetRandomCard = z.object({
 });
 export type ActionInputGetRandomCard = z.infer<typeof schemaActionInputGetRandomCard>;
 export const validateActionInputGetRandomCard = generateValidator(schemaActionInputGetRandomCard);
-
-export const schemaActionInputGetCardById = z.object({ cardId: z.number().int().positive() });
-export type ActionInputGetCardById = z.infer<typeof schemaActionInputGetCardById>;
-export const validateActionInputGetCardById = generateValidator(schemaActionInputGetCardById);
-
-export const schemaActionInputGetCardStats = z.object({ deckId: z.number().int().positive() });
-export type ActionInputGetCardStats = z.infer<typeof schemaActionInputGetCardStats>;
-export const validateActionInputGetCardStats = generateValidator(schemaActionInputGetCardStats);

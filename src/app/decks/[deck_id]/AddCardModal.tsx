@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, PrimaryButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Select } from "@/design-system/base/select";
 import { Textarea } from "@/design-system/base/textarea";
@@ -275,9 +275,9 @@ export function AddCardModal({
 <Button variant="secondary" onClick={handleClose}>
                 {t("cancel")}
               </Button>
-        <PrimaryButton onClick={handleAdd} loading={isSubmitting}>
+        <Button variant="primary" onClick={handleAdd} loading={isSubmitting}>
           {isSubmitting ? t("adding") : t("add")}
-        </PrimaryButton>
+        </Button>
       </Modal.Footer>
     </Modal>
   );

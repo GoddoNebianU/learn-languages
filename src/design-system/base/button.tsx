@@ -48,12 +48,9 @@ const buttonVariants = cva(
         primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-md",
         secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200 shadow-sm",
         selectable: "bg-gray-100 text-gray-900 hover:bg-gray-200 data-[variant='selectable'][selected=true]:bg-primary-500 data-[variant='selectable'][selected=true]:text-white data-[variant='selectable'][selected=true]:ring-2 data-[variant='selectable'][selected=true]:ring-primary-500 data-[variant='selectable'][selected=false]:bg-gray-100 data-[variant='selectable'][selected=false]:text-gray-900 data-[variant='selectable'][selected=false]:hover:bg-gray-200",
-        success: "bg-success-500 text-white hover:bg-success-600 shadow-md",
-        warning: "bg-warning-500 text-white hover:bg-warning-600 shadow-md",
         error: "bg-error-500 text-white hover:bg-error-600 shadow-md",
         ghost: "bg-transparent text-gray-700 hover:bg-gray-100 shadow-none",
         "ghost-light": "bg-transparent text-white hover:bg-white/10 shadow-none",
-        outline: "border-2 border-gray-300 text-gray-700 hover:bg-gray-50 shadow-none",
         link: "text-primary-500 hover:text-primary-600 hover:underline shadow-none px-0",
       },
       size: {
@@ -243,28 +240,7 @@ export function Button({
   );
 }
 
-/**
- * 预定义的按钮快捷组件
- */
-export const PrimaryButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="primary" {...props} />
-);
-
-// LightButton: 次要按钮
-export const LightButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="secondary" {...props} />
-);
-
-// GhostLightButton: 透明按钮（白色文字，用于深色背景）
-export const GhostLightButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="ghost-light" {...props} />
-);
-
-export const LinkButton = (props: Omit<ButtonProps, "variant">) => (
-  <Button variant="link" {...props} />
-);
-
-// ========== 其他便捷组件 ==========
+// ========== 便捷组件 ==========
 
 // IconClick: 图片图标按钮（支持 Next.js Image）
 export const IconClick = (props: Omit<ButtonProps, "variant"> & {

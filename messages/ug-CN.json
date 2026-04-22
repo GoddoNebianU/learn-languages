@@ -448,7 +448,8 @@
     "opacity": "سۈزۈكلۈك",
     "top": "ئۈستى",
     "center": "ئوتتۇرا",
-    "bottom": "ئاستى"
+    "bottom": "ئاستى",
+    "subtitleProgress": "خەتكۈچ سۈرئىتى"
   },
   "text_speaker": {
     "generateIPA": "IPA ھاسىل قىلىش",

@@ -1,5 +1,4 @@
-import { LightButton } from "@/design-system/base/button";
-import { IconClick } from "@/design-system/base/button";
+import { Button, IconClick } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
@@ -77,22 +76,24 @@ export function MemoryCard({
           ></IconClick>
           {more ? (
             <>
-              <LightButton
+              <Button
+                variant="secondary"
                 className="w-20"
                 onClick={() => {
                   setLetterDisplay(!letterDisplay);
                 }}
               >
                 {letterDisplay ? t("hideLetter") : t("showLetter")}
-              </LightButton>
-              <LightButton
+              </Button>
+              <Button
+                variant="secondary"
                 className="w-20"
                 onClick={() => {
                   setIPADisplay(!ipaDisplay);
                 }}
               >
                 {ipaDisplay ? t("hideIPA") : t("showIPA")}
-              </LightButton>
+              </Button>
             </>
           ) : (
             <></>

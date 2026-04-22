@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
-import { PrimaryButton, LinkButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
 function LoginPageInner() {
@@ -131,23 +131,25 @@ function LoginPageInner() {
                 <p className="text-yellow-800 dark:text-yellow-200 mb-2">
                   {t("emailNotVerifiedHint")}
                 </p>
-                <LinkButton 
+                <Button 
+                  variant="link"
                   onClick={handleResendVerification}
                   loading={resendLoading}
                   size="sm"
                 >
                   {t("resendVerification")}
-                </LinkButton>
+                </Button>
               </div>
             )}
             
-            <PrimaryButton 
+            <Button 
+              variant="primary"
               onClick={handleLogin} 
               loading={loading}
               fullWidth
             >
               {t("confirm")}
-            </PrimaryButton>
+            </Button>
             
             <Link 
               href={"/signup" + (redirectTo ? `?redirect=${redirectTo}` : "")}

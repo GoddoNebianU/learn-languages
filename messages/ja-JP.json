@@ -416,7 +416,8 @@
     "opacity": "不透明度",
     "top": "上",
     "center": "中央",
-    "bottom": "下"
+    "bottom": "下",
+    "subtitleProgress": "字幕進捗"
   },
   "text_speaker": {
     "generateIPA": "IPAを生成",

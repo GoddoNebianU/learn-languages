@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { IconClick, CircleToggleButton, CircleButton, PrimaryButton } from "@/design-system/base/button";
+import { IconClick, CircleToggleButton, CircleButton, Button } from "@/design-system/base/button";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -191,12 +191,13 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           {/* 中间区域：随机按钮 */}
           <div className="flex gap-2 items-center">
             {isRandomMode && (
-              <PrimaryButton
+              <Button
+                variant="primary"
                 onClick={goToRandom}
                 className="rounded-full px-4 py-2 text-sm"
               >
                 {t("randomNext")}
-              </PrimaryButton>
+              </Button>
             )}
           </div>
 

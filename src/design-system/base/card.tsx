@@ -68,9 +68,6 @@ const cardVariants = cva(
   }
 );
 
-export type CardVariant = VariantProps<typeof cardVariants>["variant"];
-export type CardPadding = VariantProps<typeof cardVariants>["padding"];
-
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
@@ -122,98 +119,16 @@ export function Card({
 }
 
 /**
- * CardSection - 卡片内容区块
- * 用于组织卡片内部的多个内容区块
- */
-export interface CardSectionProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  noPadding?: boolean;
-}
-
-export function CardSection({
-  noPadding = false,
-  className,
-  children,
-  ...props
-}: CardSectionProps) {
-  return (
-    <div
-      className={cn(
-        !noPadding && "p-6",
-        "first:rounded-t-2xl last:rounded-b-2xl",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-/**
- * CardHeader - 卡片头部
- */
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
-
-export function CardHeader({
-  className,
-  children,
-  ...props
-}: CardHeaderProps) {
-  return (
-    <div
-      className={cn("flex items-center justify-between p-6 border-b border-gray-200", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-
-/**
- * CardTitle - 卡片标题
- */
-export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  children: React.ReactNode;
-}
-
-export function CardTitle({
-  className,
-  children,
-  ...props
-}: CardTitleProps) {
-  return (
-    <h3
-      className={cn("text-lg font-semibold text-gray-900", className)}
-      {...props}
-    >
-      {children}
-    </h3>
-  );
-}
-
-/**
  * CardBody - 卡片主体
  */
-export const CardBody = CardSection;
-
-/**
- * CardFooter - 卡片底部
- */
-export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
-
-export function CardFooter({
+export function CardBody({
   className,
   children,
   ...props
-}: CardFooterProps) {
+}: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
   return (
     <div
-      className={cn("flex items-center justify-end gap-2 p-6 border-t border-gray-200", className)}
+      className={cn("p-6", className)}
       {...props}
     >
       {children}

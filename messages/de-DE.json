@@ -377,7 +377,8 @@
     "opacity": "Deckkraft",
     "top": "Oben",
     "center": "Mitte",
-    "bottom": "Unten"
+    "bottom": "Unten",
+    "subtitleProgress": "Untertitel-Fortschritt"
   },
   "text_speaker": {
     "generateIPA": "IPA generieren",

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
-import { PrimaryButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 
 function SignUpPageInner() {
@@ -111,13 +111,14 @@ function SignUpPageInner() {
               />
             </VStack>
             
-            <PrimaryButton 
+            <Button 
+              variant="primary"
               onClick={handleSignUp} 
               loading={loading}
               fullWidth
             >
               {t("confirm")}
-            </PrimaryButton>
+            </Button>
             
             <Link 
               href={"/login" + (redirectTo ? `?redirect=${redirectTo}` : "")}

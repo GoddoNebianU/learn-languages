@@ -9,7 +9,7 @@ import {
   Lock,
   Trash2,
 } from "lucide-react";
-import { CircleButton, LightButton } from "@/design-system/base/button";
+import { CircleButton, Button } from "@/design-system/base/button";
 import { Skeleton } from "@/design-system/feedback/skeleton";
 import { VStack } from "@/design-system/layout/stack";
 import { useEffect, useState } from "react";
@@ -194,10 +194,10 @@ export function DecksClient({ userId }: DecksClientProps) {
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div className="mb-4 flex gap-2">
-        <LightButton onClick={handleCreateDeck}>
+        <Button variant="secondary" onClick={handleCreateDeck}>
           <Plus size={18} />
           {t("newDeck")}
-        </LightButton>
+        </Button>
       </div>
 
       <CardList>

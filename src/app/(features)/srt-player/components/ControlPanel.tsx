@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Video, FileText, ChevronLeft, ChevronRight, RotateCcw, Pause, Play, Settings, Keyboard } from 'lucide-react';
-import { Button, LightButton } from '@/design-system/base/button';
+import { Button } from '@/design-system/base/button';
 import { Range } from '@/design-system/base/range';
 import { HStack, VStack } from '@/design-system/layout/stack';
 import { useSrtPlayerStore } from '../stores/srtPlayerStore';
@@ -86,13 +86,14 @@ export function ControlPanel() {
                   <p className="text-xs text-gray-600">{videoUrl ? t('uploaded') : t('notUploaded')}</p>
                 </VStack>
               </HStack>
-              <LightButton
+              <Button
+                variant="secondary"
                 onClick={videoUrl ? undefined : handleVideoUpload}
                 disabled={!!videoUrl}
                 size="sm"
               >
                 {videoUrl ? t('uploaded') : t('upload')}
-              </LightButton>
+              </Button>
             </HStack>
           </div>
 
@@ -109,13 +110,14 @@ export function ControlPanel() {
                   <p className="text-xs text-gray-600">{subtitleUrl ? t('uploaded') : t('notUploaded')}</p>
                 </VStack>
               </HStack>
-              <LightButton
+              <Button
+                variant="secondary"
                 onClick={subtitleUrl ? undefined : handleSubtitleUpload}
                 disabled={!!subtitleUrl}
                 size="sm"
               >
                 {subtitleUrl ? t('uploaded') : t('upload')}
-              </LightButton>
+              </Button>
             </HStack>
           </div>
         </HStack>
@@ -173,19 +175,21 @@ export function ControlPanel() {
               {t('autoPause', { enabled: autoPause ? t('on') : t('off') })}
             </Button>
 
-            <LightButton
+            <Button
+              variant="secondary"
               onClick={toggleSettings}
               leftIcon={<Settings className="w-4 h-4" />}
             >
               {t('settings')}
-            </LightButton>
+            </Button>
 
-            <LightButton
+            <Button
+              variant="secondary"
               onClick={toggleShortcuts}
               leftIcon={<Keyboard className="w-4 h-4" />}
             >
               {t('shortcuts')}
-            </LightButton>
+            </Button>
           </HStack>
 
           <VStack gap={2}>

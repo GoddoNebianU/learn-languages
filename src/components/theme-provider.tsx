@@ -5,7 +5,6 @@ import {
   THEME_PRESETS,
   DEFAULT_THEME,
   getThemePreset,
-  applyThemeColors,
   type ThemePreset,
 } from "@/shared/theme-presets";
 
@@ -24,6 +23,13 @@ function getInitialTheme(): string {
   if (typeof window === "undefined") return DEFAULT_THEME;
   const saved = localStorage.getItem(STORAGE_KEY);
   return saved && getThemePreset(saved) ? saved : DEFAULT_THEME;
+}
+
+function applyThemeColors(preset: ThemePreset): void {
+  const root = document.documentElement;
+  Object.entries(preset.colors).forEach(([shade, color]) => {
+    root.style.setProperty(`--color-primary-${shade}`, color);
+  });
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

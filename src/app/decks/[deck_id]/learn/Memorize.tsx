@@ -8,7 +8,7 @@ import { Layers, Check, RotateCcw, Volume2, Headphones, ChevronLeft, ChevronRigh
 import { actionGetCardsByDeckId } from "@/modules/card/card-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LightButton, CircleButton } from "@/design-system/base/button";
+import { Button, CircleButton } from "@/design-system/base/button";
 import { Progress } from "@/design-system/feedback/progress";
 import { Skeleton } from "@/design-system/feedback/skeleton";
 import { HStack, VStack } from "@/design-system/layout/stack";
@@ -267,9 +267,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <div className="text-red-600 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-md">
             {error}
           </div>
-          <LightButton onClick={() => router.push("/decks")}>
+          <Button variant="secondary" onClick={() => router.push("/decks")}>
             {t("backToDecks")}
-          </LightButton>
+          </Button>
         </VStack>
       </PageLayout>
     );
@@ -284,9 +284,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("allDone")}</h2>
           <p className="text-gray-600 mb-6">{t("allDoneDesc")}</p>
-          <LightButton onClick={() => router.push("/decks")}>
+          <Button variant="secondary" onClick={() => router.push("/decks")}>
             {t("backToDecks")}
-          </LightButton>
+          </Button>
         </VStack>
       </PageLayout>
     );
@@ -329,7 +329,8 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       <VStack gap={2} className="mb-4">
         <HStack justify="center" gap={1} className="flex-wrap">
           {studyModeOptions.map((option) => (
-            <LightButton
+            <Button
+              variant="secondary"
               key={option.value}
               onClick={() => setStudyMode(option.value)}
               selected={studyMode === option.value}
@@ -337,12 +338,13 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               size="sm"
             >
               {option.label}
-            </LightButton>
+            </Button>
           ))}
         </HStack>
         
         <HStack justify="center" gap={2}>
-          <LightButton
+          <Button
+            variant="secondary"
             onClick={() => {
               setIsReversed(!isReversed);
               setShowAnswer(false);
@@ -352,8 +354,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             size="sm"
           >
             {t("reverse")}
-          </LightButton>
-          <LightButton
+          </Button>
+          <Button
+            variant="secondary"
             onClick={() => {
               setIsDictation(!isDictation);
             }}
@@ -362,7 +365,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             size="sm"
           >
             {t("dictation")}
-          </LightButton>
+          </Button>
         </HStack>
       </VStack>
 
@@ -417,14 +420,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
       <HStack justify="center">
         {!showAnswer ? (
-          <LightButton
+          <Button variant="secondary"
             onClick={handleShowAnswer}
             disabled={isPending}
             className="px-8 text-lg rounded-full"
           >
             {t("showAnswer")}
             <span className="ml-2 text-xs opacity-60">Space</span>
-          </LightButton>
+          </Button>
         ) : isFinished ? (
           <VStack align="center" gap={4}>
             <div className="text-green-500">
@@ -432,30 +435,30 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </div>
             <p className="text-gray-600">{t("allDoneDesc")}</p>
             <HStack gap={2}>
-              <LightButton onClick={() => router.push("/decks")}>
+              <Button variant="secondary" onClick={() => router.push("/decks")}>
                 {t("backToDecks")}
-              </LightButton>
-              <LightButton onClick={() => setCurrentIndex(0)}>
+              </Button>
+              <Button variant="secondary" onClick={() => setCurrentIndex(0)}>
                 {t("restart")}
-              </LightButton>
+              </Button>
             </HStack>
           </VStack>
         ) : (
           <HStack gap={4}>
-            <LightButton
+            <Button variant="secondary"
               onClick={handlePrevCard}
             >
               <ChevronLeft className="w-5 h-5" />
-            </LightButton>
+            </Button>
             <span className="text-gray-500 text-sm">
               {t("nextCard")}
               <span className="ml-2 text-xs opacity-60">Space</span>
             </span>
-            <LightButton
+            <Button variant="secondary"
               onClick={handleNextCard}
             >
               <ChevronRight className="w-5 h-5" />
-            </LightButton>
+            </Button>
           </HStack>
         )}
       </HStack>

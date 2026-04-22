@@ -1,6 +1,6 @@
 "use client";
 
-import { LightButton, IconClick } from "@/design-system/base/button";
+import { Button, IconClick } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { IMAGES } from "@/config/images";
@@ -368,7 +368,8 @@ export default function TextSpeakerPage() {
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
             <span className="text-sm text-gray-600">{t("language")}</span>
             {TTS_LANGUAGES.slice(0, 6).map((lang) => (
-              <LightButton
+              <Button
+                variant="secondary"
                 key={lang.value}
                 selected={!customLanguage && selectedLanguage === lang.value}
                 onClick={() => {
@@ -381,7 +382,7 @@ export default function TextSpeakerPage() {
                 size="sm"
               >
                 {getLanguageLabel(t, lang.label)}
-              </LightButton>
+              </Button>
             ))}
             <Input
               variant="bordered"
@@ -400,20 +401,22 @@ export default function TextSpeakerPage() {
           </div>
           {/* 功能开关按钮 */}
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
-            <LightButton
+            <Button
+              variant="secondary"
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
               {t("generateIPA")}
-            </LightButton>
-            <LightButton
+            </Button>
+            <Button
+              variant="secondary"
               onClick={() => {
                 setShowSaveList(!showSaveList);
               }}
               selected={showSaveList}
             >
               {t("viewSavedItems")}
-            </LightButton>
+            </Button>
           </div>
         </div>
       </div>

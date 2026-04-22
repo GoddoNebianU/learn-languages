@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import type { NavigationItem } from "./Navbar";
-import { GhostLightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 
 // Module-level counter to prevent body overflow conflicts with other overlays (e.g. Modal)
 let overflowLockCount = 0;
@@ -111,7 +111,8 @@ export function MobileMenu({ items }: MobileMenuProps) {
   return (
     <div className="relative" ref={menuRef}>
       <div ref={triggerWrapperRef}>
-        <GhostLightButton
+        <Button
+          variant="ghost-light"
           onClick={() => setIsOpen(!isOpen)}
           className="h-auto p-2"
           aria-label={isOpen ? "关闭菜单" : "打开菜单"}
@@ -119,7 +120,7 @@ export function MobileMenu({ items }: MobileMenuProps) {
           aria-haspopup="menu"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </GhostLightButton>
+        </Button>
       </div>
 
       <div

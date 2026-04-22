@@ -416,7 +416,8 @@
     "opacity": "Opacity",
     "top": "Top",
     "center": "Center",
-    "bottom": "Bottom"
+    "bottom": "Bottom",
+    "subtitleProgress": "Subtitle Progress"
   },
   "text_speaker": {
     "generateIPA": "Generate IPA",

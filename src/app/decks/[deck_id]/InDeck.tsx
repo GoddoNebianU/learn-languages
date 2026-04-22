@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { CardItem } from "./CardItem";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { PrimaryButton, CircleButton, LinkButton } from "@/design-system/base/button";
+import { Button, CircleButton } from "@/design-system/base/button";
 import { CardList } from "@/components/ui/CardList";
 import { VStack } from "@/design-system/layout/stack";
 import { Skeleton } from "@/design-system/feedback/skeleton";
@@ -77,13 +77,14 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   return (
     <PageLayout>
       <div className="mb-6">
-        <LinkButton
+        <Button
+          variant="link"
           onClick={router.back}
           className="flex items-center gap-2 mb-4"
         >
           <ArrowLeft size={16} />
           <span className="text-sm">{t("back")}</span>
-        </LinkButton>
+        </Button>
 
         <div className="flex items-center justify-between">
           <div>
@@ -96,13 +97,14 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
           </div>
 
           <div className="flex items-center gap-2">
-            <PrimaryButton
+            <Button
+              variant="primary"
               onClick={() => {
                 router.push(`/decks/${deckId}/learn`);
               }}
             >
               {t("memorize")}
-            </PrimaryButton>
+            </Button>
             {!isReadOnly && (
               <CircleButton
                 onClick={() => {

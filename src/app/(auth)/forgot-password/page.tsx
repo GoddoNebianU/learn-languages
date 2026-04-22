@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/base/card";
 import { Input } from "@/design-system/base/input";
-import { PrimaryButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { VStack } from "@/design-system/layout/stack";
 import { actionRequestPasswordReset } from "@/modules/auth/forgot-password-action";
 
@@ -78,13 +78,14 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </VStack>
-            <PrimaryButton
+            <Button
+              variant="primary"
               onClick={handleResetRequest}
               loading={loading}
               fullWidth
             >
               {t("sendResetEmail")}
-            </PrimaryButton>
+            </Button>
             <Link
               href="/login"
               className="text-center text-primary-500 hover:underline"

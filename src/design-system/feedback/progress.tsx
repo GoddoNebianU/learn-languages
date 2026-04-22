@@ -58,21 +58,13 @@ const progressVariants = cva(
   }
 );
 
-export type ProgressSize = VariantProps<typeof progressVariants>["size"];
-export type ProgressVariant = VariantProps<typeof progressVariants>["variant"];
-
-export interface ProgressProps
+interface ProgressProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof progressVariants> {
-  // 进度值（0-100）
   value: number;
-  // 是否显示百分比标签
   showLabel?: boolean;
-  // 自定义标签
   label?: string;
-  // 是否显示动画
   animated?: boolean;
-  // 自定义颜色（覆盖 variant）
   color?: string;
 }
 
@@ -90,10 +82,8 @@ export function Progress({
   className,
   ...props
 }: ProgressProps) {
-  // 确保值在 0-100 之间
   const clampedValue = Math.min(100, Math.max(0, value));
 
-  // 计算颜色
   const getColor = () => {
     if (color) return color;
     const colors = {
@@ -106,7 +96,6 @@ export function Progress({
     return colors[actualVariant];
   };
 
-  // 格式化标签
   const formatLabel = () => {
     if (label !== undefined) return label;
     return `${Math.round(clampedValue)}%`;
@@ -139,88 +128,6 @@ export function Progress({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-/**
- * CircularProgress - 环形进度条
- */
-export interface CircularProgressProps extends React.SVGProps<SVGSVGElement> {
-  value: number;
-  size?: number;
-  strokeWidth?: number;
-  variant?: ProgressVariant;
-  showLabel?: boolean;
-  label?: string;
-}
-
-export function CircularProgress({
-  value = 0,
-  size = 120,
-  strokeWidth = 8,
-  variant = "default",
-  showLabel = true,
-  label,
-  className,
-  ...props
-}: CircularProgressProps) {
-  const clampedValue = Math.min(100, Math.max(0, value));
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (clampedValue / 100) * circumference;
-
-  const colorClasses: Record<string, string> = {
-    default: "text-primary-500",
-    success: "text-green-500",
-    warning: "text-amber-500",
-    error: "text-red-500",
-  };
-
-  return (
-    <div
-      className={cn("relative inline-flex items-center justify-center", colorClasses[variant ?? "default"], className)}
-      role="progressbar"
-      aria-valuenow={clampedValue}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
-      <svg
-        width={size}
-        height={size}
-        aria-hidden="true"
-        {...props}
-      >
-        {/* 背景圆 */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          className="text-gray-200"
-        />
-        {/* 进度圆 */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-          className="transition-all duration-500 ease-out"
-        />
-      </svg>
-      {showLabel && (
-        <div className="absolute text-base font-semibold text-gray-700">
-          {label !== undefined ? label : `${Math.round(clampedValue)}%`}
-        </div>
-      )}
     </div>
   );
 }

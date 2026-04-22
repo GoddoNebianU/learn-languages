@@ -448,7 +448,8 @@
     "opacity": "불투명도",
     "top": "위",
     "center": "중앙",
-    "bottom": "아래"
+    "bottom": "아래",
+    "subtitleProgress": "자막 진행"
   },
   "text_speaker": {
     "generateIPA": "IPA 생성",

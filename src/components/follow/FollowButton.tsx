@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { PrimaryButton, LightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { actionToggleFollow } from "@/modules/follow/follow-action";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -35,15 +35,15 @@ export function FollowButton({
 
   if (isFollowing) {
     return (
-      <LightButton onClick={handleToggleFollow} disabled={isPending}>
+      <Button variant="secondary" onClick={handleToggleFollow} disabled={isPending}>
         {isPending ? "..." : t("following")}
-      </LightButton>
+      </Button>
     );
   }
 
   return (
-    <PrimaryButton onClick={handleToggleFollow} disabled={isPending}>
+    <Button variant="primary" onClick={handleToggleFollow} disabled={isPending}>
       {isPending ? "..." : t("follow")}
-    </PrimaryButton>
+    </Button>
   );
 }

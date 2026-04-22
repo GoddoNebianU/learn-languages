@@ -416,7 +416,8 @@
     "opacity": "透明度",
     "top": "顶部",
     "center": "居中",
-    "bottom": "底部"
+    "bottom": "底部",
+    "subtitleProgress": "字幕进度"
   },
   "text_speaker": {
     "generateIPA": "生成IPA",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { LinkButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
@@ -59,7 +59,7 @@ export default async function UserPage({ params }: UserPageProps) {
                     <div className="flex items-center gap-3">
                         {isOwnProfile && (
                             <>
-                                <LinkButton href="/logout">{t("logout")}</LinkButton>
+                                <Button variant="link" href="/logout">{t("logout")}</Button>
                                 <DeleteAccountButton username={username} />
                             </>
                         )}
@@ -192,9 +192,9 @@ export default async function UserPage({ params }: UserPageProps) {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <Link href={`/decks/${deck.id}`}>
-                                                <LinkButton>
+                                                <Button variant="link">
                                                     {t("decks.view")}
-                                                </LinkButton>
+                                                </Button>
                                             </Link>
                                         </td>
                                     </tr>

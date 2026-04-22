@@ -4,7 +4,7 @@ import { MobileMenu } from "./MobileMenu";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { GhostLightButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import type { ReactNode } from "react";
 
 function GithubIcon({ size = 24 }: { size?: number }) {
@@ -43,43 +43,43 @@ export async function Navbar() {
 
   return (
     <div className="flex justify-between items-center w-full h-16 px-4 md:px-8 bg-primary-500 text-white">
-      <GhostLightButton href="/" className="border-b hidden! md:block!" size="md">
+      <Button variant="ghost-light" href="/" className="border-b hidden! md:block!" size="md">
         {t("title")}
-      </GhostLightButton>
-      <GhostLightButton className="block! md:hidden!" size="md" href="/">
+      </Button>
+      <Button variant="ghost-light" className="block! md:hidden!" size="md" href="/">
         <Home size={20} />
-      </GhostLightButton>
+      </Button>
       <div className="flex gap-0.5 justify-center items-center">
         <LanguageSettings />
-        <GhostLightButton href="/decks" className="md:block! hidden!" size="md">
+        <Button variant="ghost-light" href="/decks" className="md:block! hidden!" size="md">
           {t("folders")}
-        </GhostLightButton>
-        <GhostLightButton href="/explore" className="md:block! hidden!" size="md">
+        </Button>
+        <Button variant="ghost-light" href="/explore" className="md:block! hidden!" size="md">
           {t("explore")}
-        </GhostLightButton>
+        </Button>
         {session && (
-          <GhostLightButton href="/favorites" className="md:block! hidden!" size="md">
+          <Button variant="ghost-light" href="/favorites" className="md:block! hidden!" size="md">
             {t("favorites")}
-          </GhostLightButton>
+          </Button>
         )}
-        <GhostLightButton
+        <Button variant="ghost-light"
           className="hidden! md:block!"
           size="md"
           href="https://github.com/GoddoNebianU/learn-languages"
         >
           {t("sourceCode")}
-        </GhostLightButton>
-        <GhostLightButton href="/settings" className="hidden! md:block!" size="md">
+        </Button>
+        <Button variant="ghost-light" href="/settings" className="hidden! md:block!" size="md">
           {t("settings")}
-        </GhostLightButton>
+        </Button>
         {session ? (
-          <GhostLightButton href="/profile" className="hidden! md:block!" size="md">
+          <Button variant="ghost-light" href="/profile" className="hidden! md:block!" size="md">
             {t("profile")}
-          </GhostLightButton>
+          </Button>
         ) : (
-          <GhostLightButton href="/login" className="hidden! md:block!" size="md">
+          <Button variant="ghost-light" href="/login" className="hidden! md:block!" size="md">
             {t("sign_in")}
-          </GhostLightButton>
+          </Button>
         )}
         <div className="md:hidden!">
           <MobileMenu items={mobileMenuItems} />

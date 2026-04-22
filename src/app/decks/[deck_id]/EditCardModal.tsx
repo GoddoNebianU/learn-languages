@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, LightButton, PrimaryButton } from "@/design-system/base/button";
+import { Button } from "@/design-system/base/button";
 import { Input } from "@/design-system/base/input";
 import { Textarea } from "@/design-system/base/textarea";
 import { Modal } from "@/design-system/overlay/modal";
@@ -219,12 +219,12 @@ export function EditCardModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <LightButton onClick={onClose}>
+        <Button variant="secondary" onClick={onClose}>
           {t("cancel")}
-        </LightButton>
-        <PrimaryButton onClick={handleUpdate} loading={isSubmitting}>
+        </Button>
+        <Button variant="primary" onClick={handleUpdate} loading={isSubmitting}>
           {isSubmitting ? t("updating") : t("update")}
-        </PrimaryButton>
+        </Button>
       </Modal.Footer>
     </Modal>
   );

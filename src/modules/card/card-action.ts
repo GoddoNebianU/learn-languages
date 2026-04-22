@@ -10,7 +10,6 @@ import {
   serviceGetCardById,
   serviceGetCardsByDeckId,
   serviceGetRandomCard,
-  serviceGetCardStats,
   serviceCheckDeckOwnership,
 } from "./card-service";
 import type { ActionOutputCard } from "./card-action-dto";
@@ -21,8 +20,6 @@ import {
   validateActionInputDeleteCard,
   validateActionInputGetCardsByDeckId,
   validateActionInputGetRandomCard,
-  validateActionInputGetCardById,
-  validateActionInputGetCardStats,
 } from "./card-action-dto";
 
 const log = createLogger("card-action");
@@ -139,35 +136,6 @@ export async function actionGetCardsByDeckId(input: unknown) {
   }
 }
 
-export async function actionGetCardById(input: unknown) {
-  try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
-      return { success: false, message: "Unauthorized" };
-    }
-    const validated = validateActionInputGetCardById(input);
-    const card = await serviceGetCardById(validated.cardId);
-    if (!card) {
-      return { success: false, message: "Card not found" };
-    }
-    const isOwner = await checkDeckOwnership(card.deckId);
-    if (!isOwner) {
-      return { success: false, message: "You do not have permission to view this card" };
-    }
-    return {
-      success: true,
-      message: "Card fetched successfully",
-      data: mapCardToOutput(card),
-    };
-  } catch (e) {
-    if (e instanceof ValidateError) {
-      return { success: false, message: e.message };
-    }
-    log.error("Failed to get card", { error: e instanceof Error ? e.message : String(e) });
-    return { success: false, message: "Failed to get card" };
-  }
-}
-
 export async function actionGetRandomCard(input: unknown) {
   try {
     const userId = await getCurrentUserId();
@@ -194,31 +162,5 @@ export async function actionGetRandomCard(input: unknown) {
     }
     log.error("Failed to get random card", { error: e instanceof Error ? e.message : String(e) });
     return { success: false, message: "Failed to get random card" };
-  }
-}
-
-export async function actionGetCardStats(input: unknown) {
-  try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
-      return { success: false, message: "Unauthorized" };
-    }
-    const validated = validateActionInputGetCardStats(input);
-    const isOwner = await checkDeckOwnership(validated.deckId);
-    if (!isOwner) {
-      return { success: false, message: "You do not have permission to view stats for this deck" };
-    }
-    const stats = await serviceGetCardStats(validated.deckId);
-    return {
-      success: true,
-      message: "Card stats fetched successfully",
-      data: stats,
-    };
-  } catch (e) {
-    if (e instanceof ValidateError) {
-      return { success: false, message: e.message };
-    }
-    log.error("Failed to get card stats", { error: e instanceof Error ? e.message : String(e) });
-    return { success: false, message: "Failed to get card stats" };
   }
 }
