@@ -89,6 +89,7 @@
     "addMeaning": "意味を追加",
     "partOfSpeech": "品詞",
     "deleteConfirm": "このカードを削除しますか？",
+    "deleteDeckConfirm": "このデッキを削除しますか？すべてのカードが失われます。",
     "cardDeleted": "カードを削除しました",
     "cardUpdated": "カードを更新しました"
   },

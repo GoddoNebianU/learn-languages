@@ -121,6 +121,7 @@
     "addMeaning": "مەنا قوشۇش",
     "partOfSpeech": "سۆز بۆلىكى",
     "deleteConfirm": "بۇ كارتىنى ئۆچۈرەمسىز؟",
+    "deleteDeckConfirm": "بۇ قارتنى ئۆچۈرەمسىز؟ بارلىق كارتلار يوقىلىدۇ.",
     "cardDeleted": "كارتا ئۆچۈرۈلدى",
     "cardUpdated": "كارتا يېڭىلاندى"
   },

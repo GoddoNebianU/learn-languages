@@ -121,6 +121,7 @@
     "addMeaning": "Ajouter signification",
     "partOfSpeech": "Partie du discours",
     "deleteConfirm": "Supprimer cette carte?",
+    "deleteDeckConfirm": "Supprimer ce deck ? Toutes les cartes seront perdues.",
     "cardDeleted": "Carte supprimée",
     "cardUpdated": "Carte mise à jour"
   },

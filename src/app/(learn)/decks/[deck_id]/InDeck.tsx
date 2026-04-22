@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CardItem } from "./CardItem";
@@ -13,7 +13,7 @@ import { CardList } from "@/components/ui/CardList";
 import { VStack } from "@/design-system/stack";
 import { Skeleton } from "@/design-system/skeleton";
 import { actionGetCardsByDeckId, actionDeleteCard } from "@/modules/card/card-action";
-import { actionGetDeckById } from "@/modules/deck/deck-action";
+import { actionGetDeckById, actionDeleteDeck } from "@/modules/deck/deck-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
+  const [showDeleteDeckConfirm, setShowDeleteDeckConfirm] = useState(false);
   const [deckInfo, setDeckInfo] = useState<ActionOutputDeck | null>(null);
   const router = useRouter();
   const t = useTranslations("deck_id");
@@ -76,6 +77,21 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
     }
   };
 
+  const handleDeleteDeck = async () => {
+    try {
+      const result = await actionDeleteDeck({ deckId });
+      if (result.success) {
+        toast.success(result.message);
+        router.push("/decks");
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unknown error");
+    }
+    setShowDeleteDeckConfirm(false);
+  };
+
   return (
     <PageLayout>
       <div className="mb-6">
@@ -107,13 +123,17 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
               {t("memorize")}
             </Button>
             {!isReadOnly && (
-              <IconButton className="rounded-full"
-                onClick={() => {
-                  setAddModal(true);
-                }}
-              >
-                <Plus size={18} className="text-gray-700" />
-              </IconButton>
+              <>
+                <IconButton className="rounded-full" onClick={() => setAddModal(true)}>
+                  <Plus size={18} className="text-gray-700" />
+                </IconButton>
+                <IconButton
+                  className="rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50"
+                  onClick={() => setShowDeleteDeckConfirm(true)}
+                >
+                  <Trash2 size={18} />
+                </IconButton>
+              </>
             )}
           </div>
         </div>
@@ -150,6 +170,22 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
         deckId={deckId}
         onAdded={refreshCards}
       />
+
+      {showDeleteDeckConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-4 max-w-sm mx-4">
+            <p className="text-gray-700 mb-4">{t("deleteDeckConfirm")}</p>
+            <div className="flex gap-2 justify-end">
+              <Button variant="light" size="sm" onClick={() => setShowDeleteDeckConfirm(false)}>
+                {t("cancel")}
+              </Button>
+              <Button variant="light" size="sm" onClick={handleDeleteDeck}>
+                {t("delete")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 }

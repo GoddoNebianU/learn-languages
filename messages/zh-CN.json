@@ -89,6 +89,7 @@
     "addMeaning": "添加释义",
     "partOfSpeech": "词性",
     "deleteConfirm": "确定删除这张卡片吗？",
+    "deleteDeckConfirm": "确定删除这个牌组吗？所有卡片将丢失。",
     "cardDeleted": "卡片已删除",
     "cardUpdated": "卡片已更新"
   },

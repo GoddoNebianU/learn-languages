@@ -121,6 +121,7 @@
     "addMeaning": "의미 추가",
     "partOfSpeech": "품사",
     "deleteConfirm": "이 카드를 삭제하시겠습니까?",
+    "deleteDeckConfirm": "이 덱을 삭제하시겠습니까? 모든 카드가 손실됩니다.",
     "cardDeleted": "카드 삭제됨",
     "cardUpdated": "카드 업데이트됨"
   },

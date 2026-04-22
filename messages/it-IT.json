@@ -121,6 +121,7 @@
     "addMeaning": "Aggiungi significato",
     "partOfSpeech": "Parte del discorso",
     "deleteConfirm": "Eliminare questa carta?",
+    "deleteDeckConfirm": "Eliminare questo mazzo? Tutte le carte andranno perse.",
     "cardDeleted": "Carta eliminata",
     "cardUpdated": "Carta aggiornata"
   },

@@ -65,7 +65,7 @@ export function CardItem({
               </span>
             </div>
 
-            <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1">
               {!isReadOnly && (
                 <>
                   <IconButton

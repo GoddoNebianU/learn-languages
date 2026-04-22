@@ -549,6 +549,7 @@
     "addMeaning": "Bedeutung hinzufügen",
     "partOfSpeech": "Wortart",
     "deleteConfirm": "Karte wirklich löschen?",
+    "deleteDeckConfirm": "Dieses Deck wirklich löschen? Alle Karten gehen verloren.",
     "cardDeleted": "Karte gelöscht",
     "cardUpdated": "Karte aktualisiert"
   }
