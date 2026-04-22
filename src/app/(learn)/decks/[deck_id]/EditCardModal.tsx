@@ -21,18 +21,13 @@ interface EditCardModalProps {
   onUpdated: () => void;
 }
 
-export function EditCardModal({
-  isOpen,
-  onClose,
-  card,
-  onUpdated,
-}: EditCardModalProps) {
+export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModalProps) {
   const t = useTranslations("deck_id");
-  
+
   const [word, setWord] = useState("");
   const [ipa, setIpa] = useState("");
   const [meanings, setMeanings] = useState<CardMeaning[]>([
-    { partOfSpeech: null, definition: "", example: null }
+    { partOfSpeech: null, definition: "", example: null },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,8 +38,8 @@ export function EditCardModal({
       setWord(card.word);
       setIpa(card.ipa || "");
       setMeanings(
-        card.meanings.length > 0 
-          ? card.meanings 
+        card.meanings.length > 0
+          ? card.meanings
           : [{ partOfSpeech: null, definition: "", example: null }]
       );
     }
@@ -68,13 +63,13 @@ export function EditCardModal({
 
   const handleUpdate = async () => {
     if (!card) return;
-    
+
     if (!word.trim()) {
       toast.error(t("wordRequired"));
       return;
     }
 
-    const validMeanings = meanings.filter(m => m.definition?.trim());
+    const validMeanings = meanings.filter((m) => m.definition?.trim());
     if (validMeanings.length === 0) {
       toast.error(t("definitionRequired"));
       return;
@@ -87,8 +82,8 @@ export function EditCardModal({
         cardId: card.id,
         word: word.trim(),
         ipa: showIpa && ipa.trim() ? ipa.trim() : null,
-        meanings: validMeanings.map(m => ({
-          partOfSpeech: card.cardType === "SENTENCE" ? null : (m.partOfSpeech?.trim() || null),
+        meanings: validMeanings.map((m) => ({
+          partOfSpeech: card.cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
           definition: m.definition!.trim(),
           example: m.example?.trim() || null,
         })),
@@ -110,11 +105,12 @@ export function EditCardModal({
 
   if (!card) return null;
 
-  const cardTypeLabel = card.cardType === "WORD" 
-    ? t("wordCard") 
-    : card.cardType === "PHRASE" 
-      ? t("phraseCard") 
-      : t("sentenceCard");
+  const cardTypeLabel =
+    card.cardType === "WORD"
+      ? t("wordCard")
+      : card.cardType === "PHRASE"
+        ? t("phraseCard")
+        : t("sentenceCard");
 
   return (
     <Modal open={isOpen} onClose={onClose} size="md">
@@ -122,40 +118,28 @@ export function EditCardModal({
         <Modal.Title>{t("updateCard")}</Modal.Title>
         <Modal.CloseButton onClick={onClose} />
       </Modal.Header>
-      
+
       <Modal.Body className="space-y-4">
         <HStack gap={2} className="text-sm text-gray-500">
-          <span className="px-2 py-1 bg-gray-100 rounded-md">
-            {t("card")}
-          </span>
-          <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-md">
-            {cardTypeLabel}
-          </span>
-          <span className="px-2 py-1 bg-gray-100 rounded-md">
-            {card.queryLang}
-          </span>
+          <span className="rounded-md bg-gray-100 px-2 py-1">{t("card")}</span>
+          <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">{cardTypeLabel}</span>
+          <span className="rounded-md bg-gray-100 px-2 py-1">{card.queryLang}</span>
         </HStack>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
             {card.cardType === "SENTENCE" ? t("sentence") : t("word")} *
           </label>
-          <Input 
-            value={word}
-            onChange={(e) => setWord(e.target.value)}
-            className="w-full" 
-          />
+          <Input value={word} onChange={(e) => setWord(e.target.value)} className="w-full" />
         </div>
 
         {showIpa && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t("ipa")}
-            </label>
-            <Input 
+            <label className="mb-1 block text-sm font-medium text-gray-700">{t("ipa")}</label>
+            <Input
               value={ipa}
               onChange={(e) => setIpa(e.target.value)}
-              className="w-full" 
+              className="w-full"
               placeholder={t("ipaPlaceholder")}
             />
           </div>
@@ -163,20 +147,15 @@ export function EditCardModal({
 
         <div>
           <HStack justify="between" className="mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("meanings")} *
-            </label>
-            <LinkButton
-              onClick={addMeaning}
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
+            <label className="block text-sm font-medium text-gray-700">{t("meanings")} *</label>
+            <LinkButton onClick={addMeaning} className="text-sm text-blue-600 hover:text-blue-700">
               {t("addMeaning")}
             </LinkButton>
           </HStack>
-          
+
           <VStack gap={4}>
             {meanings.map((meaning, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg space-y-2">
+              <div key={index} className="space-y-2 rounded-lg bg-gray-50 p-3">
                 <HStack gap={2}>
                   {card.cardType !== "SENTENCE" && (
                     <div className="w-28 shrink-0">
@@ -209,7 +188,7 @@ export function EditCardModal({
                   value={meaning.example || ""}
                   onChange={(e) => updateMeaning(index, "example", e.target.value)}
                   placeholder={t("examplePlaceholder")}
-                  className="w-full min-h-[40px] text-sm"
+                  className="min-h-[40px] w-full text-sm"
                 />
               </div>
             ))}

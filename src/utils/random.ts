@@ -1,4 +1,3 @@
-
 export function isNonNegativeInteger(str: string): boolean {
   return /^\d+$/.test(str);
 }
@@ -48,7 +47,7 @@ export class SeededRandom {
    */
   nextInt(min: number, max: number): number {
     if (min > max) {
-      throw new Error('min must be less than or equal to max');
+      throw new Error("min must be less than or equal to max");
     }
     return Math.floor(this.next() * (max - min + 1)) + min;
   }
@@ -61,7 +60,7 @@ export class SeededRandom {
    */
   nextFloat(min: number, max: number): number {
     if (min >= max) {
-      throw new Error('min must be less than max');
+      throw new Error("min must be less than max");
     }
     return this.next() * (max - min) + min;
   }
@@ -78,12 +77,12 @@ export class SeededRandom {
     length: number,
     min: number = 0,
     max: number = 1,
-    type: 'integer' | 'float' = 'integer'
+    type: "integer" | "float" = "integer"
   ): number[] {
     const sequence: number[] = [];
 
     for (let i = 0; i < length; i++) {
-      if (type === 'integer') {
+      if (type === "integer") {
         sequence.push(this.nextInt(min, max));
       } else {
         sequence.push(this.nextFloat(min, max));
@@ -116,7 +115,7 @@ export class SeededRandom {
    */
   nextBoolean(probability: number = 0.5): boolean {
     if (probability < 0 || probability > 1) {
-      throw new Error('probability must be between 0 and 1');
+      throw new Error("probability must be between 0 and 1");
     }
     return this.next() < probability;
   }
@@ -128,7 +127,7 @@ export class SeededRandom {
    */
   choice<T>(array: T[]): T {
     if (array.length === 0) {
-      throw new Error('array cannot be empty');
+      throw new Error("array cannot be empty");
     }
     const index = this.nextInt(0, array.length - 1);
     return array[index];

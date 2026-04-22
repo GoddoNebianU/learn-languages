@@ -27,14 +27,15 @@ export default async function FollowingPage({ params }: FollowingPageProps) {
     limit: 50,
   });
 
-  const following = followingResult.success && followingResult.data
-    ? followingResult.data.following.map((f) => f.user)
-    : [];
+  const following =
+    followingResult.success && followingResult.data
+      ? followingResult.data.following.map((f) => f.user)
+      : [];
 
   return (
     <PageLayout>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <h1 className="mb-6 text-2xl font-bold text-gray-800">
           {t("followingOf", { username: user.displayUsername || user.username || "User" })}
         </h1>
         <UserList users={following} emptyMessage={t("noFollowing")} />

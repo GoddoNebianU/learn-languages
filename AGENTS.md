@@ -48,47 +48,53 @@ src/
 
 ## 查找位置
 
-| 任务 | 位置 | 备注 |
-|------|------|------|
-| 添加功能页面 | `src/app/(features)/` | 路由组，无 URL 前缀 |
-| 添加认证页面 | `src/app/(auth)/` | 登录、注册、个人资料 |
-| 添加牌组页面 | `src/app/decks/` | 不在路由组内 |
-| 添加业务逻辑 | `src/modules/{name}/` | 遵循 action-service-repository |
-| 添加 AI 管道 | `src/lib/bigmodel/{name}/` | 多阶段 orchestrator |
-| 添加 OCR 功能 | `src/lib/bigmodel/ocr/` | 视觉模型提取词汇表 (目前未使用) |
-| 添加 UI 组件 | `src/design-system/{category}/` | base, feedback, layout, overlay |
-| 添加工具函数 | `src/utils/` | 纯函数 |
-| 添加类型定义 | `src/shared/` | 业务类型 |
-| 跨模块工具 | `src/modules/shared/` | getCurrentUserId, requireAuth |
-| 字母学习 | `src/app/(features)/alphabet/` | 静态 JSON 数据 |
-| 数据库查询 | `src/modules/*/` | Repository 层 |
-| i18n 翻译 | `messages/*.json` | 8 种语言 |
+| 任务          | 位置                            | 备注                            |
+| ------------- | ------------------------------- | ------------------------------- |
+| 添加功能页面  | `src/app/(features)/`           | 路由组，无 URL 前缀             |
+| 添加认证页面  | `src/app/(auth)/`               | 登录、注册、个人资料            |
+| 添加牌组页面  | `src/app/decks/`                | 不在路由组内                    |
+| 添加业务逻辑  | `src/modules/{name}/`           | 遵循 action-service-repository  |
+| 添加 AI 管道  | `src/lib/bigmodel/{name}/`      | 多阶段 orchestrator             |
+| 添加 OCR 功能 | `src/lib/bigmodel/ocr/`         | 视觉模型提取词汇表 (目前未使用) |
+| 添加 UI 组件  | `src/design-system/{category}/` | base, feedback, layout, overlay |
+| 添加工具函数  | `src/utils/`                    | 纯函数                          |
+| 添加类型定义  | `src/shared/`                   | 业务类型                        |
+| 跨模块工具    | `src/modules/shared/`           | getCurrentUserId, requireAuth   |
+| 字母学习      | `src/app/(features)/alphabet/`  | 静态 JSON 数据                  |
+| 数据库查询    | `src/modules/*/`                | Repository 层                   |
+| i18n 翻译     | `messages/*.json`               | 8 种语言                        |
 
 ## 约定
 
 ### 架构: Action-Service-Repository
+
 每个模块 6 个文件: `{name}-{action|action-dto|service|service-dto|repository|repository-dto}.ts`
 
 ### 命名
+
 - 类型: `{Layer}{Input|Output}{Feature}` → `ActionInputSignUp`
 - 函数: `{layer}{Feature}` → `actionSignUp`, `serviceSignUp`
 - 文件: `kebab-case` 带角色后缀
 
 ### Server/Client 划分
+
 - **默认**: Server Components (无 "use client")
 - **Client**: 仅在需要时 (useState, useEffect, 浏览器 API)
 - **Actions**: 必须有 `"use server"`
 
 ### 导入风格
+
 - 显式路径: `@/design-system/button` (无 barrel exports)
 - 不创建 `index.ts` 文件
 
 ### 验证
+
 - Zod schemas 放在 `*-dto.ts`，使用 `validate()` from `@/utils/validate`
 - Zod v4 默认导入: `import z from "zod"`
 - DTO 三件套: `schema` + `type` (z.infer) + `validate` (generateValidator)
 
 ### 认证
+
 ```typescript
 // 服务端
 import { auth } from "@/auth";
@@ -99,6 +105,7 @@ const { data } = authClient.useSession();
 ```
 
 ### 受保护操作
+
 ```typescript
 const session = await auth.api.getSession({ headers: await headers() });
 if (!session?.user?.id) return { success: false, message: "未授权" };
@@ -106,6 +113,7 @@ if (!session?.user?.id) return { success: false, message: "未授权" };
 ```
 
 ### 日志
+
 ```typescript
 import { createLogger } from "@/lib/logger";
 const log = createLogger("module-name");
@@ -113,9 +121,11 @@ log.info("description", { count: items.length });
 ```
 
 ### Action 返回格式
+
 所有 action 统一返回: `{ success: boolean; message: string; data?: T }`
 
 ### Server→Client 数据传递
+
 ```typescript
 // page.tsx (Server) 获取数据 → 传给 Client 组件
 export default async function Page() {
@@ -127,6 +137,7 @@ export default async function Page() {
 ```
 
 ### i18n 翻译检查
+
 **注意：翻译缺失不会被 build 检测出来。**
 
 **系统性检查翻译缺失的方法（改进版）：**
@@ -149,19 +160,22 @@ ast-grep --pattern 't($ARG)' --lang tsx --paths src/
 #### 步骤 2: 按文件提取所有翻译键
 
 逐个 `.tsx` 文件检查使用的翻译键：
+
 1. 找到该文件使用的 namespace（`useTranslations("namespace")` 或 `getTranslations("namespace")`）
 2. 提取该文件中所有 `t("...")` 调用
 3. 注意动态键模式：
-   - 模板字面量: `t(\`prefix.${variable}\`)` 
+   - 模板字面量: `t(\`prefix.${variable}\`)`
    - 条件键: `t(condition ? "a" : "b")`
-   - 变量键: `t(variable)` 
+   - 变量键: `t(variable)`
 4. 对比 `messages/en-US.json`，找出缺失的键
 
 5. 先补全 `en-US.json`（作为基准语言）
 6. 再根据 `en-US.json` 补全其他 7 种语言
 
 #### 步骤 3: 验证 JSON 文件结构
+
 **注意：JSON 语法错误会导致 build 失败，常见错误：**
+
 - 重复的键（同一对象中出现两次相同的键名）
 - 缺少逗号或多余的逗号
 - 缺少闭合括号 `}`
@@ -172,6 +186,7 @@ node -e "console.log(JSON.parse(require('fs').readFileSync('messages/en-US.json'
 ```
 
 #### 步骤 4: 对比验证
+
 ```bash
 # 列出代码中使用的所有 namespace
 ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/ | grep -o 'useTranslations\|getTranslations' | sort | uniq
@@ -195,6 +210,7 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 ## 独特风格
 
 ### 设计系统分类
+
 - `base/` — 原子组件: button, input, card, checkbox, radio, switch, select, textarea, range
 - `feedback/` — 反馈: alert, progress, skeleton, toast
 - `layout/` — 布局: container, grid, stack (VStack, HStack)
@@ -203,6 +219,7 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 - `navigation/` — 导航: tabs
 
 ### AI 管道模式
+
 `src/lib/bigmodel/` 多阶段 orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-{name}.ts`
 
 现有管道:
@@ -225,7 +242,9 @@ pnpm prisma studio # 数据库 GUI
 ```
 
 ### 数据库迁移
+
 **必须使用 `prisma migrate dev`，禁止 `db push`：**
+
 ```bash
 DATABASE_URL=your_db_url pnpm prisma migrate dev --name your_migration_name
 DATABASE_URL=your_db_url pnpm prisma generate

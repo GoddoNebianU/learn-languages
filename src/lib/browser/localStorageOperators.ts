@@ -24,15 +24,21 @@ export function getLocalStorageOperator<T extends z.ZodType>(
 
       const parsed = JSON.parse(item);
       const result = schema.safeParse(parsed);
-      
+
       if (!result.success) {
-        console.warn(`[localStorage] Schema validation failed for key "${key}":`, result.error.message);
+        console.warn(
+          `[localStorage] Schema validation failed for key "${key}":`,
+          result.error.message
+        );
         return null;
       }
-      
+
       return result.data;
     } catch (error) {
-      console.error(`[localStorage] Error reading key "${key}":`, error instanceof Error ? error.message : String(error));
+      console.error(
+        `[localStorage] Error reading key "${key}":`,
+        error instanceof Error ? error.message : String(error)
+      );
       return null;
     }
   };
@@ -45,7 +51,10 @@ export function getLocalStorageOperator<T extends z.ZodType>(
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(`[localStorage] Error writing key "${key}":`, error instanceof Error ? error.message : String(error));
+      console.error(
+        `[localStorage] Error writing key "${key}":`,
+        error instanceof Error ? error.message : String(error)
+      );
     }
   };
 

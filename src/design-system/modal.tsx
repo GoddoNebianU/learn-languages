@@ -56,9 +56,9 @@ export function Modal({
 
   const getFocusableElements = useCallback(() => {
     if (!dialogRef.current) return [];
-    return Array.from(
-      dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
-    ).filter((el) => !el.hasAttribute("disabled") && el.tabIndex >= 0);
+    return Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)).filter(
+      (el) => !el.hasAttribute("disabled") && el.tabIndex >= 0
+    );
   }, []);
 
   const handleTrapFocus = useCallback(
@@ -171,7 +171,7 @@ export function Modal({
     <ModalContext.Provider value={{ titleId }}>
       <div
         className={cn(
-          "fixed inset-0 z-modal flex items-center justify-center p-4",
+          "z-modal fixed inset-0 flex items-center justify-center p-4",
           "transition-opacity duration-200 ease-out",
           isVisible ? "opacity-100" : "opacity-0"
         )}
@@ -192,9 +192,9 @@ export function Modal({
           ref={dialogRef}
           tabIndex={-1}
           className={cn(
-            "relative z-10 w-full bg-white rounded-lg shadow-2xl max-h-[90vh] overflow-hidden flex flex-col",
+            "relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-2xl",
             "transition-all duration-200 ease-out",
-            isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95",
+            isVisible ? "scale-100 opacity-100" : "scale-95 opacity-0",
             sizeClasses[size],
             className
           )}
@@ -210,14 +210,10 @@ export interface ModalHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-Modal.Header = function ModalHeader({
-  children,
-  className,
-  ...props
-}: ModalHeaderProps) {
+Modal.Header = function ModalHeader({ children, className, ...props }: ModalHeaderProps) {
   return (
     <div
-      className={cn("flex items-center justify-between p-6 border-b border-gray-200", className)}
+      className={cn("flex items-center justify-between border-b border-gray-200 p-6", className)}
       {...props}
     >
       {children}
@@ -229,11 +225,7 @@ export interface ModalTitleProps extends React.HTMLAttributes<HTMLHeadingElement
   children: React.ReactNode;
 }
 
-Modal.Title = function ModalTitle({
-  children,
-  className,
-  ...props
-}: ModalTitleProps) {
+Modal.Title = function ModalTitle({ children, className, ...props }: ModalTitleProps) {
   const ctx = useContext(ModalContext);
   return (
     <h2
@@ -250,13 +242,9 @@ export interface ModalBodyProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-Modal.Body = function ModalBody({
-  children,
-  className,
-  ...props
-}: ModalBodyProps) {
+Modal.Body = function ModalBody({ children, className, ...props }: ModalBodyProps) {
   return (
-    <div className={cn("p-6 overflow-y-auto flex-1", className)} {...props}>
+    <div className={cn("flex-1 overflow-y-auto p-6", className)} {...props}>
       {children}
     </div>
   );
@@ -282,7 +270,7 @@ Modal.Footer = function ModalFooter({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-6 border-t border-gray-200",
+        "flex items-center gap-3 border-t border-gray-200 p-6",
         alignClasses[align],
         className
       )}
@@ -305,14 +293,19 @@ Modal.CloseButton = function ModalCloseButton({
       type="button"
       aria-label="Close"
       className={cn(
-        "rounded-lg p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors",
+        "rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600",
         className
       )}
       onClick={onClick}
       {...props}
     >
       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
     </button>
   );

@@ -15,41 +15,41 @@ export function useSrtPlayerShortcuts(enabled: boolean = true) {
       if (!enabled) return;
 
       const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
         return;
       }
 
       switch (event.key) {
-        case ' ':
+        case " ":
           event.preventDefault();
           togglePlayPause();
           break;
-        case 'n':
-        case 'N':
+        case "n":
+        case "N":
           event.preventDefault();
           nextSubtitle();
           break;
-        case 'p':
-        case 'P':
+        case "p":
+        case "P":
           event.preventDefault();
           previousSubtitle();
           break;
-        case 'r':
-        case 'R':
+        case "r":
+        case "R":
           event.preventDefault();
           restartSubtitle();
           break;
-        case 'a':
-        case 'A':
+        case "a":
+        case "A":
           event.preventDefault();
           toggleAutoPause();
           break;
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [enabled, togglePlayPause, nextSubtitle, previousSubtitle, restartSubtitle, toggleAutoPause]);
 }
@@ -63,20 +63,20 @@ export function useKeyboardShortcuts(
       if (!isEnabled) return;
 
       const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
         return;
       }
 
-      const shortcut = shortcuts.find(s => s.key === event.key);
+      const shortcut = shortcuts.find((s) => s.key === event.key);
       if (shortcut) {
         event.preventDefault();
         shortcut.action();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [shortcuts, isEnabled]);
 }

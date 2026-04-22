@@ -31,7 +31,8 @@ const selectVariants = cva(
         default: "border-b-2 border-gray-300 bg-transparent rounded-t-md",
         bordered: "border-gray-300 bg-white",
         filled: "border-transparent bg-gray-100",
-        light: "border-transparent bg-gray-100 shadow-sm hover:bg-gray-200 font-semibold cursor-pointer",
+        light:
+          "border-transparent bg-gray-100 shadow-sm hover:bg-gray-200 font-semibold cursor-pointer",
       },
       size: {
         sm: "h-9 px-3 text-sm",
@@ -67,24 +68,15 @@ export type SelectVariant = VariantProps<typeof selectVariants>["variant"];
 export type SelectSize = VariantProps<typeof selectVariants>["size"];
 
 export interface SelectProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size">,
+  extends
+    Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size">,
     VariantProps<typeof selectVariants> {}
 
 /**
  * Select 下拉选择框组件
  */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  (
-    {
-      variant = "default",
-      size = "md",
-      error = false,
-      className,
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ variant = "default", size = "md", error = false, className, children, ...props }, ref) => {
     return (
       <div className="relative">
         <select
@@ -96,7 +88,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           {children}
         </select>
         {/* 下拉箭头图标 */}
-        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-400"
+          aria-hidden="true"
+        >
           <svg
             className="h-4 w-4"
             fill="none"
@@ -104,12 +99,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>

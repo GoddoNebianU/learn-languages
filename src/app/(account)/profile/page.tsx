@@ -14,6 +14,6 @@ export default async function ProfilePage() {
   if (!session?.user?.id) {
     redirect("/login?redirect=/profile");
   }
-  
+
   redirect(session.user.username ? `/users/${session.user.username}` : "/decks");
 }

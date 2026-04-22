@@ -1,0 +1,32 @@
+# Build output
+.next/
+out/
+build/
+
+# Generated code
+generated/
+src/generated/
+
+# Dependencies
+node_modules/
+
+# Prisma generated client
+generated/prisma/
+
+# Environment files
+.env*
+
+# Static assets
+public/fonts/
+public/alphabets/
+*.min.js
+*.min.css
+
+# Logs
+logs/
+
+# OS files
+.DS_Store
+
+# TypeScript build info
+tsconfig.tsbuildinfo

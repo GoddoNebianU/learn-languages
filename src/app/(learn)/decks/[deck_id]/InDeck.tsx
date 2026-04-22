@@ -36,12 +36,12 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
           actionGetCardsByDeckId({ deckId }),
           actionGetDeckById({ deckId }),
         ]);
-        
+
         if (!cardsResult.success || !cardsResult.data) {
           throw new Error(cardsResult.message || "Failed to load cards");
         }
         setCards(cardsResult.data);
-        
+
         if (deckResult.success && deckResult.data) {
           setDeckInfo(deckResult.data);
         }
@@ -95,22 +95,17 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   return (
     <PageLayout>
       <div className="mb-6">
-        <LinkButton
-          onClick={router.back}
-          className="flex items-center gap-2 mb-4"
-        >
+        <LinkButton onClick={router.back} className="mb-4 flex items-center gap-2">
           <ArrowLeft size={16} />
           <span className="text-sm">{t("back")}</span>
         </LinkButton>
 
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
+            <h1 className="mb-1 text-2xl font-bold text-gray-800 md:text-3xl">
               {deckInfo?.name || t("cards")}
             </h1>
-            <p className="text-sm text-gray-500">
-              {t("itemsCount", { count: cards.length })}
-            </p>
+            <p className="text-sm text-gray-500">{t("itemsCount", { count: cards.length })}</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -128,7 +123,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
                   <Plus size={18} className="text-gray-700" />
                 </IconButton>
                 <IconButton
-                  className="rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50"
+                  className="rounded-full text-gray-400 hover:bg-red-50 hover:text-red-500"
                   onClick={() => setShowDeleteDeckConfirm(true)}
                 >
                   <Trash2 size={18} />
@@ -142,12 +137,12 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
       <CardList>
         {loading ? (
           <VStack align="center" className="p-8">
-            <Skeleton variant="circular" className="w-8 h-8" />
+            <Skeleton variant="circular" className="h-8 w-8" />
             <p className="text-sm text-gray-500">{t("loadingCards")}</p>
           </VStack>
         ) : cards.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-sm text-gray-500 mb-2">{t("noCards")}</p>
+            <p className="mb-2 text-sm text-gray-500">{t("noCards")}</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
@@ -172,10 +167,10 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
       />
 
       {showDeleteDeckConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-4 max-w-sm mx-4">
-            <p className="text-gray-700 mb-4">{t("deleteDeckConfirm")}</p>
-            <div className="flex gap-2 justify-end">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 max-w-sm rounded-lg bg-white p-4">
+            <p className="mb-4 text-gray-700">{t("deleteDeckConfirm")}</p>
+            <div className="flex justify-end gap-2">
               <Button variant="light" size="sm" onClick={() => setShowDeleteDeckConfirm(false)}>
                 {t("cancel")}
               </Button>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, type RefObject } from 'react';
-import { useSrtPlayerStore } from '../stores/srtPlayerStore';
+import { useEffect, type RefObject } from "react";
+import { useSrtPlayerStore } from "../stores/srtPlayerStore";
 
 export function useVideoSync(videoRef: RefObject<HTMLVideoElement | null>) {
   const setCurrentTime = useSrtPlayerStore((state) => state.setCurrentTime);
@@ -29,16 +29,16 @@ export function useVideoSync(videoRef: RefObject<HTMLVideoElement | null>) {
       pause();
     };
 
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    video.addEventListener('play', handlePlay);
-    video.addEventListener('pause', handlePause);
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("play", handlePlay);
+    video.addEventListener("pause", handlePause);
 
     return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      video.removeEventListener('play', handlePlay);
-      video.removeEventListener('pause', handlePause);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("play", handlePlay);
+      video.removeEventListener("pause", handlePause);
     };
   }, [videoRef, setCurrentTime, setDuration, play, pause]);
 }

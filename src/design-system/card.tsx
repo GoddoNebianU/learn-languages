@@ -69,8 +69,7 @@ const cardVariants = cva(
 );
 
 export interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
   children: React.ReactNode;
   disabled?: boolean;
 }
@@ -127,10 +126,7 @@ export function CardBody({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
   return (
-    <div
-      className={cn("p-6", className)}
-      {...props}
-    >
+    <div className={cn("p-6", className)} {...props}>
       {children}
     </div>
   );

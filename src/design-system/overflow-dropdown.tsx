@@ -26,15 +26,15 @@ export interface OverflowDropdownProps<T> {
 
 /**
  * OverflowDropdown 组件
- * 
+ *
  * 显示隐藏项目的下拉菜单组件，当项目数量超过可见数量时显示 "+N" 按钮
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
  *   const [selected, setSelected] = useState<string | null>(null);
  *   const items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
- *   
+ *
  *   return (
  *     <OverflowDropdown
  *       items={items}
@@ -148,7 +148,7 @@ export function OverflowDropdown<T>({
       <button
         ref={triggerRef}
         onClick={toggleDropdown}
-        className="flex items-center justify-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+        className="flex items-center justify-center rounded-md bg-gray-100 px-3 py-1.5 text-sm transition-colors hover:bg-gray-200"
         aria-label="显示更多选项"
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -161,22 +161,22 @@ export function OverflowDropdown<T>({
       <div
         ref={menuRef}
         className={cn(
-          "absolute z-50 mt-1.5 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[100px] transition-all duration-200",
-          isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+          "absolute z-50 mt-1.5 min-w-[100px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg transition-all duration-200",
+          isOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         )}
         role="menu"
         onKeyDown={handleMenuKeyDown}
       >
-<div className="py-1">
+        <div className="py-1">
           {items.slice(visibleCount).map((item) => (
             <div
               key={getKey(item)}
               onClick={() => handleItemClick(item)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-gray-50"
               role="menuitem"
               tabIndex={0}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === "Enter" || e.key === " ") {
                   handleItemClick(item);
                 }
               }}

@@ -29,21 +29,16 @@ interface AddCardModalProps {
   onAdded: () => void;
 }
 
-export function AddCardModal({
-  isOpen,
-  onClose,
-  deckId,
-  onAdded,
-}: AddCardModalProps) {
+export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalProps) {
   const t = useTranslations("deck_id");
-  
+
   const [cardType, setCardType] = useState<CardType>("WORD");
   const [word, setWord] = useState("");
   const [ipa, setIpa] = useState("");
   const [queryLang, setQueryLang] = useState("en");
   const [customQueryLang, setCustomQueryLang] = useState("");
   const [meanings, setMeanings] = useState<CardMeaning[]>([
-    { partOfSpeech: null, definition: "", example: null }
+    { partOfSpeech: null, definition: "", example: null },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -60,14 +55,14 @@ export function AddCardModal({
   };
 
   const updateMeaning = (
-    index: number, 
-    field: "partOfSpeech" | "definition" | "example", 
+    index: number,
+    field: "partOfSpeech" | "definition" | "example",
     value: string
   ) => {
     const updated = [...meanings];
-    updated[index] = { 
-      ...updated[index], 
-      [field]: value || null 
+    updated[index] = {
+      ...updated[index],
+      [field]: value || null,
     };
     setMeanings(updated);
   };
@@ -87,7 +82,7 @@ export function AddCardModal({
       return;
     }
 
-    const validMeanings = meanings.filter(m => m.definition?.trim());
+    const validMeanings = meanings.filter((m) => m.definition?.trim());
     if (validMeanings.length === 0) {
       toast.error(t("definitionRequired"));
       return;
@@ -104,8 +99,8 @@ export function AddCardModal({
         ipa: showIpa && ipa.trim() ? ipa.trim() : null,
         queryLang: effectiveQueryLang,
         cardType,
-        meanings: validMeanings.map(m => ({
-          partOfSpeech: cardType === "SENTENCE" ? null : (m.partOfSpeech?.trim() || null),
+        meanings: validMeanings.map((m) => ({
+          partOfSpeech: cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
           definition: m.definition!.trim(),
           example: m.example?.trim() || null,
         })),
@@ -137,16 +132,16 @@ export function AddCardModal({
         <Modal.Title>{t("addNewCard")}</Modal.Title>
         <Modal.CloseButton onClick={handleClose} />
       </Modal.Header>
-      
+
       <Modal.Body className="space-y-4">
         <div className="pt-4">
           <HStack gap={3}>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-800 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-800">
                 {t("cardType")}
               </label>
-              <Select 
-                value={cardType} 
+              <Select
+                value={cardType}
                 onChange={(e) => setCardType(e.target.value as CardType)}
                 className="w-full"
               >
@@ -159,10 +154,8 @@ export function AddCardModal({
         </div>
         <div className="border-t border-gray-100 pt-4"></div>
 
-<div className="pt-4">
-          <label className="block text-sm font-medium text-gray-800 mb-2">
-            {t("queryLang")}
-          </label>
+        <div className="pt-4">
+          <label className="mb-2 block text-sm font-medium text-gray-800">{t("queryLang")}</label>
           <HStack gap={2} className="flex-wrap">
             {QUERY_LANGUAGES.map((lang) => (
               <Button
@@ -189,26 +182,24 @@ export function AddCardModal({
         </div>
 
         <div className="border-t border-gray-100 pt-4">
-          <label className="block text-sm font-medium text-gray-800 mb-2">
+          <label className="mb-2 block text-sm font-medium text-gray-800">
             {cardType === "SENTENCE" ? t("sentence") : t("word")} *
           </label>
-          <Input 
+          <Input
             value={word}
             onChange={(e) => setWord(e.target.value)}
-            className="w-full" 
+            className="w-full"
             placeholder={cardType === "SENTENCE" ? t("sentencePlaceholder") : t("wordPlaceholder")}
           />
         </div>
 
         {showIpa && (
           <div className="border-t border-gray-100 pt-4">
-            <label className="block text-sm font-medium text-gray-800 mb-2">
-              {t("ipa")}
-            </label>
-            <Input 
+            <label className="mb-2 block text-sm font-medium text-gray-800">{t("ipa")}</label>
+            <Input
               value={ipa}
               onChange={(e) => setIpa(e.target.value)}
-              className="w-full" 
+              className="w-full"
               placeholder={t("ipaPlaceholder")}
             />
           </div>
@@ -216,20 +207,15 @@ export function AddCardModal({
 
         <div className="border-t border-gray-100 pt-4">
           <HStack justify="between" className="mb-2">
-            <label className="block text-sm font-medium text-gray-800">
-              {t("meanings")} *
-            </label>
-            <LinkButton
-              onClick={addMeaning}
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
+            <label className="block text-sm font-medium text-gray-800">{t("meanings")} *</label>
+            <LinkButton onClick={addMeaning} className="text-sm text-blue-600 hover:text-blue-700">
               {t("addMeaning")}
             </LinkButton>
           </HStack>
-          
+
           <VStack gap={4}>
             {meanings.map((meaning, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg space-y-2">
+              <div key={index} className="space-y-2 rounded-lg bg-gray-50 p-3">
                 <HStack gap={2}>
                   {cardType !== "SENTENCE" && (
                     <div className="w-28 shrink-0">
@@ -262,7 +248,7 @@ export function AddCardModal({
                   value={meaning.example || ""}
                   onChange={(e) => updateMeaning(index, "example", e.target.value)}
                   placeholder={t("examplePlaceholder")}
-                  className="w-full min-h-[40px] text-sm"
+                  className="min-h-[40px] w-full text-sm"
                 />
               </div>
             ))}
@@ -271,9 +257,9 @@ export function AddCardModal({
       </Modal.Body>
 
       <Modal.Footer>
-<Button variant="light" onClick={handleClose}>
-                {t("cancel")}
-              </Button>
+        <Button variant="light" onClick={handleClose}>
+          {t("cancel")}
+        </Button>
         <Button variant="primary" onClick={handleAdd} loading={isSubmitting}>
           {isSubmitting ? t("adding") : t("add")}
         </Button>

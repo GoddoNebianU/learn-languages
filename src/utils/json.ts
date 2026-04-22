@@ -8,10 +8,10 @@ export function parseAIGeneratedJSON<T>(aiResponse: string): T {
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(`Failed to parse JSON: ${error.message}`);
-      } else if (typeof error === 'string') {
+      } else if (typeof error === "string") {
         throw new Error(`Failed to parse JSON: ${error}`);
       } else {
-        throw new Error('Failed to parse JSON: Unknown error');
+        throw new Error("Failed to parse JSON: Unknown error");
       }
     }
   }
@@ -20,6 +20,6 @@ export function parseAIGeneratedJSON<T>(aiResponse: string): T {
   try {
     return JSON.parse(aiResponse.trim());
   } catch (error) {
-    throw new Error('No valid JSON found in the response');
+    throw new Error("No valid JSON found in the response");
   }
 }

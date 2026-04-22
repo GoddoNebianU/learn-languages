@@ -6,19 +6,16 @@ import { createLogger } from "@/lib/logger";
 const log = createLogger("dictionary-preprocess");
 
 function escapeXml(str: string): string {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 }
 
-export async function preprocessInput(
-    text: string,
-    queryLang: string
-): Promise<PreprocessResult> {
-    const prompt = `
+export async function preprocessInput(text: string, queryLang: string): Promise<PreprocessResult> {
+  const prompt = `
 你是一个词典预处理系统。分析输入并生成标准形式。
 
 用户输入：<input>${escapeXml(text)}</input>
@@ -53,45 +50,47 @@ export async function preprocessInput(
 - 只返回 JSON，不要其他文字
 `.trim();
 
-    try {
-        const result = await getAnswer([
-            {
-                role: "system",
-                content: "你是词典预处理系统，只返回 JSON。",
-            },
-            {
-                role: "user",
-                content: prompt,
-            },
-        ]).then(parseAIGeneratedJSON<PreprocessResult>);
+  try {
+    const result = await getAnswer([
+      {
+        role: "system",
+        content: "你是词典预处理系统，只返回 JSON。",
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ]).then(parseAIGeneratedJSON<PreprocessResult>);
 
-        if (typeof result.isValid !== "boolean") {
-            throw new Error("预处理：isValid 字段类型错误");
-        }
-
-        if (!result.standardForm || result.standardForm.trim().length === 0) {
-            throw new Error(result.reason || "预处理：standardForm 为空");
-        }
-
-        if (!["word", "phrase"].includes(result.inputType)) {
-            result.inputType = result.standardForm.includes(" ") ? "phrase" : "word";
-        }
-
-        let confidence: "high" | "medium" | "low" = "low";
-        const cv = result.confidence?.toLowerCase();
-        if (cv === "高" || cv === "high") confidence = "high";
-        else if (cv === "中" || cv === "medium") confidence = "medium";
-        else log.warn("Unexpected confidence value from LLM", { confidence: result.confidence });
-
-        return {
-            isValid: result.isValid,
-            inputType: result.inputType as "word" | "phrase",
-            standardForm: result.standardForm,
-            confidence,
-            reason: typeof result.reason === "string" ? result.reason : "",
-        };
-    } catch (error) {
-        log.error("Preprocess failed", { error: error instanceof Error ? error.message : String(error) });
-        throw error;
+    if (typeof result.isValid !== "boolean") {
+      throw new Error("预处理：isValid 字段类型错误");
     }
+
+    if (!result.standardForm || result.standardForm.trim().length === 0) {
+      throw new Error(result.reason || "预处理：standardForm 为空");
+    }
+
+    if (!["word", "phrase"].includes(result.inputType)) {
+      result.inputType = result.standardForm.includes(" ") ? "phrase" : "word";
+    }
+
+    let confidence: "high" | "medium" | "low" = "low";
+    const cv = result.confidence?.toLowerCase();
+    if (cv === "高" || cv === "high") confidence = "high";
+    else if (cv === "中" || cv === "medium") confidence = "medium";
+    else log.warn("Unexpected confidence value from LLM", { confidence: result.confidence });
+
+    return {
+      isValid: result.isValid,
+      inputType: result.inputType as "word" | "phrase",
+      standardForm: result.standardForm,
+      confidence,
+      reason: typeof result.reason === "string" ? result.reason : "",
+    };
+  } catch (error) {
+    log.error("Preprocess failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
 }

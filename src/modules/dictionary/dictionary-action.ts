@@ -12,7 +12,7 @@ import {
 const log = createLogger("dictionary-action");
 
 export async function actionLookUpDictionary(
-  input: unknown,
+  input: unknown
 ): Promise<ActionOutputLookUpDictionary> {
   try {
     const validated = validateActionInputLookUpDictionary(input);

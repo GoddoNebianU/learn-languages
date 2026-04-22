@@ -2,7 +2,7 @@ export type CardMeaning = {
   partOfSpeech: string | null;
   definition: string;
   example?: string | null;
-}
+};
 
 export const CardTypeEnum = {
   WORD: "WORD",
@@ -58,8 +58,8 @@ export type RepoOutputCard = {
   meanings: CardMeaning[];
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
 export type RepoOutputCardStats = {
   total: number;
-}
+};

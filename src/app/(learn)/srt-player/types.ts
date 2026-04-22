@@ -40,7 +40,7 @@ export interface SubtitleSettings {
   fontSize: number;
   backgroundColor: string;
   textColor: string;
-  position: 'top' | 'center' | 'bottom';
+  position: "top" | "center" | "bottom";
   fontFamily: string;
   opacity: number;
 }
@@ -116,14 +116,10 @@ export interface SrtPlayerStore {
 
 export const selectors = {
   canPlay: (state: SrtPlayerStore) =>
-    !!state.video.url &&
-    !!state.subtitle.url &&
-    state.subtitle.data.length > 0,
+    !!state.video.url && !!state.subtitle.url && state.subtitle.data.length > 0,
 
   currentSubtitle: (state: SrtPlayerStore) =>
-    state.subtitle.currentIndex !== null
-      ? state.subtitle.data[state.subtitle.currentIndex]
-      : null,
+    state.subtitle.currentIndex !== null ? state.subtitle.data[state.subtitle.currentIndex] : null,
 
   progress: (state: SrtPlayerStore) => ({
     current: state.subtitle.currentIndex ?? 0,

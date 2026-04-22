@@ -35,14 +35,14 @@ function LoginPageInner() {
 
   const handleResendVerification = async () => {
     if (!unverifiedEmail) return;
-    
+
     setResendLoading(true);
     try {
       const { error } = await authClient.sendVerificationEmail({
         email: unverifiedEmail,
         callbackURL: "/login",
       });
-      
+
       if (error) {
         toast.error(t("resendFailed"));
       } else {
@@ -99,19 +99,19 @@ function LoginPageInner() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">{t("title")}</h1>
-            
+            <h1 className="w-full text-center text-3xl font-bold">{t("title")}</h1>
+
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
                 placeholder={t("usernameOrEmailPlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              
+
               <Input
                 type="password"
                 placeholder={t("passwordPlaceholder")}
@@ -122,35 +122,27 @@ function LoginPageInner() {
 
             <Link
               href="/forgot-password"
-              className="text-sm text-gray-500 hover:text-primary-500 self-end"
+              className="self-end text-sm text-gray-500 hover:text-primary-500"
             >
               {t("forgotPassword")}
             </Link>
-            
+
             {showResendOption && (
-              <div className="w-full p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg text-sm">
-                <p className="text-yellow-800 dark:text-yellow-200 mb-2">
+              <div className="w-full rounded-lg bg-yellow-50 p-3 text-sm dark:bg-yellow-900/20">
+                <p className="mb-2 text-yellow-800 dark:text-yellow-200">
                   {t("emailNotVerifiedHint")}
                 </p>
-                <LinkButton 
-                  onClick={handleResendVerification}
-                  className="text-sm"
-                >
+                <LinkButton onClick={handleResendVerification} className="text-sm">
                   {t("resendVerification")}
                 </LinkButton>
               </div>
             )}
-            
-            <Button 
-              variant="primary"
-              onClick={handleLogin} 
-              loading={loading}
-              fullWidth
-            >
+
+            <Button variant="primary" onClick={handleLogin} loading={loading} fullWidth>
               {t("confirm")}
             </Button>
-            
-            <Link 
+
+            <Link
               href={"/signup" + (redirectTo ? `?redirect=${redirectTo}` : "")}
               className="text-center text-primary-500 hover:underline"
             >
@@ -165,7 +157,13 @@ function LoginPageInner() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <LoginPageInner />
     </Suspense>
   );

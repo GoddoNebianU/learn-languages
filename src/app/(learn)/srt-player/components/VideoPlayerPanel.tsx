@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useEffect, forwardRef } from 'react';
-import { useSrtPlayerStore } from '../stores/srtPlayerStore';
-import { setVideoRef } from '../stores/srtPlayerStore';
-import { useTranslations } from 'next-intl';
+import { useRef, useEffect, forwardRef } from "react";
+import { useSrtPlayerStore } from "../stores/srtPlayerStore";
+import { setVideoRef } from "../stores/srtPlayerStore";
+import { useTranslations } from "next-intl";
 
 export const VideoPlayerPanel = forwardRef<HTMLVideoElement>((_, ref) => {
   const t = useTranslations("srt_player");
@@ -21,42 +21,36 @@ export const VideoPlayerPanel = forwardRef<HTMLVideoElement>((_, ref) => {
   }, [videoRef]);
 
   return (
-    <div className="aspect-video bg-black relative rounded-md overflow-hidden">
+    <div className="relative aspect-video overflow-hidden rounded-md bg-black">
       {(!videoUrl || !subtitleUrl || subtitleData.length === 0) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-10">
+        <div className="bg-opacity-75 absolute inset-0 z-10 flex items-center justify-center bg-gray-900">
           <div className="text-center text-white">
-            <p className="text-lg mb-2">
+            <p className="mb-2 text-lg">
               {!videoUrl && !subtitleUrl
-                ? t('uploadVideoAndSubtitle')
+                ? t("uploadVideoAndSubtitle")
                 : !videoUrl
-                  ? t('uploadVideoFile')
+                  ? t("uploadVideoFile")
                   : !subtitleUrl
-                    ? t('uploadSubtitleFile')
-                    : t('processingSubtitle')}
+                    ? t("uploadSubtitleFile")
+                    : t("processingSubtitle")}
             </p>
             {(!videoUrl || !subtitleUrl) && (
-              <p className="text-sm text-gray-300">{t('needBothFiles')}</p>
+              <p className="text-sm text-gray-300">{t("needBothFiles")}</p>
             )}
           </div>
         </div>
       )}
 
-      {videoUrl && (
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          className="w-full h-full"
-          playsInline
-        />
-      )}
+      {videoUrl && <video ref={videoRef} src={videoUrl} className="h-full w-full" playsInline />}
 
       {subtitleUrl && subtitleData.length > 0 && currentText && (
         <div
-          className="absolute px-4 py-2 text-center w-full"
+          className="absolute w-full px-4 py-2 text-center"
           style={{
-            bottom: settings.position === 'top' ? 'auto' : settings.position === 'center' ? '50%' : '0',
-            top: settings.position === 'top' ? '0' : 'auto',
-            transform: settings.position === 'center' ? 'translateY(-50%)' : 'none',
+            bottom:
+              settings.position === "top" ? "auto" : settings.position === "center" ? "50%" : "0",
+            top: settings.position === "top" ? "0" : "auto",
+            transform: settings.position === "center" ? "translateY(-50%)" : "none",
             backgroundColor: settings.backgroundColor,
             color: settings.textColor,
             fontSize: `${settings.fontSize}px`,
@@ -71,4 +65,4 @@ export const VideoPlayerPanel = forwardRef<HTMLVideoElement>((_, ref) => {
   );
 });
 
-VideoPlayerPanel.displayName = 'VideoPlayerPanel';
+VideoPlayerPanel.displayName = "VideoPlayerPanel";

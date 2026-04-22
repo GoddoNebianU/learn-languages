@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  Layers as DeckIcon,
-  Heart,
-} from "lucide-react";
+import { ChevronRight, Layers as DeckIcon, Heart } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -30,7 +26,7 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
   const handleRemoveFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isRemoving) return;
-    
+
     setIsRemoving(true);
     const result = await actionToggleDeckFavorite({ deckId: favorite.id });
     if (result.success) {
@@ -43,19 +39,19 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
 
   return (
     <div
-      className="flex justify-between items-center group py-4 px-5 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+      className="group flex cursor-pointer items-center justify-between border-b border-gray-200 px-5 py-4 transition-colors last:border-b-0 hover:bg-gray-50"
       onClick={() => {
         router.push(`/explore/${favorite.id}`);
       }}
     >
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex flex-1 items-center gap-4">
         <div className="shrink-0 text-primary-500">
           <DeckIcon size={24} />
         </div>
 
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-900 truncate">{favorite.name}</h3>
-          <p className="text-sm text-gray-500 mt-0.5">
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-semibold text-gray-900">{favorite.name}</h3>
+          <p className="mt-0.5 text-sm text-gray-500">
             {t("folderInfo", {
               userName: favorite.userName ?? favorite.userUsername ?? t("unknownUser"),
               totalPairs: favorite.cardCount ?? 0,
@@ -67,7 +63,7 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
       <div className="flex items-center gap-2">
         <Heart
           size={18}
-          className="fill-red-500 text-red-500 cursor-pointer hover:scale-110 transition-transform"
+          className="cursor-pointer fill-red-500 text-red-500 transition-transform hover:scale-110"
           onClick={handleRemoveFavorite}
         />
         <ChevronRight size={20} className="text-gray-400" />
@@ -105,12 +101,12 @@ export function FavoritesClient({ initialFavorites }: FavoritesClientProps) {
       <CardList>
         {loading ? (
           <VStack align="center" className="p-8">
-            <Skeleton variant="circular" className="w-8 h-8" />
+            <Skeleton variant="circular" className="h-8 w-8" />
             <p className="text-sm text-gray-500">{t("loading")}</p>
           </VStack>
         ) : favorites.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="py-12 text-center text-gray-400">
+            <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
               <Heart size={24} className="text-gray-400" />
             </div>
             <p className="text-sm">{t("noFavorites")}</p>

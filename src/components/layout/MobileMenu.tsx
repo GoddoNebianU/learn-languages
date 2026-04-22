@@ -49,9 +49,7 @@ export function MobileMenu({ items }: MobileMenuProps) {
     lockBodyScroll();
 
     requestAnimationFrame(() => {
-      const menuItems = menuPanelRef.current
-        ? getMenuItems(menuPanelRef.current)
-        : [];
+      const menuItems = menuPanelRef.current ? getMenuItems(menuPanelRef.current) : [];
       menuItems[0]?.focus();
     });
 
@@ -113,7 +111,7 @@ export function MobileMenu({ items }: MobileMenuProps) {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          className="inline-flex items-center justify-center rounded-md p-2 text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
           aria-label={isOpen ? "关闭菜单" : "打开菜单"}
           aria-expanded={isOpen}
           aria-haspopup="menu"
@@ -125,10 +123,8 @@ export function MobileMenu({ items }: MobileMenuProps) {
       <div
         ref={menuPanelRef}
         className={cn(
-          "absolute right-0 top-full mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black/5 overflow-hidden transition-all duration-200 origin-top-right z-50",
-          isOpen
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
+          "absolute top-full right-0 z-50 mt-2 w-56 origin-top-right overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition-all duration-200",
+          isOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         )}
         role="menu"
         aria-hidden={!isOpen}
@@ -138,7 +134,7 @@ export function MobileMenu({ items }: MobileMenuProps) {
             <a
               key={index}
               href={item.href}
-              className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors focus:bg-gray-50 focus:text-gray-900 focus:outline-none"
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-900 focus:outline-none"
               role="menuitem"
               tabIndex={isOpen ? 0 : -1}
               onClick={closeMenu}
@@ -152,13 +148,7 @@ export function MobileMenu({ items }: MobileMenuProps) {
         </div>
       </div>
 
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={closeMenu}
-          aria-hidden="true"
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 z-40" onClick={closeMenu} aria-hidden="true" />}
     </div>
   );
 }

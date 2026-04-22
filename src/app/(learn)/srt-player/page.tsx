@@ -68,19 +68,25 @@ export default function SrtPlayerPage() {
   }, [srtT, subtitleUrl, setSubtitleData]);
 
   const handleVideoUpload = () => {
-    uploadVideo((url) => {
-      setVideoUrl(url);
-    }, (error) => {
-      toast.error(srtT('videoUploadFailed') + ': ' + error.message);
-    });
+    uploadVideo(
+      (url) => {
+        setVideoUrl(url);
+      },
+      (error) => {
+        toast.error(srtT("videoUploadFailed") + ": " + error.message);
+      }
+    );
   };
 
   const handleSubtitleUpload = () => {
-    uploadSubtitle((url) => {
-      setSubtitleUrl(url);
-    }, (error) => {
-      toast.error(srtT('subtitleUploadFailed') + ': ' + error.message);
-    });
+    uploadSubtitle(
+      (url) => {
+        setSubtitleUrl(url);
+      },
+      (error) => {
+        toast.error(srtT("subtitleUploadFailed") + ": " + error.message);
+      }
+    );
   };
 
   const handlePlaybackRateChange = () => {
@@ -94,49 +100,39 @@ export default function SrtPlayerPage() {
 
   return (
     <PageLayout>
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
-          {t("srtPlayer.name")}
-        </h1>
-        <p className="text-lg text-gray-600">
-          {t("srtPlayer.description")}
-        </p>
+      <div className="mb-8 text-center">
+        <h1 className="mb-2 text-4xl font-bold text-gray-800">{t("srtPlayer.name")}</h1>
+        <p className="text-lg text-gray-600">{t("srtPlayer.description")}</p>
       </div>
 
-      <video 
-        ref={videoRef} 
-        width="85%" 
-        className="mx-auto"
-        playsInline
-      />
+      <video ref={videoRef} width="85%" className="mx-auto" playsInline />
 
-      {canPlay && (
-        <SubtitleProgressBar className="w-[85%] mx-auto mt-2" />
-      )}
+      {canPlay && <SubtitleProgressBar className="mx-auto mt-2 w-[85%]" />}
 
-      <div className="shadow rounded h-20 w-[85%] mx-auto overflow-y-auto flex-wrap flex items-begin justify-center">
-        {currentSubtitle && currentSubtitle.text.split(" ").map((s, i) => (
-          <Link
-            key={i}
-            href={`/dictionary?q=${s}`}
-            className="px-1 h-fit hover:bg-gray-200 hover:cursor-pointer"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {s}
-          </Link>
-        ))}
+      <div className="items-begin mx-auto flex h-20 w-[85%] flex-wrap justify-center overflow-y-auto rounded shadow">
+        {currentSubtitle &&
+          currentSubtitle.text.split(" ").map((s, i) => (
+            <Link
+              key={i}
+              href={`/dictionary?q=${s}`}
+              className="h-fit px-1 hover:cursor-pointer hover:bg-gray-200"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {s}
+            </Link>
+          ))}
       </div>
 
-      <div className="mx-auto mt-4 flex items-center justify-center gap-4 w-[85%]">
-        <div className="border-gray-200 border-2 flex items-center gap-3 px-3 py-2 rounded">
+      <div className="mx-auto mt-4 flex w-[85%] items-center justify-center gap-4">
+        <div className="flex items-center gap-3 rounded border-2 border-gray-200 px-3 py-2">
           <Video size={16} />
           <span className="text-sm">{srtT("videoFile")}</span>
           <Button variant="light" size="sm" onClick={handleVideoUpload}>
             {srtT("upload")}
           </Button>
         </div>
-        <div className="border-gray-200 border-2 flex items-center gap-3 px-3 py-2 rounded">
+        <div className="flex items-center gap-3 rounded border-2 border-gray-200 px-3 py-2">
           <FileText size={16} />
           <span className="text-sm">{srtT("subtitleFile")}</span>
           <Button variant="light" size="sm" onClick={handleSubtitleUpload}>
@@ -148,28 +144,48 @@ export default function SrtPlayerPage() {
       {canPlay && (
         <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
           {isPlaying ? (
-            <Button variant="light" onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
-              {srtT('pause')}
+            <Button
+              variant="light"
+              onClick={togglePlayPause}
+              leftIcon={<Pause className="h-4 w-4" />}
+            >
+              {srtT("pause")}
             </Button>
           ) : (
-            <Button variant="light" onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
-              {srtT('play')}
+            <Button
+              variant="light"
+              onClick={togglePlayPause}
+              leftIcon={<Play className="h-4 w-4" />}
+            >
+              {srtT("play")}
             </Button>
           )}
-          <Button variant="light" onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
-            {srtT('previous')}
+          <Button
+            variant="light"
+            onClick={previousSubtitle}
+            leftIcon={<ChevronLeft className="h-4 w-4" />}
+          >
+            {srtT("previous")}
           </Button>
-          <Button variant="light" onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
-            {srtT('next')}
+          <Button
+            variant="light"
+            onClick={nextSubtitle}
+            rightIcon={<ChevronRight className="h-4 w-4" />}
+          >
+            {srtT("next")}
           </Button>
-          <Button variant="light" onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
-            {srtT('restart')}
+          <Button
+            variant="light"
+            onClick={restartSubtitle}
+            leftIcon={<RotateCcw className="h-4 w-4" />}
+          >
+            {srtT("restart")}
           </Button>
           <Button variant="light" onClick={handlePlaybackRateChange}>
             {playbackRate}x
           </Button>
           <Button variant="light" onClick={toggleAutoPause}>
-            {srtT('autoPause', { enabled: autoPause ? srtT('on') : srtT('off') })}
+            {srtT("autoPause", { enabled: autoPause ? srtT("on") : srtT("off") })}
           </Button>
         </HStack>
       )}

@@ -14,14 +14,14 @@ steps:
     image: plugins/docker
     settings:
       username:
-         from_secret: docker_username
+        from_secret: docker_username
       password:
-         from_secret: docker_password
+        from_secret: docker_password
       repo: registry.edian-studio.com/learn-languages
       registry: registry.edian-studio.com
       tags:
         - latest
-  
+
   - name: database migrate
     image: node:24-alpine
     environment:

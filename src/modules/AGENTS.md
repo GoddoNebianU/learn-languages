@@ -8,15 +8,15 @@
 
 ## 模块清单
 
-| 模块 | 文件数 | Actions | 模式完整性 | 备注 |
-|------|--------|---------|-----------|------|
-| auth | 12 | 5+1 | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件 |
-| deck | 6 | 12 | ✅ 完整 | 最复杂模块, 315 行 repository |
-| card | 6 | 7 | ✅ 完整 | 跨模块依赖 deck |
-| follow | 6 | 4 | ✅ 完整 | 自包含, 无外部依赖 |
-| dictionary | 3 | 1 | ⚠️ 不完整 | 无 service/repo — AI 管道直接调用 |
-| translator | 4 | 3 | ⚠️ 不完整 | 无 repo — AI 管道, 含废弃函数 |
-| shared | 1 | 0 | N/A | getCurrentUserId, requireAuth |
+| 模块       | 文件数 | Actions | 模式完整性         | 备注                              |
+| ---------- | ------ | ------- | ------------------ | --------------------------------- |
+| auth       | 12     | 5+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件  |
+| deck       | 6      | 12      | ✅ 完整            | 最复杂模块, 315 行 repository     |
+| card       | 6      | 7       | ✅ 完整            | 跨模块依赖 deck                   |
+| follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
+| dictionary | 3      | 1       | ⚠️ 不完整          | 无 service/repo — AI 管道直接调用 |
+| translator | 4      | 3       | ⚠️ 不完整          | 无 repo — AI 管道, 含废弃函数     |
+| shared     | 1      | 0       | N/A                | getCurrentUserId, requireAuth     |
 
 ## 文件结构 (完整 6 文件模式)
 
@@ -33,12 +33,14 @@
 ## 不完整模块说明
 
 ### dictionary (3 文件)
+
 - 有: action + action-dto + service-dto
 - 无: service, repository, repository-dto
 - 原因: 纯 AI 查询, 无数据库持久化
 - action 直接调用 `@/lib/bigmodel/dictionary/orchestrator`
 
 ### translator (4 文件)
+
 - 有: action + action-dto + service + service-dto
 - 无: repository, repository-dto
 - 原因: 翻译通过 AI 管道, 无数据库操作
@@ -76,7 +78,11 @@ export const validateActionInputCreateDeck = generateValidator(schemaActionInput
 "use server";
 
 import { validate } from "@/utils/validate";
-import { schemaActionInputCreateDeck, type ActionInputCreateDeck, type ActionOutputCreateDeck } from "./deck-action-dto";
+import {
+  schemaActionInputCreateDeck,
+  type ActionInputCreateDeck,
+  type ActionOutputCreateDeck,
+} from "./deck-action-dto";
 import { serviceCreateDeck } from "./deck-service";
 import { createLogger } from "@/lib/logger";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
@@ -117,20 +123,21 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 ## 返回格式
 
 所有 action 统一返回:
+
 ```typescript
 { success: boolean; message: string; data?: T }
 ```
 
 ## 消费者地图
 
-| 模块 | 主要消费者 |
-|------|-----------|
-| deck | decks/*, dictionary, translator, explore, favorites, users/[username] |
-| card | decks/[deck_id]/*, dictionary/DictionaryClient, translator |
-| auth | login, signup, forgot-password, profile, users/[username] |
-| follow | users/[username]/*, FollowButton |
-| translator | translator/page, text-speaker/page |
-| dictionary | dictionary/DictionaryClient |
+| 模块       | 主要消费者                                                             |
+| ---------- | ---------------------------------------------------------------------- |
+| deck       | decks/\*, dictionary, translator, explore, favorites, users/[username] |
+| card       | decks/[deck_id]/\*, dictionary/DictionaryClient, translator            |
+| auth       | login, signup, forgot-password, profile, users/[username]              |
+| follow     | users/[username]/\*, FollowButton                                      |
+| translator | translator/page, text-speaker/page                                     |
+| dictionary | dictionary/DictionaryClient                                            |
 
 ## 已知问题
 

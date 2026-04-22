@@ -48,10 +48,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
 
   return (
     <VStack gap={2}>
-      <Select
-        value={isCommonLanguage ? value : "other"}
-        onChange={handleSelectChange}
-      >
+      <Select value={isCommonLanguage ? value : "other"} onChange={handleSelectChange}>
         {COMMON_LANGUAGES.map((lang) => (
           <option key={lang.value} value={lang.value}>
             {lang.label === "other" ? t("dictionary.other") : t(`translator.${lang.label}`)}

@@ -1,7 +1,7 @@
 export type RepoInputFindUserByEmail = {
-    email: string;
+  email: string;
 };
 
 export type RepoOutputFindUserByEmail = {
-    id: string;
+  id: string;
 } | null;

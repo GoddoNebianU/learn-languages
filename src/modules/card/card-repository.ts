@@ -88,7 +88,9 @@ export async function repoGetCardById(cardId: number): Promise<RepoOutputCard | 
   return card as RepoOutputCard | null;
 }
 
-export async function repoGetCardsByDeckId(input: RepoInputGetCardsByDeckId): Promise<RepoOutputCard[]> {
+export async function repoGetCardsByDeckId(
+  input: RepoInputGetCardsByDeckId
+): Promise<RepoOutputCard[]> {
   const { deckId, limit = 50, offset = 0 } = input;
   const cards = await prisma.card.findMany({
     where: { deckId },
@@ -101,11 +103,11 @@ export async function repoGetCardsByDeckId(input: RepoInputGetCardsByDeckId): Pr
   return cards as RepoOutputCard[];
 }
 
-export async function repoGetRandomCard(input: RepoInputGetRandomCard): Promise<RepoOutputCard | null> {
+export async function repoGetRandomCard(
+  input: RepoInputGetRandomCard
+): Promise<RepoOutputCard | null> {
   const { deckId, excludeIds = [] } = input;
-  const whereClause = excludeIds.length > 0
-    ? { deckId, id: { notIn: excludeIds } }
-    : { deckId };
+  const whereClause = excludeIds.length > 0 ? { deckId, id: { notIn: excludeIds } } : { deckId };
   const count = await prisma.card.count({ where: whereClause });
   if (count === 0) {
     return null;

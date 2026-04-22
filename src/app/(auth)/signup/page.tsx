@@ -59,20 +59,15 @@ function SignUpPageInner() {
 
   if (verificationSent) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-96">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
-              <h1 className="text-2xl font-bold text-center w-full">
-                {t("verifyYourEmail")}
-              </h1>
+              <h1 className="w-full text-center text-2xl font-bold">{t("verifyYourEmail")}</h1>
               <p className="text-center text-gray-600">
                 {t("verificationEmailSentHint", { email })}
               </p>
-              <Link
-                href="/login"
-                className="text-primary-500 hover:underline"
-              >
+              <Link href="/login" className="text-primary-500 hover:underline">
                 {t("backToLogin")}
               </Link>
             </VStack>
@@ -83,26 +78,26 @@ function SignUpPageInner() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">{t("signUpTitle")}</h1>
-            
+            <h1 className="w-full text-center text-3xl font-bold">{t("signUpTitle")}</h1>
+
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
                 placeholder={t("usernamePlaceholder")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              
+
               <Input
                 type="email"
                 placeholder={t("emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              
+
               <Input
                 type="password"
                 placeholder={t("passwordPlaceholder")}
@@ -110,17 +105,12 @@ function SignUpPageInner() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </VStack>
-            
-            <Button 
-              variant="primary"
-              onClick={handleSignUp} 
-              loading={loading}
-              fullWidth
-            >
+
+            <Button variant="primary" onClick={handleSignUp} loading={loading} fullWidth>
               {t("confirm")}
             </Button>
-            
-            <Link 
+
+            <Link
               href={"/login" + (redirectTo ? `?redirect=${redirectTo}` : "")}
               className="text-center text-primary-500 hover:underline"
             >
@@ -135,7 +125,13 @@ function SignUpPageInner() {
 
 export default function SignUpPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <SignUpPageInner />
     </Suspense>
   );

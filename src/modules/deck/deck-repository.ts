@@ -91,7 +91,9 @@ export async function repoGetDeckById(input: RepoInputGetDeckById): Promise<Repo
   };
 }
 
-export async function repoGetDecksByUserId(input: RepoInputGetDecksByUserId): Promise<RepoOutputDeck[]> {
+export async function repoGetDecksByUserId(
+  input: RepoInputGetDecksByUserId
+): Promise<RepoOutputDeck[]> {
   const decks = await prisma.deck.findMany({
     where: { userId: input.userId },
     include: {
@@ -116,7 +118,9 @@ export async function repoGetDecksByUserId(input: RepoInputGetDecksByUserId): Pr
   }));
 }
 
-export async function repoGetPublicDecks(input: RepoInputGetPublicDecks = {}): Promise<RepoOutputPublicDeck[]> {
+export async function repoGetPublicDecks(
+  input: RepoInputGetPublicDecks = {}
+): Promise<RepoOutputPublicDeck[]> {
   const { limit = 50, offset = 0, orderBy = "createdAt" } = input;
 
   const decks = await prisma.deck.findMany({
@@ -151,7 +155,9 @@ export async function repoGetUserIdByDeckId(deckId: number): Promise<string | nu
   return deck?.userId ?? null;
 }
 
-export async function repoGetDeckOwnership(deckId: number): Promise<RepoOutputDeckOwnership | null> {
+export async function repoGetDeckOwnership(
+  deckId: number
+): Promise<RepoOutputDeckOwnership | null> {
   const deck = await prisma.deck.findUnique({
     where: { id: deckId },
     select: { userId: true },
@@ -159,7 +165,9 @@ export async function repoGetDeckOwnership(deckId: number): Promise<RepoOutputDe
   return deck;
 }
 
-export async function repoGetPublicDeckById(input: RepoInputGetPublicDeckById): Promise<RepoOutputPublicDeck | null> {
+export async function repoGetPublicDeckById(
+  input: RepoInputGetPublicDeckById
+): Promise<RepoOutputPublicDeck | null> {
   const deck = await prisma.deck.findFirst({
     where: {
       id: input.deckId,
@@ -180,7 +188,9 @@ export async function repoGetPublicDeckById(input: RepoInputGetPublicDeckById): 
   return mapDeckToPublicOutput(deck);
 }
 
-export async function repoToggleDeckFavorite(input: RepoInputToggleDeckFavorite): Promise<RepoOutputDeckFavorite> {
+export async function repoToggleDeckFavorite(
+  input: RepoInputToggleDeckFavorite
+): Promise<RepoOutputDeckFavorite> {
   const isFavorited = await prisma.$transaction(async (tx) => {
     const deleted = await tx.deckFavorite.deleteMany({
       where: {
@@ -217,7 +227,9 @@ export async function repoToggleDeckFavorite(input: RepoInputToggleDeckFavorite)
   };
 }
 
-export async function repoCheckDeckFavorite(input: RepoInputCheckDeckFavorite): Promise<RepoOutputDeckFavorite> {
+export async function repoCheckDeckFavorite(
+  input: RepoInputCheckDeckFavorite
+): Promise<RepoOutputDeckFavorite> {
   const favorite = await prisma.deckFavorite.findUnique({
     where: {
       userId_deckId: {
@@ -242,7 +254,9 @@ export async function repoCheckDeckFavorite(input: RepoInputCheckDeckFavorite): 
   };
 }
 
-export async function repoSearchPublicDecks(input: RepoInputSearchPublicDecks): Promise<RepoOutputPublicDeck[]> {
+export async function repoSearchPublicDecks(
+  input: RepoInputSearchPublicDecks
+): Promise<RepoOutputPublicDeck[]> {
   const { query, limit = 50, offset = 0 } = input;
 
   const decks = await prisma.deck.findMany({
@@ -270,7 +284,7 @@ export async function repoSearchPublicDecks(input: RepoInputSearchPublicDecks): 
 }
 
 export async function repoGetUserFavoriteDecks(
-  input: RepoInputGetUserFavoriteDecks,
+  input: RepoInputGetUserFavoriteDecks
 ): Promise<RepoOutputUserFavoriteDeck[]> {
   const favorites = await prisma.deckFavorite.findMany({
     where: { userId: input.userId },

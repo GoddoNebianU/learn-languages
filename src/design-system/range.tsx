@@ -29,18 +29,7 @@ export interface RangeProps extends Omit<React.ComponentPropsWithoutRef<"input">
 }
 
 export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
-  (
-    {
-      value,
-      min = 0,
-      max,
-      onChange,
-      disabled = false,
-      className,
-      ...props
-    },
-    ref
-  ) => {
+  ({ value, min = 0, max, onChange, disabled = false, className, ...props }, ref) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = parseInt(event.target.value);
@@ -61,13 +50,13 @@ export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
         onChange={handleChange}
         disabled={disabled}
         className={cn(
-          "w-full h-2 rounded-lg appearance-none cursor-pointer",
-          "focus:outline-none focus:ring-2 focus:ring-primary-500",
-          disabled && "opacity-50 cursor-not-allowed",
+          "h-2 w-full cursor-pointer appearance-none rounded-lg",
+          "focus:ring-2 focus:ring-primary-500 focus:outline-none",
+          disabled && "cursor-not-allowed opacity-50",
           className
         )}
         style={{
-          background: `linear-gradient(to right, var(--color-primary-700, #374151) 0%, var(--color-primary-700, #374151) ${progressPercentage}%, var(--color-border, #e5e7eb) ${progressPercentage}%, var(--color-border, #e5e7eb) 100%)`
+          background: `linear-gradient(to right, var(--color-primary-700, #374151) 0%, var(--color-primary-700, #374151) ${progressPercentage}%, var(--color-border, #e5e7eb) ${progressPercentage}%, var(--color-border, #e5e7eb) 100%)`,
         }}
         {...props}
       />

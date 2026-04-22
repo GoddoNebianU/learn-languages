@@ -19,21 +19,25 @@
 ## ✨ 核心特性
 
 ### 🎯 学习工具
+
 - **智能翻译** - 基于 AI 的多语言互译，支持 IPA 音标标注
 - **词典查询** - 详细的单词释义、词性分析、例句展示
 - **语音合成** - 阿里云千问 TTS 提供自然的语音输出
 - **个人学习空间** - 文件夹管理、学习资料组织
 
 ### 🔐 用户系统
+
 - **多方式认证** - 邮箱/用户名登录、GitHub OAuth
 - **个人资料** - 用户主页、学习进度追踪
 - **数据安全** - better-auth 提供企业级安全保障
 
 ### 🌐 国际化
+
 - **8 种语言** - en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN
 - **完整本地化** - 所有界面文本支持多语言
 
 ### 🏗️ 技术亮点
+
 - **App Router** - 采用 Next.js 16 最新路由系统
 - **Server Components** - 优先服务端渲染，优化性能
 - **Action-Service-Repository** - 清晰的三层架构设计
@@ -102,6 +106,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 <td width="50%">
 
 ### 前端
+
 - **Next.js 16** - App Router
 - **React 19** - UI 框架
 - **TypeScript 5.9** - 类型安全
@@ -113,6 +118,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 <td width="50%">
 
 ### 后端
+
 - **PostgreSQL** - 关系数据库
 - **Prisma 7** - ORM
 - **better-auth** - 认证系统
@@ -224,10 +230,7 @@ learn-languages/
 
 ```typescript
 // 智能词典查询
-- 单词释义
-- 词性分析
-- 例句展示
-- 词频统计
+-单词释义 - 词性分析 - 例句展示 - 词频统计;
 ```
 
 ### 文件夹模块 (folder)
@@ -266,16 +269,16 @@ User (用户)
 
 当前支持的语言：
 
-| 语言 | 代码 | 区域 |
-|------|------|------|
-| English | en-US | 美国 |
-| 中文 | zh-CN | 中国 |
-| 日本語 | ja-JP | 日本 |
-| 한국어 | ko-KR | 韩国 |
-| Deutsch | de-DE | 德国 |
-| Français | fr-FR | 法国 |
+| 语言     | 代码  | 区域   |
+| -------- | ----- | ------ |
+| English  | en-US | 美国   |
+| 中文     | zh-CN | 中国   |
+| 日本語   | ja-JP | 日本   |
+| 한국어   | ko-KR | 韩国   |
+| Deutsch  | de-DE | 德国   |
+| Français | fr-FR | 法国   |
 | Italiano | it-IT | 意大利 |
-| ئۇيغۇرچە | ug-CN | 新疆 |
+| ئۇيغۇرچە | ug-CN | 新疆   |
 
 添加新语言：
 

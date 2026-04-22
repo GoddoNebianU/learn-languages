@@ -43,7 +43,9 @@ export const schemaActionInputGetCardsByDeckId = z.object({
   offset: z.number().int().min(0).optional(),
 });
 export type ActionInputGetCardsByDeckId = z.infer<typeof schemaActionInputGetCardsByDeckId>;
-export const validateActionInputGetCardsByDeckId = generateValidator(schemaActionInputGetCardsByDeckId);
+export const validateActionInputGetCardsByDeckId = generateValidator(
+  schemaActionInputGetCardsByDeckId
+);
 
 export const schemaActionInputGetRandomCard = z.object({
   deckId: z.number().int().positive(),

@@ -38,7 +38,9 @@ export async function serviceCheckOwnership(input: ServiceInputCheckOwnership): 
   return ownerId === input.userId;
 }
 
-export async function serviceCreateDeck(input: ServiceInputCreateDeck): Promise<{ success: boolean; deckId?: number; message: string }> {
+export async function serviceCreateDeck(
+  input: ServiceInputCreateDeck
+): Promise<{ success: boolean; deckId?: number; message: string }> {
   try {
     log.info("Creating deck", { name: input.name, userId: input.userId });
     const deckId = await repoCreateDeck(input);
@@ -50,7 +52,9 @@ export async function serviceCreateDeck(input: ServiceInputCreateDeck): Promise<
   }
 }
 
-export async function serviceUpdateDeck(input: ServiceInputUpdateDeck): Promise<{ success: boolean; message: string }> {
+export async function serviceUpdateDeck(
+  input: ServiceInputUpdateDeck
+): Promise<{ success: boolean; message: string }> {
   try {
     log.info("Updating deck", { deckId: input.deckId });
     await repoUpdateDeck({
@@ -67,7 +71,9 @@ export async function serviceUpdateDeck(input: ServiceInputUpdateDeck): Promise<
   }
 }
 
-export async function serviceDeleteDeck(input: ServiceInputDeleteDeck): Promise<{ success: boolean; message: string }> {
+export async function serviceDeleteDeck(
+  input: ServiceInputDeleteDeck
+): Promise<{ success: boolean; message: string }> {
   try {
     log.info("Deleting deck", { deckId: input.deckId });
     await repoDeleteDeck({ id: input.deckId });
@@ -79,7 +85,9 @@ export async function serviceDeleteDeck(input: ServiceInputDeleteDeck): Promise<
   }
 }
 
-export async function serviceGetDeckById(input: ServiceInputGetDeckById): Promise<{ success: boolean; data?: ServiceOutputDeck; message: string }> {
+export async function serviceGetDeckById(
+  input: ServiceInputGetDeckById
+): Promise<{ success: boolean; data?: ServiceOutputDeck; message: string }> {
   try {
     const deck = await repoGetDeckById({ id: input.deckId });
     if (!deck) {
@@ -92,7 +100,9 @@ export async function serviceGetDeckById(input: ServiceInputGetDeckById): Promis
   }
 }
 
-export async function serviceGetDecksByUserId(input: ServiceInputGetDecksByUserId): Promise<{ success: boolean; data?: ServiceOutputDeck[]; message: string }> {
+export async function serviceGetDecksByUserId(
+  input: ServiceInputGetDecksByUserId
+): Promise<{ success: boolean; data?: ServiceOutputDeck[]; message: string }> {
   try {
     const decks = await repoGetDecksByUserId(input);
     return { success: true, data: decks, message: "Decks retrieved successfully" };
@@ -102,7 +112,9 @@ export async function serviceGetDecksByUserId(input: ServiceInputGetDecksByUserI
   }
 }
 
-export async function serviceGetPublicDecks(input: ServiceInputGetPublicDecks = {}): Promise<{ success: boolean; data?: ServiceOutputPublicDeck[]; message: string }> {
+export async function serviceGetPublicDecks(
+  input: ServiceInputGetPublicDecks = {}
+): Promise<{ success: boolean; data?: ServiceOutputPublicDeck[]; message: string }> {
   try {
     const decks = await repoGetPublicDecks(input);
     return { success: true, data: decks, message: "Public decks retrieved successfully" };
@@ -112,7 +124,9 @@ export async function serviceGetPublicDecks(input: ServiceInputGetPublicDecks = 
   }
 }
 
-export async function serviceGetPublicDeckById(input: ServiceInputGetPublicDeckById): Promise<{ success: boolean; data?: ServiceOutputPublicDeck; message: string }> {
+export async function serviceGetPublicDeckById(
+  input: ServiceInputGetPublicDeckById
+): Promise<{ success: boolean; data?: ServiceOutputPublicDeck; message: string }> {
   try {
     const deck = await repoGetPublicDeckById(input);
     if (!deck) {
@@ -125,7 +139,9 @@ export async function serviceGetPublicDeckById(input: ServiceInputGetPublicDeckB
   }
 }
 
-export async function serviceToggleDeckFavorite(input: ServiceInputToggleDeckFavorite): Promise<{ success: boolean; data?: ServiceOutputDeckFavorite; message: string }> {
+export async function serviceToggleDeckFavorite(
+  input: ServiceInputToggleDeckFavorite
+): Promise<{ success: boolean; data?: ServiceOutputDeckFavorite; message: string }> {
   try {
     const result = await repoToggleDeckFavorite(input);
     return { success: true, data: result, message: "Favorite toggled successfully" };
@@ -135,7 +151,9 @@ export async function serviceToggleDeckFavorite(input: ServiceInputToggleDeckFav
   }
 }
 
-export async function serviceCheckDeckFavorite(input: ServiceInputCheckDeckFavorite): Promise<{ success: boolean; data?: ServiceOutputDeckFavorite; message: string }> {
+export async function serviceCheckDeckFavorite(
+  input: ServiceInputCheckDeckFavorite
+): Promise<{ success: boolean; data?: ServiceOutputDeckFavorite; message: string }> {
   try {
     const result = await repoCheckDeckFavorite(input);
     return { success: true, data: result, message: "Favorite status retrieved" };
@@ -145,7 +163,9 @@ export async function serviceCheckDeckFavorite(input: ServiceInputCheckDeckFavor
   }
 }
 
-export async function serviceSearchPublicDecks(input: ServiceInputSearchPublicDecks): Promise<{ success: boolean; data?: ServiceOutputPublicDeck[]; message: string }> {
+export async function serviceSearchPublicDecks(
+  input: ServiceInputSearchPublicDecks
+): Promise<{ success: boolean; data?: ServiceOutputPublicDeck[]; message: string }> {
   try {
     const decks = await repoSearchPublicDecks(input);
     return { success: true, data: decks, message: "Search completed successfully" };
@@ -155,7 +175,9 @@ export async function serviceSearchPublicDecks(input: ServiceInputSearchPublicDe
   }
 }
 
-export async function serviceGetUserFavoriteDecks(userId: string): Promise<{ success: boolean; data?: ServiceOutputUserFavoriteDeck[]; message: string }> {
+export async function serviceGetUserFavoriteDecks(
+  userId: string
+): Promise<{ success: boolean; data?: ServiceOutputUserFavoriteDeck[]; message: string }> {
   try {
     const favorites = await repoGetUserFavoriteDecks({ userId });
     return { success: true, data: favorites, message: "Favorite decks retrieved successfully" };

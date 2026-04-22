@@ -1,8 +1,8 @@
 "use client";
 
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { toast } from 'sonner';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { toast } from "sonner";
 import type {
   SrtPlayerStore,
   VideoState,
@@ -10,8 +10,8 @@ import type {
   ControlState,
   SubtitleSettings,
   SubtitleEntry,
-} from '../types';
-import type { RefObject } from 'react';
+} from "../types";
+import type { RefObject } from "react";
 
 let videoRef: RefObject<HTMLVideoElement | null> | null;
 
@@ -30,17 +30,17 @@ const initialVideoState: VideoState = {
 
 const initialSubtitleSettings: SubtitleSettings = {
   fontSize: 24,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  textColor: '#ffffff',
-  position: 'bottom',
-  fontFamily: 'sans-serif',
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  textColor: "#ffffff",
+  position: "bottom",
+  fontFamily: "sans-serif",
   opacity: 1,
 };
 
 const initialSubtitleState: SubtitleState = {
   url: null,
   data: [],
-  currentText: '',
+  currentText: "",
   currentIndex: null,
   settings: initialSubtitleSettings,
 };
@@ -61,20 +61,17 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
       setVideoUrl: (url) =>
         set((state) => {
           if (videoRef?.current) {
-            videoRef.current.src = url || '';
+            videoRef.current.src = url || "";
             videoRef.current.load();
           }
           return { video: { ...state.video, url } };
         }),
 
-      setPlaying: (playing) =>
-        set((state) => ({ video: { ...state.video, isPlaying: playing } })),
+      setPlaying: (playing) => set((state) => ({ video: { ...state.video, isPlaying: playing } })),
 
-      setCurrentTime: (time) =>
-        set((state) => ({ video: { ...state.video, currentTime: time } })),
+      setCurrentTime: (time) => set((state) => ({ video: { ...state.video, currentTime: time } })),
 
-      setDuration: (duration) =>
-        set((state) => ({ video: { ...state.video, duration } })),
+      setDuration: (duration) => set((state) => ({ video: { ...state.video, duration } })),
 
       setPlaybackRate: (rate) =>
         set((state) => {
@@ -95,12 +92,12 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
       play: () => {
         const state = get();
         if (!state.video.url || !state.subtitle.url || state.subtitle.data.length === 0) {
-          toast.error('请先上传视频和字幕文件');
+          toast.error("请先上传视频和字幕文件");
           return;
         }
         if (videoRef?.current) {
           videoRef.current.play().catch((error) => {
-            toast.error('视频播放失败: ' + error.message);
+            toast.error("视频播放失败: " + error.message);
           });
           set({ video: { ...state.video, isPlaying: true } });
         }
@@ -146,11 +143,9 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
         }
       },
 
-      setSubtitleUrl: (url) =>
-        set((state) => ({ subtitle: { ...state.subtitle, url } })),
+      setSubtitleUrl: (url) => set((state) => ({ subtitle: { ...state.subtitle, url } })),
 
-      setSubtitleData: (data) =>
-        set((state) => ({ subtitle: { ...state.subtitle, data } })),
+      setSubtitleData: (data) => set((state) => ({ subtitle: { ...state.subtitle, data } })),
 
       setCurrentSubtitle: (text, index) =>
         set((state) => ({
@@ -216,6 +211,6 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
           controls: { ...state.controls, showSettings: !state.controls.showSettings },
         })),
     }),
-    { name: 'srt-player-store' }
+    { name: "srt-player-store" }
   )
 );

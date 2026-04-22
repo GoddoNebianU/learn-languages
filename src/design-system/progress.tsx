@@ -59,8 +59,7 @@ const progressVariants = cva(
 );
 
 interface ProgressProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof progressVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof progressVariants> {
   value: number;
   showLabel?: boolean;
   label?: string;
@@ -103,7 +102,7 @@ export function Progress({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <div className="flex items-center justify-between mb-1">
+      <div className="mb-1 flex items-center justify-between">
         <div className="flex-1">
           <div
             className={cn(progressVariants({ size, variant }))}
@@ -123,7 +122,7 @@ export function Progress({
           </div>
         </div>
         {showLabel && (
-          <div className="ml-3 text-sm font-medium text-gray-700 min-w-12 text-right">
+          <div className="ml-3 min-w-12 text-right text-sm font-medium text-gray-700">
             {formatLabel()}
           </div>
         )}

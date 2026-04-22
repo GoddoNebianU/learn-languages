@@ -57,8 +57,7 @@ const textareaVariants = cva(
 export type TextareaVariant = VariantProps<typeof textareaVariants>["variant"];
 
 export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    VariantProps<typeof textareaVariants> {
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {
   // 自动调整高度
   autoResize?: boolean;
 }

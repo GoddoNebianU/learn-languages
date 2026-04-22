@@ -2,35 +2,35 @@
 
 // User profile data types
 export type RepoOutputUserProfile = {
-    id: string;
-    email: string;
-    emailVerified: boolean;
-    username: string | null;
-    displayUsername: string | null;
-    image: string | null;
-    bio: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+  id: string;
+  email: string;
+  emailVerified: boolean;
+  username: string | null;
+  displayUsername: string | null;
+  image: string | null;
+  bio: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 } | null;
 
 // Input types
 export type RepoInputFindUserByUsername = {
-    username: string;
+  username: string;
 };
 
 export type RepoInputFindUserById = {
-    id: string;
+  id: string;
 };
 
 export type RepoInputFindUserByEmail = {
-    email: string;
+  email: string;
 };
 
 // Delete user cascade types
 export type RepoInputDeleteUserCascade = {
-    userId: string;
+  userId: string;
 };
 
 export type RepoOutputDeleteUserCascade = {
-    success: boolean;
+  success: boolean;
 };

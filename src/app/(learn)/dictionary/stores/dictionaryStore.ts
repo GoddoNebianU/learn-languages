@@ -1,7 +1,7 @@
 "use client";
 
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 import { TSharedItem } from "@/shared/dictionary-type";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
 import { toast } from "sonner";
@@ -62,7 +62,7 @@ export const useDictionaryStore = create<DictionaryStore>()(
 
       search: async () => {
         const { query, queryLang, definitionLang } = get();
-        
+
         if (!query.trim()) {
           return;
         }
@@ -95,7 +95,7 @@ export const useDictionaryStore = create<DictionaryStore>()(
 
       relookup: async () => {
         const { query, queryLang, definitionLang } = get();
-        
+
         if (!query.trim()) {
           return;
         }
@@ -127,7 +127,7 @@ export const useDictionaryStore = create<DictionaryStore>()(
 
       syncFromUrl: (params) => {
         const updates: Partial<DictionaryState> = {};
-        
+
         if (params.q !== undefined) {
           updates.query = params.q;
         }
@@ -137,12 +137,12 @@ export const useDictionaryStore = create<DictionaryStore>()(
         if (params.dl !== undefined) {
           updates.definitionLang = params.dl;
         }
-        
+
         if (Object.keys(updates).length > 0) {
           set(updates);
         }
       },
     }),
-    { name: 'dictionary-store' }
+    { name: "dictionary-store" }
   )
 );

@@ -18,17 +18,19 @@ export default function Alphabet() {
   const t = useTranslations("alphabet");
   const [chosenAlphabet, setChosenAlphabet] = useState<SupportedAlphabets | null>(null);
   const [alphabetData, setAlphabetData] = useState<Letter[] | null>(null);
-  const [loadingState, setLoadingState] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [loadingState, setLoadingState] = useState<"idle" | "loading" | "success" | "error">(
+    "idle"
+  );
 
   useEffect(() => {
     const loadAlphabetData = async () => {
       if (chosenAlphabet && !alphabetData) {
         try {
           setLoadingState("loading");
-          
+
           const res = await fetch("/alphabets/" + chosenAlphabet + ".json");
           if (!res.ok) throw new Error("Network response was not ok");
-          
+
           const obj = await res.json();
           setAlphabetData(obj as Letter[]);
           setLoadingState("success");
@@ -63,17 +65,15 @@ export default function Alphabet() {
             <button
               key={option.value}
               onClick={() => setChosenAlphabet(option.value)}
-              className="group bg-white border border-gray-200 sm:border-2 rounded-lg p-4 sm:p-6 hover:border-primary-300 hover:shadow-md cursor-pointer transition-all text-center"
+              className="group cursor-pointer rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:border-primary-300 hover:shadow-md sm:border-2 sm:p-6"
             >
               <span
-                className="block text-3xl sm:text-4xl font-bold mb-2"
+                className="mb-2 block text-3xl font-bold sm:text-4xl"
                 style={{ color: option.color }}
               >
                 {option.label}
               </span>
-              <span className="text-sm sm:text-base text-gray-600">
-                {t(option.value)}
-              </span>
+              <span className="text-sm text-gray-600 sm:text-base">{t(option.value)}</span>
             </button>
           ))}
         </div>
@@ -85,7 +85,7 @@ export default function Alphabet() {
   if (loadingState === "loading") {
     return (
       <PageLayout>
-        <div className="text-2xl text-gray-600 text-center">{t("loading")}</div>
+        <div className="text-center text-2xl text-gray-600">{t("loading")}</div>
       </PageLayout>
     );
   }
@@ -94,7 +94,7 @@ export default function Alphabet() {
   if (loadingState === "error") {
     return (
       <PageLayout>
-        <div className="text-2xl text-red-600 text-center">{t("loadFailed")}</div>
+        <div className="text-center text-2xl text-red-600">{t("loadFailed")}</div>
       </PageLayout>
     );
   }

@@ -73,7 +73,8 @@ export type InputVariant = VariantProps<typeof inputVariants>["variant"];
 export type InputSize = VariantProps<typeof inputVariants>["size"];
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
     VariantProps<typeof inputVariants> {
   // 左侧图标（通常用于搜索框）
   leftIcon?: React.ReactNode;
@@ -106,23 +107,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       return (
         <div className={cn("relative", containerClassName)}>
           {/* 左侧图标 */}
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true">
+          <div
+            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          >
             {leftIcon}
           </div>
           {/* 输入框 */}
           <input
             ref={ref}
             type={type}
-            className={cn(
-              inputVariants({ variant, size, error }),
-              leftIcon && "pl-10"
-            )}
+            className={cn(inputVariants({ variant, size, error }), leftIcon && "pl-10")}
             aria-invalid={error ? "true" : undefined}
             {...props}
           />
           {/* 右侧图标 */}
           {rightIcon && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
+            <div
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400"
+              aria-hidden="true"
+            >
               {rightIcon}
             </div>
           )}
@@ -141,7 +145,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {rightIcon && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">
+          <div
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          >
             {rightIcon}
           </div>
         )}

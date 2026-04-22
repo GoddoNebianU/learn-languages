@@ -5,7 +5,11 @@ import { headers } from "next/headers";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
 import { Memorize } from "./Memorize";
 
-export async function generateMetadata({ params }: { params: Promise<{ deck_id: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ deck_id: string }>;
+}): Promise<Metadata> {
   const { deck_id } = await params;
   const deckInfo = (await actionGetDeckById({ deckId: Number(deck_id) })).data;
   return {
@@ -14,11 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ deck_id: 
   };
 }
 
-export default async function LearnPage({
-  params,
-}: {
-  params: Promise<{ deck_id: string }>;
-}) {
+export default async function LearnPage({ params }: { params: Promise<{ deck_id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const { deck_id } = await params;
   const deckId = Number(deck_id);

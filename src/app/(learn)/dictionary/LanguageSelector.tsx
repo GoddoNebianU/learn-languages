@@ -42,10 +42,10 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
 
   return (
     <div>
-      <label className="block text-gray-700 text-sm mb-2">
+      <label className="mb-2 block text-sm text-gray-700">
         {label} ({hint})
       </label>
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div className="mb-2 flex flex-wrap gap-2">
         {POPULAR_LANGUAGES.map((lang) => (
           <Button
             variant="light"
@@ -53,7 +53,7 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
             type="button"
             selected={isPresetLanguage && value === lang.code}
             onClick={() => handlePresetSelect(lang.code)}
-            className="text-sm px-3"
+            className="px-3 text-sm"
           >
             {lang.nativeName}
           </Button>
@@ -63,7 +63,7 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
           type="button"
           selected={!isPresetLanguage && !!value}
           onClick={handleCustomToggle}
-          className="text-sm px-3 py-1"
+          className="px-3 py-1 text-sm"
         >
           {t("other")}
         </Button>

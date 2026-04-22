@@ -29,7 +29,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const t = useTranslations("dictionary");
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const {
     query,
     queryLang,
@@ -52,9 +52,9 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     const q = searchParams.get("q") || undefined;
     const ql = searchParams.get("ql") || undefined;
     const dl = searchParams.get("dl") || undefined;
-    
+
     syncFromUrl({ q, ql, dl });
-    
+
     if (q) {
       search();
     }
@@ -72,7 +72,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!query.trim()) return;
 
     const params = new URLSearchParams({
@@ -152,16 +152,12 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
   return (
     <PageLayout>
-      <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-          {t("title")}
-        </h1>
-        <p className="text-gray-700 text-lg">
-          {t("description")}
-        </p>
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-4xl font-bold text-gray-800 md:text-5xl">{t("title")}</h1>
+        <p className="text-lg text-gray-700">{t("description")}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
         <Input
           type="text"
           name="searchQuery"
@@ -175,16 +171,16 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         <Button
           variant="light"
           type="submit"
-          className="px-6 rounded-full whitespace-nowrap"
+          className="rounded-full px-6 whitespace-nowrap"
           loading={isSearching}
         >
           {t("search")}
         </Button>
       </form>
 
-      <div className="mt-4 bg-white/20 rounded-lg p-4">
+      <div className="mt-4 rounded-lg bg-white/20 p-4">
         <div className="mb-3">
-          <span className="text-gray-800 font-semibold">{t("languageSettings")}</span>
+          <span className="font-semibold text-gray-800">{t("languageSettings")}</span>
         </div>
 
         <div className="space-y-4">
@@ -207,29 +203,25 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
       <div className="mt-8">
         {isSearching ? (
           <VStack align="center" className="py-12">
-            <Skeleton variant="circular" className="w-8 h-8 mb-3" />
+            <Skeleton variant="circular" className="mb-3 h-8 w-8" />
             <p className="text-gray-600">{t("searching")}</p>
           </VStack>
         ) : query && !searchResult ? (
-          <div className="text-center py-12 bg-white/20 rounded-lg">
-            <p className="text-gray-800 text-xl">{t("noResults")}</p>
-            <p className="text-gray-600 mt-2">{t("tryOtherWords")}</p>
+          <div className="rounded-lg bg-white/20 py-12 text-center">
+            <p className="text-xl text-gray-800">{t("noResults")}</p>
+            <p className="mt-2 text-gray-600">{t("tryOtherWords")}</p>
           </div>
         ) : searchResult ? (
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <div className="flex items-start justify-between mb-6">
+          <div className="rounded-lg bg-white p-6 shadow-lg">
+            <div className="mb-6 flex items-start justify-between">
               <div className="flex-1">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                <h2 className="mb-2 text-3xl font-bold text-gray-800">
                   {searchResult.standardForm}
                 </h2>
               </div>
               <HStack align="center" gap={2} className="ml-4">
                 {session && decks.length > 0 && (
-                  <Select
-                    id="deck-select"
-                    variant="bordered"
-                    size="sm"
-                  >
+                  <Select id="deck-select" variant="bordered" size="sm">
                     {decks.map((deck) => (
                       <option key={deck.id} value={deck.id}>
                         {deck.name}
@@ -258,21 +250,16 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
               ))}
             </div>
 
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              <Button
-                variant="light"
-                onClick={relookup}
-                className="text-sm"
-                loading={isSearching}
-              >
-                <RefreshCw className="w-4 h-4" />
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              <Button variant="light" onClick={relookup} className="text-sm" loading={isSearching}>
+                <RefreshCw className="h-4 w-4" />
                 {t("relookup")}
               </Button>
             </div>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-800 text-xl mb-2">{t("welcomeTitle")}</p>
+          <div className="py-12 text-center">
+            <p className="mb-2 text-xl text-gray-800">{t("welcomeTitle")}</p>
             <p className="text-gray-600">{t("welcomeHint")}</p>
           </div>
         )}
@@ -283,7 +270,15 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
 export function DictionaryClient({ initialDecks }: DictionaryClientProps) {
   return (
-    <Suspense fallback={<PageLayout><div className="flex min-h-[50vh] items-center justify-center"><p>Loading...</p></div></PageLayout>}>
+    <Suspense
+      fallback={
+        <PageLayout>
+          <div className="flex min-h-[50vh] items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        </PageLayout>
+      }
+    >
       <DictionaryClientInner initialDecks={initialDecks} />
     </Suspense>
   );

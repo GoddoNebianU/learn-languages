@@ -60,20 +60,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const themePreset = useMemo(() => getThemePreset(currentTheme) || THEME_PRESETS[0], [currentTheme]);
-
-  const value = useMemo(() => ({
-    currentTheme,
-    themePreset,
-    setTheme,
-    availableThemes: THEME_PRESETS,
-  }), [currentTheme, themePreset, setTheme]);
-
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+  const themePreset = useMemo(
+    () => getThemePreset(currentTheme) || THEME_PRESETS[0],
+    [currentTheme]
   );
+
+  const value = useMemo(
+    () => ({
+      currentTheme,
+      themePreset,
+      setTheme,
+      availableThemes: THEME_PRESETS,
+    }),
+    [currentTheme, themePreset, setTheme]
+  );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

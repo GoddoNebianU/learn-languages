@@ -75,8 +75,7 @@ export type ContainerSize = VariantProps<typeof containerVariants>["size"];
 export type ContainerPadding = VariantProps<typeof containerVariants>["padding"];
 
 export interface ContainerProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof containerVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof containerVariants> {
   // 子元素
   children: React.ReactNode;
 }
@@ -93,10 +92,7 @@ export function Container({
   ...props
 }: ContainerProps) {
   return (
-    <div
-      className={cn(containerVariants({ size, padding, fullWidth }), className)}
-      {...props}
-    >
+    <div className={cn(containerVariants({ size, padding, fullWidth }), className)} {...props}>
       {children}
     </div>
   );

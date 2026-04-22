@@ -3,7 +3,12 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { validate } from "@/utils/validate";
-import { serviceGetFollowers, serviceGetFollowing, serviceGetFollowStatus, serviceToggleFollow } from "./follow-service";
+import {
+  serviceGetFollowers,
+  serviceGetFollowing,
+  serviceGetFollowStatus,
+  serviceToggleFollow,
+} from "./follow-service";
 import {
   schemaActionInputGetFollowers,
   schemaActionInputGetFollowing,

@@ -71,7 +71,9 @@ async function checkDeckOwnership(deckId: number): Promise<boolean> {
   return serviceCheckOwnership({ deckId, userId: session.user.id });
 }
 
-export async function actionCreateDeck(input: ActionInputCreateDeck): Promise<ActionOutputCreateDeck> {
+export async function actionCreateDeck(
+  input: ActionInputCreateDeck
+): Promise<ActionOutputCreateDeck> {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
@@ -96,10 +98,12 @@ export async function actionCreateDeck(input: ActionInputCreateDeck): Promise<Ac
   }
 }
 
-export async function actionUpdateDeck(input: ActionInputUpdateDeck): Promise<ActionOutputUpdateDeck> {
+export async function actionUpdateDeck(
+  input: ActionInputUpdateDeck
+): Promise<ActionOutputUpdateDeck> {
   try {
     const validatedInput = validateActionInputUpdateDeck(input);
-    
+
     const isOwner = await checkDeckOwnership(validatedInput.deckId);
     if (!isOwner) {
       return { success: false, message: "You do not have permission to update this deck" };
@@ -120,10 +124,12 @@ export async function actionUpdateDeck(input: ActionInputUpdateDeck): Promise<Ac
   }
 }
 
-export async function actionDeleteDeck(input: ActionInputDeleteDeck): Promise<ActionOutputDeleteDeck> {
+export async function actionDeleteDeck(
+  input: ActionInputDeleteDeck
+): Promise<ActionOutputDeleteDeck> {
   try {
     const validatedInput = validateActionInputDeleteDeck(input);
-    
+
     const isOwner = await checkDeckOwnership(validatedInput.deckId);
     if (!isOwner) {
       return { success: false, message: "You do not have permission to delete this deck" };
@@ -139,11 +145,13 @@ export async function actionDeleteDeck(input: ActionInputDeleteDeck): Promise<Ac
   }
 }
 
-export async function actionGetDeckById(input: ActionInputGetDeckById): Promise<ActionOutputGetDeckById> {
+export async function actionGetDeckById(
+  input: ActionInputGetDeckById
+): Promise<ActionOutputGetDeckById> {
   try {
     const validatedInput = validateActionInputGetDeckById(input);
     const result = await serviceGetDeckById({ deckId: validatedInput.deckId });
-    
+
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
@@ -169,13 +177,15 @@ export async function actionGetDeckById(input: ActionInputGetDeckById): Promise<
   }
 }
 
-export async function actionGetDecksByUserId(input: ActionInputGetDecksByUserId): Promise<ActionOutputGetDecksByUserId> {
+export async function actionGetDecksByUserId(
+  input: ActionInputGetDecksByUserId
+): Promise<ActionOutputGetDecksByUserId> {
   try {
     const validatedInput = validateActionInputGetDecksByUserId(input);
     const { userId } = validatedInput;
 
     const result = await serviceGetDecksByUserId({ userId });
-    
+
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
@@ -204,11 +214,13 @@ export async function actionGetDecksByUserId(input: ActionInputGetDecksByUserId)
   }
 }
 
-export async function actionGetPublicDecks(input: ActionInputGetPublicDecks = {}): Promise<ActionOutputGetPublicDecks> {
+export async function actionGetPublicDecks(
+  input: ActionInputGetPublicDecks = {}
+): Promise<ActionOutputGetPublicDecks> {
   try {
     const validatedInput = validateActionInputGetPublicDecks(input);
     const result = await serviceGetPublicDecks(validatedInput);
-    
+
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
@@ -230,11 +242,13 @@ export async function actionGetPublicDecks(input: ActionInputGetPublicDecks = {}
   }
 }
 
-export async function actionGetPublicDeckById(input: ActionInputGetPublicDeckById): Promise<ActionOutputGetPublicDeckById> {
+export async function actionGetPublicDeckById(
+  input: ActionInputGetPublicDeckById
+): Promise<ActionOutputGetPublicDeckById> {
   try {
     const validatedInput = validateActionInputGetPublicDeckById(input);
     const result = await serviceGetPublicDeckById(validatedInput);
-    
+
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
@@ -256,11 +270,13 @@ export async function actionGetPublicDeckById(input: ActionInputGetPublicDeckByI
   }
 }
 
-export async function actionSearchPublicDecks(input: ActionInputSearchPublicDecks): Promise<ActionOutputSearchPublicDecks> {
+export async function actionSearchPublicDecks(
+  input: ActionInputSearchPublicDecks
+): Promise<ActionOutputSearchPublicDecks> {
   try {
     const validatedInput = validateActionInputSearchPublicDecks(input);
     const result = await serviceSearchPublicDecks(validatedInput);
-    
+
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
     }
@@ -282,7 +298,9 @@ export async function actionSearchPublicDecks(input: ActionInputSearchPublicDeck
   }
 }
 
-export async function actionToggleDeckFavorite(input: ActionInputToggleDeckFavorite): Promise<ActionOutputToggleDeckFavorite> {
+export async function actionToggleDeckFavorite(
+  input: ActionInputToggleDeckFavorite
+): Promise<ActionOutputToggleDeckFavorite> {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
@@ -305,11 +323,17 @@ export async function actionToggleDeckFavorite(input: ActionInputToggleDeckFavor
   }
 }
 
-export async function actionCheckDeckFavorite(input: ActionInputCheckDeckFavorite): Promise<ActionOutputCheckDeckFavorite> {
+export async function actionCheckDeckFavorite(
+  input: ActionInputCheckDeckFavorite
+): Promise<ActionOutputCheckDeckFavorite> {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session?.user?.id) {
-      return { success: true, message: "Not logged in", data: { isFavorited: false, favoriteCount: 0 } };
+      return {
+        success: true,
+        message: "Not logged in",
+        data: { isFavorited: false, favoriteCount: 0 },
+      };
     }
 
     const validatedInput = validateActionInputCheckDeckFavorite(input);

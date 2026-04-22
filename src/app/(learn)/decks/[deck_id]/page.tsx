@@ -6,7 +6,11 @@ import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
 
-export async function generateMetadata({ params }: { params: Promise<{ deck_id: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ deck_id: string }>;
+}): Promise<Metadata> {
   const { deck_id } = await params;
   const deckInfo = (await actionGetDeckById({ deckId: Number(deck_id) })).data;
   return {
@@ -15,11 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ deck_id: 
   };
 }
 
-export default async function DecksPage({
-  params,
-}: {
-  params: Promise<{ deck_id: number; }>;
-}) {
+export default async function DecksPage({ params }: { params: Promise<{ deck_id: number }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const { deck_id } = await params;
   const t = await getTranslations("deck_id");

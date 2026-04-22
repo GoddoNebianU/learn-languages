@@ -63,20 +63,15 @@ function ResetPasswordPageInner() {
 
   if (success) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-96">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
-              <h1 className="text-2xl font-bold text-center w-full">
+              <h1 className="w-full text-center text-2xl font-bold">
                 {t("resetPasswordSuccessTitle")}
               </h1>
-              <p className="text-center text-gray-600">
-                {t("resetPasswordSuccessHint")}
-              </p>
-              <Link
-                href="/login"
-                className="text-primary-500 hover:underline"
-              >
+              <p className="text-center text-gray-600">{t("resetPasswordSuccessHint")}</p>
+              <Link href="/login" className="text-primary-500 hover:underline">
                 {t("backToLogin")}
               </Link>
             </VStack>
@@ -88,20 +83,13 @@ function ResetPasswordPageInner() {
 
   if (!token) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-96">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
-              <h1 className="text-2xl font-bold text-center w-full">
-                {t("invalidToken")}
-              </h1>
-              <p className="text-center text-gray-600">
-                {t("invalidTokenHint")}
-              </p>
-              <Link
-                href="/forgot-password"
-                className="text-primary-500 hover:underline"
-              >
+              <h1 className="w-full text-center text-2xl font-bold">{t("invalidToken")}</h1>
+              <p className="text-center text-gray-600">{t("invalidTokenHint")}</p>
+              <Link href="/forgot-password" className="text-primary-500 hover:underline">
                 {t("requestNewToken")}
               </Link>
             </VStack>
@@ -112,13 +100,11 @@ function ResetPasswordPageInner() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">
-              {t("resetPassword")}
-            </h1>
+            <h1 className="w-full text-center text-3xl font-bold">{t("resetPassword")}</h1>
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
                 type="password"
@@ -133,18 +119,10 @@ function ResetPasswordPageInner() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </VStack>
-            <Button
-              variant="primary"
-              onClick={handleResetPassword}
-              loading={loading}
-              fullWidth
-            >
+            <Button variant="primary" onClick={handleResetPassword} loading={loading} fullWidth>
               {t("resetPassword")}
             </Button>
-            <Link
-              href="/login"
-              className="text-center text-primary-500 hover:underline"
-            >
+            <Link href="/login" className="text-center text-primary-500 hover:underline">
               {t("backToLogin")}
             </Link>
           </VStack>
@@ -156,7 +134,13 @@ function ResetPasswordPageInner() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <ResetPasswordPageInner />
     </Suspense>
   );

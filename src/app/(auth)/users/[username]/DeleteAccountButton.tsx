@@ -55,16 +55,12 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
 
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <div className="p-6">
-          <h2 className="text-xl font-bold text-red-600 mb-4">
-            {t("deleteAccount.title")}
-          </h2>
-          
+          <h2 className="mb-4 text-xl font-bold text-red-600">{t("deleteAccount.title")}</h2>
+
           <div className="space-y-4">
-            <p className="text-gray-700">
-              {t("deleteAccount.warning")}
-            </p>
-            
-            <ul className="list-disc list-inside text-gray-600 text-sm space-y-1">
+            <p className="text-gray-700">{t("deleteAccount.warning")}</p>
+
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-600">
               <li>{t("deleteAccount.warningDecks")}</li>
               <li>{t("deleteAccount.warningCards")}</li>
               <li>{t("deleteAccount.warningHistory")}</li>
@@ -72,8 +68,9 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
             </ul>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t("deleteAccount.confirmLabel")} <span className="font-mono font-bold">{username}</span>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                {t("deleteAccount.confirmLabel")}{" "}
+                <span className="font-mono font-bold">{username}</span>
               </label>
               <Input
                 type="text"
@@ -85,13 +82,13 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="mt-6 flex justify-end gap-3">
             <Button variant="light" onClick={() => setShowModal(false)}>
               {t("deleteAccount.cancel")}
             </Button>
-            <Button 
-              variant="light" 
-              onClick={handleDelete} 
+            <Button
+              variant="light"
+              onClick={handleDelete}
               loading={loading}
               disabled={confirmUsername !== username}
             >

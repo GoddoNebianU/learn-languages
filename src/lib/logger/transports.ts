@@ -11,11 +11,7 @@ const customFormat = printf(({ level, message, timestamp, ...metadata }) => {
 });
 
 export const devTransport = new transports.Console({
-  format: combine(
-    colorize(),
-    timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    customFormat
-  ),
+  format: combine(colorize(), timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), customFormat),
 });
 
 export const prodConsoleTransport = new transports.Console({

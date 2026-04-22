@@ -80,7 +80,9 @@ export const schemaActionInputGetDecksByUserId = z.object({
   userId: z.string(),
 });
 export type ActionInputGetDecksByUserId = z.infer<typeof schemaActionInputGetDecksByUserId>;
-export const validateActionInputGetDecksByUserId = generateValidator(schemaActionInputGetDecksByUserId);
+export const validateActionInputGetDecksByUserId = generateValidator(
+  schemaActionInputGetDecksByUserId
+);
 
 export type ActionOutputGetDecksByUserId = {
   message: string;
@@ -100,25 +102,33 @@ export const schemaActionInputSearchPublicDecks = z.object({
   offset: z.number().int().nonnegative().optional(),
 });
 export type ActionInputSearchPublicDecks = z.infer<typeof schemaActionInputSearchPublicDecks>;
-export const validateActionInputSearchPublicDecks = generateValidator(schemaActionInputSearchPublicDecks);
+export const validateActionInputSearchPublicDecks = generateValidator(
+  schemaActionInputSearchPublicDecks
+);
 
 export const schemaActionInputGetPublicDeckById = z.object({
   deckId: z.number().int().positive(),
 });
 export type ActionInputGetPublicDeckById = z.infer<typeof schemaActionInputGetPublicDeckById>;
-export const validateActionInputGetPublicDeckById = generateValidator(schemaActionInputGetPublicDeckById);
+export const validateActionInputGetPublicDeckById = generateValidator(
+  schemaActionInputGetPublicDeckById
+);
 
 export const schemaActionInputToggleDeckFavorite = z.object({
   deckId: z.number().int().positive(),
 });
 export type ActionInputToggleDeckFavorite = z.infer<typeof schemaActionInputToggleDeckFavorite>;
-export const validateActionInputToggleDeckFavorite = generateValidator(schemaActionInputToggleDeckFavorite);
+export const validateActionInputToggleDeckFavorite = generateValidator(
+  schemaActionInputToggleDeckFavorite
+);
 
 export const schemaActionInputCheckDeckFavorite = z.object({
   deckId: z.number().int().positive(),
 });
 export type ActionInputCheckDeckFavorite = z.infer<typeof schemaActionInputCheckDeckFavorite>;
-export const validateActionInputCheckDeckFavorite = generateValidator(schemaActionInputCheckDeckFavorite);
+export const validateActionInputCheckDeckFavorite = generateValidator(
+  schemaActionInputCheckDeckFavorite
+);
 
 export type ActionOutputDeckFavorite = {
   isFavorited: boolean;

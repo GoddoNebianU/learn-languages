@@ -26,14 +26,18 @@ export type ServiceInputCheckDeckOwnership = {
   userId: string;
 };
 
-export async function serviceCreateCard(input: RepoInputCreateCard): Promise<{ success: boolean; cardId?: number; message: string }> {
+export async function serviceCreateCard(
+  input: RepoInputCreateCard
+): Promise<{ success: boolean; cardId?: number; message: string }> {
   log.info("Creating card", { deckId: input.deckId, word: input.word });
   const cardId = await repoCreateCard(input);
   log.info("Card created", { cardId });
   return { success: true, cardId, message: "Card created successfully" };
 }
 
-export async function serviceUpdateCard(input: RepoInputUpdateCard): Promise<{ success: boolean; message: string }> {
+export async function serviceUpdateCard(
+  input: RepoInputUpdateCard
+): Promise<{ success: boolean; message: string }> {
   log.info("Updating card", { cardId: input.cardId });
   const card = await repoGetCardById(input.cardId);
   if (!card) {
@@ -44,7 +48,9 @@ export async function serviceUpdateCard(input: RepoInputUpdateCard): Promise<{ s
   return { success: true, message: "Card updated successfully" };
 }
 
-export async function serviceDeleteCard(input: RepoInputDeleteCard): Promise<{ success: boolean; message: string }> {
+export async function serviceDeleteCard(
+  input: RepoInputDeleteCard
+): Promise<{ success: boolean; message: string }> {
   log.info("Deleting card", { cardId: input.cardId });
   const card = await repoGetCardById(input.cardId);
   if (!card) {
@@ -59,12 +65,16 @@ export async function serviceGetCardById(cardId: number): Promise<RepoOutputCard
   return repoGetCardById(cardId);
 }
 
-export async function serviceGetCardsByDeckId(input: RepoInputGetCardsByDeckId): Promise<RepoOutputCard[]> {
+export async function serviceGetCardsByDeckId(
+  input: RepoInputGetCardsByDeckId
+): Promise<RepoOutputCard[]> {
   log.debug("Getting cards by deck", { deckId: input.deckId });
   return repoGetCardsByDeckId(input);
 }
 
-export async function serviceGetRandomCard(input: RepoInputGetRandomCard): Promise<RepoOutputCard | null> {
+export async function serviceGetRandomCard(
+  input: RepoInputGetRandomCard
+): Promise<RepoOutputCard | null> {
   log.debug("Getting random card", { deckId: input.deckId });
   return repoGetRandomCard(input);
 }
@@ -74,7 +84,9 @@ export async function serviceGetCardStats(deckId: number): Promise<RepoOutputCar
   return repoGetCardStats(deckId);
 }
 
-export async function serviceCheckDeckOwnership(input: ServiceInputCheckDeckOwnership): Promise<boolean> {
+export async function serviceCheckDeckOwnership(
+  input: ServiceInputCheckDeckOwnership
+): Promise<boolean> {
   log.debug("Checking deck ownership", { deckId: input.deckId });
   const ownerId = await repoGetUserIdByDeckId(input.deckId);
   return ownerId === input.userId;

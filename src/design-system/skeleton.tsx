@@ -50,8 +50,7 @@ const skeletonVariants = cva(
 );
 
 export interface SkeletonProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof skeletonVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof skeletonVariants> {}
 
 /**
  * Skeleton 骨架屏组件
@@ -66,11 +65,7 @@ export function Skeleton({
     <div
       role="status"
       aria-busy="true"
-      className={cn(
-        "bg-gray-200",
-        skeletonVariants({ variant, animated }),
-        className
-      )}
+      className={cn("bg-gray-200", skeletonVariants({ variant, animated }), className)}
       {...props}
     />
   );

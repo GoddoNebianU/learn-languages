@@ -36,13 +36,13 @@ export function FollowStats({
     <div className="flex items-center gap-4">
       <a
         href={`/users/${username}/followers`}
-        className="text-sm text-gray-600 hover:text-primary-500 transition-colors"
+        className="text-sm text-gray-600 transition-colors hover:text-primary-500"
       >
         <span className="font-semibold text-gray-900">{followersCount}</span> {t("followers")}
       </a>
       <a
         href={`/users/${username}/following`}
-        className="text-sm text-gray-600 hover:text-primary-500 transition-colors"
+        className="text-sm text-gray-600 transition-colors hover:text-primary-500"
       >
         <span className="font-semibold text-gray-900">{followingCount}</span> {t("following")}
       </a>

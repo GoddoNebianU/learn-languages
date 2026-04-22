@@ -1,15 +1,8 @@
-import { Button } from "@/design-system/button"
+import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import {
-  Dispatch,
-  KeyboardEvent,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, KeyboardEvent, SetStateAction, useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 export function MemoryCard({
@@ -20,7 +13,9 @@ export function MemoryCard({
   setChosenAlphabet: Dispatch<SetStateAction<SupportedAlphabets | null>>;
 }) {
   const t = useTranslations("alphabet");
-  const [index, setIndex] = useState(() => alphabet.length > 0 ? Math.floor(Math.random() * alphabet.length) : 0);
+  const [index, setIndex] = useState(() =>
+    alphabet.length > 0 ? Math.floor(Math.random() * alphabet.length) : 0
+  );
   const [more, setMore] = useState(false);
   const [ipaDisplay, setIPADisplay] = useState(true);
   const [letterDisplay, setLetterDisplay] = useState(true);
@@ -42,11 +37,11 @@ export function MemoryCard({
   const letter = alphabet[index] || { letter: "", letter_name_ipa: "", letter_sound_ipa: "" };
   return (
     <div
-      className="w-full flex justify-center items-center"
+      className="flex w-full items-center justify-center"
       onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => e.preventDefault()}
     >
-      <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-lg shadow border-gray-200 border flex justify-center items-center">
-        <div className="w-full flex justify-end items-center">
+      <div className="m-4 flex w-full flex-col items-center justify-center rounded-lg border border-gray-200 p-4 shadow md:w-[60dvw]">
+        <div className="flex w-full items-center justify-end">
           <IconButton
             size={28}
             iconAlt="close"
@@ -54,15 +49,13 @@ export function MemoryCard({
             onClick={() => setChosenAlphabet(null)}
           ></IconButton>
         </div>
-        <div className="flex flex-col gap-12 justify-center items-center">
-          <span className="text-7xl md:text-9xl">
-            {letterDisplay ? letter.letter : ""}
-          </span>
-          <span className="text-5xl md:text-7xl text-gray-400">
+        <div className="flex flex-col items-center justify-center gap-12">
+          <span className="text-7xl md:text-9xl">{letterDisplay ? letter.letter : ""}</span>
+          <span className="text-5xl text-gray-400 md:text-7xl">
             {ipaDisplay ? letter.letter_sound_ipa : ""}
           </span>
         </div>
-        <div className="flex flex-row mt-32 items-center justify-center gap-2">
+        <div className="mt-32 flex flex-row items-center justify-center gap-2">
           <IconButton
             size={28}
             iconAlt="refresh"

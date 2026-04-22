@@ -6,22 +6,22 @@
 
 ## 组件列表
 
-| 组件 | 文件 | 说明 |
-|------|------|------|
-| Button | `button.tsx` | 按钮 (primary / light) |
-| IconButton | `icon-button.tsx` | 纯图标按钮 (透明背景) |
-| LinkButton | `link-button.tsx` | 文字链接按钮 |
-| Card, CardHeader, CardTitle, CardBody, CardFooter | `card.tsx` | 卡片容器 |
-| Input | `input.tsx` | 输入框 |
-| Select | `select.tsx` | 下拉选择 |
-| Textarea | `textarea.tsx` | 多行文本 |
-| Range | `range.tsx` | 范围滑块 |
-| Progress | `progress.tsx` | 进度条 |
-| Skeleton | `skeleton.tsx` | 骨架屏 |
-| VStack, HStack | `stack.tsx` | 堆叠布局 |
-| Container | `container.tsx` | 容器 |
-| Modal | `modal.tsx` | 模态框 |
-| OverflowDropdown | `overflow-dropdown.tsx` | 溢出下拉 |
+| 组件                                              | 文件                    | 说明                   |
+| ------------------------------------------------- | ----------------------- | ---------------------- |
+| Button                                            | `button.tsx`            | 按钮 (primary / light) |
+| IconButton                                        | `icon-button.tsx`       | 纯图标按钮 (透明背景)  |
+| LinkButton                                        | `link-button.tsx`       | 文字链接按钮           |
+| Card, CardHeader, CardTitle, CardBody, CardFooter | `card.tsx`              | 卡片容器               |
+| Input                                             | `input.tsx`             | 输入框                 |
+| Select                                            | `select.tsx`            | 下拉选择               |
+| Textarea                                          | `textarea.tsx`          | 多行文本               |
+| Range                                             | `range.tsx`             | 范围滑块               |
+| Progress                                          | `progress.tsx`          | 进度条                 |
+| Skeleton                                          | `skeleton.tsx`          | 骨架屏                 |
+| VStack, HStack                                    | `stack.tsx`             | 堆叠布局               |
+| Container                                         | `container.tsx`         | 容器                   |
+| Modal                                             | `modal.tsx`             | 模态框                 |
+| OverflowDropdown                                  | `overflow-dropdown.tsx` | 溢出下拉               |
 
 ## Button 变体
 

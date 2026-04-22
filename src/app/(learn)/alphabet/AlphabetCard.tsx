@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { Button } from "@/design-system/button"
+import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -23,12 +23,11 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
   const [showLetter, setShowLetter] = useState(true);
   const [showRoman, setShowRoman] = useState(false);
   const [isRandomMode, setIsRandomMode] = useState(false);
-  
+
   // 只有日语假名显示罗马音按钮
   const hasRomanization = alphabetType === "japanese";
 
   const currentLetter = alphabet[currentIndex];
-
 
   const goToNext = useCallback(() => {
     if (isRandomMode) {
@@ -86,7 +85,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -102,26 +101,26 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
   return (
     <PageLayout className="relative">
       {/* 右上角返回按钮 - outside the white card */}
-      <div className="flex justify-end mb-4">
+      <div className="mb-4 flex justify-end">
         <IconButton
           size={32}
           iconAlt="close"
           iconSrc={IMAGES.close}
           onClick={onBack}
-          className="bg-white rounded-full shadow-md"
+          className="rounded-full bg-white shadow-md"
         />
       </div>
 
       {/* 白色主卡片容器 */}
       <Card padding="xl">
         {/* 顶部进度指示器和显示选项按钮 */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="mb-6 flex items-center justify-between">
           {/* 当前字母进度 */}
           <span className="text-sm text-gray-500">
             {currentIndex + 1} / {alphabet.length}
           </span>
           {/* 显示选项切换按钮组 */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2">
             <Button
               variant="light"
               selected={showLetter}
@@ -163,42 +162,44 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         </div>
 
         {/* 字母主要内容显示区域 */}
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           {/* 字母本身（可隐藏） */}
           {showLetter ? (
-            <div className="text-6xl md:text-8xl font-bold text-gray-800 mb-4">
+            <div className="mb-4 text-6xl font-bold text-gray-800 md:text-8xl">
               {currentLetter.letter}
             </div>
           ) : (
-            <div className="text-6xl md:text-8xl font-bold text-gray-300 mb-4 h-20 md:h-24 flex items-center justify-center">
-              <span className="text-2xl md:text-3xl text-gray-400">?</span>
+            <div className="mb-4 flex h-20 items-center justify-center text-6xl font-bold text-gray-300 md:h-24 md:text-8xl">
+              <span className="text-2xl text-gray-400 md:text-3xl">?</span>
             </div>
           )}
 
           {/* IPA 音标显示 */}
           {showIPA && (
-            <div className="text-2xl md:text-3xl text-gray-600 mb-2">
+            <div className="mb-2 text-2xl text-gray-600 md:text-3xl">
               {currentLetter.letter_sound_ipa}
             </div>
           )}
 
           {/* 罗马音显示（日语） */}
           {showRoman && hasRomanization && currentLetter.roman_letter && (
-            <div className="text-lg md:text-xl text-gray-500">
-              {currentLetter.roman_letter}
-            </div>
+            <div className="text-lg text-gray-500 md:text-xl">{currentLetter.roman_letter}</div>
           )}
         </div>
 
         {/* 底部导航控制区域 */}
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           {/* 上一个按钮 */}
-          <IconButton className="rounded-full" onClick={goToPrevious} aria-label={t("previousLetter")}>
+          <IconButton
+            className="rounded-full"
+            onClick={goToPrevious}
+            aria-label={t("previousLetter")}
+          >
             <ChevronLeft size={20} />
           </IconButton>
 
           {/* 中间区域：随机按钮 */}
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             {isRandomMode && (
               <Button
                 variant="primary"
@@ -218,18 +219,13 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
       </Card>
 
       {/* 底部操作提示文字 */}
-      <div className="text-center mt-6 text-white text-sm">
-        <p>
-          {isRandomMode
-            ? t("keyboardHint")
-            : t("swipeHint")
-          }
-        </p>
+      <div className="mt-6 text-center text-sm text-white">
+        <p>{isRandomMode ? t("keyboardHint") : t("swipeHint")}</p>
       </div>
 
       {/* 全屏触摸事件监听层（用于滑动切换） */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="pointer-events-none absolute inset-0"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}

@@ -36,20 +36,13 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-96">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
-              <h1 className="text-2xl font-bold text-center w-full">
-                {t("checkYourEmail")}
-              </h1>
-              <p className="text-center text-gray-600">
-                {t("resetPasswordEmailSentHint")}
-              </p>
-              <Link
-                href="/login"
-                className="text-primary-500 hover:underline"
-              >
+              <h1 className="w-full text-center text-2xl font-bold">{t("checkYourEmail")}</h1>
+              <p className="text-center text-gray-600">{t("resetPasswordEmailSentHint")}</p>
+              <Link href="/login" className="text-primary-500 hover:underline">
                 {t("backToLogin")}
               </Link>
             </VStack>
@@ -60,16 +53,12 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-96">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
-            <h1 className="text-3xl font-bold text-center w-full">
-              {t("forgotPassword")}
-            </h1>
-            <p className="text-center text-gray-600 text-sm">
-              {t("forgotPasswordHint")}
-            </p>
+            <h1 className="w-full text-center text-3xl font-bold">{t("forgotPassword")}</h1>
+            <p className="text-center text-sm text-gray-600">{t("forgotPasswordHint")}</p>
             <VStack gap={0} align="center" justify="center" className="w-full">
               <Input
                 type="email"
@@ -78,18 +67,10 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </VStack>
-            <Button
-              variant="primary"
-              onClick={handleResetRequest}
-              loading={loading}
-              fullWidth
-            >
+            <Button variant="primary" onClick={handleResetRequest} loading={loading} fullWidth>
               {t("sendResetEmail")}
             </Button>
-            <Link
-              href="/login"
-              className="text-center text-primary-500 hover:underline"
-            >
+            <Link href="/login" className="text-center text-primary-500 hover:underline">
               {t("backToLogin")}
             </Link>
           </VStack>

@@ -1,17 +1,14 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "editor.defaultFormatter": null,
-    "[typescript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[css]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    },
-    "tailwindCSS.classFunctions": [
-        "cva",
-        "cx"
-    ]
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.defaultFormatter": null,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "tailwindCSS.classFunctions": ["cva", "cx"]
 }

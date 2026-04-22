@@ -44,13 +44,13 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums text-right w-12 shrink-0">
+      <span className="w-12 shrink-0 text-right text-xs whitespace-nowrap text-gray-500 tabular-nums">
         {subtitleIndexDisplay}
       </span>
 
       <div
         ref={barRef}
-        className="relative flex-1 h-3 bg-gray-200 rounded-full cursor-pointer overflow-hidden"
+        className="relative h-3 flex-1 cursor-pointer overflow-hidden rounded-full bg-gray-200"
         onClick={handleBarClick}
         role="slider"
         aria-label={t("subtitleProgress")}
@@ -60,7 +60,7 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
         tabIndex={0}
       >
         <div
-          className="absolute inset-y-0 left-0 bg-primary-500 rounded"
+          className="absolute inset-y-0 left-0 rounded bg-primary-500"
           style={{ width: `${progressPercent}%` }}
         />
 
@@ -72,7 +72,7 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
             <div
               key={entry.index}
               className={cn(
-                "absolute top-1/2 -translate-y-1/2 w-[1px]",
+                "absolute top-1/2 w-[1px] -translate-y-1/2",
                 isCurrent ? "h-2 bg-primary-700" : "h-1.5 bg-gray-500/50"
               )}
               style={{ left: `${leftPercent}%` }}
@@ -81,12 +81,12 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
         })}
 
         <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 bg-primary-700 rounded-full border border-white shadow"
+          className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-primary-700 shadow"
           style={{ left: `${progressPercent}%` }}
         />
       </div>
 
-      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums text-left w-24 shrink-0">
+      <span className="w-24 shrink-0 text-left text-xs whitespace-nowrap text-gray-500 tabular-nums">
         {formatTime(currentTime)} / {formatTime(duration)}
       </span>
     </div>

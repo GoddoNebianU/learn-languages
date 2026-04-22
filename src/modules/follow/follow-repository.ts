@@ -15,9 +15,7 @@ import type {
 
 const log = createLogger("follow-repository");
 
-export async function repoCreateFollow(
-  dto: RepoInputCreateFollow
-): Promise<RepoOutputFollowUser> {
+export async function repoCreateFollow(dto: RepoInputCreateFollow): Promise<RepoOutputFollowUser> {
   log.debug("Creating follow", { followerId: dto.followerId, followingId: dto.followingId });
 
   const follow = await prisma.follow.create({
@@ -31,9 +29,7 @@ export async function repoCreateFollow(
   return follow;
 }
 
-export async function repoDeleteFollow(
-  dto: RepoInputDeleteFollow
-): Promise<void> {
+export async function repoDeleteFollow(dto: RepoInputDeleteFollow): Promise<void> {
   log.debug("Deleting follow", { followerId: dto.followerId, followingId: dto.followingId });
 
   await prisma.follow.delete({
@@ -48,9 +44,7 @@ export async function repoDeleteFollow(
   log.info("Follow deleted");
 }
 
-export async function repoCheckFollow(
-  dto: RepoInputCheckFollow
-): Promise<RepoOutputIsFollowing> {
+export async function repoCheckFollow(dto: RepoInputCheckFollow): Promise<RepoOutputIsFollowing> {
   const follow = await prisma.follow.findUnique({
     where: {
       followerId_followingId: {
@@ -63,9 +57,7 @@ export async function repoCheckFollow(
   return !!follow;
 }
 
-export async function repoToggleFollow(
-  dto: RepoInputCheckFollow
-): Promise<RepoOutputIsFollowing> {
+export async function repoToggleFollow(dto: RepoInputCheckFollow): Promise<RepoOutputIsFollowing> {
   const isNowFollowing = await prisma.$transaction(async (tx) => {
     const deleted = await tx.follow.deleteMany({
       where: {

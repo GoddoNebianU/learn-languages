@@ -27,14 +27,15 @@ export default async function FollowersPage({ params }: FollowersPageProps) {
     limit: 50,
   });
 
-  const followers = followersResult.success && followersResult.data
-    ? followersResult.data.followers.map((f) => f.user)
-    : [];
+  const followers =
+    followersResult.success && followersResult.data
+      ? followersResult.data.followers.map((f) => f.user)
+      : [];
 
   return (
     <PageLayout>
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <h1 className="mb-6 text-2xl font-bold text-gray-800">
           {t("followersOf", { username: user.displayUsername || user.username || "User" })}
         </h1>
         <UserList users={followers} emptyMessage={t("noFollowers")} />

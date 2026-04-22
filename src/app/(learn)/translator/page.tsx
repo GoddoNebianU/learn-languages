@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/design-system/button"
+import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
@@ -39,7 +39,7 @@ export default function TranslatorPage() {
     targetLanguage: string;
   } | null>(null);
   const { load, play } = useAudioPlayer();
-  
+
   const { data: session } = authClient.useSession();
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -55,31 +55,46 @@ export default function TranslatorPage() {
     }
   }, [session?.user?.id]);
 
-  const tts = useCallback(async (text: string, locale: string) => {
-    try {
-      // Map language name to TTS format
-      let theLanguage = locale.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
+  const tts = useCallback(
+    async (text: string, locale: string) => {
+      try {
+        // Map language name to TTS format
+        let theLanguage = locale
+          .toLowerCase()
+          .replace(/[^a-z]/g, "")
+          .replace(/^./, (match) => match.toUpperCase());
 
-      // Check if language is in TTS supported list
-      const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-        "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
-        "Spanish", "Japanese", "Korean", "French", "Russian"
-      ];
+        // Check if language is in TTS supported list
+        const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
+          "Auto",
+          "Chinese",
+          "English",
+          "German",
+          "Italian",
+          "Portuguese",
+          "Spanish",
+          "Japanese",
+          "Korean",
+          "French",
+          "Russian",
+        ];
 
-      if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
-        theLanguage = "Auto";
+        if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
+          theLanguage = "Auto";
+        }
+
+        const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
+        if (!url) {
+          throw new Error("TTS returned no audio URL");
+        }
+        await load(url);
+        await play();
+      } catch (error) {
+        toast.error("Failed to generate audio");
       }
-
-      const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
-      if (!url) {
-        throw new Error("TTS returned no audio URL");
-      }
-      await load(url);
-      await play();
-    } catch (error) {
-      toast.error("Failed to generate audio");
-    }
-  }, [load, play]);
+    },
+    [load, play]
+  );
 
   const translate = async () => {
     if (!taref.current || processing) return;
@@ -163,11 +178,13 @@ export default function TranslatorPage() {
         ipa: translationResult.sourceIpa || null,
         queryLang: lastTranslation.sourceLanguage,
         cardType,
-        meanings: [{
-          partOfSpeech: null,
-          definition: translationResult.translatedText,
-          example: null,
-        }],
+        meanings: [
+          {
+            partOfSpeech: null,
+            definition: translationResult.translatedText,
+            example: null,
+          },
+        ],
       });
 
       const deckName = decks.find((d) => d.id === deckId)?.name || "Unknown";
@@ -184,27 +201,25 @@ export default function TranslatorPage() {
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("description")} />
 
-      <div className="flex flex-col md:flex-row md:justify-between gap-2">
-        <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
-          <div className="border border-gray-200 rounded-lg w-full h-64 p-2">
+      <div className="flex flex-col gap-2 md:flex-row md:justify-between">
+        <div className="flex w-full flex-col-reverse gap-2 md:w-1/2">
+          <div className="h-64 w-full rounded-lg border border-gray-200 p-2">
             <Textarea
-              className="resize-none h-8/12 w-full"
+              className="h-8/12 w-full resize-none"
               ref={taref}
               onKeyDown={(e) => {
                 if (e.ctrlKey && e.key === "Enter") translate();
               }}
             />
-            <div className="ipa w-full h-2/12 overflow-auto text-gray-600">
+            <div className="ipa h-2/12 w-full overflow-auto text-gray-600">
               {translationResult?.sourceIpa || ""}
             </div>
-            <div className="h-2/12 w-full flex justify-end items-center">
+            <div className="flex h-2/12 w-full items-center justify-end">
               <IconButton
                 iconSrc={IMAGES.copy_all}
                 iconAlt="copy"
                 onClick={async () => {
-                  await navigator.clipboard.writeText(
-                    taref.current?.value || "",
-                  );
+                  await navigator.clipboard.writeText(taref.current?.value || "");
                 }}
               ></IconButton>
               <IconButton
@@ -218,7 +233,7 @@ export default function TranslatorPage() {
               ></IconButton>
             </div>
           </div>
-          <div className="w-full flex gap-1 items-center overflow-hidden">
+          <div className="flex w-full items-center gap-1 overflow-hidden">
             <Button
               variant="light"
               selected={!customSourceLanguage && sourceLanguage === "Auto"}
@@ -258,18 +273,20 @@ export default function TranslatorPage() {
               value={customSourceLanguage}
               onChange={(e) => setCustomSourceLanguage(e.target.value)}
               placeholder={t("customLanguage")}
-              className="min-w-[80px] max-w-full"
+              className="max-w-full min-w-[80px]"
             />
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
-          <div className="bg-gray-100 rounded-lg w-full h-64 p-2">
-            <div className="h-2/3 w-full overflow-y-auto">{translationResult?.translatedText || ""}</div>
-            <div className="ipa w-full h-1/6 overflow-y-auto text-gray-600">
+        <div className="flex w-full flex-col-reverse gap-2 md:w-1/2">
+          <div className="h-64 w-full rounded-lg bg-gray-100 p-2">
+            <div className="h-2/3 w-full overflow-y-auto">
+              {translationResult?.translatedText || ""}
+            </div>
+            <div className="ipa h-1/6 w-full overflow-y-auto text-gray-600">
               {translationResult?.targetIpa || ""}
             </div>
-            <div className="h-1/6 w-full flex justify-end items-center">
+            <div className="flex h-1/6 w-full items-center justify-end">
               <IconButton
                 iconSrc={IMAGES.copy_all}
                 iconAlt="copy"
@@ -282,15 +299,12 @@ export default function TranslatorPage() {
                 iconAlt="play"
                 onClick={() => {
                   if (!translationResult) return;
-                  tts(
-                    translationResult.translatedText,
-                    translationResult.targetLanguage,
-                  );
+                  tts(translationResult.translatedText, translationResult.targetLanguage);
                 }}
               ></IconButton>
             </div>
           </div>
-          <div className="w-full flex gap-1 items-center overflow-hidden">
+          <div className="flex w-full items-center gap-1 overflow-hidden">
             <Button
               variant="light"
               selected={!customTargetLanguage && targetLanguage === "Chinese"}
@@ -319,13 +333,13 @@ export default function TranslatorPage() {
               value={customTargetLanguage}
               onChange={(e) => setCustomTargetLanguage(e.target.value)}
               placeholder={t("customLanguage")}
-              className="min-w-[80px] max-w-full"
+              className="max-w-full min-w-[80px]"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-center items-center gap-4 mt-4">
+      <div className="mt-4 flex items-center justify-center gap-4">
         <Button
           variant="primary"
           onClick={translate}
@@ -336,7 +350,8 @@ export default function TranslatorPage() {
           {t("translate")}
         </Button>
         {translationResult && session && decks.length > 0 && (
-          <IconButton className="rounded-full"
+          <IconButton
+            className="rounded-full"
             onClick={() => setShowSaveModal(true)}
             title={t("saveAsCard")}
           >
@@ -346,11 +361,11 @@ export default function TranslatorPage() {
       </div>
 
       {showSaveModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h2 className="text-xl font-semibold mb-4">{t("saveAsCard")}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6">
+            <h2 className="mb-4 text-xl font-semibold">{t("saveAsCard")}</h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
                 {t("selectDeck")}
               </label>
               <Select id="deck-select-translator" className="w-full">
@@ -361,10 +376,10 @@ export default function TranslatorPage() {
                 ))}
               </Select>
             </div>
-            <div className="mb-4 p-3 bg-gray-50 rounded text-sm">
-              <div className="font-medium mb-1">{t("front")}:</div>
-              <div className="text-gray-700 mb-2">{lastTranslation?.sourceText}</div>
-              <div className="font-medium mb-1">{t("back")}:</div>
+            <div className="mb-4 rounded bg-gray-50 p-3 text-sm">
+              <div className="mb-1 font-medium">{t("front")}:</div>
+              <div className="mb-2 text-gray-700">{lastTranslation?.sourceText}</div>
+              <div className="mb-1 font-medium">{t("back")}:</div>
               <div className="text-gray-700">{translationResult?.translatedText}</div>
             </div>
             <div className="flex justify-end gap-2">

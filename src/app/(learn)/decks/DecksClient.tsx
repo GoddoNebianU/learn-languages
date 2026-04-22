@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  Layers,
-  Pencil,
-  Plus,
-  Globe,
-  Lock,
-  Trash2,
-} from "lucide-react";
+import { ChevronRight, Layers, Pencil, Plus, Globe, Lock, Trash2 } from "lucide-react";
 import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { Skeleton } from "@/design-system/skeleton";
@@ -84,29 +76,25 @@ const DeckCard = ({ deck, onUpdateDeck, onDeleteDeck }: DeckCardProps) => {
 
   return (
     <div
-      className="flex justify-between items-center group py-4 px-5 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
+      className="group flex cursor-pointer items-center justify-between border-b border-gray-200 px-5 py-4 transition-colors last:border-b-0 hover:bg-gray-50"
       onClick={() => {
         router.push(`/decks/${deck.id}`);
       }}
     >
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex flex-1 items-center gap-4">
         <div className="shrink-0 text-primary-500">
           <Layers size={24} />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-gray-900 truncate">{deck.name}</h3>
+            <h3 className="truncate font-semibold text-gray-900">{deck.name}</h3>
             <span className="flex items-center gap-1 text-xs text-gray-400">
-              {deck.visibility === "PUBLIC" ? (
-                <Globe size={12} />
-              ) : (
-                <Lock size={12} />
-              )}
+              {deck.visibility === "PUBLIC" ? <Globe size={12} /> : <Lock size={12} />}
               {deck.visibility === "PUBLIC" ? t("public") : t("private")}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <p className="mt-0.5 text-sm text-gray-500">
             {t("deckInfo", {
               id: deck.id,
               name: deck.name,
@@ -116,23 +104,20 @@ const DeckCard = ({ deck, onUpdateDeck, onDeleteDeck }: DeckCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-1 ml-4">
-        <IconButton className="rounded-full"
+      <div className="ml-4 flex items-center gap-1">
+        <IconButton
+          className="rounded-full"
           onClick={handleToggleVisibility}
           title={deck.visibility === "PUBLIC" ? t("setPrivate") : t("setPublic")}
         >
-          {deck.visibility === "PUBLIC" ? (
-            <Lock size={18} />
-          ) : (
-            <Globe size={18} />
-          )}
+          {deck.visibility === "PUBLIC" ? <Lock size={18} /> : <Globe size={18} />}
         </IconButton>
         <IconButton className="rounded-full" onClick={handleRename}>
           <Pencil size={18} />
         </IconButton>
         <IconButton
           onClick={handleDelete}
-          className="rounded-full hover:text-red-500 hover:bg-red-50"
+          className="rounded-full hover:bg-red-50 hover:text-red-500"
         >
           <Trash2 size={18} />
         </IconButton>
@@ -166,9 +151,7 @@ export function DecksClient({ userId }: DecksClientProps) {
   }, [userId]);
 
   const handleUpdateDeck = (deckId: number, updates: Partial<ActionOutputDeck>) => {
-    setDecks((prev) =>
-      prev.map((d) => (d.id === deckId ? { ...d, ...updates } : d))
-    );
+    setDecks((prev) => prev.map((d) => (d.id === deckId ? { ...d, ...updates } : d)));
   };
 
   const handleDeleteDeck = (deckId: number) => {
@@ -204,12 +187,12 @@ export function DecksClient({ userId }: DecksClientProps) {
       <CardList>
         {loading ? (
           <VStack align="center" className="p-8">
-            <Skeleton variant="circular" className="w-8 h-8 mb-3" />
+            <Skeleton variant="circular" className="mb-3 h-8 w-8" />
             <p className="text-sm text-gray-500">{t("loading")}</p>
           </VStack>
         ) : decks.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="py-12 text-center text-gray-400">
+            <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
               <Layers size={24} className="text-gray-400" />
             </div>
             <p className="text-sm">{t("noDecksYet")}</p>

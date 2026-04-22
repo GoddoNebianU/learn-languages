@@ -1,15 +1,12 @@
 "use client";
 
-import { Button } from "@/design-system/button"
+import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import {
-  TextSpeakerArraySchema,
-  TextSpeakerItemSchema,
-} from "@/lib/interfaces";
+import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/lib/interfaces";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import z from "zod";
 import { SaveList } from "./SaveList";
@@ -34,21 +31,35 @@ const TTS_LANGUAGES = [
   { value: "Russian", label: "russian" },
 ] as const;
 
-type TTSLabel = typeof TTS_LANGUAGES[number]["label"];
+type TTSLabel = (typeof TTS_LANGUAGES)[number]["label"];
 
-function getLanguageLabel(t: ReturnType<typeof useTranslations<"text_speaker">>, label: TTSLabel): string {
+function getLanguageLabel(
+  t: ReturnType<typeof useTranslations<"text_speaker">>,
+  label: TTSLabel
+): string {
   switch (label) {
-    case "auto": return t("languages.auto");
-    case "chinese": return t("languages.chinese");
-    case "english": return t("languages.english");
-    case "japanese": return t("languages.japanese");
-    case "korean": return t("languages.korean");
-    case "french": return t("languages.french");
-    case "german": return t("languages.german");
-    case "italian": return t("languages.italian");
-    case "spanish": return t("languages.spanish");
-    case "portuguese": return t("languages.portuguese");
-    case "russian": return t("languages.russian");
+    case "auto":
+      return t("languages.auto");
+    case "chinese":
+      return t("languages.chinese");
+    case "english":
+      return t("languages.english");
+    case "japanese":
+      return t("languages.japanese");
+    case "korean":
+      return t("languages.korean");
+    case "french":
+      return t("languages.french");
+    case "german":
+      return t("languages.german");
+    case "italian":
+      return t("languages.italian");
+    case "spanish":
+      return t("languages.spanish");
+    case "portuguese":
+      return t("languages.portuguese");
+    case "russian":
+      return t("languages.russian");
   }
 }
 
@@ -71,11 +82,9 @@ export default function TextSpeakerPage() {
   const [processing, setProcessing] = useState(false);
   const { play, stop, load, audioRef } = useAudioPlayer();
 
-  const { get: getFromLocalStorage, set: setIntoLocalStorage } =
-    getLocalStorageOperator<typeof TextSpeakerArraySchema>(
-      "text-speaker",
-      TextSpeakerArraySchema,
-    );
+  const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
+    typeof TextSpeakerArraySchema
+  >("text-speaker", TextSpeakerArraySchema);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -130,7 +139,7 @@ export default function TextSpeakerPage() {
           // 第一次播放
           try {
             let theLanguage: string;
-            
+
             if (customLanguage.trim()) {
               theLanguage = customLanguage.trim();
             } else if (selectedLanguage !== "Auto") {
@@ -143,11 +152,23 @@ export default function TextSpeakerPage() {
               theLanguage = tmp_language;
             }
 
-            theLanguage = theLanguage.toLowerCase().replace(/[^a-z]/g, '').replace(/^./, match => match.toUpperCase());
+            theLanguage = theLanguage
+              .toLowerCase()
+              .replace(/[^a-z]/g, "")
+              .replace(/^./, (match) => match.toUpperCase());
 
             const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-              "Auto", "Chinese", "English", "German", "Italian", "Portuguese",
-              "Spanish", "Japanese", "Korean", "French", "Russian"
+              "Auto",
+              "Chinese",
+              "English",
+              "German",
+              "Italian",
+              "Portuguese",
+              "Spanish",
+              "Japanese",
+              "Korean",
+              "French",
+              "Russian",
             ];
 
             if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
@@ -269,28 +290,28 @@ export default function TextSpeakerPage() {
     <PageLayout className="items-start py-4">
       {/* 文本输入区域 */}
       <div
-        className="border border-gray-200 rounded-lg"
+        className="rounded-lg border border-gray-200"
         style={{ fontFamily: "Times New Roman, serif" }}
       >
         {/* 文本输入框 */}
         <Textarea
           variant="bordered"
-          className="text-2xl min-h-64"
+          className="min-h-64 text-2xl"
           onChange={handleInputChange}
           ref={textareaRef}
         />
         {/* IPA 显示区域 */}
         {(ipa.length !== 0 && (
-          <div className="overflow-auto text-gray-600 h-18 border-gray-200 border-b px-4">
+          <div className="h-18 overflow-auto border-b border-gray-200 px-4 text-gray-600">
             {ipa}
           </div>
         )) || <div className="h-18"></div>}
 
         {/* 控制按钮区域 */}
-        <div className="p-4 relative w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+        <div className="relative flex w-full flex-row flex-wrap items-center justify-center gap-2 p-4">
           {/* 速度调节面板 */}
           {showSpeedAdjust && (
-            <div className="bg-white p-6 rounded-lg border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center z-10">
+            <div className="absolute -top-4 left-1/2 z-10 flex -translate-x-1/2 -translate-y-full flex-row flex-wrap items-center justify-center gap-2 rounded-lg border-2 border-gray-200 bg-white p-6 shadow-2xl">
               <IconButton
                 size={28}
                 onClick={letMeSetSpeed(0.5)}
@@ -366,7 +387,7 @@ export default function TextSpeakerPage() {
             className={`${saving ? "bg-gray-200" : ""}`}
           ></IconButton>
           {/* 语言选择器 */}
-          <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+          <div className="flex w-full flex-row flex-wrap items-center justify-center gap-2">
             <span className="text-sm text-gray-600">{t("language")}</span>
             {TTS_LANGUAGES.slice(0, 6).map((lang) => (
               <Button
@@ -401,7 +422,7 @@ export default function TextSpeakerPage() {
             />
           </div>
           {/* 功能开关按钮 */}
-          <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
+          <div className="flex w-full flex-row flex-wrap items-center justify-center gap-2">
             <Button
               variant="light"
               selected={ipaEnabled}
@@ -423,7 +444,7 @@ export default function TextSpeakerPage() {
       </div>
       {/* 保存列表 */}
       {showSaveList && (
-        <div className="mt-4 border border-gray-200 rounded-lg overflow-hidden">
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-200">
           <SaveList show={showSaveList} handleUse={handleUseItem}></SaveList>
         </div>
       )}

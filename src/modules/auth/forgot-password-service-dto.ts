@@ -1,8 +1,8 @@
 export type ServiceInputRequestPasswordReset = {
-    email: string;
+  email: string;
 };
 
 export type ServiceOutputRequestPasswordReset = {
-    success: boolean;
-    message: string;
+  success: boolean;
+  message: string;
 };

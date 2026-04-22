@@ -59,31 +59,28 @@ export function LanguageSettings() {
     setPendingLocale(locale);
   }, []);
 
-  const handleMenuKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLButtonElement>) => {
-      const items = menuRef.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
-      if (!items) return;
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement>) => {
+    const items = menuRef.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
+    if (!items) return;
 
-      const currentIndex = Array.from(items).indexOf(e.currentTarget);
+    const currentIndex = Array.from(items).indexOf(e.currentTarget);
 
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-        items[nextIndex]?.focus();
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-        items[prevIndex]?.focus();
-      } else if (e.key === "Escape") {
-        e.preventDefault();
-        setIsOpen(false);
-      } else if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        e.currentTarget.click();
-      }
-    },
-    []
-  );
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+      items[nextIndex]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      items[prevIndex]?.focus();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setIsOpen(false);
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.currentTarget.click();
+    }
+  }, []);
 
   return (
     <div className="relative" ref={menuRef}>
@@ -96,7 +93,7 @@ export function LanguageSettings() {
             setIsOpen(false);
           }
         }}
-        className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+        className="inline-flex items-center justify-center rounded-md p-2 text-white transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
         aria-label="切换语言"
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -106,10 +103,8 @@ export function LanguageSettings() {
 
       <div
         className={cn(
-          "absolute right-0 top-full mt-2 w-40 rounded-lg bg-white shadow-lg ring-1 ring-black/5 overflow-hidden transition-all duration-200 origin-top-right z-50",
-          isOpen
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95 pointer-events-none"
+          "absolute top-full right-0 z-50 mt-2 w-40 origin-top-right overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition-all duration-200",
+          isOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         )}
         role="menu"
       >
@@ -121,7 +116,7 @@ export function LanguageSettings() {
               onClick={() => setLocale(lang.code)}
               onKeyDown={handleMenuKeyDown}
               tabIndex={isOpen ? 0 : -1}
-              className="inline-flex items-center w-full justify-start px-4 py-2.5 text-left text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+              className="inline-flex w-full items-center justify-start px-4 py-2.5 text-left text-gray-700 transition-colors hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none"
               role="menuitem"
             >
               {lang.label}
@@ -131,11 +126,7 @@ export function LanguageSettings() {
       </div>
 
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-          aria-hidden="true"
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} aria-hidden="true" />
       )}
     </div>
   );

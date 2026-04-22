@@ -179,7 +179,12 @@ body {
   padding: 0;
   background: var(--primary-50);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif;
   font-size: 1rem;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
@@ -200,7 +205,7 @@ samp {
  * 导航栏按钮样式
  */
 .navbar-btn {
-  @apply border-0 bg-transparent hover:bg-black/30 shadow-none;
+  @apply border-0 bg-transparent shadow-none hover:bg-black/30;
   transition: background-color var(--transition-fast);
 }
 

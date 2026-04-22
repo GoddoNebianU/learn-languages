@@ -35,7 +35,8 @@ const buttonVariants = cva(
 export type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
 export type ButtonSize = VariantProps<typeof buttonVariants>["size"];
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   children?: React.ReactNode;
   href?: string;
   openInNewTab?: boolean;
@@ -79,7 +80,10 @@ export function Button({
   const renderSvgIcon = (icon: React.ReactNode, position: "left" | "right") => {
     if (!icon) return null;
     return (
-      <span className={`flex items-center shrink-0 ${position === "left" ? "-ml-1 mr-2" : "-mr-1 ml-2"}`} aria-hidden="true">
+      <span
+        className={`flex shrink-0 items-center ${position === "left" ? "mr-2 -ml-1" : "-mr-1 ml-2"}`}
+        aria-hidden="true"
+      >
         {icon}
       </span>
     );
@@ -88,16 +92,39 @@ export function Button({
   const renderImageIcon = () => {
     if (!iconSrc) return null;
     return (
-      <Image src={iconSrc} width={iconSize} height={iconSize} alt={iconAlt || "icon"} className="shrink-0" />
+      <Image
+        src={iconSrc}
+        width={iconSize}
+        height={iconSize}
+        alt={iconAlt || "icon"}
+        className="shrink-0"
+      />
     );
   };
 
   const renderLoadingIcon = () => {
     if (!loading) return null;
     return (
-      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      <svg
+        className="h-4 w-4 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
       </svg>
     );
   };
@@ -114,7 +141,12 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} className={computedClass} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noopener noreferrer" : undefined}>
+      <Link
+        href={href}
+        className={computedClass}
+        target={openInNewTab ? "_blank" : undefined}
+        rel={openInNewTab ? "noopener noreferrer" : undefined}
+      >
         {content}
       </Link>
     );

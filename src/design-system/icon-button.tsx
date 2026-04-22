@@ -25,13 +25,19 @@ export function IconButton({
     <button
       type="button"
       className={cn(
-        "inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center rounded-md p-2 text-gray-700 transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
         className
       )}
       {...props}
     >
       {iconSrc && (
-        <Image src={iconSrc} width={size} height={size} alt={iconAlt || "icon"} className="shrink-0" />
+        <Image
+          src={iconSrc}
+          width={size}
+          height={size}
+          alt={iconAlt || "icon"}
+          className="shrink-0"
+        />
       )}
       {icon ?? children}
     </button>

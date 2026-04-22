@@ -4,7 +4,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Learn Languages — AI-Powered Language Learning",
-  description: "A modern language learning platform with AI-powered translation, dictionary, text-to-speech, and flashcard tools.",
+  description:
+    "A modern language learning platform with AI-powered translation, dictionary, text-to-speech, and flashcard tools.",
 };
 
 interface LinkAreaProps {
@@ -19,10 +20,10 @@ function LinkArea({ href, name, description, color }: LinkAreaProps) {
     <Link
       href={href}
       style={{ backgroundColor: color }}
-      className={`hover:scale-105 transition-transform duration-200 h-32 md:h-64 flex md:justify-center items-center`}
+      className={`flex h-32 items-center transition-transform duration-200 hover:scale-105 md:h-64 md:justify-center`}
     >
-      <div className="text-white m-8">
-        <h1 className="md:text-4xl text-3xl">{name}</h1>
+      <div className="m-8 text-white">
+        <h1 className="text-3xl md:text-4xl">{name}</h1>
         <p className="md:text-xl">{description}</p>
       </div>
     </Link>
@@ -33,27 +34,26 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   return (
     <>
-      <div className="bg-primary-500 text-white w-full min-h-[75dvh] flex justify-center items-center">
-        <div className="mb-16 mx-16 md:mx-0 md:max-w-[60dvw]">
-          <h1 className="text-6xl md:text-9xl mb-8 font-extrabold">
-            {t("title")}
-          </h1>
-          <p className="text-2xl md:text-5xl font-medium">{t("description")}</p>
+      <div className="flex min-h-[75dvh] w-full items-center justify-center bg-primary-500 text-white">
+        <div className="mx-16 mb-16 md:mx-0 md:max-w-[60dvw]">
+          <h1 className="mb-8 text-6xl font-extrabold md:text-9xl">{t("title")}</h1>
+          <p className="text-2xl font-medium md:text-5xl">{t("description")}</p>
         </div>
       </div>
-      <div className="w-full flex justify-center font-serif items-center flex-col min-h-64 h-[25dvh]">
+      <div className="flex h-[25dvh] min-h-64 w-full flex-col items-center justify-center font-serif">
         <p className="text-3xl">{t("fortune.quote")}</p>
-        <cite className="text-[#e9b353] text-xl">{t("fortune.author")}</cite>
+        <cite className="text-xl text-[#e9b353]">{t("fortune.author")}</cite>
       </div>
-      <div className="bg-[#bbbbbb] w-full flex justify-center items-center flex-col h-32">
-        <div className="w-0 h-0 border-l-40 border-r-40 border-t-30 border-l-transparent border-r-transparent border-t-white"></div>
+      <div className="flex h-32 w-full flex-col items-center justify-center bg-[#bbbbbb]">
+        <div className="h-0 w-0 border-t-30 border-r-40 border-l-40 border-t-white border-r-transparent border-l-transparent"></div>
       </div>
-      <div className="w-full grid grid-cols-1 grid-rows-6 md:grid-cols-3"><LinkArea
-        href="/translator"
-        name={t("translator.name")}
-        description={t("translator.description")}
-        color="#a56068"
-      ></LinkArea>
+      <div className="grid w-full grid-cols-1 grid-rows-6 md:grid-cols-3">
+        <LinkArea
+          href="/translator"
+          name={t("translator.name")}
+          description={t("translator.description")}
+          color="#a56068"
+        ></LinkArea>
         <LinkArea
           href="/text-speaker"
           name={t("textSpeaker.name")}

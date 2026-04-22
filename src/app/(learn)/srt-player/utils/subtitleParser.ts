@@ -3,11 +3,9 @@ import { SubtitleEntry } from "../types";
 export function parseSrt(data: string): SubtitleEntry[] {
   const lines = data.split(/\r?\n/);
   const result: SubtitleEntry[] = [];
-  const re = new RegExp(
-    "(\\d{2}:\\d{2}:\\d{2},\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2},\\d{3})",
-  );
+  const re = new RegExp("(\\d{2}:\\d{2}:\\d{2},\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2},\\d{3})");
   let i = 0;
-  
+
   while (i < lines.length) {
     if (!lines[i].trim()) {
       i++;
@@ -15,39 +13,36 @@ export function parseSrt(data: string): SubtitleEntry[] {
     }
     i++;
     if (i >= lines.length) break;
-    
+
     const timeMatch = lines[i].match(re);
     if (!timeMatch) {
       i++;
       continue;
     }
-    
+
     const start = toSeconds(timeMatch[1]);
     const end = toSeconds(timeMatch[2]);
     i++;
-    
+
     let text = "";
     while (i < lines.length && lines[i].trim()) {
       text += lines[i] + "\n";
       i++;
     }
-    
-    result.push({ 
-      start, 
-      end, 
+
+    result.push({
+      start,
+      end,
       text: text.trim(),
       index: result.length,
     });
     i++;
   }
-  
+
   return result;
 }
 
-export function getSubtitleIndex(
-  subtitles: SubtitleEntry[],
-  currentTime: number,
-): number | null {
+export function getSubtitleIndex(subtitles: SubtitleEntry[], currentTime: number): number | null {
   for (let i = 0; i < subtitles.length; i++) {
     if (currentTime >= subtitles[i].start && currentTime <= subtitles[i].end) {
       return i;
@@ -56,14 +51,11 @@ export function getSubtitleIndex(
   return null;
 }
 
-export function getNearestIndex(
-  subtitles: SubtitleEntry[],
-  currentTime: number,
-): number | null {
+export function getNearestIndex(subtitles: SubtitleEntry[], currentTime: number): number | null {
   for (let i = 0; i < subtitles.length; i++) {
     const subtitle = subtitles[i];
     const isWithin = currentTime >= subtitle.start && currentTime <= subtitle.end;
-    
+
     if (isWithin) return i;
     if (currentTime < subtitle.start) return i > 0 ? i - 1 : null;
   }
@@ -72,18 +64,17 @@ export function getNearestIndex(
 
 export function getCurrentSubtitle(
   subtitles: SubtitleEntry[],
-  currentTime: number,
+  currentTime: number
 ): SubtitleEntry | null {
-  return subtitles.find((subtitle) => 
-    currentTime >= subtitle.start && currentTime <= subtitle.end
-  ) || null;
+  return (
+    subtitles.find((subtitle) => currentTime >= subtitle.start && currentTime <= subtitle.end) ||
+    null
+  );
 }
 
 function toSeconds(timeStr: string): number {
   const [h, m, s] = timeStr.replace(",", ".").split(":");
-  return parseFloat(
-    (parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s)).toFixed(3),
-  );
+  return parseFloat((parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s)).toFixed(3));
 }
 
 export async function loadSubtitle(url: string): Promise<SubtitleEntry[]> {
@@ -92,7 +83,7 @@ export async function loadSubtitle(url: string): Promise<SubtitleEntry[]> {
     const data = await response.text();
     return parseSrt(data);
   } catch (error) {
-    console.error('加载字幕失败', error);
+    console.error("加载字幕失败", error);
     return [];
   }
 }

@@ -1,48 +1,41 @@
 import { executeTranslation } from "@/lib/bigmodel/translator/orchestrator";
 import { getAnswer } from "@/lib/bigmodel/llm";
 import {
-    ServiceInputTranslateText,
-    ServiceOutputTranslateText,
-    ServiceInputGenIPA,
-    ServiceOutputGenIPA,
-    ServiceInputGenLanguage,
-    ServiceOutputGenLanguage,
+  ServiceInputTranslateText,
+  ServiceOutputTranslateText,
+  ServiceInputGenIPA,
+  ServiceOutputGenIPA,
+  ServiceInputGenLanguage,
+  ServiceOutputGenLanguage,
 } from "./translator-service-dto";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("translator-service");
 
 export const serviceTranslateText = async (
-    dto: ServiceInputTranslateText
+  dto: ServiceInputTranslateText
 ): Promise<ServiceOutputTranslateText> => {
-    const { sourceText, targetLanguage, sourceLanguage, needIpa } = dto;
+  const { sourceText, targetLanguage, sourceLanguage, needIpa } = dto;
 
-    const response = await executeTranslation(
-        sourceText,
-        targetLanguage,
-        needIpa,
-        sourceLanguage
-    );
+  const response = await executeTranslation(sourceText, targetLanguage, needIpa, sourceLanguage);
 
-    return {
-        sourceText: response.sourceText,
-        translatedText: response.translatedText,
-        sourceLanguage: response.sourceLanguage,
-        targetLanguage: response.targetLanguage,
-        sourceIpa: response.sourceIpa || "",
-        targetIpa: response.targetIpa || "",
-    };
+  return {
+    sourceText: response.sourceText,
+    translatedText: response.translatedText,
+    sourceLanguage: response.sourceLanguage,
+    targetLanguage: response.targetLanguage,
+    sourceIpa: response.sourceIpa || "",
+    targetIpa: response.targetIpa || "",
+  };
 };
 
-export const serviceGenIPA = async (
-    dto: ServiceInputGenIPA
-): Promise<ServiceOutputGenIPA> => {
-    const { text } = dto;
-    return (
-        "[" +
-        (
-            await getAnswer(
-                `
+export const serviceGenIPA = async (dto: ServiceInputGenIPA): Promise<ServiceOutputGenIPA> => {
+  const { text } = dto;
+  return (
+    "[" +
+    (
+      await getAnswer(
+        `
 <text>${text}</text>
 
 请生成以上文本的严式国际音标
@@ -50,23 +43,23 @@ export const serviceGenIPA = async (
 不要附带任何说明
 不要擅自增减符号
 不许用"/"或者"[]"包裹
-            `.trim(),
-            )
-        )
-            .replaceAll("[", "")
-            .replaceAll("]", "") +
-        "]"
-    );
+            `.trim()
+      )
+    )
+      .replaceAll("[", "")
+      .replaceAll("]", "") +
+    "]"
+  );
 };
 
 export const serviceGenLanguage = async (
-    dto: ServiceInputGenLanguage
+  dto: ServiceInputGenLanguage
 ): Promise<ServiceOutputGenLanguage> => {
-    const { text } = dto;
-    const language = await getAnswer([
-        {
-            role: "system",
-            content: `
+  const { text } = dto;
+  const language = await getAnswer([
+    {
+      role: "system",
+      content: `
 你是一个语言检测工具。请识别文本的语言并返回语言名称。
 
 返回语言的标准英文名称，例如：
@@ -93,12 +86,12 @@ export const serviceGenLanguage = async (
 2. 首字母大写，其余小写
 3. 不要附带任何说明
 4. 不要擅自增减符号
-            `.trim()
-        },
-        {
-            role: "user",
-            content: `<text>${text}</text>`
-        }
-    ]);
-    return language.trim();
+            `.trim(),
+    },
+    {
+      role: "user",
+      content: `<text>${text}</text>`,
+    },
+  ]);
+  return language.trim();
 };

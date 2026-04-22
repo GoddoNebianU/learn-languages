@@ -55,7 +55,7 @@ export function useSubtitleSync() {
 
   useEffect(() => {
     if (!subtitleData || subtitleData.length === 0) {
-      setCurrentSubtitle('', null);
+      setCurrentSubtitle("", null);
       lastIndexRef.current = null;
       return;
     }
@@ -75,7 +75,7 @@ export function useSubtitleSync() {
       if (newIndex !== null) {
         setCurrentSubtitle(subtitleData[newIndex].text, newIndex);
       } else {
-        setCurrentSubtitle('', null);
+        setCurrentSubtitle("", null);
       }
     }
   }, [subtitleData, currentTime, setCurrentSubtitle]);

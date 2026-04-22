@@ -63,20 +63,17 @@ export const auth = betterAuth({
           });
         }
       }
-      
+
       if (ctx.path === "/sign-in/username") {
         const body = ctx.body as { username?: string };
         if (body.username) {
           const user = await prisma.user.findFirst({
             where: {
-              OR: [
-                { username: body.username },
-                { email: body.username },
-              ],
+              OR: [{ username: body.username }, { email: body.username }],
             },
             select: { emailVerified: true },
           });
-          
+
           if (user && !user.emailVerified) {
             throw new APIError("FORBIDDEN", {
               message: "Please verify your email address before signing in",

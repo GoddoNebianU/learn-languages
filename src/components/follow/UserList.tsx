@@ -16,11 +16,7 @@ interface UserListProps {
 
 export function UserList({ users, emptyMessage }: UserListProps) {
   if (users.length === 0) {
-    return (
-      <div className="text-center py-12 text-gray-500">
-        {emptyMessage}
-      </div>
-    );
+    return <div className="py-12 text-center text-gray-500">{emptyMessage}</div>;
   }
 
   return (
@@ -29,10 +25,10 @@ export function UserList({ users, emptyMessage }: UserListProps) {
         <Link
           key={user.id}
           href={`/users/${user.username || user.id}`}
-          className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+          className="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
         >
           {user.image ? (
-            <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+            <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
               <Image
                 src={user.image}
                 alt={user.displayUsername || user.username || "User"}
@@ -42,24 +38,18 @@ export function UserList({ users, emptyMessage }: UserListProps) {
               />
             </div>
           ) : (
-            <div className="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-500">
               <span className="text-lg font-bold text-white">
                 {(user.displayUsername || user.username || "U")[0].toUpperCase()}
               </span>
             </div>
           )}
-          <div className="flex-1 min-w-0">
-            <div className="font-semibold text-gray-900 truncate">
+          <div className="min-w-0 flex-1">
+            <div className="truncate font-semibold text-gray-900">
               {user.displayUsername || user.username || "Anonymous"}
             </div>
-            {user.username && (
-              <div className="text-sm text-gray-500">@{user.username}</div>
-            )}
-            {user.bio && (
-              <div className="text-sm text-gray-600 truncate mt-1">
-                {user.bio}
-              </div>
-            )}
+            {user.username && <div className="text-sm text-gray-500">@{user.username}</div>}
+            {user.bio && <div className="mt-1 truncate text-sm text-gray-600">{user.bio}</div>}
           </div>
         </Link>
       ))}

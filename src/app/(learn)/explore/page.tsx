@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function ExplorePage() {
   const publicDecksResult = await actionGetPublicDecks();
-  const publicDecks = publicDecksResult.success ? publicDecksResult.data ?? [] : [];
+  const publicDecks = publicDecksResult.success ? (publicDecksResult.data ?? []) : [];
 
   return <ExploreClient initialPublicDecks={publicDecks} />;
 }
