@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/design-system/base/button";
-import { Container } from "@/design-system/layout/container";
+import { Button } from "@/design-system/button";
+import { Container } from "@/design-system/container";
 
 export default function Error({
   error,

@@ -1,5 +1,5 @@
-import { Container } from "@/design-system/layout/container";
-import { Skeleton } from "@/design-system/feedback/skeleton";
+import { Container } from "@/design-system/container";
+import { Skeleton } from "@/design-system/skeleton";
 
 export default function UserProfileLoading() {
   return (

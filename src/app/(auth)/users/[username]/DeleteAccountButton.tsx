@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Button } from "@/design-system/base/button";
-import { Modal } from "@/design-system/overlay/modal";
+import { Button } from "@/design-system/button";
+import { Modal } from "@/design-system/modal";
 import { actionDeleteAccount } from "@/modules/auth/auth-action";
 
 interface DeleteAccountButtonProps {

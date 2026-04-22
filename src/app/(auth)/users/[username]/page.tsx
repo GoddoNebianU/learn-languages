@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Button } from "@/design-system/base/button";
+import { Button } from "@/design-system/button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";

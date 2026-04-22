@@ -26,13 +26,8 @@ src/
 │   ├── dictionary/   # 词典 (不完整: 仅 action, 无 repo — AI 驱动)
 │   ├── translator/   # 翻译 (不完整: 无 repo — AI 驱动)
 │   └── shared/       # 跨模块工具 (action-utils.ts)
-├── design-system/    # CVA 基础组件 (与 components/ 分离)
-│   ├── base/         # button, input, card, checkbox, radio, switch, select, textarea, range
-│   ├── feedback/     # alert, progress, skeleton, toast
-│   ├── layout/       # container, grid, stack
-│   ├── overlay/      # modal, overflow-dropdown
-│   ├── data-display/ # badge, divider
-│   └── navigation/   # tabs
+├── design-system/    # CVA 基础组件 (平铺, 与 components/ 分离)
+│   # button, card, input, select, textarea, range, progress, skeleton, stack, container, modal, overflow-dropdown
 ├── components/       # 业务组件 (非通用 UI)
 │   ├── layout/       # Navbar, MobileMenu, LanguageSettings
 │   ├── follow/       # FollowButton, FollowStats, UserList
@@ -85,7 +80,7 @@ src/
 - **Actions**: 必须有 `"use server"`
 
 ### 导入风格
-- 显式路径: `@/design-system/base/button` (无 barrel exports)
+- 显式路径: `@/design-system/button` (无 barrel exports)
 - 不创建 `index.ts` 文件
 
 ### 验证

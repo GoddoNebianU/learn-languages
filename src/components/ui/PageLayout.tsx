@@ -3,8 +3,8 @@
  *
  * 使用 Design System 重写的页面布局组件
  */
-import { Card } from "@/design-system/base/card";
-import { Container } from "@/design-system/layout/container";
+import { Card } from "@/design-system/card";
+import { Container } from "@/design-system/container";
 import { cn } from "@/utils/cn";
 
 type PageLayoutVariant = "centered-card" | "full-width" | "fullscreen";

@@ -4,7 +4,7 @@ import { MobileMenu } from "./MobileMenu";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { Button } from "@/design-system/base/button";
+import { Button } from "@/design-system/button";
 import type { ReactNode } from "react";
 
 function GithubIcon({ size = 24 }: { size?: number }) {

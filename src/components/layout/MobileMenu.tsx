@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import type { NavigationItem } from "./Navbar";
-import { Button } from "@/design-system/base/button";
+import { Button } from "@/design-system/button";
 
 // Module-level counter to prevent body overflow conflicts with other overlays (e.g. Modal)
 let overflowLockCount = 0;

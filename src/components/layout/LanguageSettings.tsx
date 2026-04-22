@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { Button } from "@/design-system/base/button";
+import { Button } from "@/design-system/button";
 
 const languages = [
   { code: "en-US", label: "English" },

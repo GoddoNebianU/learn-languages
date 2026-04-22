@@ -7,10 +7,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
-import { Card, CardBody } from "@/design-system/base/card";
-import { Input } from "@/design-system/base/input";
-import { Button } from "@/design-system/base/button";
-import { VStack } from "@/design-system/layout/stack";
+import { Card, CardBody } from "@/design-system/card";
+import { Input } from "@/design-system/input";
+import { Button } from "@/design-system/button";
+import { VStack } from "@/design-system/stack";
 
 function SignUpPageInner() {
   const t = useTranslations("auth");

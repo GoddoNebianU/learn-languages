@@ -3,7 +3,7 @@
  *
  * 使用 Design System 重写的页面标题组件
  */
-import { VStack } from "@/design-system/layout/stack";
+import { VStack } from "@/design-system/stack";
 import { cn } from "@/utils/cn";
 
 interface PageHeaderProps {

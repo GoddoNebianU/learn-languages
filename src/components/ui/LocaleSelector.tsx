@@ -5,9 +5,9 @@
  */
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Input } from "@/design-system/base/input";
-import { Select } from "@/design-system/base/select";
-import { VStack } from "@/design-system/layout/stack";
+import { Input } from "@/design-system/input";
+import { Select } from "@/design-system/select";
+import { VStack } from "@/design-system/stack";
 
 const COMMON_LANGUAGES = [
   { label: "chinese", value: "chinese" },

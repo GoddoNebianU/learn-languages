@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Button } from "@/design-system/base/button";
+import { Button } from "@/design-system/button";
 import { actionToggleFollow } from "@/modules/follow/follow-action";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";

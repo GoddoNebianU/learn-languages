@@ -52,3 +52,6 @@ test.js
 certificates
 
 .opencode
+.agents
+
+/logs
