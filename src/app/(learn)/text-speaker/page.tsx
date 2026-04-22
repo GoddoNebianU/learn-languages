@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, IconClick } from "@/design-system/button";
+import { Button } from "@/design-system/button"
+import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { IMAGES } from "@/config/images";
@@ -290,54 +291,54 @@ export default function TextSpeakerPage() {
           {/* 速度调节面板 */}
           {showSpeedAdjust && (
             <div className="bg-white p-6 rounded-lg border-gray-200 border-2 shadow-2xl absolute left-1/2 -translate-x-1/2 -translate-y-full -top-4 flex flex-row flex-wrap gap-2 justify-center items-center z-10">
-              <IconClick
-                size="lg"
+              <IconButton
+                size={28}
                 onClick={letMeSetSpeed(0.5)}
-                src={IMAGES.speed_0_5x}
-                alt="0.5x"
+                iconSrc={IMAGES.speed_0_5x}
+                iconAlt="0.5x"
                 className={speed === 0.5 ? "bg-gray-200" : ""}
-              ></IconClick>
-              <IconClick
-                size="lg"
+              ></IconButton>
+              <IconButton
+                size={28}
                 onClick={letMeSetSpeed(0.7)}
-                src={IMAGES.speed_0_7x}
-                alt="0.7x"
+                iconSrc={IMAGES.speed_0_7x}
+                iconAlt="0.7x"
                 className={speed === 0.7 ? "bg-gray-200" : ""}
-              ></IconClick>
-              <IconClick
-                size="lg"
+              ></IconButton>
+              <IconButton
+                size={28}
                 onClick={letMeSetSpeed(1)}
-                src={IMAGES.speed_1x}
-                alt="1x"
+                iconSrc={IMAGES.speed_1x}
+                iconAlt="1x"
                 className={speed === 1 ? "bg-gray-200" : ""}
-              ></IconClick>
-              <IconClick
-                size="lg"
+              ></IconButton>
+              <IconButton
+                size={28}
                 onClick={letMeSetSpeed(1.2)}
-                src={IMAGES.speed_1_2_x}
-                alt="1.2x"
+                iconSrc={IMAGES.speed_1_2_x}
+                iconAlt="1.2x"
                 className={speed === 1.2 ? "bg-gray-200" : ""}
-              ></IconClick>
-              <IconClick
-                size="lg"
+              ></IconButton>
+              <IconButton
+                size={28}
                 onClick={letMeSetSpeed(1.5)}
-                src={IMAGES.speed_1_5x}
-                alt="1.5x"
+                iconSrc={IMAGES.speed_1_5x}
+                iconAlt="1.5x"
                 className={speed === 1.5 ? "bg-gray-200" : ""}
-              ></IconClick>
+              ></IconButton>
             </div>
           )}
           {/* 播放/暂停按钮 */}
-          <IconClick
-            size="lg"
+          <IconButton
+            size={28}
             onClick={speak}
-            src={pause ? IMAGES.play_arrow : IMAGES.pause}
-            alt="playorpause"
+            iconSrc={pause ? IMAGES.play_arrow : IMAGES.pause}
+            iconAlt="playorpause"
             className={`${processing ? "bg-gray-200" : ""}`}
-          ></IconClick>
+          ></IconButton>
           {/* 自动暂停按钮 */}
-          <IconClick
-            size="lg"
+          <IconButton
+            size={28}
             onClick={() => {
               setAutopause(!autopause);
               if (objurlRef.current) {
@@ -345,31 +346,31 @@ export default function TextSpeakerPage() {
               }
               setPause(true);
             }}
-            src={autopause ? IMAGES.autoplay : IMAGES.autopause}
-            alt="autoplayorpause"
-          ></IconClick>
+            iconSrc={autopause ? IMAGES.autoplay : IMAGES.autopause}
+            iconAlt="autoplayorpause"
+          ></IconButton>
           {/* 速度调节按钮 */}
-          <IconClick
-            size="lg"
+          <IconButton
+            size={28}
             onClick={() => setShowSpeedAdjust(!showSpeedAdjust)}
-            src={IMAGES.speed}
-            alt="speed"
+            iconSrc={IMAGES.speed}
+            iconAlt="speed"
             className={`${showSpeedAdjust ? "bg-gray-200" : ""}`}
-          ></IconClick>
+          ></IconButton>
           {/* 保存按钮 */}
-          <IconClick
-            size="lg"
+          <IconButton
+            size={28}
             onClick={save}
-            src={IMAGES.save}
-            alt="save"
+            iconSrc={IMAGES.save}
+            iconAlt="save"
             className={`${saving ? "bg-gray-200" : ""}`}
-          ></IconClick>
+          ></IconButton>
           {/* 语言选择器 */}
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
             <span className="text-sm text-gray-600">{t("language")}</span>
             {TTS_LANGUAGES.slice(0, 6).map((lang) => (
               <Button
-                variant="secondary"
+                variant="light"
                 key={lang.value}
                 selected={!customLanguage && selectedLanguage === lang.value}
                 onClick={() => {
@@ -402,14 +403,14 @@ export default function TextSpeakerPage() {
           {/* 功能开关按钮 */}
           <div className="w-full flex flex-row flex-wrap gap-2 justify-center items-center">
             <Button
-              variant="secondary"
+              variant="light"
               selected={ipaEnabled}
               onClick={() => setIPAEnabled(!ipaEnabled)}
             >
               {t("generateIPA")}
             </Button>
             <Button
-              variant="secondary"
+              variant="light"
               onClick={() => {
                 setShowSaveList(!showSaveList);
               }}

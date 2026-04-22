@@ -35,7 +35,7 @@ export function FollowButton({
 
   if (isFollowing) {
     return (
-      <Button variant="secondary" onClick={handleToggleFollow} disabled={isPending}>
+      <Button variant="light" onClick={handleToggleFollow} disabled={isPending}>
         {isPending ? "..." : t("following")}
       </Button>
     );

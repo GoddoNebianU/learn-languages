@@ -8,7 +8,7 @@ import { Layers, Check, RotateCcw, Volume2, Headphones, ChevronLeft, ChevronRigh
 import { actionGetCardsByDeckId } from "@/modules/card/card-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Button, CircleButton } from "@/design-system/button";
+import { Button } from "@/design-system/button";
 import { Progress } from "@/design-system/progress";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
@@ -267,7 +267,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <div className="text-red-600 mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg max-w-md">
             {error}
           </div>
-          <Button variant="secondary" onClick={() => router.push("/decks")}>
+          <Button variant="light" onClick={() => router.push("/decks")}>
             {t("backToDecks")}
           </Button>
         </VStack>
@@ -284,7 +284,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">{t("allDone")}</h2>
           <p className="text-gray-600 mb-6">{t("allDoneDesc")}</p>
-          <Button variant="secondary" onClick={() => router.push("/decks")}>
+          <Button variant="light" onClick={() => router.push("/decks")}>
             {t("backToDecks")}
           </Button>
         </VStack>
@@ -330,7 +330,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         <HStack justify="center" gap={1} className="flex-wrap">
           {studyModeOptions.map((option) => (
             <Button
-              variant="secondary"
+              variant="light"
               key={option.value}
               onClick={() => setStudyMode(option.value)}
               selected={studyMode === option.value}
@@ -344,7 +344,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         
         <HStack justify="center" gap={2}>
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => {
               setIsReversed(!isReversed);
               setShowAnswer(false);
@@ -356,7 +356,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             {t("reverse")}
           </Button>
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => {
               setIsDictation(!isDictation);
             }}
@@ -420,7 +420,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
       <HStack justify="center">
         {!showAnswer ? (
-          <Button variant="secondary"
+          <Button variant="light"
             onClick={handleShowAnswer}
             disabled={isPending}
             className="px-8 text-lg rounded-full"
@@ -435,17 +435,17 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </div>
             <p className="text-gray-600">{t("allDoneDesc")}</p>
             <HStack gap={2}>
-              <Button variant="secondary" onClick={() => router.push("/decks")}>
+              <Button variant="light" onClick={() => router.push("/decks")}>
                 {t("backToDecks")}
               </Button>
-              <Button variant="secondary" onClick={() => setCurrentIndex(0)}>
+              <Button variant="light" onClick={() => setCurrentIndex(0)}>
                 {t("restart")}
               </Button>
             </HStack>
           </VStack>
         ) : (
           <HStack gap={4}>
-            <Button variant="secondary"
+            <Button variant="light"
               onClick={handlePrevCard}
             >
               <ChevronLeft className="w-5 h-5" />
@@ -454,7 +454,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               {t("nextCard")}
               <span className="ml-2 text-xs opacity-60">Space</span>
             </span>
-            <Button variant="secondary"
+            <Button variant="light"
               onClick={handleNextCard}
             >
               <ChevronRight className="w-5 h-5" />

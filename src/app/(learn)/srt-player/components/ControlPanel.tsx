@@ -87,7 +87,7 @@ export function ControlPanel() {
                 </VStack>
               </HStack>
               <Button
-                variant="secondary"
+                variant="light"
                 onClick={videoUrl ? undefined : handleVideoUpload}
                 disabled={!!videoUrl}
                 size="sm"
@@ -111,7 +111,7 @@ export function ControlPanel() {
                 </VStack>
               </HStack>
               <Button
-                variant="secondary"
+                variant="light"
                 onClick={subtitleUrl ? undefined : handleSubtitleUpload}
                 disabled={!!subtitleUrl}
                 size="sm"
@@ -170,13 +170,13 @@ export function ControlPanel() {
               onClick={toggleAutoPause}
               disabled={!canPlay}
               leftIcon={<Pause className="w-4 h-4" />}
-              variant={autoPause ? 'primary' : 'secondary'}
+              variant={autoPause ? 'primary' : 'light'}
             >
               {t('autoPause', { enabled: autoPause ? t('on') : t('off') })}
             </Button>
 
             <Button
-              variant="secondary"
+              variant="light"
               onClick={toggleSettings}
               leftIcon={<Settings className="w-4 h-4" />}
             >
@@ -184,7 +184,7 @@ export function ControlPanel() {
             </Button>
 
             <Button
-              variant="secondary"
+              variant="light"
               onClick={toggleShortcuts}
               leftIcon={<Keyboard className="w-4 h-4" />}
             >
@@ -265,7 +265,7 @@ export function ControlPanel() {
                     <Button
                       key={pos}
                       size="sm"
-                      variant={settings.position === pos ? 'primary' : 'secondary'}
+                      variant={settings.position === pos ? 'primary' : 'light'}
                       onClick={() => updateSettings({ position: pos })}
                     >
                       {t(pos)}

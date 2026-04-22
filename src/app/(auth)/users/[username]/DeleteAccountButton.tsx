@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/design-system/button";
+import { LinkButton } from "@/design-system/link-button";
 import { Modal } from "@/design-system/modal";
 import { actionDeleteAccount } from "@/modules/auth/auth-action";
 
@@ -44,13 +45,12 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
 
   return (
     <>
-      <Button
-        variant="link"
+      <LinkButton
         onClick={() => setShowModal(true)}
         className="text-xs text-gray-400 hover:text-red-500"
       >
         {t("deleteAccount.button")}
-      </Button>
+      </LinkButton>
 
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <div className="p-6">
@@ -85,11 +85,11 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
+            <Button variant="light" onClick={() => setShowModal(false)}>
               {t("deleteAccount.cancel")}
             </Button>
             <Button 
-              variant="error" 
+              variant="light" 
               onClick={handleDelete} 
               loading={loading}
               disabled={confirmUsername !== username}

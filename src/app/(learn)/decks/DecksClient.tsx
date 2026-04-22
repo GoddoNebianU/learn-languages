@@ -9,7 +9,8 @@ import {
   Lock,
   Trash2,
 } from "lucide-react";
-import { CircleButton, Button } from "@/design-system/button";
+import { Button } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
 import { Skeleton } from "@/design-system/skeleton";
 import { VStack } from "@/design-system/stack";
 import { useEffect, useState } from "react";
@@ -116,7 +117,7 @@ const DeckCard = ({ deck, onUpdateDeck, onDeleteDeck }: DeckCardProps) => {
       </div>
 
       <div className="flex items-center gap-1 ml-4">
-        <CircleButton
+        <IconButton className="rounded-full"
           onClick={handleToggleVisibility}
           title={deck.visibility === "PUBLIC" ? t("setPrivate") : t("setPublic")}
         >
@@ -125,16 +126,16 @@ const DeckCard = ({ deck, onUpdateDeck, onDeleteDeck }: DeckCardProps) => {
           ) : (
             <Globe size={18} />
           )}
-        </CircleButton>
-        <CircleButton onClick={handleRename}>
+        </IconButton>
+        <IconButton className="rounded-full" onClick={handleRename}>
           <Pencil size={18} />
-        </CircleButton>
-        <CircleButton
+        </IconButton>
+        <IconButton
           onClick={handleDelete}
-          className="hover:text-red-500 hover:bg-red-50"
+          className="rounded-full hover:text-red-500 hover:bg-red-50"
         >
           <Trash2 size={18} />
-        </CircleButton>
+        </IconButton>
         <ChevronRight size={20} className="text-gray-400" />
       </div>
     </div>
@@ -194,7 +195,7 @@ export function DecksClient({ userId }: DecksClientProps) {
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div className="mb-4 flex gap-2">
-        <Button variant="secondary" onClick={handleCreateDeck}>
+        <Button variant="light" onClick={handleCreateDeck}>
           <Plus size={18} />
           {t("newDeck")}
         </Button>

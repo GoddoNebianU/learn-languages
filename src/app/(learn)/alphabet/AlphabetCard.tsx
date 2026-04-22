@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
-import { IconClick, CircleToggleButton, CircleButton, Button } from "@/design-system/button";
+import { Button } from "@/design-system/button"
+import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -102,10 +103,10 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
     <PageLayout className="relative">
       {/* 右上角返回按钮 - outside the white card */}
       <div className="flex justify-end mb-4">
-        <IconClick
-          size="lg"
-          alt="close"
-          src={IMAGES.close}
+        <IconButton
+          size={32}
+          iconAlt="close"
+          iconSrc={IMAGES.close}
           onClick={onBack}
           className="bg-white rounded-full shadow-md"
         />
@@ -121,35 +122,43 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           </span>
           {/* 显示选项切换按钮组 */}
           <div className="flex gap-2 flex-wrap">
-            <CircleToggleButton
+            <Button
+              variant="light"
               selected={showLetter}
               onClick={() => setShowLetter(!showLetter)}
+              className="rounded-full px-3 py-1 text-sm transition-colors"
             >
               {t("letter")}
-            </CircleToggleButton>
+            </Button>
             {/* IPA 音标显示切换 */}
-            <CircleToggleButton
+            <Button
+              variant="light"
               selected={showIPA}
               onClick={() => setShowIPA(!showIPA)}
+              className="rounded-full px-3 py-1 text-sm transition-colors"
             >
               IPA
-            </CircleToggleButton>
+            </Button>
             {/* 罗马音显示切换（仅日语显示） */}
             {hasRomanization && (
-              <CircleToggleButton
+              <Button
+                variant="light"
                 selected={showRoman}
                 onClick={() => setShowRoman(!showRoman)}
+                className="rounded-full px-3 py-1 text-sm transition-colors"
               >
                 {t("roman")}
-              </CircleToggleButton>
+              </Button>
             )}
             {/* 随机模式切换 */}
-            <CircleToggleButton
+            <Button
+              variant="light"
               selected={isRandomMode}
               onClick={() => setIsRandomMode(!isRandomMode)}
+              className="rounded-full px-3 py-1 text-sm transition-colors"
             >
               {t("random")}
-            </CircleToggleButton>
+            </Button>
           </div>
         </div>
 
@@ -184,9 +193,9 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         {/* 底部导航控制区域 */}
         <div className="flex justify-between items-center">
           {/* 上一个按钮 */}
-          <CircleButton onClick={goToPrevious} aria-label={t("previousLetter")}>
+          <IconButton className="rounded-full" onClick={goToPrevious} aria-label={t("previousLetter")}>
             <ChevronLeft size={20} />
-          </CircleButton>
+          </IconButton>
 
           {/* 中间区域：随机按钮 */}
           <div className="flex gap-2 items-center">
@@ -202,9 +211,9 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           </div>
 
           {/* 下一个按钮 */}
-          <CircleButton onClick={goToNext} aria-label={t("nextLetter")}>
+          <IconButton className="rounded-full" onClick={goToNext} aria-label={t("nextLetter")}>
             <ChevronRight size={20} />
-          </CircleButton>
+          </IconButton>
         </div>
       </Card>
 

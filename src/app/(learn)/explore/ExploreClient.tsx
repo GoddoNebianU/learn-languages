@@ -6,7 +6,7 @@ import {
   Search,
   ArrowUpDown,
 } from "lucide-react";
-import { CircleButton } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack } from "@/design-system/stack";
@@ -75,7 +75,7 @@ const PublicDeckCard = ({ deck, currentUserId, onUpdateFavorite }: PublicDeckCar
           <Layers size={18} className="sm:hidden" />
           <Layers size={22} className="hidden sm:block" />
         </div>
-        <CircleButton
+        <IconButton className="rounded-full"
           onClick={handleToggleFavorite}
           title={isFavorited ? t("unfavorite") : t("favorite")}
         >
@@ -83,7 +83,7 @@ const PublicDeckCard = ({ deck, currentUserId, onUpdateFavorite }: PublicDeckCar
             size={16}
             className={`sm:w-[18px] sm:h-[18px] sm:text-[18px] ${isFavorited ? "fill-red-500 text-red-500" : ""}`}
           />
-        </CircleButton>
+        </IconButton>
       </div>
 
       <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base mb-1 sm:mb-2">{deck.name}</h3>
@@ -161,16 +161,16 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
           leftIcon={<Search size={18} />}
           containerClassName="flex-1"
         />
-        <CircleButton
+        <IconButton
           onClick={handleToggleSort}
           title={sortByFavorites ? t("sortByFavoritesActive") : t("sortByFavorites")}
-          className={sortByFavorites ? "bg-primary-100 text-primary-600 hover:bg-primary-200" : ""}
+          className={`rounded-full ${sortByFavorites ? "bg-primary-100 text-primary-600 hover:bg-primary-200" : ""}`}
         >
           <ArrowUpDown size={18} />
-        </CircleButton>
-        <CircleButton onClick={handleSearch}>
+        </IconButton>
+        <IconButton className="rounded-full" onClick={handleSearch}>
           <Search size={18} />
-        </CircleButton>
+        </IconButton>
       </HStack>
 
       {loading ? (

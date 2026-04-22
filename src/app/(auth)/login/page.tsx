@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/card";
 import { Input } from "@/design-system/input";
 import { Button } from "@/design-system/button";
+import { LinkButton } from "@/design-system/link-button";
 import { VStack } from "@/design-system/stack";
 
 function LoginPageInner() {
@@ -131,14 +132,12 @@ function LoginPageInner() {
                 <p className="text-yellow-800 dark:text-yellow-200 mb-2">
                   {t("emailNotVerifiedHint")}
                 </p>
-                <Button 
-                  variant="link"
+                <LinkButton 
                   onClick={handleResendVerification}
-                  loading={resendLoading}
-                  size="sm"
+                  className="text-sm"
                 >
                   {t("resendVerification")}
-                </Button>
+                </LinkButton>
               </div>
             )}
             

@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
+import { LinkButton } from "@/design-system/link-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { Modal } from "@/design-system/modal";
@@ -164,14 +166,12 @@ export function EditCardModal({
             <label className="block text-sm font-medium text-gray-700">
               {t("meanings")} *
             </label>
-            <Button
-              variant="link"
+            <LinkButton
               onClick={addMeaning}
               className="text-sm text-blue-600 hover:text-blue-700"
-              leftIcon={<Plus size={14} />}
             >
               {t("addMeaning")}
-            </Button>
+            </LinkButton>
           </HStack>
           
           <VStack gap={4}>
@@ -197,13 +197,12 @@ export function EditCardModal({
                     />
                   </div>
                   {meanings.length > 1 && (
-                    <Button
-                      variant="ghost"
+                    <IconButton
                       onClick={() => removeMeaning(index)}
                       className="h-auto p-2 text-gray-400 hover:text-red-500"
                     >
                       <Trash2 size={16} />
-                    </Button>
+                    </IconButton>
                   )}
                 </HStack>
                 <Textarea
@@ -219,7 +218,7 @@ export function EditCardModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant="light" onClick={onClose}>
           {t("cancel")}
         </Button>
         <Button variant="primary" onClick={handleUpdate} loading={isSubmitting}>

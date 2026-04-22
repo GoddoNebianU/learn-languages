@@ -48,7 +48,7 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
       <div className="flex flex-wrap gap-2 mb-2">
         {POPULAR_LANGUAGES.map((lang) => (
           <Button
-            variant="secondary"
+            variant="light"
             key={lang.code}
             type="button"
             selected={isPresetLanguage && value === lang.code}
@@ -59,7 +59,7 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
           </Button>
         ))}
         <Button
-          variant="secondary"
+          variant="light"
           type="button"
           selected={!isPresetLanguage && !!value}
           onClick={handleCustomToggle}

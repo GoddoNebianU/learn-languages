@@ -62,7 +62,7 @@ export default function Alphabet() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* 日语假名选项 */}
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => setChosenAlphabet("japanese")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -74,7 +74,7 @@ export default function Alphabet() {
 
           {/* 英语字母选项 */}
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => setChosenAlphabet("english")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -86,7 +86,7 @@ export default function Alphabet() {
 
           {/* 维吾尔语字母选项 */}
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => setChosenAlphabet("uyghur")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >
@@ -98,7 +98,7 @@ export default function Alphabet() {
 
           {/* 世界语字母选项 */}
           <Button
-            variant="secondary"
+            variant="light"
             onClick={() => setChosenAlphabet("esperanto")}
             className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
           >

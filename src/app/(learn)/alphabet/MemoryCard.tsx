@@ -1,4 +1,5 @@
-import { Button, IconClick } from "@/design-system/button";
+import { Button } from "@/design-system/button"
+import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import {
@@ -46,12 +47,12 @@ export function MemoryCard({
     >
       <div className="m-4 p-4 w-full md:w-[60dvw] flex-col rounded-lg shadow border-gray-200 border flex justify-center items-center">
         <div className="w-full flex justify-end items-center">
-          <IconClick
-            size="lg"
-            alt="close"
-            src={IMAGES.close}
+          <IconButton
+            size={28}
+            iconAlt="close"
+            iconSrc={IMAGES.close}
             onClick={() => setChosenAlphabet(null)}
-          ></IconClick>
+          ></IconButton>
         </div>
         <div className="flex flex-col gap-12 justify-center items-center">
           <span className="text-7xl md:text-9xl">
@@ -62,22 +63,22 @@ export function MemoryCard({
           </span>
         </div>
         <div className="flex flex-row mt-32 items-center justify-center gap-2">
-          <IconClick
-            size="lg"
-            alt="refresh"
-            src={IMAGES.refresh}
+          <IconButton
+            size={28}
+            iconAlt="refresh"
+            iconSrc={IMAGES.refresh}
             onClick={refresh}
-          ></IconClick>
-          <IconClick
-            size="lg"
-            alt="more"
-            src={IMAGES.more_horiz}
+          ></IconButton>
+          <IconButton
+            size={28}
+            iconAlt="more"
+            iconSrc={IMAGES.more_horiz}
             onClick={() => setMore(!more)}
-          ></IconClick>
+          ></IconButton>
           {more ? (
             <>
               <Button
-                variant="secondary"
+                variant="light"
                 className="w-20"
                 onClick={() => {
                   setLetterDisplay(!letterDisplay);
@@ -86,7 +87,7 @@ export function MemoryCard({
                 {letterDisplay ? t("hideLetter") : t("showLetter")}
               </Button>
               <Button
-                variant="secondary"
+                variant="light"
                 className="w-20"
                 onClick={() => {
                   setIPADisplay(!ipaDisplay);

@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import type { NavigationItem } from "./Navbar";
-import { Button } from "@/design-system/button";
 
 // Module-level counter to prevent body overflow conflicts with other overlays (e.g. Modal)
 let overflowLockCount = 0;
@@ -111,16 +110,16 @@ export function MobileMenu({ items }: MobileMenuProps) {
   return (
     <div className="relative" ref={menuRef}>
       <div ref={triggerWrapperRef}>
-        <Button
-          variant="ghost-light"
+        <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="h-auto p-2"
+          className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           aria-label={isOpen ? "关闭菜单" : "打开菜单"}
           aria-expanded={isOpen}
           aria-haspopup="menu"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </Button>
+        </button>
       </div>
 
       <div

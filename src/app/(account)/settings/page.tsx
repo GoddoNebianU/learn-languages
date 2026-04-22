@@ -29,7 +29,7 @@ export default function SettingsPage() {
               {availableThemes.map((theme) => (
                 <Button
                   key={theme.id}
-                  variant="ghost"
+                  variant="light"
                   onClick={() => setTheme(theme.id)}
                   className={cn(
                     "h-auto group relative flex flex-col items-center gap-2 p-2 rounded-lg transition-all",

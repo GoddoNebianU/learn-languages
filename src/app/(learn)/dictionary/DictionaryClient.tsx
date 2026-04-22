@@ -173,7 +173,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
           containerClassName="flex-1"
         />
         <Button
-          variant="secondary"
+          variant="light"
           type="submit"
           className="px-6 rounded-full whitespace-nowrap"
           loading={isSearching}
@@ -238,7 +238,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                   </Select>
                 )}
                 <Button
-                  variant="secondary"
+                  variant="light"
                   onClick={handleSave}
                   className="w-10 shrink-0"
                   title={t("saveToFolder")}
@@ -260,7 +260,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
             <div className="border-t border-gray-200 pt-4 mt-4">
               <Button
-                variant="secondary"
+                variant="light"
                 onClick={relookup}
                 className="text-sm"
                 loading={isSearching}

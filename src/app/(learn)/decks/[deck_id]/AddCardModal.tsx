@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
+import { LinkButton } from "@/design-system/link-button";
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { Textarea } from "@/design-system/textarea";
@@ -165,7 +167,7 @@ export function AddCardModal({
             {QUERY_LANGUAGES.map((lang) => (
               <Button
                 key={lang.value}
-                variant="selectable"
+                variant="light"
                 selected={!customQueryLang && queryLang === lang.value}
                 onClick={() => {
                   setQueryLang(lang.value);
@@ -217,14 +219,12 @@ export function AddCardModal({
             <label className="block text-sm font-medium text-gray-800">
               {t("meanings")} *
             </label>
-            <Button
-              variant="link"
+            <LinkButton
               onClick={addMeaning}
               className="text-sm text-blue-600 hover:text-blue-700"
-              leftIcon={<Plus size={14} />}
             >
               {t("addMeaning")}
-            </Button>
+            </LinkButton>
           </HStack>
           
           <VStack gap={4}>
@@ -250,13 +250,12 @@ export function AddCardModal({
                     />
                   </div>
                   {meanings.length > 1 && (
-                    <Button
-                      variant="ghost"
+                    <IconButton
                       onClick={() => removeMeaning(index)}
                       className="h-auto p-2 text-gray-400 hover:text-red-500"
                     >
                       <Trash2 size={16} />
-                    </Button>
+                    </IconButton>
                   )}
                 </HStack>
                 <Textarea
@@ -272,7 +271,7 @@ export function AddCardModal({
       </Modal.Body>
 
       <Modal.Footer>
-<Button variant="secondary" onClick={handleClose}>
+<Button variant="light" onClick={handleClose}>
                 {t("cancel")}
               </Button>
         <Button variant="primary" onClick={handleAdd} loading={isSubmitting}>

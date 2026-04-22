@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
-import { Button } from "@/design-system/button";
 
 const languages = [
   { code: "en-US", label: "English" },
@@ -88,8 +87,8 @@ export function LanguageSettings() {
 
   return (
     <div className="relative" ref={menuRef}>
-      <Button
-        variant="ghost-light"
+      <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === "Escape" && isOpen) {
@@ -97,13 +96,13 @@ export function LanguageSettings() {
             setIsOpen(false);
           }
         }}
-        className="h-auto p-2"
+        className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
         aria-label="切换语言"
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >
         <Languages size={20} />
-      </Button>
+      </button>
 
       <div
         className={cn(
@@ -116,17 +115,17 @@ export function LanguageSettings() {
       >
         <div className="py-1">
           {languages.map((lang) => (
-            <Button
+            <button
               key={lang.code}
-              variant="ghost"
+              type="button"
               onClick={() => setLocale(lang.code)}
               onKeyDown={handleMenuKeyDown}
               tabIndex={isOpen ? 0 : -1}
-              className="h-auto w-full justify-start px-4 py-2.5 text-left"
+              className="inline-flex items-center w-full justify-start px-4 py-2.5 text-left text-gray-700 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
               role="menuitem"
             >
               {lang.label}
-            </Button>
+            </button>
           ))}
         </div>
       </div>

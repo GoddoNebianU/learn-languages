@@ -134,7 +134,7 @@ export default function SrtPlayerPage() {
             <Video size={16} />
             <span className="text-sm">{srtT("videoFile")}</span>
           </div>
-          <Button variant="secondary" onClick={handleVideoUpload} disabled={!!videoUrl}>
+          <Button variant="light" onClick={handleVideoUpload} disabled={!!videoUrl}>
             {videoUrl ? srtT("uploaded") : srtT("uploadVideoButton")}
           </Button>
         </div>
@@ -145,7 +145,7 @@ export default function SrtPlayerPage() {
               {subtitleData.length > 0 ? srtT("subtitleUploaded", { count: subtitleData.length }) : srtT("subtitleNotUploaded")}
             </span>
           </div>
-          <Button variant="secondary" onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
+          <Button variant="light" onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
             {subtitleUrl ? srtT("uploaded") : srtT("uploadSubtitleButton")}
           </Button>
         </div>
@@ -154,27 +154,27 @@ export default function SrtPlayerPage() {
       {canPlay && (
         <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
           {isPlaying ? (
-            <Button variant="secondary" onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
+            <Button variant="light" onClick={togglePlayPause} leftIcon={<Pause className="w-4 h-4" />}>
               {srtT('pause')}
             </Button>
           ) : (
-            <Button variant="secondary" onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
+            <Button variant="light" onClick={togglePlayPause} leftIcon={<Play className="w-4 h-4" />}>
               {srtT('play')}
             </Button>
           )}
-          <Button variant="secondary" onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
+          <Button variant="light" onClick={previousSubtitle} leftIcon={<ChevronLeft className="w-4 h-4" />}>
             {srtT('previous')}
           </Button>
-          <Button variant="secondary" onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
+          <Button variant="light" onClick={nextSubtitle} rightIcon={<ChevronRight className="w-4 h-4" />}>
             {srtT('next')}
           </Button>
-          <Button variant="secondary" onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
+          <Button variant="light" onClick={restartSubtitle} leftIcon={<RotateCcw className="w-4 h-4" />}>
             {srtT('restart')}
           </Button>
-          <Button variant="secondary" onClick={handlePlaybackRateChange}>
+          <Button variant="light" onClick={handlePlaybackRateChange}>
             {playbackRate}x
           </Button>
-          <Button variant="secondary" onClick={toggleAutoPause}>
+          <Button variant="light" onClick={toggleAutoPause}>
             {srtT('autoPause', { enabled: autoPause ? srtT('on') : srtT('off') })}
           </Button>
         </HStack>

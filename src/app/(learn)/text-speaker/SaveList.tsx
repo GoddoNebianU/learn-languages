@@ -6,7 +6,8 @@ import {
   TextSpeakerArraySchema,
   TextSpeakerItemSchema,
 } from "@/lib/interfaces";
-import { Button, IconClick } from "@/design-system/button";
+import { LinkButton } from "@/design-system/link-button";
+import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
@@ -34,13 +35,13 @@ function TextCard({ item, handleUse, handleDel }: TextCardProps) {
         </div>
       </div>
       <div className="flex justify-center items-center border-gray-300 border-l-2 m-2">
-        <IconClick
-          src={IMAGES.delete}
-          alt="delete"
+        <IconButton
+          iconSrc={IMAGES.delete}
+          iconAlt="delete"
           onClick={onDelClick}
           className="place-self-center"
-          size="lg"
-        ></IconClick>
+          size={28}
+        ></IconButton>
       </div>
     </div>
   );
@@ -86,13 +87,12 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
       >
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-600">{t("saved")}</p>
-          <Button
-            variant="link"
+          <LinkButton
             onClick={handleDeleteAll}
             className="text-xs text-gray-500 hover:text-gray-800"
           >
             {t("clearAll")}
-          </Button>
+          </LinkButton>
         </div>
         <ul className="divide-y divide-gray-100">
           {data.map((item, i) => (

@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, IconClick, CircleButton } from "@/design-system/button";
+import { Button } from "@/design-system/button"
+import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { Select } from "@/design-system/select";
@@ -251,31 +252,31 @@ export default function TranslatorPage() {
               {translationResult?.sourceIpa || ""}
             </div>
             <div className="h-2/12 w-full flex justify-end items-center">
-              <IconClick
-                src={IMAGES.copy_all}
-                alt="copy"
+              <IconButton
+                iconSrc={IMAGES.copy_all}
+                iconAlt="copy"
                 onClick={async () => {
                   await navigator.clipboard.writeText(
                     taref.current?.value || "",
                   );
                 }}
-              ></IconClick>
-              <IconClick
-                src={IMAGES.play_arrow}
-                alt="play"
+              ></IconButton>
+              <IconButton
+                iconSrc={IMAGES.play_arrow}
+                iconAlt="play"
                 onClick={() => {
                   const text = taref.current?.value;
                   if (!text) return;
                   tts(text, translationResult?.sourceLanguage || "");
                 }}
-              ></IconClick>
+              ></IconButton>
             </div>
           </div>
           <div className="option1 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("sourceLanguage")}</span>
 {visibleSourceButtons.map((lang) => (
   <Button
-    variant="secondary"
+    variant="light"
     key={lang.value}
     selected={!customSourceLanguage && sourceLanguage === lang.value}
     onClick={() => {
@@ -292,7 +293,7 @@ export default function TranslatorPage() {
   visibleCount={sourceButtonCount}
   renderItem={(lang) => (
     <Button
-      variant="secondary"
+      variant="light"
       key={lang.value}
       selected={!customSourceLanguage && sourceLanguage === lang.value}
       onClick={() => {
@@ -321,7 +322,7 @@ export default function TranslatorPage() {
 />
             <div className="flex-1"></div>
             <Button
-              variant="secondary"
+              variant="light"
               selected={needIpa}
               onClick={() => setNeedIpa((prev) => !prev)}
               className="shrink-0"
@@ -340,16 +341,16 @@ export default function TranslatorPage() {
               {translationResult?.targetIpa || ""}
             </div>
             <div className="h-1/6 w-full flex justify-end items-center">
-              <IconClick
-                src={IMAGES.copy_all}
-                alt="copy"
+              <IconButton
+                iconSrc={IMAGES.copy_all}
+                iconAlt="copy"
                 onClick={async () => {
                   await navigator.clipboard.writeText(translationResult?.translatedText || "");
                 }}
-              ></IconClick>
-              <IconClick
-                src={IMAGES.play_arrow}
-                alt="play"
+              ></IconButton>
+              <IconButton
+                iconSrc={IMAGES.play_arrow}
+                iconAlt="play"
                 onClick={() => {
                   if (!translationResult) return;
                   tts(
@@ -357,14 +358,14 @@ export default function TranslatorPage() {
                     translationResult.targetLanguage,
                   );
                 }}
-              ></IconClick>
+              ></IconButton>
             </div>
           </div>
           <div className="option2 w-full flex gap-1 items-center">
             <span className="shrink-0">{t("translateInto")}</span>
 {visibleTargetButtons.map((lang) => (
   <Button
-    variant="secondary"
+    variant="light"
     key={lang.value}
     selected={!customTargetLanguage && targetLanguage === lang.value}
     onClick={() => {
@@ -381,7 +382,7 @@ export default function TranslatorPage() {
   visibleCount={targetButtonCount}
   renderItem={(lang) => (
     <Button
-      variant="secondary"
+      variant="light"
       key={lang.value}
       selected={!customTargetLanguage && targetLanguage === lang.value}
       onClick={() => {
@@ -424,12 +425,12 @@ export default function TranslatorPage() {
           {t("translate")}
         </Button>
         {translationResult && session && decks.length > 0 && (
-          <CircleButton
+          <IconButton className="rounded-full"
             onClick={() => setShowSaveModal(true)}
             title={t("saveAsCard")}
           >
             <Plus size={20} />
-          </CircleButton>
+          </IconButton>
         )}
       </div>
 
@@ -456,7 +457,7 @@ export default function TranslatorPage() {
               <div className="text-gray-700">{translationResult?.translatedText}</div>
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+              <Button variant="light" onClick={() => setShowSaveModal(false)}>
                 {t("cancel")}
               </Button>
               <Button variant="primary" onClick={handleSaveCard} loading={isSaving}>

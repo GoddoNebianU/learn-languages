@@ -1,7 +1,7 @@
 "use client";
 
 import { Layers, Heart, ExternalLink, ArrowLeft } from "lucide-react";
-import { CircleButton } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
@@ -68,9 +68,9 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
         <div className="flex items-center gap-3 mb-6">
-          <CircleButton onClick={() => router.push("/explore")}>
+          <IconButton className="rounded-full" onClick={() => router.push("/explore")}>
             <ArrowLeft size={18} />
-          </CircleButton>
+          </IconButton>
           <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
             {t("title")}
           </h1>
@@ -93,16 +93,14 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
                 </p>
               </div>
             </div>
-            <CircleButton
-              onClick={handleToggleFavorite}
+            <IconButton onClick={handleToggleFavorite}
               title={isFavorited ? t("unfavorite") : t("favorite")}
-              className="shrink-0"
-            >
+              className="rounded-full shrink-0">
               <Heart
                 size={20}
                 className={isFavorited ? "fill-red-500 text-red-500" : ""}
               />
-            </CircleButton>
+            </IconButton>
           </div>
 
           {deck.desc && (

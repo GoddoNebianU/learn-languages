@@ -1,6 +1,7 @@
 import { Trash2, Pencil } from "lucide-react";
 import { useState } from "react";
-import { Button, CircleButton } from "@/design-system/button";
+import { Button } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
 import { useTranslations } from "next-intl";
 import type { ActionOutputCard, CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
@@ -67,20 +68,20 @@ export function CardItem({
             <div className="flex items-center gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
               {!isReadOnly && (
                 <>
-                  <CircleButton
+                  <IconButton
                     onClick={() => setShowEditModal(true)}
                     title={t("edit")}
-                    className="text-gray-400 hover:text-blue-500 hover:bg-blue-50"
+                    className="rounded-full text-gray-400 hover:text-blue-500 hover:bg-blue-50"
                   >
                     <Pencil size={14} />
-                  </CircleButton>
-                  <CircleButton
+                  </IconButton>
+                  <IconButton
                     onClick={() => setShowDeleteConfirm(true)}
                     title={t("delete")}
-                    className="text-gray-400 hover:text-red-500 hover:bg-red-50"
+                    className="rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50"
                   >
                     <Trash2 size={14} />
-                  </CircleButton>
+                  </IconButton>
                 </>
               )}
             </div>
@@ -106,14 +107,14 @@ export function CardItem({
             <p className="text-gray-700 mb-4">{t("deleteConfirm")}</p>
             <div className="flex gap-2 justify-end">
               <Button
-                variant="ghost"
+                variant="light"
                 size="sm"
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 {t("cancel")}
               </Button>
               <Button
-                variant="error"
+                variant="light"
                 size="sm"
                 onClick={handleDelete}
               >
