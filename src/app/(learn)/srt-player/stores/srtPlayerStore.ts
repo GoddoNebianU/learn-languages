@@ -120,6 +120,10 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
         if (state.video.isPlaying) {
           get().pause();
         } else {
+          if (state.controls.autoPause && state.subtitle.currentIndex !== null) {
+            const currentSubtitle = state.subtitle.data[state.subtitle.currentIndex];
+            get().seek(currentSubtitle.start);
+          }
           get().play();
         }
       },

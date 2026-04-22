@@ -44,13 +44,13 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
 
   return (
     <div className={cn("flex items-center gap-3", className)}>
-      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums">
+      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums text-right w-12 shrink-0">
         {subtitleIndexDisplay}
       </span>
 
       <div
         ref={barRef}
-        className="relative flex-1 h-10 bg-gray-200 rounded cursor-pointer overflow-hidden"
+        className="relative flex-1 h-3 bg-gray-200 rounded-full cursor-pointer overflow-hidden"
         onClick={handleBarClick}
         role="slider"
         aria-label={t("subtitleProgress")}
@@ -73,7 +73,7 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
               key={entry.index}
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 w-[1px]",
-                isCurrent ? "h-3 bg-primary-700" : "h-2 bg-gray-500/50"
+                isCurrent ? "h-2 bg-primary-700" : "h-1.5 bg-gray-500/50"
               )}
               style={{ left: `${leftPercent}%` }}
             />
@@ -81,12 +81,12 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
         })}
 
         <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-primary-700 rounded-full border-2 border-white shadow"
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 bg-primary-700 rounded-full border border-white shadow"
           style={{ left: `${progressPercent}%` }}
         />
       </div>
 
-      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums">
+      <span className="text-xs text-gray-500 whitespace-nowrap tabular-nums text-left w-24 shrink-0">
         {formatTime(currentTime)} / {formatTime(duration)}
       </span>
     </div>

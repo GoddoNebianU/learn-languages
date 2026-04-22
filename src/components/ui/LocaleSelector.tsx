@@ -1,8 +1,3 @@
-/**
- * LocaleSelector - 语言选择器组件
- *
- * 使用 Design System 重写的语言选择器组件
- */
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Input } from "@/design-system/input";
@@ -23,10 +18,6 @@ const COMMON_LANGUAGES = [
   { label: "other", value: "other" },
 ] as const;
 
-function getLocaleLabel(t: (key: string) => string, label: string): string {
-  return t("translator." + label);
-}
-
 interface LocaleSelectorProps {
   value: string;
   onChange: (val: string) => void;
@@ -38,16 +29,13 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
   const isCommonLanguage = COMMON_LANGUAGES.some((l) => l.value === value && l.value !== "other");
   const showCustomInput = value === "other" || !isCommonLanguage;
 
-  // 计算输入框的值:如果是"other"使用自定义输入,否则使用外部传入的值
   const inputValue = value === "other" ? customInput : value;
 
-  // 处理自定义输入
   const handleCustomInputChange = (inputValue: string) => {
     setCustomInput(inputValue);
     onChange(inputValue);
   };
 
-  // 当选择常见语言或"其他"时
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
     if (selectedValue === "other") {
@@ -66,7 +54,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
       >
         {COMMON_LANGUAGES.map((lang) => (
           <option key={lang.value} value={lang.value}>
-            {getLocaleLabel(t, lang.label)}
+            {lang.label === "other" ? t("dictionary.other") : t(`translator.${lang.label}`)}
           </option>
         ))}
       </Select>
@@ -75,7 +63,7 @@ export function LocaleSelector({ value, onChange }: LocaleSelectorProps) {
           type="text"
           value={inputValue}
           onChange={(e) => handleCustomInputChange(e.target.value)}
-          placeholder={t("folder_id.enterLanguageName")}
+          placeholder={t("deck_id.enterLanguageName")}
           variant="bordered"
         />
       )}

@@ -114,7 +114,7 @@ export default function SrtPlayerPage() {
         <SubtitleProgressBar className="w-[85%] mx-auto mt-2" />
       )}
 
-      <div className="shadow rounded h-20 w-[85%] mx-auto flex-wrap flex items-begin justify-center">
+      <div className="shadow rounded h-20 w-[85%] mx-auto overflow-y-auto flex-wrap flex items-begin justify-center">
         {currentSubtitle && currentSubtitle.text.split(" ").map((s, i) => (
           <Link
             key={i}
@@ -128,25 +128,19 @@ export default function SrtPlayerPage() {
         ))}
       </div>
 
-      <div className="mx-auto mt-4 flex items-center justify-center flex-wrap gap-2 w-[85%]">
-        <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
-          <div className="flex items-center flex-col">
-            <Video size={16} />
-            <span className="text-sm">{srtT("videoFile")}</span>
-          </div>
-          <Button variant="light" onClick={handleVideoUpload} disabled={!!videoUrl}>
-            {videoUrl ? srtT("uploaded") : srtT("uploadVideoButton")}
+      <div className="mx-auto mt-4 flex items-center justify-center gap-4 w-[85%]">
+        <div className="border-gray-200 border-2 flex items-center gap-3 px-3 py-2 rounded">
+          <Video size={16} />
+          <span className="text-sm">{srtT("videoFile")}</span>
+          <Button variant="light" size="sm" onClick={handleVideoUpload}>
+            {srtT("upload")}
           </Button>
         </div>
-        <div className="border-gray-200 border-2 flex items p-2 justify-between items-center rounded gap-8">
-          <div className="flex items-center flex-col">
-            <FileText size={16} />
-            <span className="text-sm">
-              {subtitleData.length > 0 ? srtT("subtitleUploaded", { count: subtitleData.length }) : srtT("subtitleNotUploaded")}
-            </span>
-          </div>
-          <Button variant="light" onClick={handleSubtitleUpload} disabled={!!subtitleUrl}>
-            {subtitleUrl ? srtT("uploaded") : srtT("uploadSubtitleButton")}
+        <div className="border-gray-200 border-2 flex items-center gap-3 px-3 py-2 rounded">
+          <FileText size={16} />
+          <span className="text-sm">{srtT("subtitleFile")}</span>
+          <Button variant="light" size="sm" onClick={handleSubtitleUpload}>
+            {srtT("upload")}
           </Button>
         </div>
       </div>

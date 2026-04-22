@@ -272,7 +272,6 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">📚</div>
             <p className="text-gray-800 text-xl mb-2">{t("welcomeTitle")}</p>
             <p className="text-gray-600">{t("welcomeHint")}</p>
           </div>

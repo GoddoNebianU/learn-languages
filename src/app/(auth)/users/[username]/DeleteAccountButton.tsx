@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/design-system/button";
+import { Input } from "@/design-system/input";
 import { LinkButton } from "@/design-system/link-button";
 import { Modal } from "@/design-system/modal";
 import { actionDeleteAccount } from "@/modules/auth/auth-action";
@@ -74,11 +75,11 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t("deleteAccount.confirmLabel")} <span className="font-mono font-bold">{username}</span>
               </label>
-              <input
+              <Input
                 type="text"
                 value={confirmUsername}
                 onChange={(e) => setConfirmUsername(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                variant="bordered"
                 placeholder={username}
               />
             </div>

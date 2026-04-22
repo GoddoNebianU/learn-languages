@@ -15,7 +15,7 @@ interface CardItemProps {
   onUpdated: () => void;
 }
 
-const CARD_TYPE_KEYS: Record<CardType, string> = {
+const CARD_TYPE_KEYS: Record<CardType, "wordCard" | "phraseCard" | "sentenceCard"> = {
   WORD: "wordCard",
   PHRASE: "phraseCard",
   SENTENCE: "sentenceCard",

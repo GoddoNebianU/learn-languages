@@ -36,7 +36,7 @@ const TTS_LANGUAGES = [
 
 type TTSLabel = typeof TTS_LANGUAGES[number]["label"];
 
-function getLanguageLabel(t: (key: string) => string, label: TTSLabel): string {
+function getLanguageLabel(t: ReturnType<typeof useTranslations<"text_speaker">>, label: TTSLabel): string {
   switch (label) {
     case "auto": return t("languages.auto");
     case "chinese": return t("languages.chinese");

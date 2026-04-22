@@ -19,6 +19,8 @@ import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -179,12 +181,11 @@ export default function TranslatorPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-white">
-      {/* TCard Component */}
-      <div className="w-screen flex flex-col md:flex-row md:justify-between gap-2 p-2">
-        {/* Card Component - Left Side */}
+    <PageLayout>
+      <PageHeader title={t("title")} subtitle={t("description")} />
+
+      <div className="flex flex-col md:flex-row md:justify-between gap-2">
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
-          {/* ICard1 Component */}
           <div className="border border-gray-200 rounded-lg w-full h-64 p-2">
             <Textarea
               className="resize-none h-8/12 w-full"
@@ -217,7 +218,7 @@ export default function TranslatorPage() {
               ></IconButton>
             </div>
           </div>
-          <div className="option1 w-full flex gap-1 items-center">
+          <div className="w-full flex gap-1 items-center overflow-hidden">
             <Button
               variant="light"
               selected={!customSourceLanguage && sourceLanguage === "Auto"}
@@ -257,14 +258,12 @@ export default function TranslatorPage() {
               value={customSourceLanguage}
               onChange={(e) => setCustomSourceLanguage(e.target.value)}
               placeholder={t("customLanguage")}
-              className="w-auto min-w-[120px] shrink-0"
+              className="min-w-[80px] max-w-full"
             />
           </div>
         </div>
 
-        {/* Card Component - Right Side */}
         <div className="w-full md:w-1/2 flex flex-col-reverse gap-2">
-          {/* ICard2 Component */}
           <div className="bg-gray-100 rounded-lg w-full h-64 p-2">
             <div className="h-2/3 w-full overflow-y-auto">{translationResult?.translatedText || ""}</div>
             <div className="ipa w-full h-1/6 overflow-y-auto text-gray-600">
@@ -291,7 +290,7 @@ export default function TranslatorPage() {
               ></IconButton>
             </div>
           </div>
-          <div className="option2 w-full flex gap-1 items-center">
+          <div className="w-full flex gap-1 items-center overflow-hidden">
             <Button
               variant="light"
               selected={!customTargetLanguage && targetLanguage === "Chinese"}
@@ -320,14 +319,13 @@ export default function TranslatorPage() {
               value={customTargetLanguage}
               onChange={(e) => setCustomTargetLanguage(e.target.value)}
               placeholder={t("customLanguage")}
-              className="w-auto min-w-[120px] shrink-0"
+              className="min-w-[80px] max-w-full"
             />
           </div>
         </div>
       </div>
 
-      {/* TranslateButton Component */}
-      <div className="w-screen flex justify-center items-center gap-4">
+      <div className="flex justify-center items-center gap-4 mt-4">
         <Button
           variant="primary"
           onClick={translate}
@@ -380,6 +378,6 @@ export default function TranslatorPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }
