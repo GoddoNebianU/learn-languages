@@ -19,55 +19,6 @@ import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { OverflowDropdown } from "@/design-system/overflow-dropdown";
-
-const SOURCE_LANGUAGES = [
-  { value: "Auto", label: "auto" },
-  { value: "Chinese", label: "chinese" },
-  { value: "English", label: "english" },
-  { value: "Japanese", label: "japanese" },
-  { value: "Korean", label: "korean" },
-  { value: "French", label: "french" },
-  { value: "German", label: "german" },
-  { value: "Italian", label: "italian" },
-  { value: "Spanish", label: "spanish" },
-  { value: "Portuguese", label: "portuguese" },
-  { value: "Russian", label: "russian" },
-] as const;
-
-const TARGET_LANGUAGES = [
-  { value: "Chinese", label: "chinese" },
-  { value: "English", label: "english" },
-  { value: "Japanese", label: "japanese" },
-  { value: "Korean", label: "korean" },
-  { value: "French", label: "french" },
-  { value: "German", label: "german" },
-  { value: "Italian", label: "italian" },
-  { value: "Spanish", label: "spanish" },
-  { value: "Portuguese", label: "portuguese" },
-  { value: "Russian", label: "russian" },
-] as const;
-
-type LangLabel = typeof SOURCE_LANGUAGES[number]["label"];
-
-function getLangLabel(t: (key: string) => string, label: LangLabel): string {
-  switch (label) {
-    case "auto": return t("auto");
-    case "chinese": return t("chinese");
-    case "english": return t("english");
-    case "japanese": return t("japanese");
-    case "korean": return t("korean");
-    case "french": return t("french");
-    case "german": return t("german");
-    case "italian": return t("italian");
-    case "spanish": return t("spanish");
-    case "portuguese": return t("portuguese");
-    case "russian": return t("russian");
-  }
-}
-
-// Fixed number of language buttons to display
-const FIXED_BUTTON_COUNT = 2;
 
 export default function TranslatorPage() {
   const t = useTranslations("translator");
@@ -101,9 +52,6 @@ export default function TranslatorPage() {
       });
     }
   }, [session?.user?.id]);
-
-  const sourceButtonCount = FIXED_BUTTON_COUNT;
-  const targetButtonCount = FIXED_BUTTON_COUNT;
 
   const tts = useCallback(async (text: string, locale: string) => {
     try {
@@ -172,9 +120,6 @@ export default function TranslatorPage() {
       setProcessing(false);
     }
   };
-
-  const visibleSourceButtons = SOURCE_LANGUAGES.slice(0, sourceButtonCount);
-  const visibleTargetButtons = TARGET_LANGUAGES.slice(0, targetButtonCount);
 
   const handleSaveCard = async () => {
     if (!session) {
@@ -273,62 +218,47 @@ export default function TranslatorPage() {
             </div>
           </div>
           <div className="option1 w-full flex gap-1 items-center">
-            <span className="shrink-0">{t("sourceLanguage")}</span>
-{visibleSourceButtons.map((lang) => (
-  <Button
-    variant="light"
-    key={lang.value}
-    selected={!customSourceLanguage && sourceLanguage === lang.value}
-    onClick={() => {
-      setSourceLanguage(lang.value);
-      setCustomSourceLanguage("");
-    }}
-    className="shrink-0"
-  >
-    {getLangLabel(t, lang.label)}
-  </Button>
-))}
-<OverflowDropdown
-  items={SOURCE_LANGUAGES.slice()}
-  visibleCount={sourceButtonCount}
-  renderItem={(lang) => (
-    <Button
-      variant="light"
-      key={lang.value}
-      selected={!customSourceLanguage && sourceLanguage === lang.value}
-      onClick={() => {
-        setSourceLanguage(lang.value);
-        setCustomSourceLanguage("");
-      }}
-      className="shrink-0"
-    >
-      {getLangLabel(t, lang.label)}
-    </Button>
-  )}
-  onItemClick={(lang) => {
-    setSourceLanguage(lang.value);
-    setCustomSourceLanguage("");
-  }}
-  getKey={(lang) => lang.value}
-  label={t("nMore", { count: SOURCE_LANGUAGES.length - sourceButtonCount })}
-/>
-<Input
-  variant="bordered"
-  size="sm"
-  value={customSourceLanguage}
-  onChange={(e) => setCustomSourceLanguage(e.target.value)}
-  placeholder={t("customLanguage")}
-  className="w-auto min-w-[120px] shrink-0"
-/>
-            <div className="flex-1"></div>
             <Button
               variant="light"
-              selected={needIpa}
-              onClick={() => setNeedIpa((prev) => !prev)}
+              selected={!customSourceLanguage && sourceLanguage === "Auto"}
+              onClick={() => {
+                setSourceLanguage("Auto");
+                setCustomSourceLanguage("");
+              }}
               className="shrink-0"
             >
-              {t("generateIPA")}
+              {t("auto")}
             </Button>
+            <Button
+              variant="light"
+              selected={!customSourceLanguage && sourceLanguage === "Chinese"}
+              onClick={() => {
+                setSourceLanguage("Chinese");
+                setCustomSourceLanguage("");
+              }}
+              className="shrink-0"
+            >
+              {t("chinese")}
+            </Button>
+            <Button
+              variant="light"
+              selected={!customSourceLanguage && sourceLanguage === "English"}
+              onClick={() => {
+                setSourceLanguage("English");
+                setCustomSourceLanguage("");
+              }}
+              className="shrink-0"
+            >
+              {t("english")}
+            </Button>
+            <Input
+              variant="bordered"
+              size="sm"
+              value={customSourceLanguage}
+              onChange={(e) => setCustomSourceLanguage(e.target.value)}
+              placeholder={t("customLanguage")}
+              className="w-auto min-w-[120px] shrink-0"
+            />
           </div>
         </div>
 
@@ -362,53 +292,36 @@ export default function TranslatorPage() {
             </div>
           </div>
           <div className="option2 w-full flex gap-1 items-center">
-            <span className="shrink-0">{t("translateInto")}</span>
-{visibleTargetButtons.map((lang) => (
-  <Button
-    variant="light"
-    key={lang.value}
-    selected={!customTargetLanguage && targetLanguage === lang.value}
-    onClick={() => {
-      setTargetLanguage(lang.value);
-      setCustomTargetLanguage("");
-    }}
-    className="shrink-0"
-  >
-    {getLangLabel(t, lang.label)}
-  </Button>
-))}
-<OverflowDropdown
-  items={TARGET_LANGUAGES.slice()}
-  visibleCount={targetButtonCount}
-  renderItem={(lang) => (
-    <Button
-      variant="light"
-      key={lang.value}
-      selected={!customTargetLanguage && targetLanguage === lang.value}
-      onClick={() => {
-        setTargetLanguage(lang.value);
-        setCustomTargetLanguage("");
-      }}
-      className="shrink-0"
-    >
-      {getLangLabel(t, lang.label)}
-    </Button>
-  )}
-  onItemClick={(lang) => {
-    setTargetLanguage(lang.value);
-    setCustomTargetLanguage("");
-  }}
-  getKey={(lang) => lang.value}
-  label={t("nMore", { count: TARGET_LANGUAGES.length - targetButtonCount })}
-/>
-<Input
-  variant="bordered"
-  size="sm"
-  value={customTargetLanguage}
-  onChange={(e) => setCustomTargetLanguage(e.target.value)}
-  placeholder={t("customLanguage")}
-  className="w-auto min-w-[120px] shrink-0"
-/>
+            <Button
+              variant="light"
+              selected={!customTargetLanguage && targetLanguage === "Chinese"}
+              onClick={() => {
+                setTargetLanguage("Chinese");
+                setCustomTargetLanguage("");
+              }}
+              className="shrink-0"
+            >
+              {t("chinese")}
+            </Button>
+            <Button
+              variant="light"
+              selected={!customTargetLanguage && targetLanguage === "English"}
+              onClick={() => {
+                setTargetLanguage("English");
+                setCustomTargetLanguage("");
+              }}
+              className="shrink-0"
+            >
+              {t("english")}
+            </Button>
+            <Input
+              variant="bordered"
+              size="sm"
+              value={customTargetLanguage}
+              onChange={(e) => setCustomTargetLanguage(e.target.value)}
+              placeholder={t("customLanguage")}
+              className="w-auto min-w-[120px] shrink-0"
+            />
           </div>
         </div>
       </div>
