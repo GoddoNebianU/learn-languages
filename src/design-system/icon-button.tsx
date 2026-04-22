@@ -18,6 +18,7 @@ export function IconButton({
   iconAlt,
   size = 20,
   className,
+  children,
   ...props
 }: IconButtonProps) {
   return (
@@ -32,7 +33,7 @@ export function IconButton({
       {iconSrc && (
         <Image src={iconSrc} width={size} height={size} alt={iconAlt || "icon"} className="shrink-0" />
       )}
-      {icon}
+      {icon ?? children}
     </button>
   );
 }
