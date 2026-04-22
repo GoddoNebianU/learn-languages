@@ -150,8 +150,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       }
     }
     setShowAnswer(false);
-    setIsReversed(false);
-    setIsDictation(false);
     cleanupAudio();
   }, [currentIndex, cards.length, isInfinite, studyMode, originalCards, shuffleCards]);
 
