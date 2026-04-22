@@ -4,8 +4,15 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { Button } from "@/design-system/button";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { AlphabetCard } from "./AlphabetCard";
+
+const alphabetOptions: { value: SupportedAlphabets; label: string; color: string }[] = [
+  { value: "japanese", label: "あいうえお", color: "#a56068" },
+  { value: "english", label: "ABC", color: "#578aad" },
+  { value: "uyghur", label: "ئۇيغۇر", color: "#3c988d" },
+  { value: "esperanto", label: "ABCĜĤ", color: "#dd7486" },
+];
 
 export default function Alphabet() {
   const t = useTranslations("alphabet");
@@ -49,64 +56,26 @@ export default function Alphabet() {
   if (!chosenAlphabet) {
     return (
       <PageLayout>
-        {/* 页面标题 */}
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-          {t("chooseCharacters")}
-        </h1>
-        {/* 副标题说明 */}
-        <p className="text-lg text-gray-600 text-center">
-          {t("chooseAlphabetHint")}
-        </p>
+        <PageHeader title={t("chooseCharacters")} subtitle={t("chooseAlphabetHint")} />
 
-        {/* 语言选择按钮网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* 日语假名选项 */}
-          <Button
-            variant="light"
-            onClick={() => setChosenAlphabet("japanese")}
-            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
-          >
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">あいうえお</span>
-              <span>{t("japanese")}</span>
-            </div>
-          </Button>
-
-          {/* 英语字母选项 */}
-          <Button
-            variant="light"
-            onClick={() => setChosenAlphabet("english")}
-            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
-          >
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">ABC</span>
-              <span>{t("english")}</span>
-            </div>
-          </Button>
-
-          {/* 维吾尔语字母选项 */}
-          <Button
-            variant="light"
-            onClick={() => setChosenAlphabet("uyghur")}
-            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
-          >
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">ئۇيغۇر</span>
-              <span>{t("uyghur")}</span>
-            </div>
-          </Button>
-
-          {/* 世界语字母选项 */}
-          <Button
-            variant="light"
-            onClick={() => setChosenAlphabet("esperanto")}
-            className="h-auto px-6 py-4 text-lg font-medium hover:scale-105 transition-transform"
-          >
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">ABCĜĤ</span>
-              <span>{t("esperanto")}</span>
-            </div>
-          </Button>
+        <div className="grid grid-cols-2 gap-4">
+          {alphabetOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setChosenAlphabet(option.value)}
+              className="group bg-white border border-gray-200 sm:border-2 rounded-lg p-4 sm:p-6 hover:border-primary-300 hover:shadow-md cursor-pointer transition-all text-center"
+            >
+              <span
+                className="block text-3xl sm:text-4xl font-bold mb-2"
+                style={{ color: option.color }}
+              >
+                {option.label}
+              </span>
+              <span className="text-sm sm:text-base text-gray-600">
+                {t(option.value)}
+              </span>
+            </button>
+          ))}
         </div>
       </PageLayout>
     );
