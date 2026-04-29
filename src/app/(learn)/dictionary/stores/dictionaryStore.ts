@@ -5,19 +5,9 @@ import { devtools } from "zustand/middleware";
 import { TSharedItem } from "@/shared/dictionary-type";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
 import { toast } from "sonner";
+import { getNativeName } from "@/shared/languages";
 
-const POPULAR_LANGUAGES_MAP: Record<string, string> = {
-  english: "English",
-  chinese: "中文",
-  japanese: "日本語",
-  korean: "한국어",
-  italian: "Italiano",
-  uyghur: "ئۇيغۇرچە",
-};
-
-export function getNativeName(code: string): string {
-  return POPULAR_LANGUAGES_MAP[code] || code;
-}
+export { getNativeName };
 
 export interface DictionaryState {
   query: string;
