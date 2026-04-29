@@ -1,6 +1,6 @@
 # AI 管道架构指南
 
-**生成时间:** 2026-03-31
+**生成时间:** 2026-04-29
 
 ## 概述
 
@@ -69,7 +69,7 @@ ocr/
 
 | 文件           | 导出                        | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
-| `llm.ts`       | `getAnswer(prompt)`         | Zhipu AI 聊天补全 API 封装               |
+| `llm.ts`       | `getAnswer(prompt)`         | Zhipu AI 聊天补全 API 封装 (含重试: 指数退避, 最多 2 次) |
 | `tts.ts`       | `getTTSUrl(text, voice)`    | TTS 服务                                 |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |

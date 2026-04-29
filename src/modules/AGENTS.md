@@ -12,7 +12,7 @@
 | ---------- | ------ | ------- | ------------------ | --------------------------------- |
 | auth       | 12     | 5+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件  |
 | deck       | 6      | 12      | ✅ 完整            | 最复杂模块, 315 行 repository     |
-| card       | 6      | 7       | ✅ 完整            | 跨模块依赖 deck                   |
+| card       | 5      | 7       | ⚠️ 缺 service-dto  | 跨模块依赖 deck                   |
 | follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
 | dictionary | 3      | 1       | ⚠️ 不完整          | 无 service/repo — AI 管道直接调用 |
 | translator | 4      | 3       | ⚠️ 不完整          | 无 repo — AI 管道, 含废弃函数     |
@@ -141,6 +141,8 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 
 ## 已知问题
 
-- `shared/action-utils.ts` 导出 getCurrentUserId/requireAuth 但 card 和 deck 仍内联重复此逻辑
+- `shared/action-utils.ts` 导出 getCurrentUserId/requireAuth，但 requireAuth 零消费者 (死代码)
+- deck/follow/auth 模块内联重复 session 检查逻辑，仅 card 模块使用 getCurrentUserId
 - `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层 (违反架构)
+- card 模块缺 `card-service-dto.ts`，类型定义内联在 card-service.ts 中
 - 所有 action/service/repository 文件各自创建 `createLogger("{module}-{layer}")` 实例

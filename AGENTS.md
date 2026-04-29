@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-03-31
-**提交:** dda7d64
+**生成时间:** 2026-04-29
+**提交:** ca3f2c7
 **分支:** dev
 
 ## 概述
@@ -12,55 +12,59 @@
 
 ```
 src/
-├── app/              # Next.js 路由
-│   ├── (auth)/       # 认证: login, signup, profile, users/[username], forgot/reset-password
-│   ├── (features)/   # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites
-│   ├── decks/        # 牌组管理 (不在路由组内)
-│   ├── settings/     # 设置页面
+├── app/              # Next.js 路由 (25 pages, 1 API route, 单一根 layout)
+│   ├── (auth)/       # 认证: login, signup, logout, forgot/reset-password, users/[username]
+│   ├── (account)/    # 账户: profile, settings
+│   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks
+│   │   └── srt-player/ # 最复杂页面: 自含 components/, hooks/, stores/, utils/
+│   ├── error.tsx     # 根级错误边界
+│   ├── not-found.tsx # 404 页面
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
 ├── modules/          # 业务逻辑 (action-service-repository)
 │   ├── auth/         # 认证 (12 文件: auth + forgot-password 两个子域)
-│   ├── card/         # 卡片 CRUD
-│   ├── deck/         # 牌组管理 (最复杂模块, 12 actions)
+│   ├── card/         # 卡片 (5 文件, 缺 card-service-dto)
+│   ├── deck/         # 牌组管理 (最复杂模块, 12 actions, 310 行 repo)
 │   ├── follow/       # 用户关注系统
-│   ├── dictionary/   # 词典 (不完整: 仅 action, 无 repo — AI 驱动)
-│   ├── translator/   # 翻译 (不完整: 无 repo — AI 驱动)
-│   └── shared/       # 跨模块工具 (action-utils.ts)
-├── design-system/    # CVA 基础组件 (平铺, 与 components/ 分离)
-│   # button, card, input, select, textarea, range, progress, skeleton, stack, container, modal, overflow-dropdown
+│   ├── dictionary/   # 词典 (不完整: 仅 action+action-dto+service-dto — AI 驱动, 无 repo)
+│   ├── translator/   # 翻译 (不完整: 无 repo — AI 驱动, 含废弃函数 genIPA/genLanguage)
+│   └── shared/       # 跨模块工具 (action-utils.ts: getCurrentUserId, requireAuth)
+├── design-system/    # CVA 基础组件 (平铺 14 文件, 无子目录, 与 components/ 分离)
+│   # button, icon-button, link-button, card, input, select, textarea, range, progress,
+│   # skeleton, stack, container, modal, overflow-dropdown
 ├── components/       # 业务组件 (非通用 UI)
-│   ├── layout/       # Navbar, MobileMenu, LanguageSettings
+│   ├── layout/       # Navbar, NavSession, MobileMenu, LanguageSettings
 │   ├── follow/       # FollowButton, FollowStats, UserList
-│   └── ui/           # PageLayout, PageHeader, CardList, LocaleSelector
+│   └── ui/           # PageLayout, PageHeader, CardList, LanguageSelector, LocaleSelector
 ├── lib/              # 集成层
-│   ├── bigmodel/     # AI 管道 (llm, tts, translator, dictionary, ocr)
+│   ├── bigmodel/     # AI 管道 (llm, tts, translator, dictionary, ocr) — 详见子级 AGENTS.md
 │   ├── browser/      # 客户端工具 (localStorage)
-│   ├── logger/       # Winston 日志
+│   ├── logger/       # Winston 日志 (index.ts barrel — 唯一允许的 barrel export)
 │   └── theme/        # 主题颜色
 ├── hooks/            # useAudioPlayer, useFileUpload
 ├── utils/            # cn, validate, json, string, random
-├── shared/           # card-type, dictionary-type, translator-type, theme-presets, constant
+├── shared/           # card-type, dictionary-type, translator-type, languages, theme-presets, constant
 ├── config/           # i18n, images
-└── i18n/             # next-intl 请求配置
+└── i18n/             # next-intl 请求配置 (request.ts)
 
-非 src: prisma/ (Schema+迁移), messages/ (i18n 翻译 8 种语言), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体), scripts/ (开发工具)
+非 src: prisma/ (Schema+4 迁移), messages/ (i18n 翻译 8 种语言), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体)
 ```
 
 ## 查找位置
 
 | 任务          | 位置                            | 备注                            |
 | ------------- | ------------------------------- | ------------------------------- |
-| 添加功能页面  | `src/app/(features)/`           | 路由组，无 URL 前缀             |
-| 添加认证页面  | `src/app/(auth)/`               | 登录、注册、个人资料            |
-| 添加牌组页面  | `src/app/decks/`                | 不在路由组内                    |
+| 添加功能页面  | `src/app/(learn)/`              | 路由组，无 URL 前缀             |
+| 添加认证页面  | `src/app/(auth)/`               | 登录、注册、找回密码            |
+| 添加账户页面  | `src/app/(account)/`            | 个人资料、设置                  |
+| 添加牌组页面  | `src/app/(learn)/decks/`        | 在 (learn) 路由组内             |
 | 添加业务逻辑  | `src/modules/{name}/`           | 遵循 action-service-repository  |
 | 添加 AI 管道  | `src/lib/bigmodel/{name}/`      | 多阶段 orchestrator             |
 | 添加 OCR 功能 | `src/lib/bigmodel/ocr/`         | 视觉模型提取词汇表 (目前未使用) |
-| 添加 UI 组件  | `src/design-system/{category}/` | base, feedback, layout, overlay |
+| 添加 UI 组件  | `src/design-system/`            | 平铺文件, 无子目录, 使用 CVA    |
 | 添加工具函数  | `src/utils/`                    | 纯函数                          |
 | 添加类型定义  | `src/shared/`                   | 业务类型                        |
 | 跨模块工具    | `src/modules/shared/`           | getCurrentUserId, requireAuth   |
-| 字母学习      | `src/app/(features)/alphabet/`  | 静态 JSON 数据                  |
+| 字母学习      | `src/app/(learn)/alphabet/`     | 静态 JSON 数据                  |
 | 数据库查询    | `src/modules/*/`                | Repository 层                   |
 | i18n 翻译     | `messages/*.json`               | 8 种语言                        |
 
@@ -209,14 +213,13 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 
 ## 独特风格
 
-### 设计系统分类
+### 设计系统
 
-- `base/` — 原子组件: button, input, card, checkbox, radio, switch, select, textarea, range
-- `feedback/` — 反馈: alert, progress, skeleton, toast
-- `layout/` — 布局: container, grid, stack (VStack, HStack)
-- `overlay/` — 覆盖层: modal, overflow-dropdown
-- `data-display/` — 数据展示: badge, divider
-- `navigation/` — 导航: tabs
+平铺 14 文件在 `src/design-system/`，无子目录，全部使用 CVA + `"use client"`。
+- button (primary/light 变体), icon-button, link-button, card (compound), input, select, textarea, range
+- progress, skeleton
+- VStack/HStack (stack), container
+- modal (compound), overflow-dropdown
 
 ### AI 管道模式
 
@@ -262,7 +265,7 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - 未配置测试基础设施, 用 `pnpm build` 验证
 - Docker: 3 阶段构建 (deps → builder → runner), standalone 输出, Node 24 Alpine
 - 无 CI/CD 管道 (手动构建)
-- 无 middleware.ts, 无 error.tsx, 无 loading.tsx
+- 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)
 - 主题: CSS 自定义属性 + localStorage (15 个预设主题)
 - `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts), 不仅限于 action 文件
 - 翻译缺失不会被 build 检测 — 用 AST-grep 手动审计

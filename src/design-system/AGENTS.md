@@ -1,8 +1,10 @@
 # 设计系统指南
 
+**生成时间:** 2026-04-29
+
 ## 概述
 
-基于 CVA 的可复用 UI 组件库, 与业务组件 (`src/components/`) 分离。14 个组件文件, 平铺在 `src/design-system/` 目录下。
+基于 CVA 的可复用 UI 组件库, 与业务组件 (`src/components/`) 分离。14 个组件文件, 平铺在 `src/design-system/` 目录下 (无子目录)。
 
 ## 组件列表
 
