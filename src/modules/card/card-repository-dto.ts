@@ -48,6 +48,11 @@ export interface RepoInputCheckCardOwnership {
   userId: string;
 }
 
+export interface RepoInputCheckCardExistsByWord {
+  deckId: number;
+  word: string;
+}
+
 export type RepoOutputCard = {
   id: number;
   deckId: number;

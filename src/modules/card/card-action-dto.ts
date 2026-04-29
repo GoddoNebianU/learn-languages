@@ -53,3 +53,12 @@ export const schemaActionInputGetRandomCard = z.object({
 });
 export type ActionInputGetRandomCard = z.infer<typeof schemaActionInputGetRandomCard>;
 export const validateActionInputGetRandomCard = generateValidator(schemaActionInputGetRandomCard);
+
+export const schemaActionInputCheckCardExistsByWord = z.object({
+  deckId: z.number().int().positive(),
+  word: z.string().min(1),
+});
+export type ActionInputCheckCardExistsByWord = z.infer<typeof schemaActionInputCheckCardExistsByWord>;
+export const validateActionInputCheckCardExistsByWord = generateValidator(
+  schemaActionInputCheckCardExistsByWord
+);

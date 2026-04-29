@@ -5,6 +5,7 @@ import {
   RepoInputGetCardsByDeckId,
   RepoInputGetRandomCard,
   RepoInputCheckCardOwnership,
+  RepoInputCheckCardExistsByWord,
   RepoOutputCard,
   RepoOutputCardStats,
   CardMeaning,
@@ -147,4 +148,13 @@ export async function repoCheckCardOwnership(input: RepoInputCheckCardOwnership)
 export async function repoGetCardStats(deckId: number): Promise<RepoOutputCardStats> {
   const total = await prisma.card.count({ where: { deckId } });
   return { total };
+}
+
+export async function repoCheckCardExistsByWord(
+  input: RepoInputCheckCardExistsByWord
+): Promise<boolean> {
+  const count = await prisma.card.count({
+    where: { deckId: input.deckId, word: input.word },
+  });
+  return count > 0;
 }

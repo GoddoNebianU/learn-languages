@@ -4,6 +4,7 @@ import type {
   RepoInputDeleteCard,
   RepoInputGetCardsByDeckId,
   RepoInputGetRandomCard,
+  RepoInputCheckCardExistsByWord,
   RepoOutputCard,
   RepoOutputCardStats,
 } from "./card-repository-dto";
@@ -17,6 +18,7 @@ import {
   repoGetCardsByDeckId,
   repoGetRandomCard,
   repoGetCardStats,
+  repoCheckCardExistsByWord,
 } from "./card-repository";
 
 const log = createLogger("card-service");
@@ -90,4 +92,11 @@ export async function serviceCheckDeckOwnership(
   log.debug("Checking deck ownership", { deckId: input.deckId });
   const ownerId = await repoGetUserIdByDeckId(input.deckId);
   return ownerId === input.userId;
+}
+
+export async function serviceCheckCardExistsByWord(
+  input: RepoInputCheckCardExistsByWord
+): Promise<boolean> {
+  log.debug("Checking card exists by word", { deckId: input.deckId, word: input.word });
+  return repoCheckCardExistsByWord(input);
 }
