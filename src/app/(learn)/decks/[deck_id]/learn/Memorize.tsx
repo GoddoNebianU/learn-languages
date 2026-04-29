@@ -145,6 +145,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   }, []);
 
   const isInfinite = studyMode.endsWith("infinite");
+  const isOrderMode = studyMode.startsWith("order");
 
   const cleanupAudio = useCallback(() => {
     if (audioUrlRef.current) {
@@ -159,7 +160,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       const len = cards.length;
       if (!isDictation) {
         const next = from + direction;
-        return isInfinite ? ((next % len) + len) % len : Math.max(0, Math.min(len - 1, next));
+        return isInfinite || isOrderMode
+          ? ((next % len) + len) % len
+          : Math.max(0, Math.min(len - 1, next));
       }
       for (let i = 1; i <= len; i++) {
         const idx = (((from + direction * i) % len) + len) % len;
@@ -167,24 +170,24 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       }
       return from;
     },
-    [cards, isDictation, isInfinite]
+    [cards, isDictation, isInfinite, isOrderMode]
   );
 
   const handleNextCard = useCallback(() => {
     const next = findNextIndex(currentIndex, 1);
-    if (!isInfinite && next <= currentIndex) return;
+    if (!isInfinite && !isOrderMode && next <= currentIndex) return;
     setCurrentIndex(next);
     setShowAnswer(false);
     cleanupAudio();
-  }, [currentIndex, findNextIndex, isInfinite, cleanupAudio]);
+  }, [currentIndex, findNextIndex, isInfinite, isOrderMode, cleanupAudio]);
 
   const handlePrevCard = useCallback(() => {
     const prev = findNextIndex(currentIndex, -1);
-    if (!isInfinite && prev >= currentIndex) return;
+    if (!isInfinite && !isOrderMode && prev >= currentIndex) return;
     setCurrentIndex(prev);
     setShowAnswer(false);
     cleanupAudio();
-  }, [currentIndex, findNextIndex, isInfinite, cleanupAudio]);
+  }, [currentIndex, findNextIndex, isInfinite, isOrderMode, cleanupAudio]);
 
   const playTTS = useCallback(
     async (text: string) => {
@@ -302,7 +305,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const currentCard = getCurrentCard()!;
   const displayFront = getFrontText(currentCard);
-  const isFinished = !isInfinite && currentIndex === cards.length - 1 && showAnswer;
+  const isFinished = !isInfinite && !isOrderMode && currentIndex === cards.length - 1 && showAnswer;
 
   const studyModeOptions: { value: StudyMode; label: string; icon: React.ReactNode }[] = [
     { value: "order-limited", label: t("orderLimited"), icon: <List className="h-4 w-4" /> },
