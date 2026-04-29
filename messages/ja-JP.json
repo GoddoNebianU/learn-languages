@@ -264,13 +264,29 @@
     "folders": "デッキ",
     "explore": "探索",
     "favorites": "お気に入り",
-    "settings": "設定",
-    "wordEntry": "単語入力"
+    "settings": "設定"
   },
   "settings": {
     "title": "設定",
     "themeColor": "テーマカラー",
-    "themeColorDescription": "お好みのテーマカラーを選択してください"
+    "themeColorDescription": "お好みのテーマカラーを選択してください",
+    "themeNames": {
+      "teal": "ティール",
+      "blue": "ブルー",
+      "violet": "バイオレット",
+      "rose": "ローズ",
+      "amber": "アンバー",
+      "emerald": "エメラルド",
+      "orange": "オレンジ",
+      "indigo": "インディゴ",
+      "slate": "スレート",
+      "sage": "セージ",
+      "taupe": "トープ",
+      "mauve": "モーブ",
+      "mist": "ミスト",
+      "dusty": "ダスティローズ",
+      "olive": "オリーブ"
+    }
   },
   "srt_player": {
     "uploadVideo": "ビデオをアップロード",
@@ -424,7 +440,22 @@
     "definition": "定義",
     "example": "例文",
     "noDictionaryItemToSave": "保存する辞書項目がありません。先に検索してください。",
-    "noDeckSelected": "デッキが選択されていません"
+    "noDeckSelected": "デッキが選択されていません",
+    "normalMode": "通常",
+    "readingMode": "読書",
+    "targetDeck": "対象デッキ",
+    "noDecks": "デッキがありません",
+    "selectDeckFirst": "デッキを選択してください",
+    "pastePlaceholder": "ここに単語を貼り付けてください...",
+    "pasteHint": "単語を貼り付けて始めましょう",
+    "lookingUp": "検索中...",
+    "checkingDuplicate": "重複を確認中...",
+    "saving": "保存中...",
+    "savedStatus": "\"{word}\" を \"{deckName}\" に保存しました",
+    "wordAlreadyExists": "\"{word}\" はこのデッキに既に存在します",
+    "pasteOnly": "手入力ではなく、単語を貼り付けてください",
+    "checkFailed": "重複チェックに失敗しました",
+    "unexpectedError": "予期しないエラーが発生しました"
   },
   "explore": {
     "title": "探索",
@@ -539,34 +570,5 @@
     "noFollowers": "まだフォロワーがいません",
     "noFollowing": "まだ誰もフォローしていません",
     "followFailed": "フォロー状態の更新に失敗しました"
-  },
-  "word_entry": {
-    "title": "単語入力",
-    "description": "単語を貼り付けて自動的に検索し、デッキに保存します。",
-    "targetDeck": "対象デッキ",
-    "noDecks": "デッキがありません",
-    "selectDeckFirst": "デッキを選択してください",
-    "wordInput": "単語",
-    "pastePlaceholder": "ここに単語を貼り付けてください...",
-    "hint": "単語を貼り付けて始めましょう",
-    "lookingUp": "検索中...",
-    "checkingDuplicate": "重複を確認中...",
-    "saving": "保存中...",
-    "saved": "保存しました",
-    "savedStatus": "\"{word}\" を \"{deckName}\" に保存しました",
-    "lookupFailed": "検索に失敗しました",
-    "checkFailed": "重複チェックに失敗しました",
-    "wordAlreadyExists": "\"{word}\" はこのデッキに既に存在します",
-    "saveFailed": "保存に失敗しました",
-    "unexpectedError": "予期しないエラーが発生しました",
-    "pasteOnly": "手入力ではなく、単語を貼り付けてください",
-    "error": "エラー",
-    "languageSettings": "言語設定",
-    "queryLanguage": "検索言語",
-    "queryLanguageHint": "貼り付ける単語の言語",
-    "definitionLanguage": "定義言語",
-    "definitionLanguageHint": "定義の言語",
-    "other": "その他",
-    "otherLanguagePlaceholder": "言語名を入力"
   }
 }

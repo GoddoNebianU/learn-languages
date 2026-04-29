@@ -296,13 +296,29 @@
     "folders": "دېكلار",
     "explore": "ئىزدىنىش",
     "favorites": "يىغىپ ساقلاش",
-    "settings": "تەڭشەكلەر",
-    "wordEntry": "سۆز كىرگۈزۈش"
+    "settings": "تەڭشەكلەر"
   },
   "settings": {
     "title": "تەڭشەكلەر",
     "themeColor": "تېما رەڭگى",
-    "themeColorDescription": "ياقتۇرىدىغان تېما رەڭگىڭىزنى تاللاڭ"
+    "themeColorDescription": "ياقتۇرىدىغان تېما رەڭگىڭىزنى تاللاڭ",
+    "themeNames": {
+      "teal": "كۆكۈش يېشىل",
+      "blue": "كۆك",
+      "violet": "بىنەپشە",
+      "rose": "ئەتىرگۈل",
+      "amber": "كەھرىۋا",
+      "emerald": "زۇمۇرت",
+      "orange": "قىزغۇچ سېرىق",
+      "indigo": "نىل",
+      "slate": "گرافىت",
+      "sage": "ياۋا ئوت",
+      "taupe": "ئىللىق قۇم",
+      "mauve": "لاۋاندا",
+      "mist": "تۇمان كۆك",
+      "dusty": "ئەتىرگۈل كۈلرەڭ",
+      "olive": "زەيتۇن"
+    }
   },
   "srt_player": {
     "uploadVideo": "ۋىدېئو يۈكلەش",
@@ -456,7 +472,22 @@
     "definition": "ئېنىقلىما",
     "example": "مىسال",
     "noDictionaryItemToSave": "ساقلايدىغان لۇغەت تۈرى يوق. ئاۋۋال ئىزدەڭ.",
-    "noDeckSelected": "دېك تاللانمىدى"
+    "noDeckSelected": "دېك تاللانمىدى",
+    "normalMode": "ئادەتتىكى",
+    "readingMode": "ئوقۇش",
+    "targetDeck": "نىشان دېك",
+    "noDecks": "دېك يوق",
+    "selectDeckFirst": "ئاۋۋال بىر دېك تاللاڭ",
+    "pastePlaceholder": "سۆزنى بۇ يەرگە چاپلاڭ...",
+    "pasteHint": "باشلاش ئۈچۈن سۆزنى چاپلاڭ",
+    "lookingUp": "ئىزدەۋاتىدۇ...",
+    "checkingDuplicate": "تەكرارلىنىشنى تەكشۈرۈۋاتىدۇ...",
+    "saving": "ساقلاۋاتىدۇ...",
+    "savedStatus": "\"{word}\" \"{deckName}\" غا ساقلاندى",
+    "wordAlreadyExists": "\"{word}\" بۇ دېكتا مەۋجۇت",
+    "pasteOnly": "كىرگۈزمەي سۆزنى چاپلاڭ",
+    "checkFailed": "تەكرارلىنىشنى تەكشۈرۈش مەغلۇپ بولدى",
+    "unexpectedError": "كۈتكىلى بولمايدىغان خاتالىق يۈز بەردى"
   },
   "explore": {
     "title": "ئىزدىنىش",
@@ -544,34 +575,5 @@
     "noFollowers": "تېخى ئەگەشكۈچى يوق",
     "noFollowing": "تېخى ئەگىشىدىغان ئادەم يوق",
     "followFailed": "ئەگىشىش ھالىتىنى يېڭىلاش مەغلۇپ بولدى"
-  },
-  "word_entry": {
-    "title": "سۆز كىرگۈزۈش",
-    "description": "سۆزنى چاپلاپ ئاپتوماتىك ئىزدەڭ ۋە دېكىغا ساقلاڭ.",
-    "targetDeck": "نىشان دېك",
-    "noDecks": "دېك يوق",
-    "selectDeckFirst": "ئاۋۋال بىر دېك تاللاڭ",
-    "wordInput": "سۆز",
-    "pastePlaceholder": "سۆزنى بۇ يەرگە چاپلاڭ...",
-    "hint": "باشلاش ئۈچۈن سۆزنى چاپلاڭ",
-    "lookingUp": "ئىزدەۋاتىدۇ...",
-    "checkingDuplicate": "تەكرارلىنىشنى تەكشۈرۈۋاتىدۇ...",
-    "saving": "ساقلاۋاتىدۇ...",
-    "saved": "مۇۋەپپەقىيەتلىك ساقلاندى",
-    "savedStatus": "\"{word}\" \"{deckName}\" غا ساقلاندى",
-    "lookupFailed": "ئىزدەش مەغلۇپ بولدى",
-    "checkFailed": "تەكرارلىنىشنى تەكشۈرۈش مەغلۇپ بولدى",
-    "wordAlreadyExists": "\"{word}\" بۇ دېكتا مەۋجۇت",
-    "saveFailed": "ساقلاش مەغلۇپ بولدى",
-    "unexpectedError": "كۈتكىلى بولمايدىغان خاتالىق يۈز بەردى",
-    "pasteOnly": "كىرگۈزمەي سۆزنى چاپلاڭ",
-    "error": "خاتالىق",
-    "languageSettings": "تىل تەڭشىكى",
-    "queryLanguage": "سۈرۈشتۈرۈش تىلى",
-    "queryLanguageHint": "چاپلىغان سۆزنىڭ تىلى",
-    "definitionLanguage": "ئېنىقلىما تىلى",
-    "definitionLanguageHint": "ئېنىقلىمىنىڭ تىلى",
-    "other": "باشقا",
-    "otherLanguagePlaceholder": "تىل نامىنى كىرگۈزۈڭ"
   }
 }

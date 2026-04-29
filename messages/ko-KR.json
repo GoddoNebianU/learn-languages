@@ -296,13 +296,29 @@
     "folders": "덱",
     "explore": "탐색",
     "favorites": "즐겨찾기",
-    "settings": "설정",
-    "wordEntry": "단어 입력"
+    "settings": "설정"
   },
   "settings": {
     "title": "설정",
     "themeColor": "테마 색상",
-    "themeColorDescription": "원하는 테마 색상을 선택하세요"
+    "themeColorDescription": "원하는 테마 색상을 선택하세요",
+    "themeNames": {
+      "teal": "틸",
+      "blue": "파란",
+      "violet": "보라",
+      "rose": "로즈",
+      "amber": "앰버",
+      "emerald": "에메랄드",
+      "orange": "오렌지",
+      "indigo": "인디고",
+      "slate": "슬레이트",
+      "sage": "세이지",
+      "taupe": "토프",
+      "mauve": "모브",
+      "mist": "미스트",
+      "dusty": "더스티 로즈",
+      "olive": "올리브"
+    }
   },
   "srt_player": {
     "uploadVideo": "비디오 업로드",
@@ -456,7 +472,22 @@
     "definition": "정의",
     "example": "예문",
     "noDictionaryItemToSave": "저장할 사전 항목이 없습니다. 먼저 검색하세요.",
-    "noDeckSelected": "덱이 선택되지 않았습니다"
+    "noDeckSelected": "덱이 선택되지 않았습니다",
+    "normalMode": "일반",
+    "readingMode": "읽기",
+    "targetDeck": "대상 덱",
+    "noDecks": "사용 가능한 덱이 없습니다",
+    "selectDeckFirst": "먼저 덱을 선택하세요",
+    "pastePlaceholder": "여기에 단어를 붙여넣으세요...",
+    "pasteHint": "단어를 붙여넣어 시작하세요",
+    "lookingUp": "조회 중...",
+    "checkingDuplicate": "중복 확인 중...",
+    "saving": "저장 중...",
+    "savedStatus": "\"{word}\"이(가) \"{deckName}\"에 저장되었습니다",
+    "wordAlreadyExists": "\"{word}\"이(가) 이미 이 덱에 있습니다",
+    "pasteOnly": "직접 입력하지 말고 단어를 붙여넣으세요",
+    "checkFailed": "중복 확인 실패",
+    "unexpectedError": "예기치 않은 오류가 발생했습니다"
   },
   "explore": {
     "title": "탐색",
@@ -553,34 +584,5 @@
     "noFollowers": "아직 팔로워가 없습니다",
     "noFollowing": "아직 팔로우하는 사람이 없습니다",
     "followFailed": "팔로우 상태 업데이트에 실패했습니다"
-  },
-  "word_entry": {
-    "title": "단어 입력",
-    "description": "단어를 붙여넣어 자동으로 조회하고 덱에 저장합니다.",
-    "targetDeck": "대상 덱",
-    "noDecks": "사용 가능한 덱이 없습니다",
-    "selectDeckFirst": "먼저 덱을 선택하세요",
-    "wordInput": "단어",
-    "pastePlaceholder": "여기에 단어를 붙여넣으세요...",
-    "hint": "단어를 붙여넣어 시작하세요",
-    "lookingUp": "조회 중...",
-    "checkingDuplicate": "중복 확인 중...",
-    "saving": "저장 중...",
-    "saved": "저장되었습니다",
-    "savedStatus": "\"{word}\"이(가) \"{deckName}\"에 저장되었습니다",
-    "lookupFailed": "조회 실패",
-    "checkFailed": "중복 확인 실패",
-    "wordAlreadyExists": "\"{word}\"이(가) 이미 이 덱에 있습니다",
-    "saveFailed": "저장 실패",
-    "unexpectedError": "예기치 않은 오류가 발생했습니다",
-    "pasteOnly": "직접 입력하지 말고 단어를 붙여넣으세요",
-    "error": "오류",
-    "languageSettings": "언어 설정",
-    "queryLanguage": "질의 언어",
-    "queryLanguageHint": "붙여넣을 단어의 언어",
-    "definitionLanguage": "정의 언어",
-    "definitionLanguageHint": "정의의 언어",
-    "other": "기타",
-    "otherLanguagePlaceholder": "언어 이름 입력"
   }
 }

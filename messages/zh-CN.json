@@ -264,13 +264,29 @@
     "folders": "牌组",
     "explore": "探索",
     "favorites": "收藏",
-    "settings": "设置",
-    "wordEntry": "录入单词"
+    "settings": "设置"
   },
   "settings": {
     "title": "设置",
     "themeColor": "主题色",
-    "themeColorDescription": "选择您喜欢的主题色"
+    "themeColorDescription": "选择您喜欢的主题色",
+    "themeNames": {
+      "teal": "青绿",
+      "blue": "蓝色",
+      "violet": "紫罗兰",
+      "rose": "玫瑰",
+      "amber": "琥珀",
+      "emerald": "翡翠",
+      "orange": "橙色",
+      "indigo": "靛蓝",
+      "slate": "石墨",
+      "sage": "鼠尾草",
+      "taupe": "暖沙",
+      "mauve": "薰衣草",
+      "mist": "雾蓝",
+      "dusty": "玫瑰灰",
+      "olive": "橄榄"
+    }
   },
   "srt_player": {
     "upload": "上传",
@@ -424,7 +440,22 @@
     "definition": "释义",
     "example": "例句",
     "noDictionaryItemToSave": "没有可保存的词典项，请先搜索。",
-    "noDeckSelected": "未选择卡组"
+    "noDeckSelected": "未选择卡组",
+    "normalMode": "普通",
+    "readingMode": "阅读",
+    "targetDeck": "目标牌组",
+    "noDecks": "暂无牌组",
+    "selectDeckFirst": "请先选择一个牌组",
+    "pastePlaceholder": "在这里粘贴单词...",
+    "pasteHint": "粘贴一个单词开始",
+    "lookingUp": "正在查询...",
+    "checkingDuplicate": "正在检查重复...",
+    "saving": "正在保存...",
+    "savedStatus": "\"{word}\" 已保存到 \"{deckName}\"",
+    "wordAlreadyExists": "\"{word}\" 已存在于该牌组中",
+    "pasteOnly": "请粘贴单词，不支持手动输入",
+    "checkFailed": "重复检查失败",
+    "unexpectedError": "发生意外错误"
   },
   "explore": {
     "title": "探索",
@@ -536,34 +567,5 @@
     "noFollowers": "还没有粉丝",
     "noFollowing": "还没有关注任何人",
     "followFailed": "更新关注状态失败"
-  },
-  "word_entry": {
-    "title": "录入单词",
-    "description": "粘贴单词自动查询并保存到你的牌组中。",
-    "targetDeck": "目标牌组",
-    "noDecks": "暂无牌组",
-    "selectDeckFirst": "请先选择一个牌组",
-    "wordInput": "单词",
-    "pastePlaceholder": "在这里粘贴单词...",
-    "hint": "粘贴一个单词开始",
-    "lookingUp": "正在查询...",
-    "checkingDuplicate": "正在检查重复...",
-    "saving": "正在保存...",
-    "saved": "保存成功",
-    "savedStatus": "\"{word}\" 已保存到 \"{deckName}\"",
-    "lookupFailed": "查询失败",
-    "checkFailed": "重复检查失败",
-    "wordAlreadyExists": "\"{word}\" 已存在于该牌组中",
-    "saveFailed": "保存失败",
-    "unexpectedError": "发生意外错误",
-    "pasteOnly": "请粘贴单词，不支持手动输入",
-    "error": "错误",
-    "languageSettings": "语言设置",
-    "queryLanguage": "查询语言",
-    "queryLanguageHint": "所粘贴单词的语言",
-    "definitionLanguage": "释义语言",
-    "definitionLanguageHint": "释义的语言",
-    "other": "其他",
-    "otherLanguagePlaceholder": "输入语言名称"
   }
 }

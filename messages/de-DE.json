@@ -224,13 +224,29 @@
     "folders": "Decks",
     "explore": "Erkunden",
     "favorites": "Favoriten",
-    "settings": "Einstellungen",
-    "wordEntry": "Worteingabe"
+    "settings": "Einstellungen"
   },
   "settings": {
     "title": "Einstellungen",
     "themeColor": "Designfarbe",
-    "themeColorDescription": "Wählen Sie Ihre bevorzugte Designfarbe"
+    "themeColorDescription": "Wählen Sie Ihre bevorzugte Designfarbe",
+    "themeNames": {
+      "teal": "Blaugrün",
+      "blue": "Blau",
+      "violet": "Violett",
+      "rose": "Rose",
+      "amber": "Bernstein",
+      "emerald": "Smaragd",
+      "orange": "Orange",
+      "indigo": "Indigo",
+      "slate": "Schiefer",
+      "sage": "Salbei",
+      "taupe": "Taupe",
+      "mauve": "Malve",
+      "mist": "Nebel",
+      "dusty": "Staubiges Rosa",
+      "olive": "Oliv"
+    }
   },
   "srt_player": {
     "uploadVideo": "Video hochladen",
@@ -384,7 +400,22 @@
     "definition": "Definition",
     "example": "Beispiel",
     "noDictionaryItemToSave": "Kein Wörterbucheintrag zum Speichern. Bitte suchen Sie zuerst.",
-    "noDeckSelected": "Kein Deck ausgewählt"
+    "noDeckSelected": "Kein Deck ausgewählt",
+    "normalMode": "Normal",
+    "readingMode": "Lesen",
+    "targetDeck": "Ziel-Deck",
+    "noDecks": "Keine Decks verfügbar",
+    "selectDeckFirst": "Bitte wählen Sie zuerst ein Deck",
+    "pastePlaceholder": "Wort hier einfügen...",
+    "pasteHint": "Fügen Sie ein Wort ein, um zu beginnen",
+    "lookingUp": "Nachschlagen...",
+    "checkingDuplicate": "Duplikate prüfen...",
+    "saving": "Speichern...",
+    "savedStatus": "\"{word}\" in \"{deckName}\" gespeichert",
+    "wordAlreadyExists": "\"{word}\" existiert bereits in diesem Deck",
+    "pasteOnly": "Bitte fügen Sie ein Wort ein, anstatt zu tippen",
+    "checkFailed": "Duplikatprüfung fehlgeschlagen",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
   },
   "explore": {
     "title": "Entdecken",
@@ -553,34 +584,5 @@
     "deleteDeckConfirm": "Dieses Deck wirklich löschen? Alle Karten gehen verloren.",
     "cardDeleted": "Karte gelöscht",
     "cardUpdated": "Karte aktualisiert"
-  },
-  "word_entry": {
-    "title": "Worteingabe",
-    "description": "Fügen Sie ein Wort ein, um es automatisch nachzuschlagen und in Ihrem Deck zu speichern.",
-    "targetDeck": "Ziel-Deck",
-    "noDecks": "Keine Decks verfügbar",
-    "selectDeckFirst": "Bitte wählen Sie zuerst ein Deck",
-    "wordInput": "Wort",
-    "pastePlaceholder": "Wort hier einfügen...",
-    "hint": "Fügen Sie ein Wort ein, um zu beginnen",
-    "lookingUp": "Nachschlagen...",
-    "checkingDuplicate": "Duplikate prüfen...",
-    "saving": "Speichern...",
-    "saved": "Erfolgreich gespeichert",
-    "savedStatus": "\"{word}\" in \"{deckName}\" gespeichert",
-    "lookupFailed": "Nachschlagung fehlgeschlagen",
-    "checkFailed": "Duplikatprüfung fehlgeschlagen",
-    "wordAlreadyExists": "\"{word}\" existiert bereits in diesem Deck",
-    "saveFailed": "Speichern fehlgeschlagen",
-    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten",
-    "pasteOnly": "Bitte fügen Sie ein Wort ein, anstatt zu tippen",
-    "error": "Fehler",
-    "languageSettings": "Spracheinstellungen",
-    "queryLanguage": "Abfragesprache",
-    "queryLanguageHint": "Sprache des eingefügten Wortes",
-    "definitionLanguage": "Definitionssprache",
-    "definitionLanguageHint": "Sprache der Definitionen",
-    "other": "Andere",
-    "otherLanguagePlaceholder": "Sprachname eingeben"
   }
 }

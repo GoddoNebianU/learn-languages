@@ -296,13 +296,29 @@
     "folders": "Decks",
     "explore": "Explorer",
     "favorites": "Favoris",
-    "settings": "Paramètres",
-    "wordEntry": "Saisie de mot"
+    "settings": "Paramètres"
   },
   "settings": {
     "title": "Paramètres",
     "themeColor": "Couleur du thème",
-    "themeColorDescription": "Choisissez votre couleur de thème préférée"
+    "themeColorDescription": "Choisissez votre couleur de thème préférée",
+    "themeNames": {
+      "teal": "Turquoise",
+      "blue": "Bleu",
+      "violet": "Violet",
+      "rose": "Rose",
+      "amber": "Ambre",
+      "emerald": "Émeraude",
+      "orange": "Orange",
+      "indigo": "Indigo",
+      "slate": "Ardoise",
+      "sage": "Sauge",
+      "taupe": "Taupe",
+      "mauve": "Mauve",
+      "mist": "Brume",
+      "dusty": "Rose Poudré",
+      "olive": "Olive"
+    }
   },
   "srt_player": {
     "uploadVideo": "Télécharger la vidéo",
@@ -456,7 +472,22 @@
     "definition": "Définition",
     "example": "Exemple",
     "noDictionaryItemToSave": "Aucun élément de dictionnaire à sauvegarder. Veuillez d'abord rechercher.",
-    "noDeckSelected": "Aucun deck sélectionné"
+    "noDeckSelected": "Aucun deck sélectionné",
+    "normalMode": "Normal",
+    "readingMode": "Lecture",
+    "targetDeck": "Deck cible",
+    "noDecks": "Aucun deck disponible",
+    "selectDeckFirst": "Veuillez d'abord sélectionner un deck",
+    "pastePlaceholder": "Collez un mot ici...",
+    "pasteHint": "Collez un mot pour commencer",
+    "lookingUp": "Recherche en cours...",
+    "checkingDuplicate": "Vérification des doublons...",
+    "saving": "Enregistrement...",
+    "savedStatus": "\"{word}\" enregistré dans \"{deckName}\"",
+    "wordAlreadyExists": "\"{word}\" existe déjà dans ce deck",
+    "pasteOnly": "Veuillez coller un mot au lieu de taper",
+    "checkFailed": "Échec de la vérification des doublons",
+    "unexpectedError": "Une erreur inattendue s'est produite"
   },
   "explore": {
     "title": "Explorer",
@@ -544,34 +575,5 @@
     "noFollowers": "Pas encore d'abonnés",
     "noFollowing": "Ne suit personne",
     "followFailed": "Échec de la mise à jour du statut de suivi"
-  },
-  "word_entry": {
-    "title": "Saisie de mot",
-    "description": "Collez un mot pour le rechercher automatiquement et l'enregistrer dans votre deck.",
-    "targetDeck": "Deck cible",
-    "noDecks": "Aucun deck disponible",
-    "selectDeckFirst": "Veuillez d'abord sélectionner un deck",
-    "wordInput": "Mot",
-    "pastePlaceholder": "Collez un mot ici...",
-    "hint": "Collez un mot pour commencer",
-    "lookingUp": "Recherche en cours...",
-    "checkingDuplicate": "Vérification des doublons...",
-    "saving": "Enregistrement...",
-    "saved": "Enregistré avec succès",
-    "savedStatus": "\"{word}\" enregistré dans \"{deckName}\"",
-    "lookupFailed": "Échec de la recherche",
-    "checkFailed": "Échec de la vérification des doublons",
-    "wordAlreadyExists": "\"{word}\" existe déjà dans ce deck",
-    "saveFailed": "Échec de l'enregistrement",
-    "unexpectedError": "Une erreur inattendue s'est produite",
-    "pasteOnly": "Veuillez coller un mot au lieu de taper",
-    "error": "Erreur",
-    "languageSettings": "Paramètres linguistiques",
-    "queryLanguage": "Langue de requête",
-    "queryLanguageHint": "langue du mot collé",
-    "definitionLanguage": "Langue de définition",
-    "definitionLanguageHint": "langue des définitions",
-    "other": "Autre",
-    "otherLanguagePlaceholder": "Entrer le nom de la langue"
   }
 }

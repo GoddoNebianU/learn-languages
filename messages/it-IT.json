@@ -296,13 +296,29 @@
     "folders": "Mazzi",
     "explore": "Esplora",
     "favorites": "Preferiti",
-    "settings": "Impostazioni",
-    "wordEntry": "Inserimento parola"
+    "settings": "Impostazioni"
   },
   "settings": {
     "title": "Impostazioni",
     "themeColor": "Colore del tema",
-    "themeColorDescription": "Scegli il tuo colore del tema preferito"
+    "themeColorDescription": "Scegli il tuo colore del tema preferito",
+    "themeNames": {
+      "teal": "Turchese",
+      "blue": "Blu",
+      "violet": "Viola",
+      "rose": "Rosa",
+      "amber": "Ambra",
+      "emerald": "Smeraldo",
+      "orange": "Arancione",
+      "indigo": "Indaco",
+      "slate": "Ardesia",
+      "sage": "Salvia",
+      "taupe": "Talpa",
+      "mauve": "Malva",
+      "mist": "Nebbia",
+      "dusty": "Rosa Polveroso",
+      "olive": "Oliva"
+    }
   },
   "srt_player": {
     "uploadVideo": "Carica Video",
@@ -456,7 +472,22 @@
     "definition": "Definizione",
     "example": "Esempio",
     "noDictionaryItemToSave": "Nessun elemento del dizionario da salvare. Cerca prima.",
-    "noDeckSelected": "Nessun deck selezionato"
+    "noDeckSelected": "Nessun deck selezionato",
+    "normalMode": "Normale",
+    "readingMode": "Lettura",
+    "targetDeck": "Mazzo di destinazione",
+    "noDecks": "Nessun mazzo disponibile",
+    "selectDeckFirst": "Seleziona prima un mazzo",
+    "pastePlaceholder": "Incolla una parola qui...",
+    "pasteHint": "Incolla una parola per iniziare",
+    "lookingUp": "Ricerca in corso...",
+    "checkingDuplicate": "Verifica duplicati...",
+    "saving": "Salvataggio...",
+    "savedStatus": "\"{word}\" salvato in \"{deckName}\"",
+    "wordAlreadyExists": "\"{word}\" esiste già in questo mazzo",
+    "pasteOnly": "Incolla una parola invece di digitare",
+    "checkFailed": "Verifica duplicati fallita",
+    "unexpectedError": "Si è verificato un errore imprevisto"
   },
   "explore": {
     "title": "Esplora",
@@ -544,34 +575,5 @@
     "noFollowers": "Nessun seguace ancora",
     "noFollowing": "Non segui ancora nessuno",
     "followFailed": "Impossibile aggiornare lo stato di seguire"
-  },
-  "word_entry": {
-    "title": "Inserimento parola",
-    "description": "Incolla una parola per cercarla automaticamente e salvarla nel tuo mazzo.",
-    "targetDeck": "Mazzo di destinazione",
-    "noDecks": "Nessun mazzo disponibile",
-    "selectDeckFirst": "Seleziona prima un mazzo",
-    "wordInput": "Parola",
-    "pastePlaceholder": "Incolla una parola qui...",
-    "hint": "Incolla una parola per iniziare",
-    "lookingUp": "Ricerca in corso...",
-    "checkingDuplicate": "Verifica duplicati...",
-    "saving": "Salvataggio...",
-    "saved": "Salvato con successo",
-    "savedStatus": "\"{word}\" salvato in \"{deckName}\"",
-    "lookupFailed": "Ricerca fallita",
-    "checkFailed": "Verifica duplicati fallita",
-    "wordAlreadyExists": "\"{word}\" esiste già in questo mazzo",
-    "saveFailed": "Salvataggio fallito",
-    "unexpectedError": "Si è verificato un errore imprevisto",
-    "pasteOnly": "Incolla una parola invece di digitare",
-    "error": "Errore",
-    "languageSettings": "Impostazioni lingua",
-    "queryLanguage": "Lingua di ricerca",
-    "queryLanguageHint": "lingua della parola incollata",
-    "definitionLanguage": "Lingua di definizione",
-    "definitionLanguageHint": "lingua delle definizioni",
-    "other": "Altro",
-    "otherLanguagePlaceholder": "Inserire il nome della lingua"
   }
 }

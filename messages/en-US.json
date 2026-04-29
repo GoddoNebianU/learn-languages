@@ -264,13 +264,29 @@
     "folders": "Decks",
     "explore": "Explore",
     "favorites": "Favorites",
-    "settings": "Settings",
-    "wordEntry": "Word Entry"
+    "settings": "Settings"
   },
   "settings": {
     "title": "Settings",
     "themeColor": "Theme Color",
-    "themeColorDescription": "Choose your preferred theme color"
+    "themeColorDescription": "Choose your preferred theme color",
+    "themeNames": {
+      "teal": "Teal",
+      "blue": "Blue",
+      "violet": "Violet",
+      "rose": "Rose",
+      "amber": "Amber",
+      "emerald": "Emerald",
+      "orange": "Orange",
+      "indigo": "Indigo",
+      "slate": "Slate",
+      "sage": "Sage",
+      "taupe": "Taupe",
+      "mauve": "Mauve",
+      "mist": "Mist",
+      "dusty": "Dusty Rose",
+      "olive": "Olive"
+    }
   },
   "srt_player": {
     "uploadVideo": "Upload Video",
@@ -424,7 +440,22 @@
     "definition": "Definition",
     "example": "Example",
     "noDictionaryItemToSave": "No dictionary item to save. Please search first.",
-    "noDeckSelected": "No deck selected"
+    "noDeckSelected": "No deck selected",
+    "normalMode": "Normal",
+    "readingMode": "Reading",
+    "targetDeck": "Target Deck",
+    "noDecks": "No decks available",
+    "selectDeckFirst": "Please select a deck first",
+    "pastePlaceholder": "Paste a word here...",
+    "pasteHint": "Paste a word to get started",
+    "lookingUp": "Looking up...",
+    "checkingDuplicate": "Checking for duplicates...",
+    "saving": "Saving...",
+    "savedStatus": "\"{word}\" saved to \"{deckName}\"",
+    "wordAlreadyExists": "\"{word}\" already exists in this deck",
+    "pasteOnly": "Please paste a word instead of typing",
+    "checkFailed": "Failed to check for duplicates",
+    "unexpectedError": "An unexpected error occurred"
   },
   "explore": {
     "title": "Explore",
@@ -536,34 +567,5 @@
     "noFollowers": "No followers yet",
     "noFollowing": "Not following anyone yet",
     "followFailed": "Failed to update follow status"
-  },
-  "word_entry": {
-    "title": "Word Entry",
-    "description": "Paste a word to automatically look it up and save it to your deck.",
-    "targetDeck": "Target Deck",
-    "noDecks": "No decks available",
-    "selectDeckFirst": "Please select a deck first",
-    "wordInput": "Word",
-    "pastePlaceholder": "Paste a word here...",
-    "hint": "Paste a word to get started",
-    "lookingUp": "Looking up...",
-    "checkingDuplicate": "Checking for duplicates...",
-    "saving": "Saving...",
-    "saved": "Saved successfully",
-    "savedStatus": "\"{word}\" saved to \"{deckName}\"",
-    "lookupFailed": "Lookup failed",
-    "checkFailed": "Failed to check for duplicates",
-    "wordAlreadyExists": "\"{word}\" already exists in this deck",
-    "saveFailed": "Failed to save",
-    "unexpectedError": "An unexpected error occurred",
-    "pasteOnly": "Please paste a word instead of typing",
-    "error": "Error",
-    "languageSettings": "Language Settings",
-    "queryLanguage": "Query Language",
-    "queryLanguageHint": "language of the word you paste",
-    "definitionLanguage": "Definition Language",
-    "definitionLanguageHint": "language for definitions",
-    "other": "Other",
-    "otherLanguagePlaceholder": "Enter language name"
   }
 }
