@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
+import { Compass, Folder, Heart, Home, PenLine, Settings, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
 import { MobileMenu } from "./MobileMenu";
 import { auth } from "@/auth";
@@ -45,7 +45,12 @@ export async function Navbar() {
   const mobileMenuItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
     { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
-    ...(session ? [{ label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> }] : []),
+    ...(session
+      ? [
+          { label: t("wordEntry"), href: "/word-entry", icon: <PenLine size={18} /> },
+          { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
+        ]
+      : []),
     {
       label: t("sourceCode"),
       href: "https://github.com/GoddoNebianU/learn-languages",
@@ -74,6 +79,11 @@ export async function Navbar() {
         <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>
           {t("explore")}
         </Link>
+        {session && (
+          <Link href="/word-entry" className={`${navLinkClass} hidden! md:block!`}>
+            {t("wordEntry")}
+          </Link>
+        )}
         {session && (
           <Link href="/favorites" className={`${navLinkClass} hidden! md:block!`}>
             {t("favorites")}
