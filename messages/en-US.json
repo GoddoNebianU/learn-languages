@@ -264,7 +264,8 @@
     "folders": "Decks",
     "explore": "Explore",
     "favorites": "Favorites",
-    "settings": "Settings"
+    "settings": "Settings",
+    "wordEntry": "Word Entry"
   },
   "settings": {
     "title": "Settings",
@@ -535,5 +536,34 @@
     "noFollowers": "No followers yet",
     "noFollowing": "Not following anyone yet",
     "followFailed": "Failed to update follow status"
+  },
+  "word_entry": {
+    "title": "Word Entry",
+    "description": "Paste a word to automatically look it up and save it to your deck.",
+    "targetDeck": "Target Deck",
+    "noDecks": "No decks available",
+    "selectDeckFirst": "Please select a deck first",
+    "wordInput": "Word",
+    "pastePlaceholder": "Paste a word here...",
+    "hint": "Paste a word to get started",
+    "lookingUp": "Looking up...",
+    "checkingDuplicate": "Checking for duplicates...",
+    "saving": "Saving...",
+    "saved": "Saved successfully",
+    "savedStatus": "\"{word}\" saved to \"{deckName}\"",
+    "lookupFailed": "Lookup failed",
+    "checkFailed": "Failed to check for duplicates",
+    "wordAlreadyExists": "\"{word}\" already exists in this deck",
+    "saveFailed": "Failed to save",
+    "unexpectedError": "An unexpected error occurred",
+    "pasteOnly": "Please paste a word instead of typing",
+    "error": "Error",
+    "languageSettings": "Language Settings",
+    "queryLanguage": "Query Language",
+    "queryLanguageHint": "language of the word you paste",
+    "definitionLanguage": "Definition Language",
+    "definitionLanguageHint": "language for definitions",
+    "other": "Other",
+    "otherLanguagePlaceholder": "Enter language name"
   }
 }

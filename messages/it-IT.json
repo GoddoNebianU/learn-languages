@@ -296,7 +296,8 @@
     "folders": "Mazzi",
     "explore": "Esplora",
     "favorites": "Preferiti",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "wordEntry": "Inserimento parola"
   },
   "settings": {
     "title": "Impostazioni",
@@ -543,5 +544,34 @@
     "noFollowers": "Nessun seguace ancora",
     "noFollowing": "Non segui ancora nessuno",
     "followFailed": "Impossibile aggiornare lo stato di seguire"
+  },
+  "word_entry": {
+    "title": "Inserimento parola",
+    "description": "Incolla una parola per cercarla automaticamente e salvarla nel tuo mazzo.",
+    "targetDeck": "Mazzo di destinazione",
+    "noDecks": "Nessun mazzo disponibile",
+    "selectDeckFirst": "Seleziona prima un mazzo",
+    "wordInput": "Parola",
+    "pastePlaceholder": "Incolla una parola qui...",
+    "hint": "Incolla una parola per iniziare",
+    "lookingUp": "Ricerca in corso...",
+    "checkingDuplicate": "Verifica duplicati...",
+    "saving": "Salvataggio...",
+    "saved": "Salvato con successo",
+    "savedStatus": "\"{word}\" salvato in \"{deckName}\"",
+    "lookupFailed": "Ricerca fallita",
+    "checkFailed": "Verifica duplicati fallita",
+    "wordAlreadyExists": "\"{word}\" esiste già in questo mazzo",
+    "saveFailed": "Salvataggio fallito",
+    "unexpectedError": "Si è verificato un errore imprevisto",
+    "pasteOnly": "Incolla una parola invece di digitare",
+    "error": "Errore",
+    "languageSettings": "Impostazioni lingua",
+    "queryLanguage": "Lingua di ricerca",
+    "queryLanguageHint": "lingua della parola incollata",
+    "definitionLanguage": "Lingua di definizione",
+    "definitionLanguageHint": "lingua delle definizioni",
+    "other": "Altro",
+    "otherLanguagePlaceholder": "Inserire il nome della lingua"
   }
 }

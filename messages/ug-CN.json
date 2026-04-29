@@ -296,7 +296,8 @@
     "folders": "دېكلار",
     "explore": "ئىزدىنىش",
     "favorites": "يىغىپ ساقلاش",
-    "settings": "تەڭشەكلەر"
+    "settings": "تەڭشەكلەر",
+    "wordEntry": "سۆز كىرگۈزۈش"
   },
   "settings": {
     "title": "تەڭشەكلەر",
@@ -543,5 +544,34 @@
     "noFollowers": "تېخى ئەگەشكۈچى يوق",
     "noFollowing": "تېخى ئەگىشىدىغان ئادەم يوق",
     "followFailed": "ئەگىشىش ھالىتىنى يېڭىلاش مەغلۇپ بولدى"
+  },
+  "word_entry": {
+    "title": "سۆز كىرگۈزۈش",
+    "description": "سۆزنى چاپلاپ ئاپتوماتىك ئىزدەڭ ۋە دېكىغا ساقلاڭ.",
+    "targetDeck": "نىشان دېك",
+    "noDecks": "دېك يوق",
+    "selectDeckFirst": "ئاۋۋال بىر دېك تاللاڭ",
+    "wordInput": "سۆز",
+    "pastePlaceholder": "سۆزنى بۇ يەرگە چاپلاڭ...",
+    "hint": "باشلاش ئۈچۈن سۆزنى چاپلاڭ",
+    "lookingUp": "ئىزدەۋاتىدۇ...",
+    "checkingDuplicate": "تەكرارلىنىشنى تەكشۈرۈۋاتىدۇ...",
+    "saving": "ساقلاۋاتىدۇ...",
+    "saved": "مۇۋەپپەقىيەتلىك ساقلاندى",
+    "savedStatus": "\"{word}\" \"{deckName}\" غا ساقلاندى",
+    "lookupFailed": "ئىزدەش مەغلۇپ بولدى",
+    "checkFailed": "تەكرارلىنىشنى تەكشۈرۈش مەغلۇپ بولدى",
+    "wordAlreadyExists": "\"{word}\" بۇ دېكتا مەۋجۇت",
+    "saveFailed": "ساقلاش مەغلۇپ بولدى",
+    "unexpectedError": "كۈتكىلى بولمايدىغان خاتالىق يۈز بەردى",
+    "pasteOnly": "كىرگۈزمەي سۆزنى چاپلاڭ",
+    "error": "خاتالىق",
+    "languageSettings": "تىل تەڭشىكى",
+    "queryLanguage": "سۈرۈشتۈرۈش تىلى",
+    "queryLanguageHint": "چاپلىغان سۆزنىڭ تىلى",
+    "definitionLanguage": "ئېنىقلىما تىلى",
+    "definitionLanguageHint": "ئېنىقلىمىنىڭ تىلى",
+    "other": "باشقا",
+    "otherLanguagePlaceholder": "تىل نامىنى كىرگۈزۈڭ"
   }
 }
