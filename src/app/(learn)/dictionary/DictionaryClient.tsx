@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDictionaryStore } from "./stores/dictionaryStore";
@@ -10,25 +10,31 @@ import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, ClipboardPaste, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
-import { actionCreateCard } from "@/modules/card/card-action";
+import { actionCreateCard, actionCheckCardExistsByWord } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
+import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
 import { toast } from "sonner";
-import { getNativeName } from "./stores/dictionaryStore";
+import { getNativeName } from "@/shared/languages";
+import type { TSharedItem } from "@/shared/dictionary-type";
 
 interface DictionaryClientProps {
   initialDecks: ActionOutputDeck[];
 }
 
+type ProcessingState = "idle" | "looking-up" | "checking" | "saving" | "done" | "error";
+
 function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const t = useTranslations("dictionary");
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const isReadingMode = searchParams.get("mode") === "reading";
 
   const {
     query,
@@ -48,17 +54,20 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const [decks, setDecks] = useState<ActionOutputDeck[]>(initialDecks);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    const q = searchParams.get("q") || undefined;
-    const ql = searchParams.get("ql") || undefined;
-    const dl = searchParams.get("dl") || undefined;
+  const [selectedDeckId, setSelectedDeckId] = useState<number | null>(
+    initialDecks.length > 0 ? initialDecks[0].id : null
+  );
+  const [inputValue, setInputValue] = useState("");
+  const [processingState, setProcessingState] = useState<ProcessingState>("idle");
+  const [lastResult, setLastResult] = useState<{ word: string; deckName: string } | null>(null);
+  const [readingSearchResult, setReadingSearchResult] = useState<TSharedItem | null>(null);
 
-    syncFromUrl({ q, ql, dl });
+  const inputRef = useRef<HTMLInputElement>(null);
+  const prevLengthRef = useRef(0);
 
-    if (q) {
-      search();
-    }
-  }, [searchParams, syncFromUrl, search]);
+  const hasDeck = selectedDeckId !== null;
+  const isProcessing =
+    processingState === "looking-up" || processingState === "checking" || processingState === "saving";
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -69,6 +78,20 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
       });
     }
   }, [session?.user?.id]);
+
+  useEffect(() => {
+    if (isReadingMode) return;
+
+    const q = searchParams.get("q") || undefined;
+    const ql = searchParams.get("ql") || undefined;
+    const dl = searchParams.get("dl") || undefined;
+
+    syncFromUrl({ q, ql, dl });
+
+    if (q) {
+      search();
+    }
+  }, [searchParams, syncFromUrl, search, isReadingMode]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -143,10 +166,167 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
       const deckName = decks.find((d) => d.id === deckId)?.name || "Unknown";
       toast.success(t("savedToFolder", { folderName: deckName }));
     } catch (error) {
-      console.error("Save error:", error);
       toast.error(t("saveFailed"));
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleReadingChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      const prevLength = prevLengthRef.current;
+      const newLength = newValue.length;
+
+      if (prevLength === 0 && newLength >= 2) {
+        prevLengthRef.current = newLength;
+        setInputValue(newValue);
+
+        if (!hasDeck) {
+          toast.error(t("selectDeckFirst"));
+          prevLengthRef.current = 0;
+          setInputValue("");
+          return;
+        }
+
+        setProcessingState("looking-up");
+        setLastResult(null);
+        setReadingSearchResult(null);
+
+        try {
+          const lookupResult = await actionLookUpDictionary({
+            text: newValue.trim(),
+            queryLang: getNativeName(queryLang),
+            definitionLang: getNativeName(definitionLang),
+          });
+
+          if (!lookupResult.success || !lookupResult.data) {
+            toast.error(lookupResult.message || t("lookupFailed"));
+            setProcessingState("error");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
+          const lookupData = lookupResult.data;
+          setReadingSearchResult(lookupData);
+          const word = lookupData.standardForm;
+
+          setProcessingState("checking");
+          const existsResult = await actionCheckCardExistsByWord({
+            deckId: selectedDeckId!,
+            word,
+          });
+
+          if (!existsResult.success) {
+            toast.error(existsResult.message || t("checkFailed"));
+            setProcessingState("error");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
+          if (existsResult.data?.exists) {
+            toast.error(t("wordAlreadyExists", { word }));
+            setProcessingState("error");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
+          setProcessingState("saving");
+          const hasIpa = lookupData.entries.some((e) => e.ipa);
+          const hasSpaces = lookupData.standardForm.includes(" ");
+          let cardType: CardType = "WORD";
+          if (!hasIpa) {
+            cardType = "SENTENCE";
+          } else if (hasSpaces) {
+            cardType = "PHRASE";
+          }
+
+          const ipa = lookupData.entries.find((e) => e.ipa)?.ipa || null;
+          const meanings = lookupData.entries.map((e) => ({
+            partOfSpeech: e.partOfSpeech || null,
+            definition: e.definition,
+            example: e.example || null,
+          }));
+
+          const cardResult = await actionCreateCard({
+            deckId: selectedDeckId!,
+            word,
+            ipa,
+            queryLang: getNativeName(queryLang),
+            cardType,
+            meanings,
+          });
+
+          if (!cardResult.success) {
+            toast.error(cardResult.message || t("saveFailed"));
+            setProcessingState("error");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
+          const deckName = decks.find((d) => d.id === selectedDeckId)?.name || "";
+          setLastResult({ word, deckName });
+          setProcessingState("done");
+          toast.success(t("savedStatus", { word, deckName }));
+        } catch {
+          toast.error(t("unexpectedError"));
+          setProcessingState("error");
+        } finally {
+          prevLengthRef.current = 0;
+          setInputValue("");
+        }
+      } else {
+        setInputValue("");
+        prevLengthRef.current = 0;
+        if (newLength > 0) {
+          toast.error(t("pasteOnly"));
+        }
+      }
+    },
+    [hasDeck, selectedDeckId, decks, t, queryLang, definitionLang]
+  );
+
+  const getStatusIcon = () => {
+    switch (processingState) {
+      case "looking-up":
+      case "checking":
+      case "saving":
+        return <Loader2 className="h-5 w-5 animate-spin text-primary-500" />;
+      case "done":
+        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+      case "error":
+        return <AlertCircle className="h-5 w-5 text-red-500" />;
+      default:
+        return <ClipboardPaste className="h-5 w-5 text-gray-400" />;
+    }
+  };
+
+  const getStatusText = () => {
+    switch (processingState) {
+      case "looking-up":
+        return t("lookingUp");
+      case "checking":
+        return t("checkingDuplicate");
+      case "saving":
+        return t("saving");
+      case "done":
+        return lastResult ? t("savedStatus", { word: lastResult.word, deckName: lastResult.deckName }) : "";
+      case "error":
+        return t("saveFailed");
+      default:
+        return t("pasteHint");
+    }
+  };
+
+  const handleModeToggle = (mode: "normal" | "reading") => {
+    if (mode === "reading") {
+      router.push("/dictionary?mode=reading");
+    } else {
+      router.push("/dictionary");
     }
   };
 
@@ -157,28 +337,28 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         <p className="text-lg text-gray-700">{t("description")}</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
-        <Input
-          type="text"
-          name="searchQuery"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t("searchPlaceholder")}
-          variant="search"
-          required
-          containerClassName="flex-1"
-        />
-        <Button
-          variant="light"
-          type="submit"
-          className="rounded-full px-6 whitespace-nowrap"
-          loading={isSearching}
-        >
-          {t("search")}
-        </Button>
-      </form>
+      {/* Mode Toggle */}
+      <div className="mb-6 flex justify-center">
+        <HStack align="center" gap={2}>
+          <Button
+            variant={isReadingMode ? "light" : "primary"}
+            onClick={() => handleModeToggle("normal")}
+            size="sm"
+          >
+            {t("normalMode")}
+          </Button>
+          <Button
+            variant={isReadingMode ? "primary" : "light"}
+            onClick={() => handleModeToggle("reading")}
+            size="sm"
+          >
+            {t("readingMode")}
+          </Button>
+        </HStack>
+      </div>
 
-      <div className="mt-4 rounded-lg bg-white/20 p-4">
+      {/* Shared Language Settings */}
+      <div className="mb-4 rounded-lg bg-white/20 p-4">
         <div className="mb-3">
           <span className="font-semibold text-gray-800">{t("languageSettings")}</span>
         </div>
@@ -200,70 +380,157 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         </div>
       </div>
 
-      <div className="mt-8">
-        {isSearching ? (
-          <VStack align="center" className="py-12">
-            <Skeleton variant="circular" className="mb-3 h-8 w-8" />
-            <p className="text-gray-600">{t("searching")}</p>
-          </VStack>
-        ) : query && !searchResult ? (
-          <div className="rounded-lg bg-white/20 py-12 text-center">
-            <p className="text-xl text-gray-800">{t("noResults")}</p>
-            <p className="mt-2 text-gray-600">{t("tryOtherWords")}</p>
+      {isReadingMode ? (
+        /* ===== READING MODE ===== */
+        <>
+          <div className="mb-4">
+            <label className="mb-2 block text-sm font-medium text-gray-800">{t("targetDeck")}</label>
+            <Select
+              value={selectedDeckId ?? ""}
+              onChange={(e) => setSelectedDeckId(Number(e.target.value))}
+              className="w-full"
+              disabled={isProcessing}
+            >
+              {decks.length === 0 ? (
+                <option value="">{t("noDecks")}</option>
+              ) : (
+                decks.map((deck) => (
+                  <option key={deck.id} value={deck.id}>
+                    {deck.name}
+                  </option>
+                ))
+              )}
+            </Select>
           </div>
-        ) : searchResult ? (
-          <div className="rounded-lg bg-white p-6 shadow-lg">
-            <div className="mb-6 flex items-start justify-between">
-              <div className="flex-1">
-                <h2 className="mb-2 text-3xl font-bold text-gray-800">
-                  {searchResult.standardForm}
-                </h2>
-              </div>
-              <HStack align="center" gap={2} className="ml-4">
-                {session && decks.length > 0 && (
-                  <Select id="deck-select" variant="bordered" size="sm">
-                    {decks.map((deck) => (
-                      <option key={deck.id} value={deck.id}>
-                        {deck.name}
-                      </option>
-                    ))}
-                  </Select>
-                )}
-                <Button
-                  variant="light"
-                  onClick={handleSave}
-                  className="w-10 shrink-0"
-                  title={t("saveToFolder")}
-                  loading={isSaving}
-                  disabled={isSaving}
-                >
-                  <Plus />
-                </Button>
-              </HStack>
-            </div>
 
-            <div className="space-y-6">
-              {searchResult.entries.map((entry, index) => (
-                <div key={index} className="border-t border-gray-200 pt-4">
-                  <DictionaryEntry entry={entry} />
+          <div className="mb-4">
+            <Input
+              ref={inputRef}
+              value={inputValue}
+              onChange={handleReadingChange}
+              placeholder={hasDeck ? t("pastePlaceholder") : t("selectDeckFirst")}
+              className="w-full text-lg"
+              disabled={!hasDeck || isProcessing}
+              rightIcon={getStatusIcon()}
+              containerClassName="w-full"
+            />
+          </div>
+
+          <div className="mb-6 flex items-center justify-center gap-2 text-sm text-gray-600">
+            {isProcessing && <Skeleton variant="text" className="h-4 w-32" />}
+            {!isProcessing && <span>{getStatusText()}</span>}
+          </div>
+
+          {readingSearchResult && (
+            <div className="rounded-lg bg-white p-6 shadow-lg">
+              <div className="mb-6 flex items-start justify-between">
+                <div className="flex-1">
+                  <h2 className="mb-2 text-3xl font-bold text-gray-800">
+                    {readingSearchResult.standardForm}
+                  </h2>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-4 border-t border-gray-200 pt-4">
-              <Button variant="light" onClick={relookup} className="text-sm" loading={isSearching}>
-                <RefreshCw className="h-4 w-4" />
-                {t("relookup")}
-              </Button>
+              <div className="space-y-6">
+                {readingSearchResult.entries.map((entry, index) => (
+                  <div key={index} className="border-t border-gray-200 pt-4">
+                    <DictionaryEntry entry={entry} />
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
+        </>
+      ) : (
+        /* ===== NORMAL MODE ===== */
+        <>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
+            <Input
+              type="text"
+              name="searchQuery"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("searchPlaceholder")}
+              variant="search"
+              required
+              containerClassName="flex-1"
+            />
+            <Button
+              variant="light"
+              type="submit"
+              className="rounded-full px-6 whitespace-nowrap"
+              loading={isSearching}
+            >
+              {t("search")}
+            </Button>
+          </form>
+
+          <div className="mt-8">
+            {isSearching ? (
+              <VStack align="center" className="py-12">
+                <Skeleton variant="circular" className="mb-3 h-8 w-8" />
+                <p className="text-gray-600">{t("searching")}</p>
+              </VStack>
+            ) : query && !searchResult ? (
+              <div className="rounded-lg bg-white/20 py-12 text-center">
+                <p className="text-xl text-gray-800">{t("noResults")}</p>
+                <p className="mt-2 text-gray-600">{t("tryOtherWords")}</p>
+              </div>
+            ) : searchResult ? (
+              <div className="rounded-lg bg-white p-6 shadow-lg">
+                <div className="mb-6 flex items-start justify-between">
+                  <div className="flex-1">
+                    <h2 className="mb-2 text-3xl font-bold text-gray-800">
+                      {searchResult.standardForm}
+                    </h2>
+                  </div>
+                  <HStack align="center" gap={2} className="ml-4">
+                    {session && decks.length > 0 && (
+                      <Select id="deck-select" variant="bordered" size="sm">
+                        {decks.map((deck) => (
+                          <option key={deck.id} value={deck.id}>
+                            {deck.name}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
+                    <Button
+                      variant="light"
+                      onClick={handleSave}
+                      className="w-10 shrink-0"
+                      title={t("saveToFolder")}
+                      loading={isSaving}
+                      disabled={isSaving}
+                    >
+                      <Plus />
+                    </Button>
+                  </HStack>
+                </div>
+
+                <div className="space-y-6">
+                  {searchResult.entries.map((entry, index) => (
+                    <div key={index} className="border-t border-gray-200 pt-4">
+                      <DictionaryEntry entry={entry} />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 border-t border-gray-200 pt-4">
+                  <Button variant="light" onClick={relookup} className="text-sm" loading={isSearching}>
+                    <RefreshCw className="h-4 w-4" />
+                    {t("relookup")}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="py-12 text-center">
+                <p className="mb-2 text-xl text-gray-800">{t("welcomeTitle")}</p>
+                <p className="text-gray-600">{t("welcomeHint")}</p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="py-12 text-center">
-            <p className="mb-2 text-xl text-gray-800">{t("welcomeTitle")}</p>
-            <p className="text-gray-600">{t("welcomeHint")}</p>
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </PageLayout>
   );
 }

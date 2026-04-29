@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Compass, Folder, Heart, Home, PenLine, Settings, User } from "lucide-react";
+import { Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
-import { MobileMenu } from "./MobileMenu";
+import { SessionFeatures, UserLink, MobileMenuSession } from "./NavSession";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
@@ -41,16 +41,12 @@ export async function Navbar() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+  const isLoggedIn = !!session;
 
-  const mobileMenuItems: NavigationItem[] = [
+  const loggedInMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
     { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
-    ...(session
-      ? [
-          { label: t("wordEntry"), href: "/word-entry", icon: <PenLine size={18} /> },
-          { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
-        ]
-      : []),
+    { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
     {
       label: t("sourceCode"),
       href: "https://github.com/GoddoNebianU/learn-languages",
@@ -58,9 +54,20 @@ export async function Navbar() {
       external: true,
     },
     { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
-    ...(session
-      ? [{ label: t("profile"), href: "/profile", icon: <User size={18} /> }]
-      : [{ label: t("sign_in"), href: "/login", icon: <User size={18} /> }]),
+    { label: t("profile"), href: "/profile", icon: <User size={18} /> },
+  ];
+
+  const loggedOutMobileItems: NavigationItem[] = [
+    { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
+    { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
+    {
+      label: t("sourceCode"),
+      href: "https://github.com/GoddoNebianU/learn-languages",
+      icon: <GithubIcon size={18} />,
+      external: true,
+    },
+    { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
+    { label: t("sign_in"), href: "/login", icon: <User size={18} /> },
   ];
 
   return (
@@ -79,16 +86,10 @@ export async function Navbar() {
         <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>
           {t("explore")}
         </Link>
-        {session && (
-          <Link href="/word-entry" className={`${navLinkClass} hidden! md:block!`}>
-            {t("wordEntry")}
-          </Link>
-        )}
-        {session && (
-          <Link href="/favorites" className={`${navLinkClass} hidden! md:block!`}>
-            {t("favorites")}
-          </Link>
-        )}
+        <SessionFeatures
+          favoritesLabel={t("favorites")}
+          initialSession={isLoggedIn}
+        />
         <Link
           href="https://github.com/GoddoNebianU/learn-languages"
           className={`${navLinkClass} hidden! md:block!`}
@@ -100,17 +101,17 @@ export async function Navbar() {
         <Link href="/settings" className={`${navLinkClass} hidden! md:block!`}>
           {t("settings")}
         </Link>
-        {session ? (
-          <Link href="/profile" className={`${navLinkClass} hidden! md:block!`}>
-            {t("profile")}
-          </Link>
-        ) : (
-          <Link href="/login" className={`${navLinkClass} hidden! md:block!`}>
-            {t("sign_in")}
-          </Link>
-        )}
+        <UserLink
+          profileLabel={t("profile")}
+          signInLabel={t("sign_in")}
+          initialSession={isLoggedIn}
+        />
         <div className="md:hidden!">
-          <MobileMenu items={mobileMenuItems} />
+          <MobileMenuSession
+            loggedInItems={loggedInMobileItems}
+            loggedOutItems={loggedOutMobileItems}
+            initialSession={isLoggedIn}
+          />
         </div>
       </div>
     </div>

@@ -11,6 +11,24 @@ export default function SettingsPage() {
   const t = useTranslations("settings");
   const { currentTheme, setTheme, availableThemes } = useTheme();
 
+  const themeNames: Record<string, string> = {
+    teal: t("themeNames.teal"),
+    blue: t("themeNames.blue"),
+    violet: t("themeNames.violet"),
+    rose: t("themeNames.rose"),
+    amber: t("themeNames.amber"),
+    emerald: t("themeNames.emerald"),
+    orange: t("themeNames.orange"),
+    indigo: t("themeNames.indigo"),
+    slate: t("themeNames.slate"),
+    sage: t("themeNames.sage"),
+    taupe: t("themeNames.taupe"),
+    mauve: t("themeNames.mauve"),
+    mist: t("themeNames.mist"),
+    dusty: t("themeNames.dusty"),
+    olive: t("themeNames.olive"),
+  };
+
   return (
     <PageLayout>
       <PageHeader title={t("title")} subtitle={t("themeColorDescription")} />
@@ -37,7 +55,7 @@ export default function SettingsPage() {
                 style={{ backgroundColor: theme.colors[500] }}
               />
               <span className="text-xs text-gray-600 group-hover:text-gray-900">
-                {theme.name}
+                {themeNames[theme.id] ?? theme.id}
               </span>
             </Button>
           ))}
