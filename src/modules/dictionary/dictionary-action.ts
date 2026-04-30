@@ -8,6 +8,7 @@ import {
   ActionOutputLookUpDictionary,
   validateActionInputLookUpDictionary,
 } from "./dictionary-action-dto";
+import { serviceGetCardByWord } from "@/modules/card/card-service";
 
 const log = createLogger("dictionary-action");
 
@@ -20,7 +21,27 @@ export async function actionLookUpDictionary(
     const result = await executeDictionaryLookup(
       validated.text,
       validated.queryLang,
-      validated.definitionLang
+      validated.definitionLang,
+      validated.deckId
+        ? {
+            shouldContinue: async (standardForm: string) => {
+              const card = await serviceGetCardByWord({
+                deckId: validated.deckId!,
+                word: standardForm,
+              });
+              if (card) {
+                const cachedEntries = card.meanings.map((m) => ({
+                  ipa: card.ipa ?? undefined,
+                  definition: m.definition,
+                  partOfSpeech: m.partOfSpeech ?? undefined,
+                  example: m.example ?? "",
+                }));
+                return { continue: false, cachedEntries };
+              }
+              return { continue: true };
+            },
+          }
+        : undefined
     );
 
     return {

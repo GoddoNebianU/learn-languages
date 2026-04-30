@@ -6,10 +6,24 @@ import { createLogger } from "@/lib/logger";
 
 const log = createLogger("dictionary-orchestrator");
 
+export type CachedEntry = {
+  ipa?: string;
+  definition: string;
+  partOfSpeech?: string;
+  example: string;
+};
+
+export type ShouldContinueResult =
+  | { continue: true }
+  | { continue: false; cachedEntries: CachedEntry[] };
+
 export async function executeDictionaryLookup(
   text: string,
   queryLang: string,
-  definitionLang: string
+  definitionLang: string,
+  options?: {
+    shouldContinue?: (standardForm: string) => Promise<ShouldContinueResult>;
+  }
 ): Promise<ServiceOutputLookUp> {
   try {
     log.debug("[Stage 1] Preprocessing input");
@@ -21,6 +35,21 @@ export async function executeDictionaryLookup(
     }
 
     log.debug("[Stage 1] Preprocess complete", { preprocessed });
+
+    if (options?.shouldContinue) {
+      const check = await options.shouldContinue(preprocessed.standardForm);
+      if (!check.continue) {
+        log.info("[Early exit] Card found in deck, using cached entries", {
+          standardForm: preprocessed.standardForm,
+          cachedCount: check.cachedEntries.length,
+        });
+        return {
+          standardForm: preprocessed.standardForm,
+          entries: check.cachedEntries,
+          alreadyExists: true,
+        };
+      }
+    }
 
     log.debug("[Stage 2] Generating entries");
     const entriesResult = await generateEntries(

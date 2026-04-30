@@ -6,4 +6,5 @@ export type ServiceOutputLookUp = {
     partOfSpeech?: string;
     example: string;
   }>;
+  alreadyExists?: boolean;
 };

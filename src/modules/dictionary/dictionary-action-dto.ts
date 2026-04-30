@@ -5,6 +5,7 @@ export const schemaActionLookUpDictionary = z.object({
   text: z.string().min(1),
   queryLang: z.string().min(1),
   definitionLang: z.string().min(1),
+  deckId: z.number().int().positive().optional(),
 });
 
 export type ActionInputLookUpDictionary = z.infer<typeof schemaActionLookUpDictionary>;
@@ -21,5 +22,6 @@ export type ActionOutputLookUpDictionary = {
       partOfSpeech?: string;
       example: string;
     }>;
+    alreadyExists?: boolean;
   };
 };

@@ -15,7 +15,7 @@ import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
-import { actionCreateCard, actionCheckCardExistsByWord } from "@/modules/card/card-action";
+import { actionCreateCard, actionGetCardByWord } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
@@ -27,7 +27,7 @@ interface DictionaryClientProps {
   initialDecks: ActionOutputDeck[];
 }
 
-type ProcessingState = "idle" | "looking-up" | "checking" | "saving" | "done" | "error";
+type ProcessingState = "idle" | "looking-up" | "saving" | "done" | "error";
 
 function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const t = useTranslations("dictionary");
@@ -67,7 +67,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
   const hasDeck = selectedDeckId !== null;
   const isProcessing =
-    processingState === "looking-up" || processingState === "checking" || processingState === "saving";
+    processingState === "looking-up" || processingState === "saving";
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -78,6 +78,12 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
       });
     }
   }, [session?.user?.id]);
+
+  useEffect(() => {
+    if (readingSearchResult && isReadingMode) {
+      inputRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [readingSearchResult, isReadingMode]);
 
   useEffect(() => {
     if (isReadingMode) return;
@@ -194,10 +200,35 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         setReadingSearchResult(null);
 
         try {
+          const existingCard = await actionGetCardByWord({
+            deckId: selectedDeckId!,
+            word: newValue.trim(),
+          });
+
+          if (existingCard.success && existingCard.data) {
+            const card = existingCard.data;
+            const cachedResult: TSharedItem = {
+              standardForm: card.word,
+              entries: card.meanings.map((m) => ({
+                ipa: card.ipa ?? undefined,
+                definition: m.definition,
+                partOfSpeech: m.partOfSpeech ?? undefined,
+                example: m.example ?? "",
+              })),
+            };
+            setReadingSearchResult(cachedResult);
+            toast.info(t("wordAlreadyExists", { word: card.word }));
+            setProcessingState("done");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
           const lookupResult = await actionLookUpDictionary({
             text: newValue.trim(),
             queryLang: getNativeName(queryLang),
             definitionLang: getNativeName(definitionLang),
+            deckId: selectedDeckId!,
           });
 
           if (!lookupResult.success || !lookupResult.data) {
@@ -210,29 +241,16 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
           const lookupData = lookupResult.data;
           setReadingSearchResult(lookupData);
+
+          if (lookupData.alreadyExists) {
+            toast.info(t("wordAlreadyExists", { word: lookupData.standardForm }));
+            setProcessingState("done");
+            prevLengthRef.current = 0;
+            setInputValue("");
+            return;
+          }
+
           const word = lookupData.standardForm;
-
-          setProcessingState("checking");
-          const existsResult = await actionCheckCardExistsByWord({
-            deckId: selectedDeckId!,
-            word,
-          });
-
-          if (!existsResult.success) {
-            toast.error(existsResult.message || t("checkFailed"));
-            setProcessingState("error");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
-
-          if (existsResult.data?.exists) {
-            toast.error(t("wordAlreadyExists", { word }));
-            setProcessingState("error");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
 
           setProcessingState("saving");
           const hasIpa = lookupData.entries.some((e) => e.ipa);
@@ -293,7 +311,6 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const getStatusIcon = () => {
     switch (processingState) {
       case "looking-up":
-      case "checking":
       case "saving":
         return <Loader2 className="h-5 w-5 animate-spin text-primary-500" />;
       case "done":
@@ -309,8 +326,6 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     switch (processingState) {
       case "looking-up":
         return t("lookingUp");
-      case "checking":
-        return t("checkingDuplicate");
       case "saving":
         return t("saving");
       case "done":
@@ -416,13 +431,13 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
             />
           </div>
 
-          <div className="mb-6 flex items-center justify-center gap-2 text-sm text-gray-600">
+          <div className="mb-6 flex items-start justify-center gap-2 text-sm text-gray-600">
             {isProcessing && <Skeleton variant="text" className="h-4 w-32" />}
-            {!isProcessing && <span>{getStatusText()}</span>}
+            {!isProcessing && !readingSearchResult && <span>{getStatusText()}</span>}
           </div>
 
-          {readingSearchResult && (
-            <div className="rounded-lg bg-white p-6 shadow-lg">
+          {readingSearchResult ? (
+            <div className="rounded-lg bg-white p-6 shadow-lg min-h-[calc(100vh-14rem)]">
               <div className="mb-6 flex items-start justify-between">
                 <div className="flex-1">
                   <h2 className="mb-2 text-3xl font-bold text-gray-800">
@@ -439,6 +454,8 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                 ))}
               </div>
             </div>
+          ) : (
+            <div className="min-h-[calc(100vh-14rem)]" />
           )}
         </>
       ) : (
