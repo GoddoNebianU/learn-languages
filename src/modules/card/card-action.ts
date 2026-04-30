@@ -12,8 +12,9 @@ import {
   serviceGetRandomCard,
   serviceCheckDeckOwnership,
   serviceCheckCardExistsByWord,
+  serviceGetCardByWord,
 } from "./card-service";
-import type { ActionOutputCard } from "./card-action-dto";
+import type { ActionOutputCard, ActionOutputGetCardByWord } from "./card-action-dto";
 import type { RepoOutputCard } from "./card-repository-dto";
 import {
   validateActionInputCreateCard,
@@ -193,5 +194,37 @@ export async function actionCheckCardExistsByWord(input: unknown) {
     }
     log.error("Failed to check card existence", { error: e instanceof Error ? e.message : String(e) });
     return { success: false, message: "Failed to check card existence" };
+  }
+}
+
+export async function actionGetCardByWord(input: unknown): Promise<ActionOutputGetCardByWord> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+    const validated = validateActionInputCheckCardExistsByWord(input);
+    const isOwner = await checkDeckOwnership(validated.deckId);
+    if (!isOwner) {
+      return { success: false, message: "You do not have permission to check this deck" };
+    }
+    const card = await serviceGetCardByWord({
+      deckId: validated.deckId,
+      word: validated.word,
+    });
+    if (!card) {
+      return { success: true, message: "Card not found", data: undefined };
+    }
+    return {
+      success: true,
+      message: "Card found",
+      data: mapCardToOutput(card),
+    };
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to get card by word", { error: e instanceof Error ? e.message : String(e) });
+    return { success: false, message: "Failed to get card by word" };
   }
 }

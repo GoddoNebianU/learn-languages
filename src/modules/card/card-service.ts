@@ -19,6 +19,7 @@ import {
   repoGetRandomCard,
   repoGetCardStats,
   repoCheckCardExistsByWord,
+  repoGetCardByWord,
 } from "./card-repository";
 
 const log = createLogger("card-service");
@@ -99,4 +100,11 @@ export async function serviceCheckCardExistsByWord(
 ): Promise<boolean> {
   log.debug("Checking card exists by word", { deckId: input.deckId, word: input.word });
   return repoCheckCardExistsByWord(input);
+}
+
+export async function serviceGetCardByWord(
+  input: RepoInputCheckCardExistsByWord
+): Promise<RepoOutputCard | null> {
+  log.debug("Getting card by word", { deckId: input.deckId, word: input.word });
+  return repoGetCardByWord(input);
 }

@@ -158,3 +158,13 @@ export async function repoCheckCardExistsByWord(
   });
   return count > 0;
 }
+
+export async function repoGetCardByWord(
+  input: RepoInputCheckCardExistsByWord
+): Promise<RepoOutputCard | null> {
+  const card = await prisma.card.findFirst({
+    where: { deckId: input.deckId, word: input.word },
+    include: { meanings: { orderBy: { createdAt: "asc" } } },
+  });
+  return card as RepoOutputCard | null;
+}

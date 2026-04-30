@@ -62,3 +62,9 @@ export type ActionInputCheckCardExistsByWord = z.infer<typeof schemaActionInputC
 export const validateActionInputCheckCardExistsByWord = generateValidator(
   schemaActionInputCheckCardExistsByWord
 );
+
+export type ActionOutputGetCardByWord = {
+  success: boolean;
+  message: string;
+  data?: ActionOutputCard;
+};
