@@ -16,7 +16,7 @@ function escapeXml(str: string): string {
 
 export async function preprocessInput(text: string, queryLang: string): Promise<PreprocessResult> {
   const prompt = `
-你是一个词典预处理系统。分析输入并生成标准形式。
+你是一个词典预处理系统。分析输入并生成标准形式（词典原形）。
 
 用户输入：<input>${escapeXml(text)}</input>
 查询语言：<queryLang>${queryLang}</queryLang>
@@ -25,21 +25,29 @@ export async function preprocessInput(text: string, queryLang: string): Promise<
 1. 判断输入是否有效（非空、是自然语言）
 2. 识别输入类型（单词/短语）
 3. 将输入转换为查询语言的对应词（语义映射）
-4. 生成标准形式（必须是查询语言）
+4. 还原为词典原形（standardForm）
 
-重要规则：
-- standardForm 必须是查询语言的词汇
-- 例如：查询语言=维吾尔语，输入="japanese" → standardForm="ياپونىيە"
-- 例如：查询语言=中文，输入="japanese" → standardForm="日语"
-- 例如：查询语言=English，输入="日语" → standardForm="Japanese"
-- 如果输入本身就是查询语言，则保持不变
-- 只做词典形式还原，不纠正拼写
+【核心规则：词形还原】
+standardForm 必须是该词在词典中的原形（lemma），即：
+- 英语：复数→单数（cats→cat），过去式→不定式（ran→run, played→play），比较级→原级（bigger→big），进行时→不定式（running→run），第三人称→不定式（goes→go）
+- 日语：送假名还原（走った→走る），て形→辞书形（飲んで→飲む），过去→辞书形（食べた→食べる）
+- 韩语：活用形→辞典形（먹었어→먹다, 해요→하다）
+- 德语：变格→原形（des Buches→Buch），比较级→原级（größer→groß）
+- 法语：变位→不定式（mangeait→manger），阴性/复数→阳性单数（belles→beau）
+- 中文、维吾尔语等屈折变化少的语言保持原形
+- 短语不还原，保留完整形式
+
+【语义映射】
+- 查询语言=维吾尔语，输入="japanese" → "ياپونىيە"
+- 查询语言=中文，输入="japanese" → "日语"
+- 查询语言=English，输入="日语" → "Japanese"
+- 如果输入本身就是查询语言，则只做词形还原，不做翻译
 
 返回 JSON：
 {
   "isValid": boolean,
   "inputType": "word" | "phrase",
-  "standardForm": "查询语言对应的标准形式",
+  "standardForm": "词典原形",
   "confidence": "high" | "medium" | "low",
   "reason": "错误原因，成功时为空字符串"
 }
