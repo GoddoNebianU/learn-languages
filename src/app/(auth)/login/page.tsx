@@ -40,7 +40,7 @@ function LoginPageInner() {
     try {
       const { error } = await authClient.sendVerificationEmail({
         email: unverifiedEmail,
-        callbackURL: "/login",
+        callbackURL: "/decks",
       });
 
       if (error) {
@@ -55,8 +55,12 @@ function LoginPageInner() {
   };
 
   const handleLogin = async () => {
-    if (!username || !password) {
-      toast.error(t("enterCredentials"));
+    if (!username) {
+      toast.error(t("identifierRequired"));
+      return;
+    }
+    if (!password) {
+      toast.error(t("passwordRequired"));
       return;
     }
 
@@ -85,6 +89,11 @@ function LoginPageInner() {
         });
         if (error) {
           if (error.status === 403) {
+            const emailFromError = (error as unknown as { email?: string }).email;
+            if (emailFromError) {
+              setUnverifiedEmail(emailFromError);
+              setShowResendOption(true);
+            }
             toast.error(t("emailNotVerified"));
           } else {
             toast.error(error.message ?? t("loginFailed"));
