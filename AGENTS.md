@@ -1,8 +1,8 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-04-29
-**提交:** ca3f2c7
-**分支:** dev
+**生成时间:** 2026-05-02
+**提交:** 52d4105
+**分支:** main
 
 ## 概述
 
@@ -15,8 +15,9 @@ src/
 ├── app/              # Next.js 路由 (25 pages, 1 API route, 单一根 layout)
 │   ├── (auth)/       # 认证: login, signup, logout, forgot/reset-password, users/[username]
 │   ├── (account)/    # 账户: profile, settings
-│   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks
+│   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks, memorize
 │   │   └── srt-player/ # 最复杂页面: 自含 components/, hooks/, stores/, utils/
+│   │   └── memorize/  # 记忆模式: ?deck_id=xxx 查询参数, 无参数跳转 /decks
 │   ├── error.tsx     # 根级错误边界
 │   ├── not-found.tsx # 404 页面
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
@@ -57,6 +58,7 @@ src/
 | 添加认证页面  | `src/app/(auth)/`               | 登录、注册、找回密码            |
 | 添加账户页面  | `src/app/(account)/`            | 个人资料、设置                  |
 | 添加牌组页面  | `src/app/(learn)/decks/`        | 在 (learn) 路由组内             |
+| 添加记忆页面  | `src/app/(learn)/memorize/`     | ?deck_id=xxx, 无参数跳转 /decks |
 | 添加业务逻辑  | `src/modules/{name}/`           | 遵循 action-service-repository  |
 | 添加 AI 管道  | `src/lib/bigmodel/{name}/`      | 多阶段 orchestrator             |
 | 添加 OCR 功能 | `src/lib/bigmodel/ocr/`         | 视觉模型提取词汇表 (目前未使用) |
@@ -107,6 +109,13 @@ const session = await auth.api.getSession({ headers: await headers() });
 import { authClient } from "@/lib/auth-client";
 const { data } = authClient.useSession();
 ```
+
+### 邮箱验证流程
+
+- `src/auth.ts` 配置: `requireEmailVerification: true`, `sendOnSignUp: true`, `sendOnSignIn: true`, `autoSignInAfterVerification: true`
+- 注册后自动发验证邮件, 验证后自动登录
+- 未验证用户登录 → 403 + 黄色提示框 + "重发验证邮件" 按钮
+- 用户名登录 hook 返回 `email` 字段供前端显示重发按钮
 
 ### 受保护操作
 
@@ -209,7 +218,8 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 - ❌ 生产代码中使用 `console.log` (使用 winston logger, 客户端组件例外)
 - ❌ 擅自运行 `pnpm dev` (不需要，用 `pnpm build` 验证即可)
 - ❌ `db push` (必须用 `prisma migrate dev`)
-- ❌ 在 repo 层外直接使用 prisma (例外: `src/auth.ts` better-auth hooks)
+- ❌ 原生 `confirm()` / `prompt()` / `alert()` (使用 design-system/modal)
+- ❌ 内联 SVG 图标 (使用 Lucide React, 例外: Navbar 的 GithubIcon)
 
 ## 独特风格
 
@@ -220,6 +230,7 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 - progress, skeleton
 - VStack/HStack (stack), container
 - modal (compound), overflow-dropdown
+- 所有 SVG 图标使用 Lucide React (唯一例外: Navbar 的 GithubIcon)
 
 ### AI 管道模式
 
@@ -268,5 +279,5 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)
 - 主题: CSS 自定义属性 + localStorage (15 个预设主题)
 - `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts), 不仅限于 action 文件
-- 翻译缺失不会被 build 检测 — 用 AST-grep 手动审计
 - translator-action.ts 中 genIPA() 和 genLanguage() 已废弃但保留用于 text-speaker 兼容
+- 所有 8 种语言翻译 key 必须完全一致 (用 `node -e` 脚本对比 en-US 与其他语言)

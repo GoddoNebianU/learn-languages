@@ -1,10 +1,12 @@
 # 设计系统指南
 
-**生成时间:** 2026-04-29
+**生成时间:** 2026-05-02
 
 ## 概述
 
 基于 CVA 的可复用 UI 组件库, 与业务组件 (`src/components/`) 分离。14 个组件文件, 平铺在 `src/design-system/` 目录下 (无子目录)。
+
+所有组件使用 Lucide React 图标 (非内联 SVG)。按钮加载状态用 `<Loader2>`, 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>`。唯一例外: Navbar 的 GithubIcon 保持内联 SVG。
 
 ## 组件列表
 
@@ -48,6 +50,12 @@ import { LinkButton } from "@/design-system/link-button";
 ```tsx
 import { cn } from "@/utils/cn";
 ```
+
+## 图标规范
+
+- 使用 Lucide React (`import { X } from "lucide-react"`)
+- 禁止内联 `<svg>` (Navbar GithubIcon 是唯一例外)
+- 图标按钮使用 `IconButton` 组件, 非 `<button>` + SVG
 
 ## 添加新组件
 

@@ -31,11 +31,13 @@
 
 - **牌组管理** - 创建、编辑、删除牌组，支持公开/私有可见性设置
 - **卡片系统** - 支持单词、短语、句子三种卡片类型，每张卡片可包含多条释义
+- **记忆模式** - 多种学习模式（顺序/随机/无限循环），支持翻转和听写
 - **收藏功能** - 收藏其他用户的公开牌组
 
 ### 用户系统
 
 - **多方式认证** - 邮箱/密码登录、用户名登录、GitHub OAuth
+- **邮箱验证** - 注册后自动发送验证邮件，验证后自动登录，支持重发验证邮件
 - **密码找回** - 支持邮箱验证的重置密码流程
 - **个人资料** - 用户主页、简介、学习资料展示
 - **关注系统** - 关注/取消关注其他用户，查看粉丝和关注列表
@@ -53,6 +55,7 @@
 - **React Compiler** - 已启用 React 编译器自动优化
 - **Action-Service-Repository** - 清晰的三层架构设计
 - **类型安全** - TypeScript 严格模式 + Zod v4 验证
+- **统一设计系统** - CVA 组件 + Lucide 图标，零原生弹窗
 
 ---
 
@@ -122,6 +125,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 - **React 19.2.5** - UI 框架
 - **TypeScript 6.x** - 类型安全
 - **Tailwind CSS 4** - 样式方案（无 tailwind.config.ts）
+- **Lucide React** - 图标库
 - **Zustand 5** - 状态管理
 - **next-intl** - 国际化
 
@@ -157,6 +161,7 @@ learn-languages/
 │   │   │   ├── srt-player/        #   SRT 字幕播放器（含组件、hooks、stores、utils）
 │   │   │   ├── text-speaker/      #   语音合成
 │   │   │   ├── alphabet/          #   字母学习
+│   │   │   ├── memorize/          #   记忆模式（?deck_id=xxx）
 │   │   │   ├── explore/           #   探索公开牌组
 │   │   │   ├── favorites/         #   收藏列表
 │   │   │   └── decks/             #   牌组管理
@@ -254,12 +259,13 @@ AI 驱动的模块（translator、dictionary）不包含 repository 层，直接
 
 ### 认证系统 (auth)
 
-- 邮箱/密码登录
-- 用户名登录
-- GitHub OAuth
-- 邮箱验证
+- 邮箱/密码登录、用户名登录、GitHub OAuth
+- 注册时前端验证（用户名格式、邮箱、密码强度、确认密码）
+- 邮箱验证流程（注册自动发邮件，验证后自动登录，支持重发）
+- 未验证用户登录时提示并显示重发验证邮件按钮
 - 忘记密码/重置密码
 - 用户资料页（users/[username]）
+- 账户删除（需确认用户名）
 
 ### 翻译模块 (translator)
 
@@ -281,6 +287,7 @@ AI 驱动的模块（translator、dictionary）不包含 repository 层，直接
 - 公开/私有可见性控制（PUBLIC/PRIVATE）
 - 牌组收藏功能
 - 用户间牌组浏览
+- 记忆模式（/memorize?deck_id=xxx）：顺序/随机/无限循环，翻转/听写
 
 ### 卡片模块 (card)
 

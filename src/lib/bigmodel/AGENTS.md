@@ -1,6 +1,6 @@
 # AI 管道架构指南
 
-**生成时间:** 2026-04-29
+**生成时间:** 2026-05-02
 
 ## 概述
 
@@ -62,7 +62,7 @@ ocr/
 
 - **API**: 阿里云 DashScope (qwen3-tts-flash)
 - **方法**: `getTTSUrl(text, voice)` → 返回音频 URL
-- **调用者**: translator/page, text-speaker/page, Memorize (直接从页面组件调用)
+- **调用者**: translator/page, text-speaker/page, memorize/Memorize (直接从页面组件调用)
 - **错误处理**: 捕获错误, 日志记录, 返回 `"error"` 字符串
 
 ## 共享依赖
