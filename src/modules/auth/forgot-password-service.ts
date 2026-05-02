@@ -15,22 +15,17 @@ export async function serviceRequestPasswordReset(
 
   const user = await repoFindUserByEmail({ email: dto.email });
 
-  if (!user) {
-    return {
-      success: false,
-      message: "该邮箱未注册",
-    };
+  if (user) {
+    await auth.api.requestPasswordReset({
+      body: {
+        email: dto.email,
+        redirectTo: "/reset-password",
+      },
+    });
   }
-
-  await auth.api.requestPasswordReset({
-    body: {
-      email: dto.email,
-      redirectTo: "/reset-password",
-    },
-  });
 
   return {
     success: true,
-    message: "重置密码邮件已发送，请检查您的邮箱",
+    message: "如果该邮箱已注册，重置密码邮件已发送，请检查您的邮箱",
   };
 }
