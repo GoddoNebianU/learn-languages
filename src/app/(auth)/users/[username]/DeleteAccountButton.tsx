@@ -8,6 +8,7 @@ import { Button } from "@/design-system/button";
 import { Input } from "@/design-system/input";
 import { LinkButton } from "@/design-system/link-button";
 import { Modal } from "@/design-system/modal";
+import { authClient } from "@/lib/auth-client";
 import { actionDeleteAccount } from "@/modules/auth/auth-action";
 
 interface DeleteAccountButtonProps {
@@ -31,7 +32,7 @@ export function DeleteAccountButton({ username }: DeleteAccountButtonProps) {
     try {
       const result = await actionDeleteAccount();
       if (result.success) {
-        toast.success(t("deleteAccount.success"));
+        await authClient.signOut();
         router.push("/");
       } else {
         toast.error(result.message || t("deleteAccount.failed"));
