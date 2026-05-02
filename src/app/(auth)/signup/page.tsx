@@ -29,10 +29,10 @@ function SignUpPageInner() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isPending && session?.user?.username && !redirectTo && !verificationSent) {
+    if (!isPending && session?.user?.username && !redirectTo) {
       router.push("/decks");
     }
-  }, [session, isPending, router, redirectTo, verificationSent]);
+  }, [session, isPending, router, redirectTo]);
 
   const handleSignUp = async () => {
     if (!username || !email || !password || !confirmPassword) {
