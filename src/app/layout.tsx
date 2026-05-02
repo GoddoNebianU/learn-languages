@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from '@vercel/analytics/next';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -36,6 +37,7 @@ export default async function RootLayout({
             </NextIntlClientProvider>
           </ThemeProvider>
         </StrictMode>
+        <Analytics />
       </body>
     </html>
   );
