@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
+import { ChevronDown } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
@@ -92,15 +93,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-gray-400"
           aria-hidden="true"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <ChevronDown className="h-4 w-4" />
         </div>
       </div>
     );

@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { X } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 const FOCUSABLE_SELECTORS =
@@ -299,14 +300,7 @@ Modal.CloseButton = function ModalCloseButton({
       onClick={onClick}
       {...props}
     >
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+      <X className="h-5 w-5" />
     </button>
   );
 };
