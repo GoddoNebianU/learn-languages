@@ -5,6 +5,8 @@ import z from "zod";
 import { TextSpeakerArraySchema, TextSpeakerItemSchema } from "@/lib/interfaces";
 import { LinkButton } from "@/design-system/link-button";
 import { IconButton } from "@/design-system/icon-button";
+import { Modal } from "@/design-system/modal";
+import { Button } from "@/design-system/button";
 import { IMAGES } from "@/config/images";
 import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
@@ -52,6 +54,7 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
     typeof TextSpeakerArraySchema
   >("text-speaker", TextSpeakerArraySchema);
   const [data, setData] = useState(getFromLocalStorage());
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
   const handleDel = (item: z.infer<typeof TextSpeakerItemSchema>) => {
     const current_data = getFromLocalStorage();
     if (!current_data) return;
@@ -67,30 +70,48 @@ export function SaveList({ show = false, handleUse }: SaveListProps) {
     setData(getFromLocalStorage());
   };
   const handleDeleteAll = () => {
-    const yesorno = prompt(t("confirmDeleteAll"))?.trim();
-    if (yesorno && (yesorno === "Y" || yesorno === "y")) {
-      setIntoLocalStorage([]);
-      refresh();
-    }
+    setShowDeleteAllModal(true);
+  };
+  const confirmDeleteAll = () => {
+    setIntoLocalStorage([]);
+    refresh();
+    setShowDeleteAllModal(false);
   };
   if (show && data)
     return (
-      <div className="mx-4 my-4 rounded-lg border border-gray-200 p-2 md:mx-32">
-        <div className="mb-2 flex items-center justify-between">
-          <p className="text-sm text-gray-600">{t("saved")}</p>
-          <LinkButton
-            onClick={handleDeleteAll}
-            className="text-xs text-gray-500 hover:text-gray-800"
-          >
-            {t("clearAll")}
-          </LinkButton>
+      <>
+        <div className="mx-4 my-4 rounded-lg border border-gray-200 p-2 md:mx-32">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm text-gray-600">{t("saved")}</p>
+            <LinkButton
+              onClick={handleDeleteAll}
+              className="text-xs text-gray-500 hover:text-gray-800"
+            >
+              {t("clearAll")}
+            </LinkButton>
+          </div>
+          <ul className="divide-y divide-gray-100">
+            {data.map((item, i) => (
+              <TextCard key={i} item={item} handleUse={handleUse} handleDel={handleDel}></TextCard>
+            ))}
+          </ul>
         </div>
-        <ul className="divide-y divide-gray-100">
-          {data.map((item, i) => (
-            <TextCard key={i} item={item} handleUse={handleUse} handleDel={handleDel}></TextCard>
-          ))}
-        </ul>
-      </div>
+
+        <Modal open={showDeleteAllModal} onClose={() => setShowDeleteAllModal(false)}>
+          <div className="p-6">
+            <h2 className="mb-4 text-xl font-bold text-red-600">{t("deleteAll")}</h2>
+            <p className="text-gray-700">{t("confirmDeleteAll")}</p>
+            <div className="mt-6 flex justify-end gap-3">
+              <Button variant="light" onClick={() => setShowDeleteAllModal(false)}>
+                {t("cancel")}
+              </Button>
+              <Button variant="light" onClick={confirmDeleteAll}>
+                {t("deleteAll")}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </>
     );
   else return <></>;
 }
