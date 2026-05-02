@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod";
 
 export const schemaActionInputForgotPassword = z.object({
   email: z.string().email("请输入有效的邮箱地址"),
