@@ -89,11 +89,6 @@ function LoginPageInner() {
         });
         if (error) {
           if (error.status === 403) {
-            const emailFromError = (error as unknown as { email?: string }).email;
-            if (emailFromError) {
-              setUnverifiedEmail(emailFromError);
-              setShowResendOption(true);
-            }
             toast.error(t("emailNotVerified"));
           } else {
             toast.error(error.message ?? t("loginFailed"));

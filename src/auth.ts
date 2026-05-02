@@ -34,7 +34,6 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendOnSignUp: true,
-    sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const result = await sendEmail({
@@ -57,6 +56,11 @@ export const auth = betterAuth({
             message: "Username is required",
           });
         }
+        if (!/^[a-zA-Z0-9_]+$/.test(body.username)) {
+          throw new APIError("BAD_REQUEST", {
+            message: "Username can only contain letters, numbers, and underscores",
+          });
+        }
       }
 
       if (ctx.path === "/sign-in/username") {
@@ -72,7 +76,6 @@ export const auth = betterAuth({
           if (user && !user.emailVerified) {
             throw new APIError("FORBIDDEN", {
               message: "Please verify your email address before signing in",
-              email: user.email,
             });
           }
         }
