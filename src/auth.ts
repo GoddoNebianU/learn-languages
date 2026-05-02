@@ -35,6 +35,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     sendOnSignIn: true,
+    autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const result = await sendEmail({
         to: user.email,
@@ -44,12 +45,6 @@ export const auth = betterAuth({
       if (!result.success) {
         log.error("Failed to send verification email", { error: result.error });
       }
-    },
-  },
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
   plugins: [nextCookies(), username()],
@@ -71,12 +66,13 @@ export const auth = betterAuth({
             where: {
               OR: [{ username: body.username }, { email: body.username }],
             },
-            select: { emailVerified: true },
+            select: { emailVerified: true, email: true },
           });
 
           if (user && !user.emailVerified) {
             throw new APIError("FORBIDDEN", {
               message: "Please verify your email address before signing in",
+              email: user.email,
             });
           }
         }
