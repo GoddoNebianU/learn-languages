@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
 **生成时间:** 2026-05-02
-**提交:** 52d4105
+**提交:** c27c839
 **分支:** main
 
 ## 概述
@@ -112,10 +112,10 @@ const { data } = authClient.useSession();
 
 ### 邮箱验证流程
 
-- `src/auth.ts` 配置: `requireEmailVerification: true`, `sendOnSignUp: true`, `sendOnSignIn: true`, `autoSignInAfterVerification: true`
+- `src/auth.ts` 配置: `requireEmailVerification: true`, `sendOnSignUp: true`, `autoSignInAfterVerification: true`
 - 注册后自动发验证邮件, 验证后自动登录
-- 未验证用户登录 → 403 + 黄色提示框 + "重发验证邮件" 按钮
-- 用户名登录 hook 返回 `email` 字段供前端显示重发按钮
+- 未验证用户登录 → 403 + 提示 (email 登录显示重发按钮, username 登录仅提示)
+- `sendOnSignIn` 已禁用, 防止邮件轰炸; 用户需手动点重发
 
 ### 受保护操作
 
@@ -249,7 +249,7 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 ## 命令
 
 ```bash
-pnpm dev           # 开发服务器 (HTTPS)
+pnpm dev           # 开发服务器
 pnpm build         # 生产构建 (验证代码)
 pnpm lint          # ESLint
 pnpm prisma studio # 数据库 GUI
@@ -274,7 +274,6 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - TTS: 阿里云千问 (qwen3-tts-flash)
 - 数据库: PostgreSQL, 必须用 `prisma migrate dev`
 - 未配置测试基础设施, 用 `pnpm build` 验证
-- Docker: 3 阶段构建 (deps → builder → runner), standalone 输出, Node 24 Alpine
 - 无 CI/CD 管道 (手动构建)
 - 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)
 - 主题: CSS 自定义属性 + localStorage (15 个预设主题)

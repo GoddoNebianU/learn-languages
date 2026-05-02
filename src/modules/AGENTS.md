@@ -10,7 +10,7 @@
 
 | 模块       | 文件数 | Actions | 模式完整性         | 备注                              |
 | ---------- | ------ | ------- | ------------------ | --------------------------------- |
-| auth       | 12     | 5+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件, 邮箱验证流程完善 |
+| auth       | 12     | 3+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件; signUp/signIn 由客户端直接调用 authClient |
 | deck       | 6      | 12      | ✅ 完整            | 最复杂模块, 315 行 repository     |
 | card       | 5      | 7       | ⚠️ 缺 service-dto  | 跨模块依赖 deck                   |
 | follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
@@ -145,4 +145,5 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 - deck/follow/auth 模块内联重复 session 检查逻辑，仅 card 模块使用 getCurrentUserId
 - `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层 (违反架构)
 - card 模块缺 `card-service-dto.ts`，类型定义内联在 card-service.ts 中
-- 所有 action/service/repository 文件各自创建 `createLogger("{module}-{layer}")` 实例
+- auth 模块的 `actionSignUp`/`actionSignIn`/`serviceSignUp`/`serviceSignIn` 已移除 (客户端直接用 authClient)
+- forgot-password-service 始终返回通用消息，防止用户枚举
