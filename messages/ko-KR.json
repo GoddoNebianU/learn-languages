@@ -51,7 +51,14 @@
     "import": "가져오기",
     "importing": "가져오는 중...",
     "exportSuccess": "내보내기 성공",
-    "goToDecks": "덱으로"
+    "goToDecks": "덱으로",
+    "rename": "이름 변경",
+    "renameDeck": "덱 이름 변경",
+    "newName": "새 이름",
+    "deleteDeck": "덱 삭제",
+    "cancel": "취소",
+    "create": "만들기",
+    "createDeck": "덱 만들기"
   },
   "deck_id": {
     "unauthorized": "이 덱의 소유자가 아닙니다",
@@ -197,6 +204,7 @@
     "usernamePlaceholder": "사용자명",
     "emailPlaceholder": "이메일 주소",
     "passwordPlaceholder": "비밀번호",
+    "confirmPasswordPlaceholder": "비밀번호 확인",
     "usernameOrEmailPlaceholder": "사용자명 또는 이메일",
     "loginFailed": "로그인 실패",
     "signUpFailed": "회원가입 실패",
@@ -372,6 +380,8 @@
     "confirmDeleteAll": "모든 것을 삭제하시겠습니까? (Y/N)",
     "saved": "저장됨",
     "clearAll": "모두 지우기",
+    "deleteAll": "모두 삭제",
+    "cancel": "취소",
     "language": "언어",
     "customLanguage": "또는 언어 입력...",
     "languages": {

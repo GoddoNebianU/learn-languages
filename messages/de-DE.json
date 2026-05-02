@@ -51,7 +51,14 @@
     "import": "Importieren",
     "importing": "Importieren...",
     "exportSuccess": "Export erfolgreich",
-    "goToDecks": "Zu Decks"
+    "goToDecks": "Zu Decks",
+    "rename": "Umbenennen",
+    "renameDeck": "Deck umbenennen",
+    "newName": "Neuer Name",
+    "deleteDeck": "Deck löschen",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "createDeck": "Deck erstellen"
   },
   "home": {
     "title": "Sprachen lernen",
@@ -125,6 +132,7 @@
     "usernamePlaceholder": "Benutzername",
     "emailPlaceholder": "E-Mail-Adresse",
     "passwordPlaceholder": "Passwort",
+    "confirmPasswordPlaceholder": "Passwort bestätigen",
     "usernameOrEmailPlaceholder": "Benutzername oder E-Mail",
     "loginFailed": "Anmeldung fehlgeschlagen",
     "signUpFailed": "Registrierung fehlgeschlagen",
@@ -300,6 +308,8 @@
     "confirmDeleteAll": "Sind Sie sicher, dass Sie alles löschen möchten? (J/N)",
     "saved": "Gespeichert",
     "clearAll": "Alles löschen",
+    "deleteAll": "Alle löschen",
+    "cancel": "Abbrechen",
     "language": "Sprache",
     "customLanguage": "oder Sprache eingeben...",
     "languages": {

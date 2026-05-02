@@ -51,7 +51,14 @@
     "import": "ئەكىرىش",
     "importing": "ئەكىرىلىۋاتىدۇ...",
     "exportSuccess": "چىقىرىش مۇۋەپپەقىيەتلىك",
-    "goToDecks": "دېكلەرگە بېرىش"
+    "goToDecks": "دېكلەرگە بېرىش",
+    "rename": "ئۆزگەرت",
+    "renameDeck": "دېسكىنىڭ ئىسمىنى ئۆزگەرت",
+    "newName": "يېڭى ئىسم",
+    "deleteDeck": "دېسكىنى ئۆچۈر",
+    "cancel": "بىكار قىل",
+    "create": "قۇر",
+    "createDeck": "دېسكا قۇر"
   },
   "deck_id": {
     "unauthorized": "بۇ دېكنىڭ ئىگىسى ئەمەس",
@@ -197,6 +204,7 @@
     "usernamePlaceholder": "ئىشلەتكۈچى ئاتى",
     "emailPlaceholder": "ئېلخەت ئادرېسى",
     "passwordPlaceholder": "پارول",
+    "confirmPasswordPlaceholder": "پارولنى جەزىملەڭ",
     "usernameOrEmailPlaceholder": "ئىشلەتكۈچى ئاتى ياكى ئېلخەت",
     "loginFailed": "كىرىش مەغلۇپ بولدى",
     "signUpFailed": "تىزىملىتىش مەغلۇپ بولدى",
@@ -369,9 +377,11 @@
   "text_speaker": {
     "generateIPA": "IPA ھاسىل قىلىش",
     "viewSavedItems": "ساقلانغان تۈرلەرنى كۆرۈش",
-    "confirmDeleteAll": "ھەممىنى ئۆچۈرەمسىز؟ (Y/N)",
+    "confirmDeleteAll": "ھەممىنى ئۆچۈرەمسىز؟",
     "saved": "ساقلاندى",
     "clearAll": "ھەممىنى تازىلاش",
+    "deleteAll": "ھەممىنى ئۆچۈر",
+    "cancel": "بىكار قىل",
     "language": "تىل",
     "customLanguage": "ياكى تىل كىرگۈزۈڭ...",
     "languages": {
