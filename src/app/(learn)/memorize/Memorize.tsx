@@ -28,7 +28,7 @@ import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
 const myFont = localFont({
-  src: "../../../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
+  src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
 type StudyMode = "order-limited" | "order-infinite" | "random-limited" | "random-infinite";

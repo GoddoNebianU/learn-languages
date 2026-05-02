@@ -112,7 +112,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
             <Button
               variant="primary"
               onClick={() => {
-                router.push(`/decks/${deckId}/learn`);
+                router.push(`/memorize?deck_id=${deckId}`);
               }}
             >
               {t("memorize")}
