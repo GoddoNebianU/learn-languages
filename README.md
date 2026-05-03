@@ -1,6 +1,4 @@
-<div align="center">
-  <img src="public/learn_languages_logo_v3.svg" alt="Learn Languages" width="200" />
-</div>
+<p align="center"><img src="public/learn_languages_logo_v3.svg" alt="Learn Languages" width="100%" /></p>
 
 [中文](./README.zh-CN.md)
 
