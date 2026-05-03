@@ -302,9 +302,9 @@ export default function TextSpeakerPage() {
         />
         {/* IPA 显示区域 */}
         {(ipa.length !== 0 && (
-          <div className="h-18 overflow-auto border-b border-gray-200 px-4 text-gray-600">
-            {ipa}
-          </div>
+            <div className="h-18 overflow-auto border-b border-gray-200 px-4 text-gray-600">
+              [{ipa}]
+            </div>
         )) || <div className="h-18"></div>}
 
         {/* 控制按钮区域 */}

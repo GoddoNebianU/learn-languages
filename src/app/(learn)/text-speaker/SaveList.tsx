@@ -27,9 +27,9 @@ function TextCard({ item, handleUse, handleDel }: TextCardProps) {
     <div className="m-2 grid grid-cols-8 rounded-lg border-b border-gray-200 bg-gray-100 p-2">
       <div className="col-span-7" onClick={onUseClick}>
         <div className="max-h-26 overflow-y-auto text-3xl hover:cursor-pointer">{item.text}</div>
-        <div className="max-h-16 overflow-x-auto overflow-y-auto text-xl whitespace-nowrap text-gray-600">
-          {item.ipa}
-        </div>
+          <div className="max-h-16 overflow-x-auto overflow-y-auto text-xl whitespace-nowrap text-gray-600">
+            [{item.ipa}]
+          </div>
       </div>
       <div className="m-2 flex items-center justify-center border-l-2 border-gray-300">
         <IconButton

@@ -1,8 +1,10 @@
-# learn-languages
+<div align="center">
+  <img src="public/learn_languages_logo_v3.svg" alt="Learn Languages" width="200" />
+</div>
 
 [中文](./README.zh-CN.md)
 
-Full-stack language learning platform. AI-powered translation, dictionary lookups, text-to-speech, and spaced repetition card decks. Built on Next.js 16 with PostgreSQL.
+Full-stack language learning platform. AI-powered translation, dictionary lookups, text-to-speech, and card decks. Built on Next.js 16 with PostgreSQL.
 
 ## What it does
 

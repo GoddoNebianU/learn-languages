@@ -1,5 +1,6 @@
 import { getAnswer } from "../llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
+import { stripIpaBrackets } from "@/utils/string";
 import { LanguageDetectionResult, TranslationLLMResponse } from "./types";
 import { createLogger } from "@/lib/logger";
 
@@ -128,7 +129,7 @@ async function generateIPA(text: string, language: string): Promise<string> {
       },
     ]);
 
-    return result.trim();
+    return stripIpaBrackets(result);
   } catch (error) {
     log.error("IPA generation failed", { error });
     return "";

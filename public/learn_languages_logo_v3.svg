@@ -1,0 +1,38 @@
+<svg width="100%" viewBox="0 0 680 320" role="img" xmlns="http://www.w3.org/2000/svg" style="">
+  <title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Learn Languages logo</title>
+  <desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">A modern geometric logo mark: three overlapping speech arcs forming a dynamic symbol, paired with clean wordmark</desc>
+
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="160" cy="160" r="110"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── ICON MARK ── centered at 160,160, r=110 -->
+
+  <!-- Outer ring segment — full circle outline -->
+  <circle cx="160" cy="160" r="108" fill="none" stroke="#1D4ED8" stroke-width="14" style="fill:none;stroke:rgb(29, 78, 216);color:rgb(0, 0, 0);stroke-width:14px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Arc 1: top-right — bold solid -->
+  <path d="M 160 52 A 108 108 0 0 1 268 160" fill="none" stroke="#2563EB" stroke-width="28" stroke-linecap="round" style="fill:none;stroke:rgb(37, 99, 235);color:rgb(0, 0, 0);stroke-width:28px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Arc 2: bottom — medium -->
+  <path d="M 268 160 A 108 108 0 0 1 85 248" fill="none" stroke="#60A5FA" stroke-width="14" stroke-linecap="round" style="fill:none;stroke:rgb(96, 165, 250);color:rgb(0, 0, 0);stroke-width:14px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Arc 3: left — thin -->
+  <path d="M 85 248 A 108 108 0 0 1 160 52" fill="none" stroke="#BFDBFE" stroke-width="6" stroke-linecap="round" style="fill:none;stroke:rgb(191, 219, 254);color:rgb(0, 0, 0);stroke-width:6px;stroke-linecap:round;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Center dot -->
+  <circle cx="160" cy="160" r="12" fill="#2563EB" style="fill:rgb(37, 99, 235);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Small outer orbit dots — suggestion of global nodes -->
+  <circle cx="160" cy="52" r="6" fill="#2563EB" style="fill:rgb(37, 99, 235);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <circle cx="268" cy="160" r="6" fill="#60A5FA" style="fill:rgb(96, 165, 250);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <circle cx="85" cy="248" r="5" fill="#BFDBFE" style="fill:rgb(191, 219, 254);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- ── WORDMARK ── -->
+  <text x="310" y="138" font-family="Georgia, serif" font-size="54" font-weight="700" letter-spacing="-1" fill="#111827" style="fill:rgb(17, 24, 39);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Georgia, serif;font-size:54px;font-weight:700;text-anchor:start;dominant-baseline:auto">Learn</text>
+
+  <text x="310" y="200" font-family="Georgia, serif" font-size="54" font-weight="700" letter-spacing="-1" fill="#2563EB" style="fill:rgb(37, 99, 235);stroke:none;color:rgb(0, 0, 0);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Georgia, serif;font-size:54px;font-weight:700;text-anchor:start;dominant-baseline:auto">Languages</text>
+
+</svg>

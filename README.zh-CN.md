@@ -1,8 +1,10 @@
-# learn-languages
+<div align="center">
+  <img src="public/learn_languages_logo_v3.svg" alt="Learn Languages" width="200" />
+</div>
 
 [English](./README.md)
 
-全栈语言学习平台。AI 翻译、词典查询、语音合成、间隔重复卡片管理。基于 Next.js 16 + PostgreSQL。
+全栈语言学习平台。AI 翻译、词典查询、语音合成、卡片管理。基于 Next.js 16 + PostgreSQL。
 
 ## 功能
 

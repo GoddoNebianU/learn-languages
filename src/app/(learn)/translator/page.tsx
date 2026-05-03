@@ -212,7 +212,7 @@ export default function TranslatorPage() {
               }}
             />
             <div className="ipa h-2/12 w-full overflow-auto text-gray-600">
-              {translationResult?.sourceIpa || ""}
+              {translationResult?.sourceIpa ? `[${translationResult.sourceIpa}]` : ""}
             </div>
             <div className="flex h-2/12 w-full items-center justify-end">
               <IconButton
@@ -284,7 +284,7 @@ export default function TranslatorPage() {
               {translationResult?.translatedText || ""}
             </div>
             <div className="ipa h-1/6 w-full overflow-y-auto text-gray-600">
-              {translationResult?.targetIpa || ""}
+              {translationResult?.targetIpa ? `[${translationResult.targetIpa}]` : ""}
             </div>
             <div className="flex h-1/6 w-full items-center justify-end">
               <IconButton

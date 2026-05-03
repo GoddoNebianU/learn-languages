@@ -1,5 +1,6 @@
 import { getAnswer } from "../llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
+import { stripIpaBrackets } from "@/utils/string";
 import { EntriesGenerationResult } from "./types";
 import { createLogger } from "@/lib/logger";
 
@@ -62,10 +63,7 @@ ${isWord ? `{"entries":[{"ipa":"国际音标","partOfSpeech":"词性","definitio
 
     for (const entry of result.entries) {
       if (entry.ipa) {
-        entry.ipa = entry.ipa
-          .trim()
-          .replace(/^[\[\/]/, "")
-          .replace(/[\]\/]$/, "");
+        entry.ipa = stripIpaBrackets(entry.ipa);
       }
       if (!entry.definition?.trim()) {
         throw new Error("词条缺少释义");

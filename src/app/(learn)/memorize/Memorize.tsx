@@ -8,12 +8,9 @@ import {
   Layers,
   Check,
   RotateCcw,
-  Volume2,
   Headphones,
   ChevronLeft,
   ChevronRight,
-  Shuffle,
-  List,
   Repeat,
   Infinity,
 } from "lucide-react";
@@ -21,7 +18,6 @@ import { actionGetCardsByDeckId } from "@/modules/card/card-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
-import { Progress } from "@/design-system/progress";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
@@ -31,7 +27,7 @@ const myFont = localFont({
   src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
 });
 
-type StudyMode = "order-limited" | "order-infinite" | "random-limited" | "random-infinite";
+type StudyMode = "order-infinite" | "random-infinite";
 
 interface MemorizeProps {
   deckId: number;
@@ -51,7 +47,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
   const [isDictation, setIsDictation] = useState(false);
-  const [studyMode, setStudyMode] = useState<StudyMode>("order-limited");
+  const [studyMode, setStudyMode] = useState<StudyMode>("order-infinite");
   const { play, stop, load } = useAudioPlayer();
   const audioUrlRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
@@ -144,9 +140,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     setShowAnswer(true);
   }, []);
 
-  const isInfinite = studyMode.endsWith("infinite");
-  const isOrderMode = studyMode.startsWith("order");
-
   const cleanupAudio = useCallback(() => {
     if (audioUrlRef.current) {
       URL.revokeObjectURL(audioUrlRef.current);
@@ -160,9 +153,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       const len = cards.length;
       if (!isDictation) {
         const next = from + direction;
-        return isInfinite || isOrderMode
-          ? ((next % len) + len) % len
-          : Math.max(0, Math.min(len - 1, next));
+        return ((next % len) + len) % len;
       }
       for (let i = 1; i <= len; i++) {
         const idx = (((from + direction * i) % len) + len) % len;
@@ -170,24 +161,20 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       }
       return from;
     },
-    [cards, isDictation, isInfinite, isOrderMode]
+    [cards, isDictation]
   );
 
   const handleNextCard = useCallback(() => {
-    const next = findNextIndex(currentIndex, 1);
-    if (!isInfinite && !isOrderMode && next <= currentIndex) return;
-    setCurrentIndex(next);
+    setCurrentIndex(findNextIndex(currentIndex, 1));
     setShowAnswer(false);
     cleanupAudio();
-  }, [currentIndex, findNextIndex, isInfinite, isOrderMode, cleanupAudio]);
+  }, [currentIndex, findNextIndex, cleanupAudio]);
 
   const handlePrevCard = useCallback(() => {
-    const prev = findNextIndex(currentIndex, -1);
-    if (!isInfinite && !isOrderMode && prev >= currentIndex) return;
-    setCurrentIndex(prev);
+    setCurrentIndex(findNextIndex(currentIndex, -1));
     setShowAnswer(false);
     cleanupAudio();
-  }, [currentIndex, findNextIndex, isInfinite, isOrderMode, cleanupAudio]);
+  }, [currentIndex, findNextIndex, cleanupAudio]);
 
   const playTTS = useCallback(
     async (text: string) => {
@@ -305,12 +292,9 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const currentCard = getCurrentCard()!;
   const displayFront = getFrontText(currentCard);
-  const isFinished = !isInfinite && !isOrderMode && currentIndex === cards.length - 1 && showAnswer;
 
   const studyModeOptions: { value: StudyMode; label: string; icon: React.ReactNode }[] = [
-    { value: "order-limited", label: t("orderLimited"), icon: <List className="h-4 w-4" /> },
     { value: "order-infinite", label: t("orderInfinite"), icon: <Repeat className="h-4 w-4" /> },
-    { value: "random-limited", label: t("randomLimited"), icon: <Shuffle className="h-4 w-4" /> },
     {
       value: "random-infinite",
       label: t("randomInfinite"),
@@ -325,64 +309,48 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <Layers className="h-5 w-5" />
           <span className="font-medium">{deckName}</span>
         </HStack>
-        {!isInfinite && (
-          <span className="text-sm text-gray-500">
-            {t("progress", { current: currentIndex + 1, total: cards.length })}
-          </span>
-        )}
+        <span className="text-sm text-gray-500">
+          {t("progress", { current: currentIndex + 1, total: cards.length })}
+        </span>
       </HStack>
 
-      {!isInfinite && (
-        <Progress
-          value={((currentIndex + 1) / cards.length) * 100}
-          showLabel={false}
-          animated={false}
-          className="mb-6"
-        />
-      )}
-
-      <VStack gap={2} className="mb-4">
-        <HStack justify="center" gap={1} className="flex-wrap">
-          {studyModeOptions.map((option) => (
-            <Button
-              variant="light"
-              key={option.value}
-              onClick={() => setStudyMode(option.value)}
-              selected={studyMode === option.value}
-              leftIcon={option.icon}
-              size="sm"
-            >
-              {option.label}
-            </Button>
-          ))}
-        </HStack>
-
-        <HStack justify="center" gap={2}>
+      <HStack justify="center" gap={2} className="mb-4 flex-wrap">
+        {studyModeOptions.map((option) => (
           <Button
             variant="light"
-            onClick={() => {
-              setIsReversed(!isReversed);
-              setShowAnswer(false);
-            }}
-            selected={isReversed}
-            leftIcon={<RotateCcw className="h-4 w-4" />}
+            key={option.value}
+            onClick={() => setStudyMode(option.value)}
+            selected={studyMode === option.value}
+            leftIcon={option.icon}
             size="sm"
           >
-            {t("reverse")}
+            {option.label}
           </Button>
-          <Button
-            variant="light"
-            onClick={() => {
-              setIsDictation(!isDictation);
-            }}
-            selected={isDictation}
-            leftIcon={<Headphones className="h-4 w-4" />}
-            size="sm"
-          >
-            {t("dictation")}
-          </Button>
-        </HStack>
-      </VStack>
+        ))}
+        <Button
+          variant="light"
+          onClick={() => {
+            setIsReversed(!isReversed);
+            setShowAnswer(false);
+          }}
+          selected={isReversed}
+          leftIcon={<RotateCcw className="h-4 w-4" />}
+          size="sm"
+        >
+          {t("reverse")}
+        </Button>
+        <Button
+          variant="light"
+          onClick={() => {
+            setIsDictation(!isDictation);
+          }}
+          selected={isDictation}
+          leftIcon={<Headphones className="h-4 w-4" />}
+          size="sm"
+        >
+          {t("dictation")}
+        </Button>
+      </HStack>
 
       <div
         className={`mb-6 flex h-[50dvh] flex-col rounded-xl border border-gray-200 bg-white shadow-sm ${myFont.className}`}
@@ -393,7 +361,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
               <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] p-8">
                 {currentCard.ipa ? (
                   <div className="text-center font-mono text-2xl text-gray-700">
-                    {currentCard.ipa}
+                    [{currentCard.ipa}]
                   </div>
                 ) : (
                   <div className="text-lg text-gray-400">{t("noIpa")}</div>
@@ -452,21 +420,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             {t("showAnswer")}
             <span className="ml-2 text-xs opacity-60">Space</span>
           </Button>
-        ) : isFinished ? (
-          <VStack align="center" gap={4}>
-            <div className="text-green-500">
-              <Check className="h-12 w-12" />
-            </div>
-            <p className="text-gray-600">{t("allDoneDesc")}</p>
-            <HStack gap={2}>
-              <Button variant="light" onClick={() => router.push("/decks")}>
-                {t("backToDecks")}
-              </Button>
-              <Button variant="light" onClick={() => setCurrentIndex(0)}>
-                {t("restart")}
-              </Button>
-            </HStack>
-          </VStack>
         ) : (
           <HStack gap={4}>
             <Button variant="light" onClick={handlePrevCard}>
