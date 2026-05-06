@@ -18,6 +18,9 @@ import {
   RepoOutputUserFavoriteDeck,
 } from "./deck-repository-dto";
 import { Visibility } from "../../../generated/prisma/enums";
+import { createLogger } from "@/lib/logger";
+
+const log = createLogger("deck-repository");
 
 type DeckWithPublicIncludes = {
   id: number;
@@ -48,6 +51,7 @@ function mapDeckToPublicOutput(deck: DeckWithPublicIncludes): RepoOutputPublicDe
 }
 
 export async function repoCreateDeck(data: RepoInputCreateDeck): Promise<number> {
+  log.debug("Creating deck", { name: data.name, userId: data.userId });
   const deck = await prisma.deck.create({
     data: {
       name: data.name,
@@ -56,18 +60,22 @@ export async function repoCreateDeck(data: RepoInputCreateDeck): Promise<number>
       visibility: data.visibility ?? Visibility.PRIVATE,
     },
   });
+  log.info("Deck created", { deckId: deck.id });
   return deck.id;
 }
 
 export async function repoUpdateDeck(input: RepoInputUpdateDeck): Promise<void> {
+  log.debug("Updating deck", { deckId: input.id });
   const { id, ...updateData } = input;
   await prisma.deck.update({
     where: { id },
     data: updateData,
   });
+  log.info("Deck updated", { deckId: id });
 }
 
 export async function repoGetDeckById(input: RepoInputGetDeckById): Promise<RepoOutputDeck | null> {
+  log.debug("Getting deck by id", { deckId: input.id });
   const deck = await prisma.deck.findUnique({
     where: { id: input.id },
     include: {
@@ -94,6 +102,7 @@ export async function repoGetDeckById(input: RepoInputGetDeckById): Promise<Repo
 export async function repoGetDecksByUserId(
   input: RepoInputGetDecksByUserId
 ): Promise<RepoOutputDeck[]> {
+  log.debug("Getting decks by userId", { userId: input.userId });
   const decks = await prisma.deck.findMany({
     where: { userId: input.userId },
     include: {
@@ -138,13 +147,16 @@ export async function repoGetPublicDecks(
     skip: offset,
   });
 
+  log.debug("Fetched public decks", { count: decks.length });
   return decks.map(mapDeckToPublicOutput);
 }
 
 export async function repoDeleteDeck(input: RepoInputDeleteDeck): Promise<void> {
+  log.debug("Deleting deck", { deckId: input.id });
   await prisma.deck.delete({
     where: { id: input.id },
   });
+  log.info("Deck deleted", { deckId: input.id });
 }
 
 export async function repoGetUserIdByDeckId(deckId: number): Promise<string | null> {
@@ -168,6 +180,7 @@ export async function repoGetDeckOwnership(
 export async function repoGetPublicDeckById(
   input: RepoInputGetPublicDeckById
 ): Promise<RepoOutputPublicDeck | null> {
+  log.debug("Getting public deck by id", { deckId: input.deckId });
   const deck = await prisma.deck.findFirst({
     where: {
       id: input.deckId,
@@ -191,6 +204,7 @@ export async function repoGetPublicDeckById(
 export async function repoToggleDeckFavorite(
   input: RepoInputToggleDeckFavorite
 ): Promise<RepoOutputDeckFavorite> {
+  log.debug("Toggling deck favorite", { userId: input.userId, deckId: input.deckId });
   const isFavorited = await prisma.$transaction(async (tx) => {
     const deleted = await tx.deckFavorite.deleteMany({
       where: {
@@ -221,10 +235,12 @@ export async function repoToggleDeckFavorite(
     },
   });
 
-  return {
+  const result = {
     isFavorited,
     favoriteCount: deck?._count?.favorites ?? 0,
   };
+  log.info("Deck favorite toggled", { isFavorited, favoriteCount: result.favoriteCount, deckId: input.deckId });
+  return result;
 }
 
 export async function repoCheckDeckFavorite(
@@ -258,6 +274,7 @@ export async function repoSearchPublicDecks(
   input: RepoInputSearchPublicDecks
 ): Promise<RepoOutputPublicDeck[]> {
   const { query, limit = 50, offset = 0 } = input;
+  log.debug("Searching public decks", { query, limit, offset });
 
   const decks = await prisma.deck.findMany({
     where: {
@@ -280,12 +297,14 @@ export async function repoSearchPublicDecks(
     skip: offset,
   });
 
+  log.debug("Searched public decks", { query, count: decks.length });
   return decks.map(mapDeckToPublicOutput);
 }
 
 export async function repoGetUserFavoriteDecks(
   input: RepoInputGetUserFavoriteDecks
 ): Promise<RepoOutputUserFavoriteDeck[]> {
+  log.debug("Getting user favorite decks", { userId: input.userId });
   const favorites = await prisma.deckFavorite.findMany({
     where: { userId: input.userId },
     include: {
@@ -303,6 +322,7 @@ export async function repoGetUserFavoriteDecks(
     orderBy: { createdAt: "desc" },
   });
 
+  log.debug("Fetched user favorite decks", { userId: input.userId, count: favorites.length });
   return favorites.map((fav) => ({
     ...mapDeckToPublicOutput(fav.deck),
     favoritedAt: fav.createdAt,
