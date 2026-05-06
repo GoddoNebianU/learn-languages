@@ -16,9 +16,11 @@ export const serviceTranslateText = async (
   dto: ServiceInputTranslateText
 ): Promise<ServiceOutputTranslateText> => {
   const { sourceText, targetLanguage, sourceLanguage, needIpa } = dto;
+  log.info("Translating text", { sourceTextLength: sourceText.length, targetLanguage, sourceLanguage, needIpa });
 
   const response = await executeTranslation(sourceText, targetLanguage, needIpa, sourceLanguage);
 
+  log.info("Translation completed", { sourceLanguage: response.sourceLanguage, targetLanguage: response.targetLanguage });
   return {
     sourceText: response.sourceText,
     translatedText: response.translatedText,
@@ -31,6 +33,7 @@ export const serviceTranslateText = async (
 
 export const serviceGenIPA = async (dto: ServiceInputGenIPA): Promise<ServiceOutputGenIPA> => {
   const { text } = dto;
+  log.debug("Generating IPA", { textLength: text.length });
   return (
     "[" +
     (
@@ -56,6 +59,7 @@ export const serviceGenLanguage = async (
   dto: ServiceInputGenLanguage
 ): Promise<ServiceOutputGenLanguage> => {
   const { text } = dto;
+  log.debug("Detecting language", { textLength: text.length });
   const language = await getAnswer([
     {
       role: "system",
