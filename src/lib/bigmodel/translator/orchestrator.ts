@@ -143,7 +143,12 @@ export async function executeTranslation(
   sourceLanguage?: string
 ): Promise<TranslationLLMResponse> {
   try {
-    log.debug("Starting translation", { sourceText, targetLanguage, needIpa, sourceLanguage });
+    log.info("Starting translation", {
+      sourceText: sourceText.substring(0, 100),
+      targetLanguage,
+      needIpa,
+      sourceLanguage: sourceLanguage || "(auto-detect)",
+    });
 
     let detectedLanguage: string;
 

@@ -24,8 +24,9 @@ export const actionTranslateText = async (input: unknown): Promise<ActionOutputT
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };
     }
-    log.error("Translation failed", { error: e instanceof Error ? e.message : String(e) });
-    return { success: false, message: "Translation failed" };
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    log.error("Translation failed", { error: errorMessage });
+    return { success: false, message: `Translation failed: ${errorMessage}` };
   }
 };
 
