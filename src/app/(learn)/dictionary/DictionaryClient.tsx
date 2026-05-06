@@ -6,16 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDictionaryStore } from "./stores/dictionaryStore";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
+import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Select } from "@/design-system/select";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
-import { Plus, RefreshCw, ClipboardPaste, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Plus, RefreshCw, Trash2, ClipboardPaste, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
-import { actionCreateCard, actionGetCardByWord } from "@/modules/card/card-action";
+import { actionCreateCard, actionGetCardByWord, actionUpdateCard, actionDeleteCard } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
@@ -61,6 +62,9 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   const [processingState, setProcessingState] = useState<ProcessingState>("idle");
   const [lastResult, setLastResult] = useState<{ word: string; deckName: string } | null>(null);
   const [readingSearchResult, setReadingSearchResult] = useState<TSharedItem | null>(null);
+  const [currentCardId, setCurrentCardId] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isRequerying, setIsRequerying] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const prevLengthRef = useRef(0);
@@ -198,6 +202,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         setProcessingState("looking-up");
         setLastResult(null);
         setReadingSearchResult(null);
+        setCurrentCardId(null);
 
         try {
           const existingCard = await actionGetCardByWord({
@@ -217,6 +222,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
               })),
             };
             setReadingSearchResult(cachedResult);
+            setCurrentCardId(card.id);
             toast.info(t("wordAlreadyExists", { word: card.word }));
             setProcessingState("done");
             prevLengthRef.current = 0;
@@ -243,6 +249,14 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
           setReadingSearchResult(lookupData);
 
           if (lookupData.alreadyExists) {
+            // Card found by standardForm via orchestrator — retrieve the card ID
+            const existingByForm = await actionGetCardByWord({
+              deckId: selectedDeckId!,
+              word: lookupData.standardForm,
+            });
+            if (existingByForm.success && existingByForm.data) {
+              setCurrentCardId(existingByForm.data.id);
+            }
             toast.info(t("wordAlreadyExists", { word: lookupData.standardForm }));
             setProcessingState("done");
             prevLengthRef.current = 0;
@@ -285,6 +299,8 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
             setInputValue("");
             return;
           }
+
+          setCurrentCardId(cardResult.cardId ?? null);
 
           const deckName = decks.find((d) => d.id === selectedDeckId)?.name || "";
           setLastResult({ word, deckName });
@@ -335,6 +351,76 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
       default:
         return t("pasteHint");
     }
+  };
+
+  const handleRequery = async () => {
+    if (!readingSearchResult || !currentCardId) return;
+
+    setIsRequerying(true);
+    try {
+      const result = await actionLookUpDictionary({
+        text: readingSearchResult.standardForm,
+        queryLang: getNativeName(queryLang),
+        definitionLang: getNativeName(definitionLang),
+      });
+
+      if (!result.success || !result.data) {
+        toast.error(result.message || t("relookupFailed"));
+        return;
+      }
+
+      const newResult = result.data;
+      const hasIpa = newResult.entries.some((e) => e.ipa);
+      const hasSpaces = newResult.standardForm.includes(" ");
+      let cardType: CardType = "WORD";
+      if (!hasIpa) cardType = "SENTENCE";
+      else if (hasSpaces) cardType = "PHRASE";
+
+      const ipa = newResult.entries.find((e) => e.ipa)?.ipa || null;
+      const meanings = newResult.entries.map((e) => ({
+        partOfSpeech: e.partOfSpeech || null,
+        definition: e.definition,
+        example: e.example || null,
+      }));
+
+      const updateResult = await actionUpdateCard({
+        cardId: currentCardId,
+        word: newResult.standardForm,
+        ipa,
+        meanings,
+      });
+
+      if (!updateResult.success) {
+        toast.error(updateResult.message || t("relookupFailed"));
+        return;
+      }
+
+      setReadingSearchResult(newResult);
+      toast.success(t("relookupSuccess"));
+    } catch {
+      toast.error(t("relookupFailed"));
+    } finally {
+      setIsRequerying(false);
+    }
+  };
+
+  const handleDeleteCard = async () => {
+    if (!currentCardId) return;
+    try {
+      const result = await actionDeleteCard({ cardId: currentCardId });
+      if (result.success) {
+        toast.success(t("deleteCardSuccess"));
+        setReadingSearchResult(null);
+        setCurrentCardId(null);
+        setProcessingState("idle");
+        setLastResult(null);
+      } else {
+        toast.error(result.message || t("deleteCardFailed"));
+      }
+    } catch {
+      toast.error(t("deleteCardFailed"));
+    }
+    setShowDeleteConfirm(false);
   };
 
   const handleModeToggle = (mode: "normal" | "reading") => {
@@ -444,6 +530,25 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                     {readingSearchResult.standardForm}
                   </h2>
                 </div>
+                {currentCardId && (
+                  <HStack align="center" gap={2} className="ml-4">
+                    <IconButton
+                      onClick={handleRequery}
+                      disabled={isRequerying}
+                      title={t("relookup")}
+                      className="rounded-full text-gray-400 hover:bg-blue-50 hover:text-blue-500"
+                    >
+                      <RefreshCw className={isRequerying ? "animate-spin" : ""} size={18} />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => setShowDeleteConfirm(true)}
+                      title={t("deleteCard")}
+                      className="rounded-full text-gray-400 hover:bg-red-50 hover:text-red-500"
+                    >
+                      <Trash2 size={18} />
+                    </IconButton>
+                  </HStack>
+                )}
               </div>
 
               <div className="space-y-6">
@@ -456,6 +561,22 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
             </div>
           ) : (
             <div className="min-h-[calc(100vh-14rem)]" />
+          )}
+
+          {showDeleteConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <div className="mx-4 max-w-sm rounded-lg bg-white p-4">
+                <p className="mb-4 text-gray-700">{t("deleteCardConfirm")}</p>
+                <div className="flex justify-end gap-2">
+                  <Button variant="light" size="sm" onClick={() => setShowDeleteConfirm(false)}>
+                    {t("cancel")}
+                  </Button>
+                  <Button variant="light" size="sm" onClick={handleDeleteCard}>
+                    {t("deleteCard")}
+                  </Button>
+                </div>
+              </div>
+            </div>
           )}
         </>
       ) : (
