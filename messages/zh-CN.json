@@ -458,7 +458,12 @@
     "wordAlreadyExists": "\"{word}\" 已存在于该牌组中",
     "pasteOnly": "请粘贴单词，不支持手动输入",
     "checkFailed": "重复检查失败",
-    "unexpectedError": "发生意外错误"
+    "unexpectedError": "发生意外错误",
+    "cancel": "取消",
+    "deleteCard": "删除卡片",
+    "deleteCardConfirm": "确定要删除这张卡片吗？",
+    "deleteCardSuccess": "卡片已删除",
+    "deleteCardFailed": "删除卡片失败"
   },
   "explore": {
     "title": "探索",

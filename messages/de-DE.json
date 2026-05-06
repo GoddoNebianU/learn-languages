@@ -425,7 +425,12 @@
     "wordAlreadyExists": "\"{word}\" existiert bereits in diesem Deck",
     "pasteOnly": "Bitte fügen Sie ein Wort ein, anstatt zu tippen",
     "checkFailed": "Duplikatprüfung fehlgeschlagen",
-    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten"
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten",
+    "cancel": "Abbrechen",
+    "deleteCard": "Löschen",
+    "deleteCardConfirm": "Möchten Sie diese Karte wirklich löschen?",
+    "deleteCardSuccess": "Karte gelöscht",
+    "deleteCardFailed": "Karte konnte nicht gelöscht werden"
   },
   "explore": {
     "title": "Entdecken",

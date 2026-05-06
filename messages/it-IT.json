@@ -21,7 +21,7 @@
     "keyboardHint": "Usa le frecce sinistra/destra o spazio per casuale, ESC per tornare indietro",
     "swipeHint": "Usa le frecce sinistra/destra o scorri per navigare, ESC per tornare indietro"
   },
-"decks": {
+  "decks": {
     "title": "Decks",
     "subtitle": "Gestisci i tuoi deck di flashcard",
     "newDeck": "Nuovo deck",
@@ -492,7 +492,12 @@
     "wordAlreadyExists": "\"{word}\" esiste già in questo mazzo",
     "pasteOnly": "Incolla una parola invece di digitare",
     "checkFailed": "Verifica duplicati fallita",
-    "unexpectedError": "Si è verificato un errore imprevisto"
+    "unexpectedError": "Si è verificato un errore imprevisto",
+    "cancel": "Annulla",
+    "deleteCard": "Elimina",
+    "deleteCardConfirm": "Sei sicuro di voler eliminare questa scheda?",
+    "deleteCardSuccess": "Scheda eliminata",
+    "deleteCardFailed": "Eliminazione della scheda non riuscita"
   },
   "explore": {
     "title": "Esplora",

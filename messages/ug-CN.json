@@ -497,7 +497,12 @@
     "wordAlreadyExists": "\"{word}\" بۇ دېكتا مەۋجۇت",
     "pasteOnly": "كىرگۈزمەي سۆزنى چاپلاڭ",
     "checkFailed": "تەكرارلىنىشنى تەكشۈرۈش مەغلۇپ بولدى",
-    "unexpectedError": "كۈتكىلى بولمايدىغان خاتالىق يۈز بەردى"
+    "unexpectedError": "كۈتكىلى بولمايدىغان خاتالىق يۈز بەردى",
+    "cancel": "بىكار قىلىش",
+    "deleteCard": "ئۆچۈرۈش",
+    "deleteCardConfirm": "بۇ كارتىنى ئۆچۈرۈشكە ئىشىنەمسىز؟",
+    "deleteCardSuccess": "كارتا ئۆچۈرۈلدى",
+    "deleteCardFailed": "كارتا ئۆچۈرۈش مەغلۇب بولدى"
   },
   "explore": {
     "title": "ئىزدىنىش",

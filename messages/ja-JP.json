@@ -458,7 +458,12 @@
     "wordAlreadyExists": "\"{word}\" はこのデッキに既に存在します",
     "pasteOnly": "手入力ではなく、単語を貼り付けてください",
     "checkFailed": "重複チェックに失敗しました",
-    "unexpectedError": "予期しないエラーが発生しました"
+    "unexpectedError": "予期しないエラーが発生しました",
+    "cancel": "キャンセル",
+    "deleteCard": "削除",
+    "deleteCardConfirm": "このカードを削除してもよろしいですか？",
+    "deleteCardSuccess": "カードを削除しました",
+    "deleteCardFailed": "カードの削除に失敗しました"
   },
   "explore": {
     "title": "探索",

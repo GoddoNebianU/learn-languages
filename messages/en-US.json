@@ -458,7 +458,12 @@
     "wordAlreadyExists": "\"{word}\" already exists in this deck",
     "pasteOnly": "Please paste a word instead of typing",
     "checkFailed": "Failed to check for duplicates",
-    "unexpectedError": "An unexpected error occurred"
+    "unexpectedError": "An unexpected error occurred",
+    "cancel": "Cancel",
+    "deleteCard": "Delete",
+    "deleteCardConfirm": "Are you sure you want to delete this card?",
+    "deleteCardSuccess": "Card deleted",
+    "deleteCardFailed": "Failed to delete card"
   },
   "explore": {
     "title": "Explore",

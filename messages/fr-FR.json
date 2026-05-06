@@ -21,7 +21,7 @@
     "keyboardHint": "Utilisez les touches fléchées gauche/droite ou espace pour aléatoire, ÉCHAP pour revenir",
     "swipeHint": "Utilisez les touches fléchées gauche/droite ou balayez pour naviguer, ÉCHAP pour revenir"
   },
-"decks": {
+  "decks": {
     "title": "Decks",
     "subtitle": "Gérez vos decks de cartes mémoire",
     "newDeck": "Nouveau deck",
@@ -492,7 +492,12 @@
     "wordAlreadyExists": "\"{word}\" existe déjà dans ce deck",
     "pasteOnly": "Veuillez coller un mot au lieu de taper",
     "checkFailed": "Échec de la vérification des doublons",
-    "unexpectedError": "Une erreur inattendue s'est produite"
+    "unexpectedError": "Une erreur inattendue s'est produite",
+    "cancel": "Annuler",
+    "deleteCard": "Supprimer",
+    "deleteCardConfirm": "Voulez-vous vraiment supprimer cette carte ?",
+    "deleteCardSuccess": "Carte supprimée",
+    "deleteCardFailed": "Échec de la suppression de la carte"
   },
   "explore": {
     "title": "Explorer",

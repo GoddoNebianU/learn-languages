@@ -497,7 +497,12 @@
     "wordAlreadyExists": "\"{word}\"이(가) 이미 이 덱에 있습니다",
     "pasteOnly": "직접 입력하지 말고 단어를 붙여넣으세요",
     "checkFailed": "중복 확인 실패",
-    "unexpectedError": "예기치 않은 오류가 발생했습니다"
+    "unexpectedError": "예기치 않은 오류가 발생했습니다",
+    "cancel": "취소",
+    "deleteCard": "삭제",
+    "deleteCardConfirm": "이 카드를 삭제하시겠습니까?",
+    "deleteCardSuccess": "카드가 삭제되었습니다",
+    "deleteCardFailed": "카드 삭제에 실패했습니다"
   },
   "explore": {
     "title": "탐색",
