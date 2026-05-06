@@ -21,7 +21,7 @@ export async function serviceGetUserProfileByUsername(
 export async function serviceGetUserProfileById(
   dto: ServiceInputGetUserProfileById
 ): Promise<ServiceOutputUserProfile> {
-  log.debug("Getting user profile by id", { userId: dto.userId });
+  log.debug("Getting user profile by id", { id: dto.id });
   return await repoFindUserById(dto);
 }
 
