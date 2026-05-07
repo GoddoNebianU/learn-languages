@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-环境变量说明见 `.env.example`。
+环境变量通过 `src/lib/env.ts` (Zod) 在启动时校验。必填变量（`DATABASE_URL`、`BETTER_AUTH_SECRET`）缺失时会立即崩溃。SMTP 在多用户模式下必填，单用户模式下可选。可选 API Key（`ZHIPU_*`、`DASHSCORE_API_KEY`）在首次使用时校验。详见 `.env.example`。
 
 ### 单用户模式
 
@@ -49,7 +49,7 @@ src/
 ├── modules/          # 业务逻辑 (action → service → repository)
 ├── design-system/    # CVA 基础组件 (14 文件, 平铺, 无子目录)
 ├── components/       # 业务组件 (layout, follow, ui)
-├── lib/              # 集成层 (db, auth, auth-mode, email, AI 管道, logger)
+├── lib/              # 集成层 (db, auth, auth-mode, env, email, AI 管道, logger)
 ├── hooks/            # useAudioPlayer, useFileUpload
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # 业务类型和常量

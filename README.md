@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-Environment variables are documented in `.env.example`.
+Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `SMTP_*`) will crash immediately if missing. Optional API keys (`ZHIPU_*`, `DASHSCORE_API_KEY`) are validated on first use. See `.env.example` for details.
 
 ### Single-user mode
 
@@ -49,7 +49,7 @@ src/
 ├── modules/          # business logic (action → service → repository)
 ├── design-system/    # CVA primitives (14 files, flat, no subdirs)
 ├── components/       # business components (layout, follow, ui)
-├── lib/              # integrations (db, auth, auth-mode, email, AI pipelines, logger)
+├── lib/              # integrations (db, auth, auth-mode, env, email, AI pipelines, logger)
 ├── hooks/            # useAudioPlayer, useFileUpload
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # business types and constants
