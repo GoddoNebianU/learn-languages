@@ -10,7 +10,7 @@
 
 | 模块       | 文件数 | Actions | 模式完整性         | 备注                              |
 | ---------- | ------ | ------- | ------------------ | --------------------------------- |
-| auth       | 12     | 3+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件; signUp/signIn 由客户端直接调用 authClient |
+| auth       | 12     | 3+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件; signUp/signIn/signOut 由客户端直接调用 authClient; signOutAction 仅用于 logout 页面 |
 | deck       | 6      | 12      | ✅ 完整            | 最复杂模块, 315 行 repository     |
 | card       | 5      | 7       | ⚠️ 缺 service-dto  | 跨模块依赖 deck                   |
 | follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
@@ -149,3 +149,8 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 - auth 模块的 `actionSignUp`/`actionSignIn`/`serviceSignUp`/`serviceSignIn` 已移除 (客户端直接用 authClient)
 - forgot-password-service 始终返回通用消息，防止用户枚举
 - dictionary/translator 模块不完整 (无 repo 层 — AI 驱动)
+- `src/hooks/useFileUpload.ts` 整个文件是死代码 (0 导入, srt-player 有自己的本地版本)
+- `src/utils/random.ts` 整个文件是死代码 (`isNonNegativeInteger`, `shallowEqual`, `SeededRandom` 均 0 导入)
+- `src/utils/string.ts` 中 `stringNormalize()` 0 消费者 (仅 `stripIpaBrackets` 被使用)
+- `src/shared/constant.ts` 中 10/18 导出是死代码 (`FIELD_SEPARATOR`, `DEFAULT_*_PER_DAY`, `SECONDS_PER_*`, `MS_PER_*`)
+- `src/shared/card-type.ts` 中 `CardSide` 和 `CardForStudy` 类型已定义但从未导入

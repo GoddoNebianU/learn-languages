@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
 **生成时间:** 2026-05-07
-**提交:** 1fda9fb
+**提交:** 81268ef
 **分支:** main
 
 ## 概述
@@ -285,20 +285,41 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name your_migration_name
 DATABASE_URL=your_db_url pnpm prisma generate
 ```
 
+## 已知死代码
+
+| 位置 | 内容 | 影响 |
+|------|------|------|
+| `src/modules/shared/action-utils.ts` | `requireAuth()` | 0 消费者, 所有 action 用 `getCurrentUserId()` + 手动检查 |
+| `src/utils/random.ts` | 整个文件 (`isNonNegativeInteger`, `shallowEqual`, `SeededRandom`) | 0 导入 |
+| `src/hooks/useFileUpload.ts` | 整个文件 | 0 导入, srt-player 有自己的本地版本 |
+| `src/utils/string.ts` | `stringNormalize()` | 0 消费者 |
+| `src/shared/card-type.ts` | `CardSide`, `CardForStudy` | 类型已定义但从未导入 |
+| `src/shared/constant.ts` | 10/18 导出 (`FIELD_SEPARATOR`, `DEFAULT_*_PER_DAY`, `SECONDS_PER_*`, `MS_PER_*`) | 0 消费者 |
+
+## 已知架构违规
+
+- `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层
+- `text-speaker/page.tsx` 中 `fetch('/api/ipa?...')` 引用不存在的 API 路由 (死代码, 运行时必然失败)
+- card 模块缺 `card-service-dto.ts`, 类型定义内联在 card-service.ts 中
+
 ## 备注
 
 - Tailwind CSS v4 (无 tailwind.config.ts, 通过 `@tailwindcss/postcss` + `globals.css` 的 `@theme` 指令)
 - React Compiler 已启用 (next.config.ts: reactCompiler: true)
+- TypeScript 6, ESLint flat config (`eslint.config.mjs`)
 - Zod v4 (默认导入 `import z from "zod"`)
 - i18n: 8 种语言, cookie 存储 locale (无 URL 路径, 无 middleware)
-- Prisma 7: `prisma-client` 生成器 (非 `prisma-client-js`), 输出到 `generated/prisma/`, 使用 PrismaPg adapter
+- Prisma 7: `prisma-client` 生成器 (非 `prisma-client-js`), 输出到 `generated/prisma/`, 使用 PrismaPg adapter, 配置在 `prisma.config.ts`
 - TTS: 阿里云千问 (qwen3-tts-flash)
 - 数据库: PostgreSQL, 必须用 `prisma migrate dev`
 - 未配置测试基础设施, 用 `pnpm build` 验证
 - 无 CI/CD 管道 (手动构建)
 - 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)
 - 主题: CSS 自定义属性 + localStorage (15 个预设主题)
-- `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts), 不仅限于 action 文件
+- `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts, ocr/orchestrator.ts), 不仅限于 action 文件
 - translator-action.ts 中 genIPA() 和 genLanguage() 已废弃但保留用于 text-speaker 兼容
 - 所有 8 种语言翻译 key 必须完全一致 (用 `node -e` 脚本对比 en-US 与其他语言)
 - 单/多用户模式: `NEXT_PUBLIC_AUTH_MODE=single` 跳过 better-auth，自动创建 admin 用户 (详见 src/lib/auth-mode.ts)
+- Vercel 已链接 (.vercel/project.json) 但无 vercel.json 配置
+- `output: "standalone"` 已配置但无 Dockerfile
+- HTTPS 开发: `next dev --experimental-https`

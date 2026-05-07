@@ -1,6 +1,6 @@
 # 设计系统指南
 
-**生成时间:** 2026-05-02
+**生成时间:** 2026-05-07
 
 ## 概述
 
@@ -45,6 +45,25 @@ import { IconButton } from "@/design-system/icon-button";
 import { LinkButton } from "@/design-system/link-button";
 ```
 
+## CVA 使用模式
+
+10/14 组件使用 CVA (button, card, input, select, textarea, range, progress, skeleton, stack, container)。4 个不使用: icon-button, link-button, modal, overflow-dropdown。
+
+```tsx
+// 标准模式
+const componentVariants = cva("base-classes", {
+  variants: { variant: { ... }, size: { ... } },
+  compoundVariants: [{ variant: "filled", error: true, className: "..." }],
+  defaultVariants: { variant: "default", size: "md" },
+});
+// 类型导出
+export type Variant = VariantProps<typeof componentVariants>["variant"];
+// 组件内使用
+className={cn(componentVariants({ variant, size }), className)}
+```
+
+compoundVariants 用于: input (filled+error), select (filled+error, filled+size), textarea (filled+error)。
+
 ## cn 工具函数
 
 ```tsx
@@ -64,3 +83,5 @@ import { cn } from "@/utils/cn";
 3. 添加 `"use client"`
 4. 导出组件、变体类型
 5. 从 `@/utils/cn` 导入 cn
+6. 如果有条件样式组合 (如 variant+error), 使用 compoundVariants
+7. forwardRef 用于需要 ref 的表单组件 (Input, Select, Textarea, Range)

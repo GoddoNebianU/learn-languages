@@ -1,6 +1,6 @@
 # SRT 字幕播放器
 
-**生成时间:** 2026-05-02
+**生成时间:** 2026-05-07
 
 ## 概述
 
@@ -27,6 +27,10 @@ srt-player/
     └── subtitleParser.ts    # SRT 解析 + 时间工具 (89 行)
 ```
 
+## 未使用组件
+
+`VideoPlayerPanel.tsx` 和 `ControlPanel.tsx` 当前未被 `page.tsx` 使用。`page.tsx` 直接内联实现了所有 UI。这两个组件是从同一 Zustand store 读取的独立替代方案, 可能用于未来重构。
+
 ## WHERE TO LOOK
 
 | 任务 | 位置 | 备注 |
@@ -36,6 +40,7 @@ srt-player/
 | 调整同步精度 | hooks/useSubtitleSync.ts | 自动暂停提前 0.15s |
 | 添加 UI 控制 | components/ControlPanel.tsx | 所有控制逻辑 |
 | 修改类型定义 | types.ts | SubtitleData, selectors |
+| 了解未使用的重构组件 | components/VideoPlayerPanel.tsx, components/ControlPanel.tsx | 未被 page.tsx 引用 |
 
 ## 约定
 
@@ -63,3 +68,11 @@ Store 直接持有 `videoRef` (DOM 元素引用)，通过 `setVideoRef()` 设置
 ## i18n
 
 使用两个 namespace: `useTranslations("home")` + `useTranslations("srt_player")`。
+
+## 外部依赖
+
+- Zustand (状态管理)
+- Lucide React (图标)
+- `@/hooks/useAudioPlayer` (未使用, 有本地替代)
+- `@/config/images` (未使用, 有本地内联 SVG)
+- 完全自包含: 不依赖 src/modules/, 不依赖服务端数据

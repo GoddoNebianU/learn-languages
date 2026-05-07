@@ -1,6 +1,6 @@
 # AI 管道架构指南
 
-**生成时间:** 2026-05-02
+**生成时间:** 2026-05-07
 
 ## 概述
 
@@ -69,7 +69,7 @@ ocr/
 
 | 文件           | 导出                        | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
-| `llm.ts`       | `getAnswer(prompt)`         | Zhipu AI 聊天补全 API 封装 (含重试: 指数退避, 最多 2 次) |
+| `llm.ts`       | `getAnswer(prompt)`         | Zhipu AI 聊天补全 API 封装 (使用 OpenAI SDK 兼容模式, 含重试: 指数退避, 最多 2 次) |
 | `tts.ts`       | `getTTSUrl(text, voice)`    | TTS 服务                                 |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |
@@ -94,6 +94,7 @@ interface InputAnalysisResult { ... }
 4. 创建 `orchestrator.ts` 编排调用顺序
 5. 在 Service 或 Action 层调用 orchestrator
 6. 使用 `getAnswer()` 调用 LLM, `parseAIGeneratedJSON()` 解析响应
+7. 如需视觉模型 (图片分析), 使用 GLM-4.6V + OpenAI SDK 直接调用 (参考 ocr/orchestrator.ts)
 
 ## AI 响应解析
 
@@ -101,3 +102,12 @@ interface InputAnalysisResult { ... }
 import { parseAIGeneratedJSON } from "@/utils/json";
 const result = parseAIGeneratedJSON<ExpectedType>(aiResponseString);
 ```
+
+## TTS 调用者
+
+TTS (getTTSUrl) 直接从页面组件调用 (不经过 action 层):
+- translator/page.tsx
+- text-speaker/page.tsx
+- memorize/Memorize.tsx
+
+这是因为 TTS 返回音频 URL, 不涉及数据库操作, 无需 action-service-repository 层。
