@@ -49,10 +49,16 @@ export async function Navbar() {
     isLoggedIn = !!session;
   }
 
+  const isSingle = isSingleUserMode();
+
   const loggedInMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
-    { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
-    { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
+    ...(!isSingle
+      ? [
+          { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
+          { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
+        ]
+      : []),
     {
       label: t("sourceCode"),
       href: "https://github.com/GoddoNebianU/learn-languages",
@@ -60,7 +66,7 @@ export async function Navbar() {
       external: true,
     },
     { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
-    ...(!isSingleUserMode()
+    ...(!isSingle
       ? [{ label: t("profile"), href: "/profile", icon: <User size={18} /> }]
       : []),
   ];
@@ -91,13 +97,17 @@ export async function Navbar() {
         <Link href="/decks" className={`${navLinkClass} hidden! md:block!`}>
           {t("folders")}
         </Link>
-        <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>
-          {t("explore")}
-        </Link>
-        <SessionFeatures
-          favoritesLabel={t("favorites")}
-          initialSession={isLoggedIn}
-        />
+        {!isSingle && (
+          <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>
+            {t("explore")}
+          </Link>
+        )}
+        {!isSingle && (
+          <SessionFeatures
+            favoritesLabel={t("favorites")}
+            initialSession={isLoggedIn}
+          />
+        )}
         <Link
           href="https://github.com/GoddoNebianU/learn-languages"
           className={`${navLinkClass} hidden! md:block!`}

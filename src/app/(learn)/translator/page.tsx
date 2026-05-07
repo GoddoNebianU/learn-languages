@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { actionTranslateText } from "@/modules/translator/translator-action";
 import { actionCreateCard } from "@/modules/card/card-action";
-import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import { actionGetMyDecks } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
@@ -40,23 +40,20 @@ export default function TranslatorPage() {
   } | null>(null);
   const { load, play } = useAudioPlayer();
 
-  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
-  const isLoggedIn = isSingleUser || !!session;
+  const isLoggedIn = process.env.NEXT_PUBLIC_AUTH_MODE === "single" || !!session?.user?.id;
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (isSingleUser || session?.user?.id) {
-      const userId = session?.user?.id ?? "";
-      actionGetDecksByUserId({ userId }).then((result) => {
-        if (result.success && result.data) {
-          setDecks(result.data);
-        }
-      });
-    }
-  }, [session?.user?.id, isSingleUser]);
+    if (!isLoggedIn) return;
+    actionGetMyDecks().then((result) => {
+      if (result.success && result.data) {
+        setDecks(result.data);
+      }
+    });
+  }, [isLoggedIn]);
 
   const tts = useCallback(
     async (text: string, locale: string) => {

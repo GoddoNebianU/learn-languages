@@ -24,7 +24,7 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
 
   const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
-  const currentUserId = isSingleUser ? "single" : session?.user?.id;
+  const currentUserId = isSingleUser ? undefined : session?.user?.id;
 
   useEffect(() => {
     if (currentUserId) {

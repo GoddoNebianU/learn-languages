@@ -53,6 +53,8 @@ export function UserLink({
   const isLoggedIn = useIsLoggedIn(initialSession);
   const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
 
+  if (isSingleUser) return null;
+
   if (isLoggedIn) {
     return (
       <Link
