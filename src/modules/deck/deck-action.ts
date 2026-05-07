@@ -213,6 +213,20 @@ export async function actionGetDecksByUserId(
   }
 }
 
+export async function actionGetMyDecks(): Promise<ActionOutputGetDecksByUserId> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, message: "未授权" };
+    return actionGetDecksByUserId({ userId });
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to get my decks", { error: e });
+    return { success: false, message: "Unknown error occurred" };
+  }
+}
+
 export async function actionGetPublicDecks(
   input: ActionInputGetPublicDecks = {}
 ): Promise<ActionOutputGetPublicDecks> {
