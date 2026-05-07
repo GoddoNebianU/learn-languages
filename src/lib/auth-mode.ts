@@ -1,13 +1,14 @@
 import { prisma } from "./db";
 import { createLogger } from "./logger";
 import { randomUUID } from "crypto";
+import { isSingleUserMode as checkIsSingleUserMode } from "./env";
 
 const log = createLogger("auth-mode");
 
 const SINGLE_USER_USERNAME = "admin";
 
 export function isSingleUserMode(): boolean {
-  return process.env.NEXT_PUBLIC_AUTH_MODE === "single";
+  return checkIsSingleUserMode();
 }
 
 let _singleUserId: string | null = null;

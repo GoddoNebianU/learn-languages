@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { createLogger } from "@/lib/logger";
+import { serverEnv } from "./env";
 
 const log = createLogger("email");
 
@@ -23,17 +24,14 @@ let _transporter: nodemailer.Transporter | null = null;
 
 function getTransporter(): nodemailer.Transporter {
   if (!_transporter) {
-    if (!process.env.SMTP_HOST) {
-      throw new Error("SMTP_HOST environment variable is not set");
-    }
-    log.info("Initializing SMTP transporter", { host: process.env.SMTP_HOST });
+    log.info("Initializing SMTP transporter", { host: serverEnv.SMTP_HOST });
     _transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === "true",
+      host: serverEnv.SMTP_HOST,
+      port: serverEnv.SMTP_PORT,
+      secure: serverEnv.SMTP_SECURE,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: serverEnv.SMTP_USER,
+        pass: serverEnv.SMTP_PASS,
       },
     });
   }
@@ -50,7 +48,7 @@ interface SendEmailOptions {
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   try {
     const info = await getTransporter().sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      from: serverEnv.SMTP_FROM || serverEnv.SMTP_USER,
       to,
       subject,
       html,

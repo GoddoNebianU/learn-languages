@@ -1,6 +1,7 @@
 "use server";
 
 import { createLogger } from "@/lib/logger";
+import { getZhipuApiKey, getZhipuApiUrl, getZhipuModelName } from "@/lib/env";
 
 const log = createLogger("llm");
 
@@ -42,23 +43,21 @@ async function fetchWithRetry(
 async function getAnswer(prompt: string): Promise<string>;
 async function getAnswer(prompt: Messages): Promise<string>;
 async function getAnswer(prompt: string | Messages): Promise<string> {
-  if (!process.env.ZHIPU_API_KEY) {
-    throw new Error("ZHIPU_API_KEY environment variable is not set");
-  }
+  const apiKey = getZhipuApiKey();
 
   const messages: Messages =
     typeof prompt === "string" ? [{ role: "user", content: prompt }] : prompt;
 
   const response = await fetchWithRetry(
-    process.env.ZHIPU_API_URL || "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    getZhipuApiUrl(),
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.ZHIPU_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.ZHIPU_MODEL_NAME || "glm-4.6",
+        model: getZhipuModelName(),
         messages,
         temperature: 0.2,
         thinking: {

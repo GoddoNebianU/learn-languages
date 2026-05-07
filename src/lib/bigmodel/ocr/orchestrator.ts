@@ -3,6 +3,7 @@
 import OpenAI from "openai";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { createLogger } from "@/lib/logger";
+import { getZhipuApiKey } from "@/lib/env";
 import { OCRInput, OCROutput, OCRRawResponse } from "./types";
 
 const log = createLogger("ocr-orchestrator");
@@ -10,11 +11,9 @@ const log = createLogger("ocr-orchestrator");
 let _openai: OpenAI | null = null;
 function getOpenAIClient() {
   if (!_openai) {
-    if (!process.env.ZHIPU_API_KEY) {
-      throw new Error("ZHIPU_API_KEY environment variable is not set");
-    }
+    const apiKey = getZhipuApiKey();
     _openai = new OpenAI({
-      apiKey: process.env.ZHIPU_API_KEY,
+      apiKey,
       baseURL: "https://open.bigmodel.cn/api/paas/v4",
     });
   }

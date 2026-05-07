@@ -1,6 +1,7 @@
 "use server";
 
 import { createLogger } from "@/lib/logger";
+import { getDashscopeApiKey } from "@/lib/env";
 
 const log = createLogger("tts");
 
@@ -164,20 +165,22 @@ export type TTS_SUPPORTED_LANGUAGES =
   | "French"
   | "Russian";
 
-const ttsService = process.env.DASHSCORE_API_KEY
-  ? new QwenTTSService(process.env.DASHSCORE_API_KEY)
-  : null;
+let _ttsService: QwenTTSService | null = null;
+
+function getTtsService(): QwenTTSService {
+  if (!_ttsService) {
+    _ttsService = new QwenTTSService(getDashscopeApiKey());
+  }
+  return _ttsService;
+}
 
 export async function getTTSUrl(
   text: string,
   lang: TTS_SUPPORTED_LANGUAGES
 ): Promise<string | null> {
   try {
-    if (!ttsService) {
-      log.warn("DASHSCORE_API_KEY not set");
-      throw new Error("API Key设置错误");
-    }
-    const result = await ttsService.synthesize(text, {
+    const service = getTtsService();
+    const result = await service.synthesize(text, {
       // voice: 'Cherry',
       voice: "Jennifer",
       language: lang,
