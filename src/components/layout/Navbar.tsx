@@ -3,6 +3,7 @@ import { Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
 import { SessionFeatures, UserLink, MobileMenuSession } from "./NavSession";
 import { auth } from "@/auth";
+import { isSingleUserMode } from "@/lib/auth-mode";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -38,10 +39,15 @@ export interface NavigationItem {
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const isLoggedIn = !!session;
+  let isLoggedIn: boolean;
+  if (isSingleUserMode()) {
+    isLoggedIn = true;
+  } else {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    isLoggedIn = !!session;
+  }
 
   const loggedInMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
@@ -54,7 +60,9 @@ export async function Navbar() {
       external: true,
     },
     { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
-    { label: t("profile"), href: "/profile", icon: <User size={18} /> },
+    ...(!isSingleUserMode()
+      ? [{ label: t("profile"), href: "/profile", icon: <User size={18} /> }]
+      : []),
   ];
 
   const loggedOutMobileItems: NavigationItem[] = [
@@ -104,6 +112,7 @@ export async function Navbar() {
         <UserLink
           profileLabel={t("profile")}
           signInLabel={t("sign_in")}
+          settingsLabel={t("settings")}
           initialSession={isLoggedIn}
         />
         <div className="md:hidden!">

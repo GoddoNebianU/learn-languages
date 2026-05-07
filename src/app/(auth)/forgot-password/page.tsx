@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/card";
@@ -11,6 +12,7 @@ import { VStack } from "@/design-system/stack";
 import { actionRequestPasswordReset } from "@/modules/auth/forgot-password-action";
 
 export default function ForgotPasswordPage() {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") notFound();
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

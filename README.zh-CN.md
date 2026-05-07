@@ -12,6 +12,7 @@
 - **语音合成** -- 阿里云千问 TTS，自然发音
 - **牌组与卡片** -- 创建、管理、学习词汇，多种复习模式（顺序、随机、无限、听写）
 - **社交** -- 公开牌组、收藏、用户关注
+- **单用户模式** -- 无需认证即可部署，自动创建默认管理员用户
 
 ## 技术栈
 
@@ -33,6 +34,12 @@ pnpm dev
 
 环境变量说明见 `.env.example`。
 
+### 单用户模式
+
+设置 `NEXT_PUBLIC_AUTH_MODE=single` 可完全跳过认证。应用首次访问时自动创建默认管理员用户。认证页面（登录、注册等）返回 404，导航栏始终显示已登录状态。
+
+适合不需要多用户支持的个人部署场景。
+
 ## 架构
 
 ```
@@ -42,7 +49,7 @@ src/
 ├── modules/          # 业务逻辑 (action → service → repository)
 ├── design-system/    # CVA 基础组件 (14 文件, 平铺, 无子目录)
 ├── components/       # 业务组件 (layout, follow, ui)
-├── lib/              # 集成层 (db, auth, email, AI 管道, logger)
+├── lib/              # 集成层 (db, auth, auth-mode, email, AI 管道, logger)
 ├── hooks/            # useAudioPlayer, useFileUpload
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # 业务类型和常量

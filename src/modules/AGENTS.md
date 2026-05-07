@@ -1,6 +1,6 @@
 # 模块层架构指南
 
-**生成时间:** 2026-05-02
+**生成时间:** 2026-05-07
 
 ## 概述
 
@@ -110,7 +110,7 @@ export async function actionCreateDeck(input: unknown): Promise<ActionOutputCrea
 ## 受保护操作
 
 ```typescript
-// 推荐: 使用 shared 工具
+// 所有 action 统一使用 getCurrentUserId (自动适配单/多用户模式)
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 const userId = await getCurrentUserId();
 if (!userId) return { success: false, message: "未授权" };
@@ -119,6 +119,8 @@ if (!userId) return { success: false, message: "未授权" };
 const deckOwnerId = await repoGetUserIdByDeckId(deckId);
 if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 ```
+
+**注意**: `getCurrentUserId()` 在单用户模式下 (`NEXT_PUBLIC_AUTH_MODE=single`) 直接返回 admin 用户 ID，无需 better-auth session。
 
 ## 返回格式
 
@@ -142,8 +144,8 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 ## 已知问题
 
 - `shared/action-utils.ts` 导出 getCurrentUserId/requireAuth，但 requireAuth 零消费者 (死代码)
-- deck/follow/auth 模块内联重复 session 检查逻辑，仅 card 模块使用 getCurrentUserId
 - `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层 (违反架构)
 - card 模块缺 `card-service-dto.ts`，类型定义内联在 card-service.ts 中
 - auth 模块的 `actionSignUp`/`actionSignIn`/`serviceSignUp`/`serviceSignIn` 已移除 (客户端直接用 authClient)
 - forgot-password-service 始终返回通用消息，防止用户枚举
+- dictionary/translator 模块不完整 (无 repo 层 — AI 驱动)

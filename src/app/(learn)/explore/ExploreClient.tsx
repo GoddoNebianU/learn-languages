@@ -113,8 +113,9 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortByFavorites, setSortByFavorites] = useState(false);
 
+  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
-  const currentUserId = session?.user?.id;
+  const currentUserId = isSingleUser ? "single" : session?.user?.id;
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {

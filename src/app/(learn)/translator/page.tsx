@@ -40,20 +40,23 @@ export default function TranslatorPage() {
   } | null>(null);
   const { load, play } = useAudioPlayer();
 
+  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
+  const isLoggedIn = isSingleUser || !!session;
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    if (session?.user?.id) {
-      actionGetDecksByUserId({ userId: session.user.id }).then((result) => {
+    if (isSingleUser || session?.user?.id) {
+      const userId = session?.user?.id ?? "";
+      actionGetDecksByUserId({ userId }).then((result) => {
         if (result.success && result.data) {
           setDecks(result.data);
         }
       });
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.id, isSingleUser]);
 
   const tts = useCallback(
     async (text: string, locale: string) => {
@@ -139,7 +142,7 @@ export default function TranslatorPage() {
   };
 
   const handleSaveCard = async () => {
-    if (!session) {
+    if (!isLoggedIn) {
       toast.error(t("pleaseLogin"));
       return;
     }
@@ -349,7 +352,7 @@ export default function TranslatorPage() {
         >
           {t("translate")}
         </Button>
-        {translationResult && session && decks.length > 0 && (
+        {translationResult && isLoggedIn && decks.length > 0 && (
           <IconButton
             className="rounded-full"
             onClick={() => setShowSaveModal(true)}

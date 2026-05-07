@@ -1,10 +1,12 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
+import { isSingleUserMode } from "@/lib/auth-mode";
 
 export default async function LogoutPage(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
+  if (isSingleUserMode()) notFound();
   const searchParams = await props.searchParams;
   const redirectTo = searchParams.redirect ?? null;
 

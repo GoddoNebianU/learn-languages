@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { isSingleUserMode } from "@/lib/auth-mode";
 import { getTranslations } from "next-intl/server";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { UserList } from "@/components/follow/UserList";
@@ -10,6 +11,7 @@ interface FollowersPageProps {
 }
 
 export default async function FollowersPage({ params }: FollowersPageProps) {
+  if (isSingleUserMode()) notFound();
   const { username } = await params;
   const t = await getTranslations("follow");
 

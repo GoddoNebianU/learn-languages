@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { redirect } from "next/navigation";
 import { FavoritesClient } from "./FavoritesClient";
 import { actionGetUserFavoriteDecks } from "@/modules/deck/deck-action";
@@ -12,11 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function FavoritesPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) {
-    redirect("/login?redirect=/favorites");
-  }
+  const userId = await getCurrentUserId();
+  if (!userId) redirect("/login?redirect=/favorites");
 
   let favorites: ActionOutputUserFavoriteDeck[] = [];
   const result = await actionGetUserFavoriteDecks();

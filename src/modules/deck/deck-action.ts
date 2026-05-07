@@ -1,8 +1,7 @@
 "use server";
 
-import { auth } from "@/auth";
-import { headers } from "next/headers";
 import { createLogger } from "@/lib/logger";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { ValidateError } from "@/lib/errors";
 import { Visibility } from "../../../generated/prisma/enums";
 import {
@@ -66,17 +65,17 @@ function mapVisibilityToService(v: string | undefined): Visibility | undefined {
 }
 
 async function checkDeckOwnership(deckId: number): Promise<boolean> {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) return false;
-  return serviceCheckOwnership({ deckId, userId: session.user.id });
+  const userId = await getCurrentUserId();
+  if (!userId) return false;
+  return serviceCheckOwnership({ deckId, userId });
 }
 
 export async function actionCreateDeck(
   input: ActionInputCreateDeck
 ): Promise<ActionOutputCreateDeck> {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.id) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       return { success: false, message: "Unauthorized" };
     }
 
@@ -84,7 +83,7 @@ export async function actionCreateDeck(
     const result = await serviceCreateDeck({
       name: validatedInput.name,
       desc: validatedInput.desc,
-      userId: session.user.id,
+      userId,
       visibility: mapVisibilityToService(validatedInput.visibility),
     });
 
@@ -157,8 +156,8 @@ export async function actionGetDeckById(
     }
 
     if (result.data.visibility === "PRIVATE") {
-      const session = await auth.api.getSession({ headers: await headers() });
-      if (!session?.user?.id || session.user.id !== result.data.userId) {
+      const userId = await getCurrentUserId();
+      if (!userId || userId !== result.data.userId) {
         return { success: false, message: "You do not have permission to view this deck" };
       }
     }
@@ -190,8 +189,8 @@ export async function actionGetDecksByUserId(
       return { success: false, message: result.message };
     }
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    const isSelf = session?.user?.id === userId;
+    const currentUserId = await getCurrentUserId();
+    const isSelf = currentUserId === userId;
 
     const decks = isSelf
       ? result.data
@@ -302,15 +301,15 @@ export async function actionToggleDeckFavorite(
   input: ActionInputToggleDeckFavorite
 ): Promise<ActionOutputToggleDeckFavorite> {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.id) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       return { success: false, message: "Unauthorized" };
     }
 
     const validatedInput = validateActionInputToggleDeckFavorite(input);
     const result = await serviceToggleDeckFavorite({
       deckId: validatedInput.deckId,
-      userId: session.user.id,
+      userId,
     });
 
     return result;
@@ -327,8 +326,8 @@ export async function actionCheckDeckFavorite(
   input: ActionInputCheckDeckFavorite
 ): Promise<ActionOutputCheckDeckFavorite> {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.id) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       return {
         success: true,
         message: "Not logged in",
@@ -339,7 +338,7 @@ export async function actionCheckDeckFavorite(
     const validatedInput = validateActionInputCheckDeckFavorite(input);
     const result = await serviceCheckDeckFavorite({
       deckId: validatedInput.deckId,
-      userId: session.user.id,
+      userId,
     });
 
     return result;
@@ -354,12 +353,12 @@ export async function actionCheckDeckFavorite(
 
 export async function actionGetUserFavoriteDecks(): Promise<ActionOutputGetUserFavoriteDecks> {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user?.id) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       return { success: false, message: "Unauthorized" };
     }
 
-    const result = await serviceGetUserFavoriteDecks(session.user.id);
+    const result = await serviceGetUserFavoriteDecks(userId);
 
     if (!result.success || !result.data) {
       return { success: false, message: result.message };

@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-05-02
-**提交:** c27c839
+**生成时间:** 2026-05-07
+**提交:** 1fda9fb
 **分支:** main
 
 ## 概述
@@ -37,6 +37,7 @@ src/
 │   ├── follow/       # FollowButton, FollowStats, UserList
 │   └── ui/           # PageLayout, PageHeader, CardList, LanguageSelector, LocaleSelector
 ├── lib/              # 集成层
+│   ├── auth-mode.ts  # 单/多用户模式切换 (isSingleUserMode, getSingleUserId)
 │   ├── bigmodel/     # AI 管道 (llm, tts, translator, dictionary, ocr) — 详见子级 AGENTS.md
 │   ├── browser/      # 客户端工具 (localStorage)
 │   ├── logger/       # Winston 日志 (index.ts barrel — 唯一允许的 barrel export)
@@ -101,14 +102,32 @@ src/
 
 ### 认证
 
+**环境变量**: `NEXT_PUBLIC_AUTH_MODE=multi|single` (默认 `multi`)
+
+#### 多用户模式 (multi)
+
 ```typescript
-// 服务端
+// 服务端: 通过 getCurrentUserId (推荐)
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+const userId = await getCurrentUserId();
+// 或直接使用 auth (仅 Navbar/profile 等需要 session 对象的场景)
 import { auth } from "@/auth";
 const session = await auth.api.getSession({ headers: await headers() });
+
 // 客户端
 import { authClient } from "@/lib/auth-client";
 const { data } = authClient.useSession();
 ```
+
+#### 单用户模式 (single)
+
+- `src/lib/auth-mode.ts`: `isSingleUserMode()` + `getSingleUserId()` (自动创建 admin 用户)
+- `getCurrentUserId()` 在单用户模式下直接返回 admin ID，不调用 better-auth
+- 认证页面 (login/signup 等) → `notFound()`
+- 用户资料页 (/users/*) → `notFound()`
+- API 路由 (/api/auth/*) → 404
+- Navbar 始终显示已登录状态，UserLink 指向 /settings
+- 客户端组件通过 `process.env.NEXT_PUBLIC_AUTH_MODE === "single"` 检测
 
 ### 邮箱验证流程
 
@@ -120,8 +139,10 @@ const { data } = authClient.useSession();
 ### 受保护操作
 
 ```typescript
-const session = await auth.api.getSession({ headers: await headers() });
-if (!session?.user?.id) return { success: false, message: "未授权" };
+// 推荐: 使用 shared 工具 (自动适配单/多用户模式)
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+const userId = await getCurrentUserId();
+if (!userId) return { success: false, message: "未授权" };
 // 变更前检查所有权
 ```
 
@@ -142,8 +163,8 @@ log.info("description", { count: items.length });
 ```typescript
 // page.tsx (Server) 获取数据 → 传给 Client 组件
 export default async function Page() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) redirect("/login");
+  const userId = await getCurrentUserId();
+  if (!userId) redirect("/login");
   const data = await actionGetData();
   return <ClientComponent initialData={data} />;
 }
@@ -280,3 +301,4 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts), 不仅限于 action 文件
 - translator-action.ts 中 genIPA() 和 genLanguage() 已废弃但保留用于 text-speaker 兼容
 - 所有 8 种语言翻译 key 必须完全一致 (用 `node -e` 脚本对比 en-US 与其他语言)
+- 单/多用户模式: `NEXT_PUBLIC_AUTH_MODE=single` 跳过 better-auth，自动创建 admin 用户 (详见 src/lib/auth-mode.ts)

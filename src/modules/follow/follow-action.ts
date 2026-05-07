@@ -1,8 +1,7 @@
 "use server";
 
-import { auth } from "@/auth";
-import { headers } from "next/headers";
 import { validate } from "@/utils/validate";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import {
   serviceGetFollowers,
   serviceGetFollowing,
@@ -20,15 +19,15 @@ import { createLogger } from "@/lib/logger";
 const log = createLogger("follow-action");
 
 export async function actionToggleFollow(input: unknown) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
     return { success: false, message: "Unauthorized" };
   }
 
   try {
     const dto = validate(input, schemaActionInputToggleFollow);
     const result = await serviceToggleFollow({
-      currentUserId: session.user.id,
+      currentUserId: userId,
       targetUserId: dto.targetUserId,
     });
     return { success: true, message: "Follow toggled successfully", data: result };
@@ -40,12 +39,12 @@ export async function actionToggleFollow(input: unknown) {
 }
 
 export async function actionGetFollowStatus(input: unknown) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = await getCurrentUserId();
 
   try {
     const dto = validate(input, schemaActionInputGetFollowStatus);
     const result = await serviceGetFollowStatus({
-      currentUserId: session?.user?.id ?? null,
+      currentUserId: userId,
       targetUserId: dto.targetUserId,
     });
     return { success: true, message: "Follow status retrieved successfully", data: result };

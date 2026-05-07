@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, notFound } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,7 @@ import { LinkButton } from "@/design-system/link-button";
 import { VStack } from "@/design-system/stack";
 
 function SignUpPageInner() {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") notFound();
   const t = useTranslations("auth");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

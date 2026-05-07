@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, notFound } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { Card, CardBody } from "@/design-system/card";
@@ -12,6 +12,7 @@ import { Button } from "@/design-system/button";
 import { VStack } from "@/design-system/stack";
 
 function ResetPasswordPageInner() {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") notFound();
   const t = useTranslations("auth");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

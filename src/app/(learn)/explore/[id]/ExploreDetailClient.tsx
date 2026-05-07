@@ -22,8 +22,9 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
 
+  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
-  const currentUserId = session?.user?.id;
+  const currentUserId = isSingleUser ? "single" : session?.user?.id;
 
   useEffect(() => {
     if (currentUserId) {

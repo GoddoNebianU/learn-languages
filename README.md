@@ -12,6 +12,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Text-to-Speech** -- Alibaba Qwen TTS for natural pronunciation
 - **Decks & Cards** -- create, manage, and study vocabulary with multiple review modes (sequential, random, infinite, dictation)
 - **Social** -- public decks, favorites, user follows
+- **Single-user mode** -- deploy without authentication, auto-creates a default admin user
 
 ## Stack
 
@@ -33,6 +34,12 @@ pnpm dev
 
 Environment variables are documented in `.env.example`.
 
+### Single-user mode
+
+Set `NEXT_PUBLIC_AUTH_MODE=single` to skip authentication entirely. The app auto-creates a default admin user on first access. Auth pages (login, signup, etc.) return 404, and the navbar always shows the logged-in state.
+
+This is useful for personal deployments where multi-user support is unnecessary.
+
 ## Architecture
 
 ```
@@ -42,7 +49,7 @@ src/
 ├── modules/          # business logic (action → service → repository)
 ├── design-system/    # CVA primitives (14 files, flat, no subdirs)
 ├── components/       # business components (layout, follow, ui)
-├── lib/              # integrations (db, auth, email, AI pipelines, logger)
+├── lib/              # integrations (db, auth, auth-mode, email, AI pipelines, logger)
 ├── hooks/            # useAudioPlayer, useFileUpload
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # business types and constants

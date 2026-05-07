@@ -9,6 +9,7 @@ const navLinkClass =
   "inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-white/10 transition-colors";
 
 function useIsLoggedIn(initialSession: boolean) {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") return true;
   const { data: session, isPending } = authClient.useSession();
   return isPending ? initialSession : !!session;
 }
@@ -39,21 +40,31 @@ export function SessionFeatures({
 interface UserLinkProps {
   profileLabel: string;
   signInLabel: string;
+  settingsLabel: string;
   initialSession: boolean;
 }
 
 export function UserLink({
   profileLabel,
   signInLabel,
+  settingsLabel,
   initialSession,
 }: UserLinkProps) {
   const isLoggedIn = useIsLoggedIn(initialSession);
+  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
 
-  return isLoggedIn ? (
-    <Link href="/profile" className={`${navLinkClass} hidden! md:block!`}>
-      {profileLabel}
-    </Link>
-  ) : (
+  if (isLoggedIn) {
+    return (
+      <Link
+        href={isSingleUser ? "/settings" : "/profile"}
+        className={`${navLinkClass} hidden! md:block!`}
+      >
+        {isSingleUser ? settingsLabel : profileLabel}
+      </Link>
+    );
+  }
+
+  return (
     <Link href="/login" className={`${navLinkClass} hidden! md:block!`}>
       {signInLabel}
     </Link>

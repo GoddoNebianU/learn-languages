@@ -51,7 +51,9 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     syncFromUrl,
   } = useDictionaryStore();
 
+  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
   const { data: session } = authClient.useSession();
+  const isLoggedIn = isSingleUser || !!session;
   const [decks, setDecks] = useState<ActionOutputDeck[]>(initialDecks);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -74,14 +76,15 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     processingState === "looking-up" || processingState === "saving";
 
   useEffect(() => {
-    if (session?.user?.id) {
-      actionGetDecksByUserId({ userId: session.user.id }).then((result) => {
+    if (isSingleUser || session?.user?.id) {
+      const userId = session?.user?.id ?? "";
+      actionGetDecksByUserId({ userId }).then((result) => {
         if (result.success && result.data) {
           setDecks(result.data);
         }
       });
     }
-  }, [session?.user?.id]);
+  }, [session?.user?.id, isSingleUser]);
 
   useEffect(() => {
     if (readingSearchResult && isReadingMode) {
@@ -118,7 +121,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
   };
 
   const handleSave = async () => {
-    if (!session) {
+    if (!isLoggedIn) {
       toast.error(t("pleaseLogin"));
       return;
     }
@@ -623,7 +626,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
                     </h2>
                   </div>
                   <HStack align="center" gap={2} className="ml-4">
-                    {session && decks.length > 0 && (
+                    {isLoggedIn && decks.length > 0 && (
                       <Select id="deck-select" variant="bordered" size="sm">
                         {decks.map((deck) => (
                           <option key={deck.id} value={deck.id}>

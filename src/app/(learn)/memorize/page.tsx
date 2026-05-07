@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
 import { Memorize } from "./Memorize";
 
@@ -25,7 +24,7 @@ export default async function MemorizePage({
 }: {
   searchParams: Promise<{ deck_id?: string }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = await getCurrentUserId();
   const { deck_id } = await searchParams;
 
   if (!deck_id) {
@@ -44,7 +43,7 @@ export default async function MemorizePage({
     redirect("/decks");
   }
 
-  const isOwner = session?.user?.id === deckInfo.userId;
+  const isOwner = userId === deckInfo.userId;
   const isPublic = deckInfo.visibility === "PUBLIC";
 
   if (!isOwner && !isPublic) {

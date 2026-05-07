@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { InDeck } from "./InDeck";
-import { auth } from "@/auth";
-import { headers } from "next/headers";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { actionGetDeckById } from "@/modules/deck/deck-action";
 
 export async function generateMetadata({
@@ -20,7 +19,7 @@ export async function generateMetadata({
 }
 
 export default async function DecksPage({ params }: { params: Promise<{ deck_id: number }> }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = await getCurrentUserId();
   const { deck_id } = await params;
   const t = await getTranslations("deck_id");
 
@@ -34,7 +33,7 @@ export default async function DecksPage({ params }: { params: Promise<{ deck_id:
     redirect("/decks");
   }
 
-  const isOwner = session?.user?.id === deckInfo.userId;
+  const isOwner = userId === deckInfo.userId;
   const isPublic = deckInfo.visibility === "PUBLIC";
 
   if (!isOwner && !isPublic) {

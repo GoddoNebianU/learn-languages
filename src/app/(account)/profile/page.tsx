@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { isSingleUserMode } from "@/lib/auth-mode";
+import { auth } from "@/auth";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
@@ -9,6 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
+  if (isSingleUserMode()) {
+    redirect("/settings");
+  }
+
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user?.id) {
