@@ -1,0 +1,12 @@
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@prisma/engines"
+  - "@swc/core"
+  - better-sqlite3
+  - prisma
+  - sharp
+  - unrs-resolver
+
+overrides:
+  "@types/react": "19.2.14"
+  "@types/react-dom": "19.2.3"
