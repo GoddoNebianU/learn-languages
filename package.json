@@ -2,7 +2,7 @@
   "name": "learn-languages",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@11.0.8",
+  "packageManager": "pnpm@10.12.1",
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
@@ -60,20 +60,5 @@
     "prisma": "^7.7.0",
     "tailwindcss": "^4.2.3",
     "typescript": "^6.0.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@prisma/engines",
-      "@swc/core",
-      "better-sqlite3",
-      "prisma",
-      "sharp",
-      "unrs-resolver"
-    ],
-    "overrides": {
-      "@types/react": "19.2.14",
-      "@types/react-dom": "19.2.3"
-    }
   }
 }
