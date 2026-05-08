@@ -7,5 +7,6 @@ export const SUPPORTED_LOCALES = [
   "fr-FR",
   "it-IT",
   "ug-CN",
+  "eo",
 ];
 export const DEFAULT_LOCALE = "en-US";

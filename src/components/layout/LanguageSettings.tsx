@@ -13,6 +13,7 @@ const languages = [
   { code: "fr-FR", label: "Français" },
   { code: "it-IT", label: "Italiano" },
   { code: "ug-CN", label: "ئۇيغۇرچە" },
+  { code: "eo", label: "Esperanto" },
 ];
 
 export function LanguageSettings() {
