@@ -3,6 +3,9 @@ import type { DeploymentTier } from "../../generated/prisma/enums";
 
 export type { DeploymentTier };
 
+const CAPABILITY_KEYS = ["signup", "userProfile", "social", "email"] as const;
+export type CapabilityKey = (typeof CAPABILITY_KEYS)[number];
+
 let _capabilitiesCache: Map<string, boolean> | null = null;
 let _tierCache: DeploymentTier | null = null;
 let _servicesCache: Record<string, unknown> | null = null;
@@ -12,7 +15,7 @@ async function loadCapabilities(): Promise<{ capabilities: Map<string, boolean>;
     return { capabilities: _capabilitiesCache, tier: _tierCache, services: _servicesCache };
   }
 
-  const [config, tierRows] = await Promise.all([
+  const [config, tierRow] = await Promise.all([
     prisma.systemConfig.findUnique({ where: { id: 1 } }),
     prisma.tierCapability.findMany(),
   ]);
@@ -20,10 +23,11 @@ async function loadCapabilities(): Promise<{ capabilities: Map<string, boolean>;
   const tier = config?.tier ?? "SINGLE";
   const services = (config?.services ?? {}) as Record<string, unknown>;
 
+  const row = tierRow.find((r) => r.tier === tier);
   const capabilities = new Map<string, boolean>();
-  for (const row of tierRows) {
-    if (row.tier === tier) {
-      capabilities.set(row.capability, row.enabled);
+  if (row) {
+    for (const key of CAPABILITY_KEYS) {
+      capabilities.set(key, row[key]);
     }
   }
 

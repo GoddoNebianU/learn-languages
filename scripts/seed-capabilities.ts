@@ -21,27 +21,9 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-const ALL_CAPABILITIES = [
-  "translator",
-  "dictionary",
-  "tts",
-  "social",
-  "email",
-  "signup",
-  "userProfile",
-  "deckImport",
-  "deckExport",
-];
-
-const TIER_DEFAULTS: Record<DeploymentTier, Set<string>> = {
-  SINGLE: new Set([
-    "translator",
-    "dictionary",
-    "tts",
-    "deckImport",
-    "deckExport",
-  ]),
-  MULTI: new Set(ALL_CAPABILITIES),
+const TIER_DEFAULTS: Record<DeploymentTier, { signup: boolean; userProfile: boolean; social: boolean; email: boolean }> = {
+  SINGLE: { signup: false, userProfile: false, social: false, email: false },
+  MULTI: { signup: true, userProfile: true, social: true, email: true },
 };
 
 const DEFAULT_SERVICES: Record<DeploymentTier, InputJsonValue> = {
@@ -69,14 +51,12 @@ async function main() {
   const configTier: DeploymentTier = tierInput === "MULTI" ? "MULTI" : "SINGLE";
 
   for (const tierName of Object.values(DeploymentTier)) {
-    const enabledSet = TIER_DEFAULTS[tierName];
-    for (const cap of ALL_CAPABILITIES) {
-      await prisma.tierCapability.upsert({
-        where: { tier_capability: { tier: tierName, capability: cap } },
-        update: { enabled: enabledSet.has(cap) },
-        create: { tier: tierName, capability: cap, enabled: enabledSet.has(cap) },
-      });
-    }
+    const caps = TIER_DEFAULTS[tierName];
+    await prisma.tierCapability.upsert({
+      where: { tier: tierName },
+      update: caps,
+      create: { tier: tierName, ...caps },
+    });
     console.log(`Seeded capabilities for tier: ${tierName}`);
   }
 

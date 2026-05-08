@@ -27,12 +27,12 @@ model SystemConfig {
 }
 
 model TierCapability {
-  id         Int            @id @default(autoincrement())
-  tier       DeploymentTier
-  capability String
-  enabled    Boolean        @default(true)
+  tier        DeploymentTier @id
+  signup      Boolean        @default(true)
+  userProfile Boolean        @default(true)
+  social      Boolean        @default(true)
+  email       Boolean        @default(true)
 
-  @@unique([tier, capability])
   @@map("tier_capabilities")
 }
 
