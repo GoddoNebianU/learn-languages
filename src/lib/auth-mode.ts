@@ -1,15 +1,10 @@
 import { prisma } from "./db";
 import { createLogger } from "./logger";
 import { randomUUID } from "crypto";
-import { isSingleUserMode as checkIsSingleUserMode } from "./env";
 
 const log = createLogger("auth-mode");
 
 const SINGLE_USER_USERNAME = "admin";
-
-export function isSingleUserMode(): boolean {
-  return checkIsSingleUserMode();
-}
 
 let _singleUserId: string | null = null;
 
@@ -43,7 +38,6 @@ export async function getSingleUserId(): Promise<string> {
     _singleUserId = user.id;
     return user.id;
   } catch {
-    // Race condition: another request created the user first
     const user = await prisma.user.findUniqueOrThrow({
       where: { username: SINGLE_USER_USERNAME },
       select: { id: true },

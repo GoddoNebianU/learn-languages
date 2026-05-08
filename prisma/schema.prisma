@@ -8,6 +8,35 @@ datasource db {
 }
 
 // ============================================
+// System Config & Capabilities
+// ============================================
+
+enum DeploymentTier {
+  SINGLE
+  MULTI
+}
+
+model SystemConfig {
+  id        Int            @id @default(1)
+  tier      DeploymentTier @default(SINGLE)
+  services  Json           @default("{}")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("system_config")
+}
+
+model TierCapability {
+  id         Int            @id @default(autoincrement())
+  tier       DeploymentTier
+  capability String
+  enabled    Boolean        @default(true)
+
+  @@unique([tier, capability])
+  @@map("tier_capabilities")
+}
+
+// ============================================
 // User & Auth
 // ============================================
 

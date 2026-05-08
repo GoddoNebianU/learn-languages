@@ -4,12 +4,14 @@ import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { MobileMenu } from "./MobileMenu";
 import type { NavigationItem } from "./Navbar";
+import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 
 const navLinkClass =
   "inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-white/10 transition-colors";
 
 function useIsLoggedIn(initialSession: boolean) {
-  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") return true;
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
+  if (noSignup) return true;
   const { data: session, isPending } = authClient.useSession();
   return isPending ? initialSession : !!session;
 }
@@ -51,17 +53,18 @@ export function UserLink({
   initialSession,
 }: UserLinkProps) {
   const isLoggedIn = useIsLoggedIn(initialSession);
-  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
+  const hasUserProfile = useCapabilityStore((s: CapabilityState) => s.has("userProfile"));
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
 
-  if (isSingleUser) return null;
+  if (noSignup) return null;
 
   if (isLoggedIn) {
     return (
       <Link
-        href={isSingleUser ? "/settings" : "/profile"}
+        href={hasUserProfile ? "/profile" : "/settings"}
         className={`${navLinkClass} hidden! md:block!`}
       >
-        {isSingleUser ? settingsLabel : profileLabel}
+        {hasUserProfile ? profileLabel : settingsLabel}
       </Link>
     );
   }

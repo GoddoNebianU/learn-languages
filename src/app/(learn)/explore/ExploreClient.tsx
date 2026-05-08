@@ -18,6 +18,7 @@ import {
 } from "@/modules/deck/deck-action";
 import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
+import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 
 interface PublicDeckCardProps {
   deck: ActionOutputPublicDeck;
@@ -113,9 +114,9 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortByFavorites, setSortByFavorites] = useState(false);
 
-  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
   const { data: session } = authClient.useSession();
-  const currentUserId = isSingleUser ? undefined : session?.user?.id;
+  const currentUserId = noSignup ? undefined : session?.user?.id;
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {

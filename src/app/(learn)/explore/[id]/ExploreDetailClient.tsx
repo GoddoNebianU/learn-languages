@@ -10,6 +10,7 @@ import Link from "next/link";
 import { actionToggleDeckFavorite, actionCheckDeckFavorite } from "@/modules/deck/deck-action";
 import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
+import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 
 interface ExploreDetailClientProps {
   deck: ActionOutputPublicDeck;
@@ -22,9 +23,9 @@ export function ExploreDetailClient({ deck }: ExploreDetailClientProps) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
 
-  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
   const { data: session } = authClient.useSession();
-  const currentUserId = isSingleUser ? undefined : session?.user?.id;
+  const currentUserId = noSignup ? undefined : session?.user?.id;
 
   useEffect(() => {
     if (currentUserId) {

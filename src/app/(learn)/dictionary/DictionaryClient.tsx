@@ -15,6 +15,7 @@ import { Plus, RefreshCw, Trash2, ClipboardPaste, CheckCircle2, AlertCircle, Loa
 import { DictionaryEntry } from "./DictionaryEntry";
 import { LanguageSelector } from "./LanguageSelector";
 import { authClient } from "@/lib/auth-client";
+import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
 import { actionCreateCard, actionGetCardByWord, actionUpdateCard, actionDeleteCard } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
@@ -51,9 +52,9 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     syncFromUrl,
   } = useDictionaryStore();
 
-  const isSingleUser = process.env.NEXT_PUBLIC_AUTH_MODE === "single";
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
   const { data: session } = authClient.useSession();
-  const isLoggedIn = isSingleUser || !!session;
+  const isLoggedIn = noSignup || !!session;
   const [decks, setDecks] = useState<ActionOutputDeck[]>(initialDecks);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -76,7 +77,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
     processingState === "looking-up" || processingState === "saving";
 
   useEffect(() => {
-    if (isSingleUser || session?.user?.id) {
+    if (noSignup || session?.user?.id) {
       const userId = session?.user?.id ?? "";
       actionGetDecksByUserId({ userId }).then((result) => {
         if (result.success && result.data) {
@@ -84,7 +85,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
         }
       });
     }
-  }, [session?.user?.id, isSingleUser]);
+  }, [session?.user?.id, noSignup]);
 
   useEffect(() => {
     if (readingSearchResult && isReadingMode) {

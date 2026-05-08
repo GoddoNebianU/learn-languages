@@ -8,7 +8,7 @@ import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
 import { notFound } from "next/navigation";
-import { isSingleUserMode } from "@/lib/auth-mode";
+import { hasCapability } from "@/lib/capability";
 import { getTranslations, getLocale } from "next-intl/server";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
@@ -33,7 +33,7 @@ interface UserPageProps {
 }
 
 export default async function UserPage({ params }: UserPageProps) {
-  if (isSingleUserMode()) notFound();
+  if (!(await hasCapability("userProfile"))) notFound();
   const { username } = await params;
   const t = await getTranslations("user_profile");
   const locale = await getLocale();

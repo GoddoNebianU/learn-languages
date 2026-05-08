@@ -3,7 +3,7 @@ import { Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
 import { SessionFeatures, UserLink, MobileMenuSession } from "./NavSession";
 import { auth } from "@/auth";
-import { isSingleUserMode } from "@/lib/auth-mode";
+import { hasCapability } from "@/lib/capability";
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
@@ -39,8 +39,11 @@ export interface NavigationItem {
 
 export async function Navbar() {
   const t = await getTranslations("navbar");
+  const hasSignup = await hasCapability("signup");
+  const hasSocial = await hasCapability("social");
+  const hasUserProfile = await hasCapability("userProfile");
   let isLoggedIn: boolean;
-  if (isSingleUserMode()) {
+  if (!hasSignup) {
     isLoggedIn = true;
   } else {
     const session = await auth.api.getSession({
@@ -49,11 +52,9 @@ export async function Navbar() {
     isLoggedIn = !!session;
   }
 
-  const isSingle = isSingleUserMode();
-
   const loggedInMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
-    ...(!isSingle
+    ...(hasSocial
       ? [
           { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
           { label: t("favorites"), href: "/favorites", icon: <Heart size={18} /> },
@@ -66,7 +67,7 @@ export async function Navbar() {
       external: true,
     },
     { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
-    ...(!isSingle
+    ...(hasUserProfile
       ? [{ label: t("profile"), href: "/profile", icon: <User size={18} /> }]
       : []),
   ];
@@ -97,12 +98,12 @@ export async function Navbar() {
         <Link href="/decks" className={`${navLinkClass} hidden! md:block!`}>
           {t("folders")}
         </Link>
-        {!isSingle && (
+        {hasSocial && (
           <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>
             {t("explore")}
           </Link>
         )}
-        {!isSingle && (
+        {hasSocial && (
           <SessionFeatures
             favoritesLabel={t("favorites")}
             initialSession={isLoggedIn}

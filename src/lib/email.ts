@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { createLogger } from "@/lib/logger";
-import { serverEnv } from "./env";
+import { getServices, getSmtpConfig } from "./capability";
 
 const log = createLogger("email");
 
@@ -22,16 +22,18 @@ function validateUrl(url: string): string {
 
 let _transporter: nodemailer.Transporter | null = null;
 
-function getTransporter(): nodemailer.Transporter {
+async function getTransporter(): Promise<nodemailer.Transporter> {
   if (!_transporter) {
-    log.info("Initializing SMTP transporter", { host: serverEnv.SMTP_HOST });
+    const services = await getServices();
+    const smtp = getSmtpConfig(services);
+    log.info("Initializing SMTP transporter", { host: smtp.host });
     _transporter = nodemailer.createTransport({
-      host: serverEnv.SMTP_HOST,
-      port: serverEnv.SMTP_PORT,
-      secure: serverEnv.SMTP_SECURE,
+      host: smtp.host,
+      port: smtp.port,
+      secure: smtp.secure,
       auth: {
-        user: serverEnv.SMTP_USER,
-        pass: serverEnv.SMTP_PASS,
+        user: smtp.user,
+        pass: smtp.pass,
       },
     });
   }
@@ -47,8 +49,10 @@ interface SendEmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   try {
-    const info = await getTransporter().sendMail({
-      from: serverEnv.SMTP_FROM || serverEnv.SMTP_USER,
+    const services = await getServices();
+    const smtp = getSmtpConfig(services);
+    const info = await (await getTransporter()).sendMail({
+      from: smtp.from || smtp.user,
       to,
       subject,
       html,

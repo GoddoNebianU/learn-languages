@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { isSingleUserMode } from "@/lib/auth-mode";
+import { hasCapability } from "@/lib/capability";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  if (isSingleUserMode()) {
+  if (!(await hasCapability("userProfile"))) {
     redirect("/settings");
   }
 

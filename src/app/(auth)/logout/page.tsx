@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
-import { isSingleUserMode } from "@/lib/auth-mode";
+import { hasCapability } from "@/lib/capability";
 
 export default async function LogoutPage(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  if (isSingleUserMode()) notFound();
+  if (!(await hasCapability("signup"))) notFound();
   const searchParams = await props.searchParams;
   const redirectTo = searchParams.redirect ?? null;
 

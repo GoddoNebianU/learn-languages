@@ -1,7 +1,7 @@
 "use server";
 
 import { createLogger } from "@/lib/logger";
-import { getDashscopeApiKey } from "@/lib/env";
+import { getServices, getTtsConfig } from "@/lib/capability";
 
 const log = createLogger("tts");
 
@@ -167,9 +167,14 @@ export type TTS_SUPPORTED_LANGUAGES =
 
 let _ttsService: QwenTTSService | null = null;
 
-function getTtsService(): QwenTTSService {
+async function getTtsService(): Promise<QwenTTSService> {
   if (!_ttsService) {
-    _ttsService = new QwenTTSService(getDashscopeApiKey());
+    const services = await getServices();
+    const { apiKey } = getTtsConfig(services);
+    if (!apiKey) {
+      throw new Error("TTS API key is not configured. Set it in SystemConfig services.");
+    }
+    _ttsService = new QwenTTSService(apiKey);
   }
   return _ttsService;
 }
@@ -179,7 +184,7 @@ export async function getTTSUrl(
   lang: TTS_SUPPORTED_LANGUAGES
 ): Promise<string | null> {
   try {
-    const service = getTtsService();
+    const service = await getTtsService();
     const result = await service.synthesize(text, {
       // voice: 'Cherry',
       voice: "Jennifer",

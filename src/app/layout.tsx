@@ -8,6 +8,8 @@ import { Toaster } from "sonner";
 import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from '@vercel/analytics/next';
+import { getCapabilities, getTier } from "@/lib/capability";
+import { CapabilityHydrator } from "@/components/capability-hydrator";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -25,15 +27,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const tier = await getTier();
+  const capabilities = await getCapabilities();
+
   return (
     <html lang={locale}>
       <body className={`antialiased`}>
         <StrictMode>
           <ThemeProvider>
             <NextIntlClientProvider>
-              <Navbar></Navbar>
-              {children}
-              <Toaster />
+              <CapabilityHydrator tier={tier} capabilities={capabilities}>
+                <Navbar />
+                {children}
+                <Toaster />
+              </CapabilityHydrator>
             </NextIntlClientProvider>
           </ThemeProvider>
         </StrictMode>

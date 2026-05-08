@@ -1,7 +1,7 @@
 "use server";
 
 import { createLogger } from "@/lib/logger";
-import { getLlmApiKey, getLlmApiUrl, getLlmModelName } from "@/lib/env";
+import { getServices, getLlmConfig } from "@/lib/capability";
 
 const log = createLogger("llm");
 
@@ -12,7 +12,6 @@ type Messages = Array<
 >;
 
 type GetAnswerOptions = {
-  /** Set to true when you expect JSON output. Adds response_format: { type: "json_object" } */
   jsonMode?: boolean;
 };
 
@@ -48,13 +47,18 @@ async function fetchWithRetry(
 async function getAnswer(prompt: string, options?: GetAnswerOptions): Promise<string>;
 async function getAnswer(prompt: Messages, options?: GetAnswerOptions): Promise<string>;
 async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions): Promise<string> {
-  const apiKey = getLlmApiKey();
+  const services = await getServices();
+  const { apiKey, apiUrl, modelName } = getLlmConfig(services);
+
+  if (!apiKey) {
+    throw new Error("LLM API key is not configured. Set it in SystemConfig services.");
+  }
 
   const messages: Messages =
     typeof prompt === "string" ? [{ role: "user", content: prompt }] : prompt;
 
   const body: Record<string, unknown> = {
-    model: getLlmModelName(),
+    model: modelName,
     messages,
     temperature: 0.2,
   };
@@ -64,7 +68,7 @@ async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions):
   }
 
   const response = await fetchWithRetry(
-    getLlmApiUrl(),
+    apiUrl,
     {
       method: "POST",
       headers: {

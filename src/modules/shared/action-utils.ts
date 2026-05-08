@@ -1,13 +1,15 @@
 "use server-headers";
 
-import { isSingleUserMode, getSingleUserId } from "@/lib/auth-mode";
+import { getSingleUserId } from "@/lib/auth-mode";
+import { hasCapability } from "@/lib/capability";
 import { headers } from "next/headers";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("shared-action-utils");
 
 export async function getCurrentUserId(): Promise<string | null> {
-  if (isSingleUserMode()) {
+  const hasSignup = await hasCapability("signup");
+  if (!hasSignup) {
     return getSingleUserId();
   }
 

@@ -19,6 +19,7 @@ import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -41,7 +42,8 @@ export default function TranslatorPage() {
   const { load, play } = useAudioPlayer();
 
   const { data: session } = authClient.useSession();
-  const isLoggedIn = process.env.NEXT_PUBLIC_AUTH_MODE === "single" || !!session?.user?.id;
+  const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
+  const isLoggedIn = noSignup || !!session?.user?.id;
   const [decks, setDecks] = useState<ActionOutputDeck[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
