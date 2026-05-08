@@ -16,7 +16,7 @@
 
 ## 技术栈
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 语言) / 智谱 AI / 阿里云千问 TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 语言) / OpenAI 兼容 LLM / 阿里云千问 TTS
 
 ## 快速开始
 
@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-环境变量通过 `src/lib/env.ts` (Zod) 在启动时校验。必填变量（`DATABASE_URL`、`BETTER_AUTH_SECRET`）缺失时会立即崩溃。SMTP 在多用户模式下必填，单用户模式下可选。可选 API Key（`ZHIPU_*`、`DASHSCORE_API_KEY`）在首次使用时校验。详见 `.env.example`。
+环境变量通过 `src/lib/env.ts` (Zod) 在启动时校验。必填变量（`DATABASE_URL`、`BETTER_AUTH_SECRET`）缺失时会立即崩溃。SMTP 在多用户模式下必填，单用户模式下可选。可选 API Key（`LLM_*`、`DASHSCORE_API_KEY`）在首次使用时校验。详见 `.env.example`。
 
 ### 单用户模式
 
@@ -69,7 +69,7 @@ src/
 
 AI 驱动的模块（translator、dictionary）没有 repository 层，直接调用 LLM 管道。
 
-AI 管道在 `src/lib/bigmodel/`，每个是多阶段 orchestrator：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。共享依赖是 `llm.ts`（智谱 AI 客户端）和 `tts.ts`（千问 TTS 服务）。
+AI 管道在 `src/lib/bigmodel/`，每个是多阶段 orchestrator：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。共享依赖是 `llm.ts`（OpenAI 兼容 LLM 客户端）和 `tts.ts`（千问 TTS 服务）。
 
 ## 约定
 

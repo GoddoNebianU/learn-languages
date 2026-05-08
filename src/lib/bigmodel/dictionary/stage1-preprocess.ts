@@ -59,16 +59,19 @@ standardForm 必须是该词在词典中的原形（lemma），即：
 `.trim();
 
   try {
-    const result = await getAnswer([
-      {
-        role: "system",
-        content: "你是词典预处理系统，只返回 JSON。",
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ]).then(parseAIGeneratedJSON<PreprocessResult>);
+    const result = await getAnswer(
+      [
+        {
+          role: "system",
+          content: "你是词典预处理系统，只返回 JSON。",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      { jsonMode: true }
+    ).then(parseAIGeneratedJSON<PreprocessResult>);
 
     if (typeof result.isValid !== "boolean") {
       throw new Error("预处理：isValid 字段类型错误");

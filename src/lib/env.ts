@@ -65,16 +65,16 @@ function requireApiKey(name: string, value: string | undefined): string {
   return value;
 }
 
-export function getZhipuApiKey(): string {
-  return requireApiKey("ZHIPU_API_KEY", process.env.ZHIPU_API_KEY);
+export function getLlmApiKey(): string {
+  return requireApiKey("LLM_API_KEY", process.env.LLM_API_KEY);
 }
 
-export function getZhipuApiUrl(): string {
-  return process.env.ZHIPU_API_URL || "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+export function getLlmApiUrl(): string {
+  return process.env.LLM_API_URL || "https://api.deepseek.com/chat/completions";
 }
 
-export function getZhipuModelName(): string {
-  return process.env.ZHIPU_MODEL_NAME || "glm-4.6";
+export function getLlmModelName(): string {
+  return process.env.LLM_MODEL_NAME || "deepseek-v3";
 }
 
 export function getDashscopeApiKey(): string {

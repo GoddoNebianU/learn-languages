@@ -52,10 +52,13 @@ ${isWord ? `{"entries":[{"ipa":"国际音标","partOfSpeech":"词性","definitio
 `.trim();
 
   try {
-    const result = await getAnswer([
-      { role: "system", content: "专业词典编纂专家，返回完整JSON词典数据。" },
-      { role: "user", content: prompt },
-    ]).then(parseAIGeneratedJSON<EntriesGenerationResult>);
+    const result = await getAnswer(
+      [
+        { role: "system", content: "专业词典编纂专家，返回完整JSON词典数据。" },
+        { role: "user", content: prompt },
+      ],
+      { jsonMode: true }
+    ).then(parseAIGeneratedJSON<EntriesGenerationResult>);
 
     if (!result.entries?.length) {
       throw new Error("词条生成失败：结果为空");

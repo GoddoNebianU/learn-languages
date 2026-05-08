@@ -1,7 +1,7 @@
 "use server";
 
 import { createLogger } from "@/lib/logger";
-import { getZhipuApiKey, getZhipuApiUrl, getZhipuModelName } from "@/lib/env";
+import { getLlmApiKey, getLlmApiUrl, getLlmModelName } from "@/lib/env";
 
 const log = createLogger("llm");
 
@@ -10,6 +10,11 @@ type Messages = Array<
   | { role: "user"; content: string }
   | { role: "assistant"; content: string }
 >;
+
+type GetAnswerOptions = {
+  /** Set to true when you expect JSON output. Adds response_format: { type: "json_object" } */
+  jsonMode?: boolean;
+};
 
 async function fetchWithRetry(
   url: string,
@@ -40,30 +45,33 @@ async function fetchWithRetry(
   throw new Error("Max retries exceeded");
 }
 
-async function getAnswer(prompt: string): Promise<string>;
-async function getAnswer(prompt: Messages): Promise<string>;
-async function getAnswer(prompt: string | Messages): Promise<string> {
-  const apiKey = getZhipuApiKey();
+async function getAnswer(prompt: string, options?: GetAnswerOptions): Promise<string>;
+async function getAnswer(prompt: Messages, options?: GetAnswerOptions): Promise<string>;
+async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions): Promise<string> {
+  const apiKey = getLlmApiKey();
 
   const messages: Messages =
     typeof prompt === "string" ? [{ role: "user", content: prompt }] : prompt;
 
+  const body: Record<string, unknown> = {
+    model: getLlmModelName(),
+    messages,
+    temperature: 0.2,
+  };
+
+  if (options?.jsonMode) {
+    body.response_format = { type: "json_object" };
+  }
+
   const response = await fetchWithRetry(
-    getZhipuApiUrl(),
+    getLlmApiUrl(),
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model: getZhipuModelName(),
-        messages,
-        temperature: 0.2,
-        thinking: {
-          type: "disabled",
-        },
-      }),
+      body: JSON.stringify(body),
     }
   );
 
@@ -82,3 +90,4 @@ async function getAnswer(prompt: string | Messages): Promise<string> {
 }
 
 export { getAnswer };
+export type { GetAnswerOptions };

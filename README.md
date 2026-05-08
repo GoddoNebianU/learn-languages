@@ -16,7 +16,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 
 ## Stack
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 locales) / Zhipu AI / Alibaba Qwen TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 locales) / OpenAI-compatible LLM / Alibaba Qwen TTS
 
 ## Getting started
 
@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `SMTP_*`) will crash immediately if missing. Optional API keys (`ZHIPU_*`, `DASHSCORE_API_KEY`) are validated on first use. See `.env.example` for details.
+Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `SMTP_*`) will crash immediately if missing. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. See `.env.example` for details.
 
 ### Single-user mode
 
@@ -69,7 +69,7 @@ Business modules follow a three-layer pattern. Each module has up to six files:
 
 AI-driven modules (translator, dictionary) skip the repository layer -- they call LLM pipelines directly.
 
-AI pipelines live in `src/lib/bigmodel/`. Each is a multi-stage orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`. Shared deps are `llm.ts` (Zhipu AI client) and `tts.ts` (Qwen TTS service).
+AI pipelines live in `src/lib/bigmodel/`. Each is a multi-stage orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`. Shared deps are `llm.ts` (OpenAI-compatible LLM client) and `tts.ts` (Qwen TTS service).
 
 ## Conventions
 

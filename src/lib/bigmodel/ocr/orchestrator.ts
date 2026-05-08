@@ -3,7 +3,8 @@
 import OpenAI from "openai";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { createLogger } from "@/lib/logger";
-import { getZhipuApiKey } from "@/lib/env";
+import { getLlmApiKey } from "@/lib/env";
+import { getLlmApiUrl } from "@/lib/env";
 import { OCRInput, OCROutput, OCRRawResponse } from "./types";
 
 const log = createLogger("ocr-orchestrator");
@@ -11,10 +12,10 @@ const log = createLogger("ocr-orchestrator");
 let _openai: OpenAI | null = null;
 function getOpenAIClient() {
   if (!_openai) {
-    const apiKey = getZhipuApiKey();
+    const apiKey = getLlmApiKey();
     _openai = new OpenAI({
       apiKey,
-      baseURL: "https://open.bigmodel.cn/api/paas/v4",
+      baseURL: new URL(getLlmApiUrl()).origin,
     });
   }
   return _openai;
@@ -106,6 +107,7 @@ ${languageHints.length > 0 ? `语言提示：\n${languageHints.join("\n")}\n` : 
         },
       ],
       temperature: 0.1,
+      response_format: { type: "json_object" },
     });
 
     const content = response.choices[0]?.message?.content;

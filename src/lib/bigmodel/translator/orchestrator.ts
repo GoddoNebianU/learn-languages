@@ -36,16 +36,19 @@ async function detectLanguage(text: string): Promise<LanguageDetectionResult> {
 `.trim();
 
   try {
-    const result = await getAnswer([
-      {
-        role: "system",
-        content: "你是一个语言识别专家，只返回 JSON 格式的分析结果。",
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ]).then(parseAIGeneratedJSON<LanguageDetectionResult>);
+    const result = await getAnswer(
+      [
+        {
+          role: "system",
+          content: "你是一个语言识别专家，只返回 JSON 格式的分析结果。",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      { jsonMode: true }
+    ).then(parseAIGeneratedJSON<LanguageDetectionResult>);
 
     if (typeof result.sourceLanguage !== "string" || !result.sourceLanguage) {
       throw new Error("Invalid source language detected");
