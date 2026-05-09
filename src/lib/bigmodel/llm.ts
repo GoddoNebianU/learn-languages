@@ -5,16 +5,6 @@ import { getServices, getLlmConfig } from "@/lib/capability";
 
 const log = createLogger("llm");
 
-type Messages = Array<
-  | { role: "system"; content: string }
-  | { role: "user"; content: string }
-  | { role: "assistant"; content: string }
->;
-
-type GetAnswerOptions = {
-  jsonMode?: boolean;
-};
-
 async function fetchWithRetry(
   url: string,
   options: RequestInit,
@@ -44,7 +34,11 @@ async function fetchWithRetry(
   throw new Error("Max retries exceeded");
 }
 
-async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions): Promise<string> {
+async function getAnswer(prompt: string | Array<
+  | { role: "system"; content: string }
+  | { role: "user"; content: string }
+  | { role: "assistant"; content: string }
+>, options?: { jsonMode?: boolean }): Promise<string> {
   const services = await getServices();
   const { apiKey, apiUrl, modelName } = getLlmConfig(services);
 
@@ -52,8 +46,11 @@ async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions):
     throw new Error("LLM API key is not configured. Set it in SystemConfig services.");
   }
 
-  const messages: Messages =
-    typeof prompt === "string" ? [{ role: "user", content: prompt }] : prompt;
+  const messages: Array<
+    | { role: "system"; content: string }
+    | { role: "user"; content: string }
+    | { role: "assistant"; content: string }
+  > = typeof prompt === "string" ? [{ role: "user", content: prompt }] : prompt;
 
   const body: Record<string, unknown> = {
     model: modelName,
@@ -92,4 +89,3 @@ async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions):
 }
 
 export { getAnswer };
-export type { GetAnswerOptions };
