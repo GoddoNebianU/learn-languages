@@ -386,11 +386,16 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             </>
           ) : (
             <>
-              <HStack align="center" justify="center" className="min-h-[20dvh] p-8">
+              <VStack align="center" justify="center" className="min-h-[20dvh] p-8" gap={2}>
                 <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
                   {displayFront}
                 </div>
-              </HStack>
+                {!isReversed && currentCard.ipa && (
+                  <div className="text-center font-mono text-lg text-gray-500">
+                    [{currentCard.ipa}]
+                  </div>
+                )}
+              </VStack>
 
               {showAnswer && (
                 <>
