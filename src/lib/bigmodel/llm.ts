@@ -44,8 +44,6 @@ async function fetchWithRetry(
   throw new Error("Max retries exceeded");
 }
 
-async function getAnswer(prompt: string, options?: GetAnswerOptions): Promise<string>;
-async function getAnswer(prompt: Messages, options?: GetAnswerOptions): Promise<string>;
 async function getAnswer(prompt: string | Messages, options?: GetAnswerOptions): Promise<string> {
   const services = await getServices();
   const { apiKey, apiUrl, modelName } = getLlmConfig(services);
