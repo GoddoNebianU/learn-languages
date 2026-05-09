@@ -40,7 +40,7 @@ ${
 }
 
 【JSON格式】
-${isWord ? `{"entries":[{"ipa":"国际音标","partOfSpeech":"词性","definition":"详细释义","example":"自然例句"}]}` : `{"entries":[{"definition":"详细释义","example":"自然例句"}]}`}
+{"entries":[{"ipa":"国际音标"${isWord ? `,"partOfSpeech":"词性"` : ""},"definition":"详细释义","example":"自然例句"}]}
 
 【质量标准】
 - 释义：准确、简洁，突出最核心的含义
