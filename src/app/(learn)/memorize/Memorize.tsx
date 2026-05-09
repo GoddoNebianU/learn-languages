@@ -118,7 +118,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const getBackContent = (card: ActionOutputCard): React.ReactNode => {
     if (isReversed) {
-      return <span className="text-center text-xl text-gray-900 md:text-2xl">{card.word}</span>;
+      return (
+        <VStack align="center" gap={1}>
+          <span className="text-center text-xl text-gray-900 md:text-2xl">{card.word}</span>
+          {card.ipa && (
+            <span className="text-center font-mono text-lg text-gray-500">[{card.ipa}]</span>
+          )}
+        </VStack>
+      );
     }
 
     return (
