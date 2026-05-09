@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `SMTP_*`) will crash immediately if missing. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. See `.env.example` for details.
+Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`) will crash immediately if missing. SMTP is required in multi-user mode, optional in single-user mode. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. Service configs (LLM, TTS, SMTP) and feature flags are stored in the database via `system_config` and `tier_capabilities` tables. See `.env.example` for details.
 
 ### Single-user mode
 
@@ -50,7 +50,7 @@ src/
 ├── design-system/    # CVA primitives (14 files, flat, no subdirs)
 ├── components/       # business components (layout, follow, ui)
 ├── lib/              # integrations (db, auth, auth-mode, env, email, AI pipelines, logger)
-├── hooks/            # useAudioPlayer, useFileUpload
+├── hooks/            # useAudioPlayer
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # business types and constants
 └── i18n/             # next-intl config
@@ -106,6 +106,8 @@ ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
 ## Data model
 
 ```
+SystemConfig          # deployment tier + services config (single row)
+TierCapability        # per-tier feature flags (signup, userProfile, social, email)
 User
 ├── Account
 ├── Session

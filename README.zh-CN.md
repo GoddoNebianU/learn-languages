@@ -32,7 +32,7 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
 pnpm dev
 ```
 
-环境变量通过 `src/lib/env.ts` (Zod) 在启动时校验。必填变量（`DATABASE_URL`、`BETTER_AUTH_SECRET`）缺失时会立即崩溃。SMTP 在多用户模式下必填，单用户模式下可选。可选 API Key（`LLM_*`、`DASHSCORE_API_KEY`）在首次使用时校验。详见 `.env.example`。
+环境变量通过 `src/lib/env.ts` (Zod) 在启动时校验。必填变量（`DATABASE_URL`、`BETTER_AUTH_SECRET`）缺失时会立即崩溃。SMTP 在多用户模式下必填，单用户模式下可选。可选 API Key（`LLM_*`、`DASHSCORE_API_KEY`）在首次使用时校验。服务配置（LLM、TTS、SMTP）和功能开关存储在数据库的 `system_config` 和 `tier_capabilities` 表中。详见 `.env.example`。
 
 ### 单用户模式
 
@@ -50,7 +50,7 @@ src/
 ├── design-system/    # CVA 基础组件 (14 文件, 平铺, 无子目录)
 ├── components/       # 业务组件 (layout, follow, ui)
 ├── lib/              # 集成层 (db, auth, auth-mode, env, email, AI 管道, logger)
-├── hooks/            # useAudioPlayer, useFileUpload
+├── hooks/            # useAudioPlayer
 ├── utils/            # cn, validate, json, string, random
 ├── shared/           # 业务类型和常量
 └── i18n/             # next-intl 配置
@@ -106,6 +106,8 @@ ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
 ## 数据模型
 
 ```
+SystemConfig          # 部署层级 + 服务配置 (单行)
+TierCapability        # 按层级的功能开关 (signup, userProfile, social, email)
 User
 ├── Account
 ├── Session

@@ -1,6 +1,6 @@
 # 页面架构指南
 
-**生成时间:** 2026-05-07
+**生成时间:** 2026-05-09
 
 ## 概述
 
@@ -10,7 +10,7 @@
 
 ```
 src/app/
-├── layout.tsx          # 唯一根 layout (ThemeProvider + NextIntlClientProvider + Navbar + Toaster)
+├── layout.tsx          # 唯一根 layout (ThemeProvider + NextIntlClientProvider + CapabilityHydrator + Navbar + Toaster)
 ├── page.tsx            # 首页 (Server Component)
 ├── error.tsx           # 根级错误边界 (Client Component)
 ├── not-found.tsx       # 404 页面

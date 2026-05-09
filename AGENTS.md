@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-05-07
-**提交:** 81268ef
+**生成时间:** 2026-05-09
+**提交:** 5d484e1
 **分支:** main
 
 ## 概述
@@ -48,7 +48,7 @@ src/
 ├── config/           # i18n, images
 └── i18n/             # next-intl 请求配置 (request.ts)
 
-非 src: prisma/ (Schema+4 迁移), messages/ (i18n 翻译 8 种语言), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体)
+非 src: prisma/ (Schema+2 迁移), messages/ (i18n 翻译 8 种语言), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体)
 ```
 
 ## 查找位置
