@@ -20,6 +20,7 @@ import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
+import { Range } from "@/design-system/range";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
 
@@ -313,6 +314,20 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           {t("progress", { current: currentIndex + 1, total: cards.length })}
         </span>
       </HStack>
+
+      {!studyMode.startsWith("random") && (
+        <Range
+          value={currentIndex}
+          min={0}
+          max={cards.length - 1}
+          onChange={(value) => {
+            setCurrentIndex(value);
+            setShowAnswer(false);
+            cleanupAudio();
+          }}
+          className="mb-4"
+        />
+      )}
 
       <HStack justify="center" gap={2} className="mb-4 flex-wrap">
         {studyModeOptions.map((option) => (
