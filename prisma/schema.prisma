@@ -11,27 +11,22 @@ datasource db {
 // System Config & Capabilities
 // ============================================
 
-enum DeploymentTier {
-  SINGLE
-  MULTI
-}
-
 model SystemConfig {
-  id        Int            @id @default(1)
-  tier      DeploymentTier @default(SINGLE)
-  services  Json           @default("{}")
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id        Int      @id @default(1)
+  tier      String   @default("SINGLE")
+  services  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("system_config")
 }
 
 model TierCapability {
-  tier        DeploymentTier @id
-  signup      Boolean        @default(true)
-  userProfile Boolean        @default(true)
-  social      Boolean        @default(true)
-  email       Boolean        @default(true)
+  tier        String  @id
+  signup      Boolean @default(true)
+  userProfile Boolean @default(true)
+  social      Boolean @default(true)
+  email       Boolean @default(true)
 
   @@map("tier_capabilities")
 }

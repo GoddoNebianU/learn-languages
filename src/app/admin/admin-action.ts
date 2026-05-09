@@ -5,13 +5,12 @@ import { prisma } from "@/lib/db";
 import { Prisma } from "../../../generated/prisma/client";
 import { createLogger } from "@/lib/logger";
 import { invalidateCapabilityCache } from "@/lib/capability";
-import { DeploymentTier } from "../../../generated/prisma/enums";
+import type { DeploymentTier } from "@/lib/capability";
 import {
   createAdminSession,
   verifyAdminSession,
   clearAdminSession,
   getAdminPassword,
-  setAdminPassword,
 } from "@/lib/admin-auth";
 
 const log = createLogger("admin-action");
@@ -23,16 +22,9 @@ export async function actionAdminLogin(formData: FormData) {
   }
 
   try {
-    const storedPassword = await getAdminPassword();
+    const adminPassword = getAdminPassword();
 
-    if (storedPassword === "") {
-      await setAdminPassword(password);
-      await createAdminSession();
-      log.info("Admin password set and session created");
-      return { success: true as const, message: "Logged in" };
-    }
-
-    if (password === storedPassword) {
+    if (password === adminPassword) {
       await createAdminSession();
       log.info("Admin authenticated");
       return { success: true as const, message: "Logged in" };
@@ -64,18 +56,27 @@ export async function actionGetAdminSettings() {
 
     const tier = config.tier;
     const tierRow = await prisma.tierCapability.findUnique({ where: { tier } });
+    const allTiers = await prisma.tierCapability.findMany({ orderBy: { tier: "asc" } });
     const services = (config.services ?? {}) as Record<string, unknown>;
 
     const llm = (services.llm ?? {}) as Record<string, string>;
     const tts = (services.tts ?? {}) as Record<string, string>;
     const smtp = (services.smtp ?? {}) as Record<string, unknown>;
-    const admin = (services.admin ?? {}) as Record<string, string>;
 
     return {
       success: true as const,
       message: "Settings loaded",
       data: {
         tier,
+        allTiers: allTiers.map((t) => ({
+          tier: t.tier,
+          capabilities: {
+            signup: t.signup,
+            userProfile: t.userProfile,
+            social: t.social,
+            email: t.email,
+          },
+        })),
         capabilities: {
           signup: tierRow?.signup ?? true,
           userProfile: tierRow?.userProfile ?? true,
@@ -98,7 +99,6 @@ export async function actionGetAdminSettings() {
             from: (smtp.from as string) ?? "",
           },
         },
-        hasAdminPassword: (admin.password?.length ?? 0) > 0,
       },
     };
   } catch (error) {
@@ -108,7 +108,7 @@ export async function actionGetAdminSettings() {
 }
 
 const settingsSchema = z.object({
-  tier: z.enum(["SINGLE", "MULTI"]).optional(),
+  tier: z.string().min(1).optional(),
   capabilities: z
     .object({
       signup: z.boolean(),
@@ -133,7 +133,6 @@ const settingsSchema = z.object({
         .optional(),
     })
     .optional(),
-  newPassword: z.string().min(6).optional(),
 });
 
 export async function actionUpdateAdminSettings(input: unknown) {
@@ -170,11 +169,6 @@ export async function actionUpdateAdminSettings(input: unknown) {
       mergedServices.smtp = data.services.smtp;
     }
 
-    if (data.newPassword) {
-      const admin = (mergedServices.admin ?? {}) as Record<string, string>;
-      mergedServices.admin = { ...admin, password: data.newPassword };
-    }
-
     await prisma.systemConfig.upsert({
       where: { id: 1 },
       update: { tier: newTier, services: mergedServices as Prisma.InputJsonValue },
@@ -207,6 +201,70 @@ export async function actionUpdateAdminSettings(input: unknown) {
   } catch (error) {
     log.error("Failed to update admin settings", { error: String(error) });
     return { success: false as const, message: "Failed to save settings" };
+  }
+}
+
+const addTierSchema = z.object({
+  name: z.string().min(1).max(50),
+});
+
+export async function actionAddTier(input: unknown) {
+  const isAuth = await verifyAdminSession();
+  if (!isAuth) {
+    return { success: false as const, message: "Unauthorized" };
+  }
+
+  const result = addTierSchema.safeParse(input);
+  if (!result.success) {
+    return { success: false as const, message: "Invalid tier name" };
+  }
+
+  const { name } = result.data;
+
+  try {
+    const existing = await prisma.tierCapability.findUnique({ where: { tier: name } });
+    if (existing) {
+      return { success: false as const, message: "Tier already exists" };
+    }
+
+    await prisma.tierCapability.create({
+      data: { tier: name, signup: true, userProfile: true, social: true, email: true },
+    });
+
+    log.info("Tier added", { tier: name });
+    return { success: true as const, message: `Tier "${name}" added` };
+  } catch (error) {
+    log.error("Failed to add tier", { error: String(error) });
+    return { success: false as const, message: "Failed to add tier" };
+  }
+}
+
+export async function actionDeleteTier(tier: string) {
+  const isAuth = await verifyAdminSession();
+  if (!isAuth) {
+    return { success: false as const, message: "Unauthorized" };
+  }
+
+  if (!tier || typeof tier !== "string") {
+    return { success: false as const, message: "Invalid tier name" };
+  }
+
+  try {
+    const config = await prisma.systemConfig.findUnique({ where: { id: 1 } });
+    if (config?.tier === tier) {
+      return { success: false as const, message: "Cannot delete the active tier" };
+    }
+
+    const deleted = await prisma.tierCapability.deleteMany({ where: { tier } });
+    if (deleted.count === 0) {
+      return { success: false as const, message: "Tier not found" };
+    }
+
+    log.info("Tier deleted", { tier });
+    return { success: true as const, message: `Tier "${tier}" deleted` };
+  } catch (error) {
+    log.error("Failed to delete tier", { error: String(error) });
+    return { success: false as const, message: "Failed to delete tier" };
   }
 }
 

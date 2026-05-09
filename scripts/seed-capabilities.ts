@@ -10,8 +10,6 @@
 import { PrismaClient } from "../generated/prisma/client";
 import type { InputJsonValue } from "@prisma/client/runtime/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { DeploymentTier } from "../generated/prisma/enums";
-
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   console.error("DATABASE_URL is required");
@@ -21,12 +19,12 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-const TIER_DEFAULTS: Record<DeploymentTier, { signup: boolean; userProfile: boolean; social: boolean; email: boolean }> = {
+const TIER_DEFAULTS: Record<string, { signup: boolean; userProfile: boolean; social: boolean; email: boolean }> = {
   SINGLE: { signup: false, userProfile: false, social: false, email: false },
   MULTI: { signup: true, userProfile: true, social: true, email: true },
 };
 
-const DEFAULT_SERVICES: Record<DeploymentTier, InputJsonValue> = {
+const DEFAULT_SERVICES: Record<string, InputJsonValue> = {
   SINGLE: {
     llm: { apiKey: "", apiUrl: "https://api.deepseek.com/chat/completions", modelName: "deepseek-v3" },
     tts: { apiKey: "" },
@@ -48,9 +46,9 @@ async function main() {
     process.exit(1);
   }
 
-  const configTier: DeploymentTier = tierInput === "MULTI" ? "MULTI" : "SINGLE";
+  const configTier: string = tierInput === "MULTI" ? "MULTI" : "SINGLE";
 
-  for (const tierName of Object.values(DeploymentTier)) {
+  for (const tierName of Object.keys(TIER_DEFAULTS)) {
     const caps = TIER_DEFAULTS[tierName];
     await prisma.tierCapability.upsert({
       where: { tier: tierName },

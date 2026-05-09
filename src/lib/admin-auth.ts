@@ -1,7 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/db";
-import { Prisma } from "../../generated/prisma/client";
+import { serverEnv } from "@/lib/env";
 import { createLogger } from "@/lib/logger";
 
 const log = createLogger("admin-auth");
@@ -11,40 +10,11 @@ const ALGORITHM = "HS256";
 const EXPIRES_IN = "24h";
 
 function getSecret(): Uint8Array {
-  const secret = process.env.BETTER_AUTH_SECRET;
-  if (!secret) {
-    throw new Error("BETTER_AUTH_SECRET is not configured");
-  }
-  return new TextEncoder().encode(secret);
+  return new TextEncoder().encode(serverEnv.BETTER_AUTH_SECRET);
 }
 
-export async function getAdminPassword(): Promise<string> {
-  const config = await prisma.systemConfig.findUnique({ where: { id: 1 } });
-  const services = (config?.services ?? {}) as Record<string, unknown>;
-  const admin = (services.admin ?? {}) as Record<string, string>;
-  return admin.password ?? "";
-}
-
-export async function setAdminPassword(password: string): Promise<void> {
-  const config = await prisma.systemConfig.findUnique({ where: { id: 1 } });
-  const services = (config?.services ?? {}) as Record<string, unknown>;
-  const admin = (services.admin ?? {}) as Record<string, string>;
-
-  const servicesUpdate = {
-    ...services,
-    admin: { ...admin, password },
-  } as Prisma.InputJsonValue;
-
-  await prisma.systemConfig.upsert({
-    where: { id: 1 },
-    update: { services: servicesUpdate },
-    create: {
-      id: 1,
-      services: { admin: { password } } as Prisma.InputJsonValue,
-    },
-  });
-
-  log.info("Admin password updated");
+export function getAdminPassword(): string {
+  return serverEnv.ADMIN_PASSWORD;
 }
 
 export async function createAdminSession(): Promise<void> {

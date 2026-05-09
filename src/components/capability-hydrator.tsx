@@ -1,7 +1,7 @@
 "use client";
 
 import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
-import type { DeploymentTier } from "../../generated/prisma/enums";
+import type { DeploymentTier } from "@/lib/capability";
 
 interface CapabilityHydratorProps {
   tier: DeploymentTier;

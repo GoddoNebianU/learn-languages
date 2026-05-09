@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import type { DeploymentTier } from "../../generated/prisma/enums";
+import type { DeploymentTier } from "@/lib/capability";
 
 export interface CapabilityState {
   tier: DeploymentTier;

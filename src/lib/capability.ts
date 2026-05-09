@@ -1,7 +1,6 @@
 import { prisma } from "./db";
-import type { DeploymentTier } from "../../generated/prisma/enums";
 
-export type { DeploymentTier };
+export type DeploymentTier = string;
 
 const CAPABILITY_KEYS = ["signup", "userProfile", "social", "email"] as const;
 export type CapabilityKey = (typeof CAPABILITY_KEYS)[number];
