@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useTransition, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import localFont from "next/font/local";
 import {
   Layers,
   Check,
@@ -14,8 +13,6 @@ import {
   Repeat,
   Infinity,
 } from "lucide-react";
-import { actionGetCardsByDeckId } from "@/modules/card/card-action";
-import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
 import { Skeleton } from "@/design-system/skeleton";
@@ -23,12 +20,9 @@ import { HStack, VStack } from "@/design-system/stack";
 import { Range } from "@/design-system/range";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
-
-const myFont = localFont({
-  src: "../../../../public/fonts/NotoNaskhArabic-VariableFont_wght.ttf",
-});
-
-type StudyMode = "order-infinite" | "random-infinite";
+import { useMemorizeCards } from "./useMemorizeCards";
+import type { StudyMode } from "./useMemorizeCards";
+import { MemorizeCard } from "./MemorizeCard";
 
 interface MemorizeProps {
   deckId: number;
@@ -38,115 +32,30 @@ interface MemorizeProps {
 const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const t = useTranslations("memorize.review");
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
-  const [originalCards, setOriginalCards] = useState<ActionOutputCard[]>([]);
-  const [cards, setCards] = useState<ActionOutputCard[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isReversed, setIsReversed] = useState(false);
-  const [isDictation, setIsDictation] = useState(false);
-  const [studyMode, setStudyMode] = useState<StudyMode>("order-infinite");
+  const {
+    cards,
+    currentIndex,
+    showAnswer,
+    isLoading,
+    isPending,
+    error,
+    studyMode,
+    isReversed,
+    isDictation,
+    setStudyMode,
+    setIsReversed,
+    setIsDictation,
+    setShowAnswer,
+    setCurrentIndex,
+    nextCard,
+    prevCard,
+    currentCard,
+  } = useMemorizeCards(deckId);
+
   const { play, stop, load } = useAudioPlayer();
   const audioUrlRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
-
-  const shuffleCards = useCallback((cardArray: ActionOutputCard[]): ActionOutputCard[] => {
-    const shuffled = [...cardArray];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }, []);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const loadCards = async () => {
-      setIsLoading(true);
-      setError(null);
-      startTransition(async () => {
-        const result = await actionGetCardsByDeckId({ deckId, limit: 100 });
-        if (!ignore) {
-          if (result.success && result.data) {
-            setOriginalCards(result.data);
-            setCards(result.data);
-            setCurrentIndex(0);
-            setShowAnswer(false);
-            setIsReversed(false);
-            setIsDictation(false);
-          } else {
-            setError(result.message);
-          }
-          setIsLoading(false);
-        }
-      });
-    };
-
-    loadCards();
-
-    return () => {
-      ignore = true;
-    };
-  }, [deckId]);
-
-  useEffect(() => {
-    if (studyMode.startsWith("random")) {
-      setCards(shuffleCards(originalCards));
-    } else {
-      setCards(originalCards);
-    }
-    setCurrentIndex(0);
-    setShowAnswer(false);
-  }, [studyMode, originalCards, shuffleCards]);
-
-  const getCurrentCard = (): ActionOutputCard | null => {
-    return cards[currentIndex] ?? null;
-  };
-
-  const getFrontText = (card: ActionOutputCard): string => {
-    if (isReversed) {
-      return card.meanings
-        .map((m) => (m.partOfSpeech ? `${m.partOfSpeech}: ${m.definition}` : m.definition))
-        .join("; ");
-    }
-    return card.word;
-  };
-
-  const getBackContent = (card: ActionOutputCard): React.ReactNode => {
-    if (isReversed) {
-      return (
-        <VStack align="center" gap={1}>
-          <span className="text-center text-xl text-gray-900 md:text-2xl">{card.word}</span>
-          {card.ipa && (
-            <span className="text-center font-mono text-lg text-gray-500">[{card.ipa}]</span>
-          )}
-        </VStack>
-      );
-    }
-
-    return (
-      <VStack align="stretch" gap={2} className="w-full max-w-lg">
-        {card.meanings.map((m, idx) => (
-          <div key={idx} className="flex gap-3 text-left">
-            {m.partOfSpeech && (
-              <span className="min-w-[60px] shrink-0 text-sm font-medium text-primary-600">
-                {m.partOfSpeech}
-              </span>
-            )}
-            <span className="text-gray-800">{m.definition}</span>
-          </div>
-        ))}
-      </VStack>
-    );
-  };
-
-  const handleShowAnswer = useCallback(() => {
-    setShowAnswer(true);
-  }, []);
 
   const cleanupAudio = useCallback(() => {
     if (audioUrlRef.current) {
@@ -156,33 +65,19 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     stop();
   }, [stop]);
 
-  const findNextIndex = useCallback(
-    (from: number, direction: 1 | -1): number => {
-      const len = cards.length;
-      if (!isDictation) {
-        const next = from + direction;
-        return ((next % len) + len) % len;
-      }
-      for (let i = 1; i <= len; i++) {
-        const idx = (((from + direction * i) % len) + len) % len;
-        if (cards[idx]?.ipa) return idx;
-      }
-      return from;
-    },
-    [cards, isDictation]
-  );
+  const handleShowAnswer = useCallback(() => {
+    setShowAnswer(true);
+  }, [setShowAnswer]);
 
   const handleNextCard = useCallback(() => {
-    setCurrentIndex(findNextIndex(currentIndex, 1));
-    setShowAnswer(false);
+    nextCard();
     cleanupAudio();
-  }, [currentIndex, findNextIndex, cleanupAudio]);
+  }, [nextCard, cleanupAudio]);
 
   const handlePrevCard = useCallback(() => {
-    setCurrentIndex(findNextIndex(currentIndex, -1));
-    setShowAnswer(false);
+    prevCard();
     cleanupAudio();
-  }, [currentIndex, findNextIndex, cleanupAudio]);
+  }, [prevCard, cleanupAudio]);
 
   const playTTS = useCallback(
     async (text: string) => {
@@ -217,7 +112,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   );
 
   const playCurrentCard = useCallback(() => {
-    const currentCard = getCurrentCard();
     if (!currentCard) return;
 
     const text = isReversed
@@ -227,7 +121,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     if (text) {
       playTTS(text);
     }
-  }, [isReversed, playTTS]);
+  }, [currentCard, isReversed, playTTS]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -297,9 +191,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       </PageLayout>
     );
   }
-
-  const currentCard = getCurrentCard()!;
-  const displayFront = getFrontText(currentCard);
 
   const studyModeOptions: { value: StudyMode; label: string; icon: React.ReactNode }[] = [
     { value: "order-infinite", label: t("orderInfinite"), icon: <Repeat className="h-4 w-4" /> },
@@ -374,67 +265,12 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </Button>
       </HStack>
 
-      <div
-        className={`mb-6 flex h-[50dvh] flex-col rounded-xl border border-gray-200 bg-white shadow-sm ${myFont.className}`}
-      >
-        <div className="flex-1 overflow-y-auto">
-          {isDictation ? (
-            <>
-              <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] p-8">
-                {currentCard.ipa ? (
-                  <div className="text-center font-mono text-2xl text-gray-700">
-                    [{currentCard.ipa}]
-                  </div>
-                ) : (
-                  <div className="text-lg text-gray-400">{t("noIpa")}</div>
-                )}
-              </VStack>
-
-              {showAnswer && (
-                <>
-                  <div className="border-t border-gray-200" />
-                  <VStack
-                    align="center"
-                    justify="center"
-                    className="min-h-[20dvh] rounded-b-xl bg-gray-50 p-8"
-                  >
-                    <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
-                      {displayFront}
-                    </div>
-                    {getBackContent(currentCard)}
-                  </VStack>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <VStack align="center" justify="center" className="min-h-[20dvh] p-8" gap={2}>
-                <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
-                  {displayFront}
-                </div>
-                {!isReversed && currentCard.ipa && (
-                  <div className="text-center font-mono text-lg text-gray-500">
-                    [{currentCard.ipa}]
-                  </div>
-                )}
-              </VStack>
-
-              {showAnswer && (
-                <>
-                  <div className="border-t border-gray-200" />
-                  <VStack
-                    align="center"
-                    justify="center"
-                    className="min-h-[20dvh] rounded-b-xl bg-gray-50 p-8"
-                  >
-                    {getBackContent(currentCard)}
-                  </VStack>
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+      <MemorizeCard
+        card={currentCard!}
+        showAnswer={showAnswer}
+        isReversed={isReversed}
+        isDictation={isDictation}
+      />
 
       <HStack justify="center">
         {!showAnswer ? (
