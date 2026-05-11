@@ -121,6 +121,10 @@
       "name": "Memorize",
       "description": "Language A to Language B, Language B to Language A, supports dictation"
     },
+    "reading": {
+      "name": "Reading",
+      "description": "Sentence-by-sentence reading with word-by-word translation and alignment"
+    },
     "dictionary": {
       "name": "Dictionary",
       "description": "Look up words and phrases with detailed definitions and examples"
@@ -411,6 +415,25 @@
     "savedToDeck": "Card saved to {deckName}",
     "saveFailed": "Failed to save card",
     "translationFailed": "Translation failed, please try again"
+  },
+  "reading": {
+    "title": "Reading",
+    "description": "Paste text and get sentence-by-sentence translation with word alignment",
+    "inputPlaceholder": "Paste your text here...",
+    "sourceLanguage": "Source Language",
+    "sourceLanguageHint": "Language of the input text",
+    "targetLanguage": "Target Language",
+    "targetLanguageHint": "Language to translate into",
+    "translate": "Translate",
+    "translating": "Translating...",
+    "emptyText": "Please enter some text",
+    "translationFailed": "Translation failed",
+    "paragraphFailed": "Failed to translate paragraph",
+    "processingParagraph": "Processing paragraph {current}/{total}...",
+    "otherLanguage": "Other",
+    "customLanguage": "Or type a language...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
   },
   "dictionary": {
     "title": "Dictionary",

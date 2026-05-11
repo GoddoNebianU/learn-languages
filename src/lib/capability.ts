@@ -72,7 +72,7 @@ export function getLlmConfig(services: Record<string, unknown>) {
   return {
     apiKey: llm.apiKey ?? "",
     apiUrl: llm.apiUrl ?? "https://api.deepseek.com/chat/completions",
-    modelName: llm.modelName ?? "deepseek-v3",
+    modelName: llm.modelName ?? "deepseek-v4-flash",
   };
 }
 

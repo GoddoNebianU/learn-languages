@@ -95,7 +95,10 @@ function ToggleField({ label, description, checked, onChange }: { label: string;
 
 export function AdminSettings({ initialSettings }: AdminSettingsProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isSaving, startSaveTransition] = useTransition();
+  const [isLoggingOut, startLogoutTransition] = useTransition();
+  const [isAddingTier, startAddTierTransition] = useTransition();
+  const [isDeletingTier, startDeleteTierTransition] = useTransition();
 
   const [tier, setTier] = useState<DeploymentTier>(initialSettings.tier);
   const [caps, setCaps] = useState(initialSettings.capabilities);
@@ -129,7 +132,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
       return;
     }
 
-    startTransition(async () => {
+    startAddTierTransition(async () => {
       const result = await actionAddTier({ name });
       if (result.success) {
         setAllTiers((prev) => [...prev, { tier: name, capabilities: { signup: true, userProfile: true, social: true, email: true } }]);
@@ -147,7 +150,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
       return;
     }
 
-    startTransition(async () => {
+    startDeleteTierTransition(async () => {
       const result = await actionDeleteTier(tierName);
       if (result.success) {
         setAllTiers((prev) => prev.filter((t) => t.tier !== tierName));
@@ -159,7 +162,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
   }
 
   function handleSave() {
-    startTransition(async () => {
+    startSaveTransition(async () => {
       const result = await actionUpdateAdminSettings({
         tier,
         capabilities: caps,
@@ -182,7 +185,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
   }
 
   function handleLogout() {
-    startTransition(async () => {
+    startLogoutTransition(async () => {
       await actionAdminLogout();
       router.refresh();
     });
@@ -220,8 +223,8 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
                       <button
                         type="button"
                         onClick={() => handleDeleteTier(t.tier)}
-                        disabled={isPending}
                         className="text-gray-400 hover:text-red-500 disabled:opacity-50"
+                        disabled={isDeletingTier}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -233,7 +236,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
 
             <div className="flex gap-2">
               <Input variant="bordered" value={newTierName} onChange={(e) => setNewTierName(e.target.value)} placeholder="New tier name" className="flex-1" />
-              <Button variant="light" onClick={handleAddTier} disabled={isPending || !newTierName.trim()}>
+              <Button variant="light" onClick={handleAddTier} disabled={isAddingTier || !newTierName.trim()}>
                 <Plus size={16} />
                 Add
               </Button>
@@ -281,8 +284,8 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
         </SectionCard>
 
         <div className="flex items-center gap-4">
-          <Button variant="primary" onClick={handleSave} disabled={isPending}>
-            {isPending ? (
+          <Button variant="primary" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? (
               <>
                 <Loader2 size={16} className="animate-spin" />
                 Saving...
@@ -294,8 +297,8 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
               </>
             )}
           </Button>
-          <Button variant="light" onClick={handleLogout} disabled={isPending}>
-            <LogOut size={16} />
+          <Button variant="light" onClick={handleLogout} disabled={isLoggingOut}>
+            {isLoggingOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} />}
             Logout
           </Button>
         </div>

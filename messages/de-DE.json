@@ -23,12 +23,7 @@
   },
   "decks": {
     "title": "Decks",
-    "noDecks": "Noch keine Decks",
     "deckName": "Deckname",
-    "totalCards": "Gesamtkarten",
-    "createdAt": "Erstellt am",
-    "actions": "Aktionen",
-    "view": "Anzeigen",
     "subtitle": "Lern-Decks verwalten",
     "newDeck": "Neues Deck",
     "noDecksYet": "Noch keine Decks",
@@ -87,6 +82,10 @@
     "memorize": {
       "name": "Auswendig lernen",
       "description": "Sprache A zu Sprache B, Sprache B zu Sprache A, unterstützt Diktat"
+    },
+    "reading": {
+      "name": "Lesen",
+      "description": "Satzweises Lesen mit wortweiser Übersetzung und Alignment"
     },
     "dictionary": {
       "name": "Wörterbuch",
@@ -379,6 +378,25 @@
     "saveFailed": "Karte speichern fehlgeschlagen",
     "translationFailed": "Übersetzung fehlgeschlagen, bitte versuchen Sie es erneut"
   },
+  "reading": {
+    "title": "Lesen",
+    "description": "Text einfügen und satzweise Übersetzung mit Wortzuordnung erhalten",
+    "inputPlaceholder": "Text hier einfügen...",
+    "sourceLanguage": "Quellsprache",
+    "sourceLanguageHint": "Sprache des Eingabetextes",
+    "targetLanguage": "Zielsprache",
+    "targetLanguageHint": "Zielsprache für die Übersetzung",
+    "translate": "Übersetzen",
+    "translating": "Übersetzung läuft...",
+    "emptyText": "Bitte geben Sie einen Text ein",
+    "translationFailed": "Übersetzung fehlgeschlagen",
+    "paragraphFailed": "Absatz konnte nicht übersetzt werden",
+    "processingParagraph": "Absatz wird verarbeitet {current}/{total}...",
+    "otherLanguage": "Andere",
+    "customLanguage": "Oder Sprache eingeben...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "Wörterbuch",
     "description": "Wörter und Ausdrücke mit detaillierten Definitionen und Beispielen nachschlagen",
@@ -437,8 +455,6 @@
     "subtitle": "Öffentliche Ordner entdecken",
     "searchPlaceholder": "Öffentliche Ordner durchsuchen...",
     "loading": "Wird geladen...",
-    "noFolders": "Keine öffentlichen Ordner gefunden",
-    "folderInfo": "{userName} • {totalPairs} Paare",
     "unknownUser": "Unbekannter Benutzer",
     "favorite": "Favorisieren",
     "unfavorite": "Aus Favoriten entfernen",
@@ -452,7 +468,6 @@
     "title": "Ordnerdetails",
     "createdBy": "Erstellt von: {name}",
     "unknownUser": "Unbekannter Benutzer",
-    "totalPairs": "Gesamtpaare",
     "favorites": "Favoriten",
     "createdAt": "Erstellt am",
     "viewContent": "Inhalt anzeigen",
@@ -497,15 +512,6 @@
       "confirm": "Mein Konto löschen",
       "success": "Konto erfolgreich gelöscht",
       "failed": "Konto konnte nicht gelöscht werden"
-    },
-    "folders": {
-      "title": "Decks",
-      "noFolders": "Noch keine Decks",
-      "folderName": "Deckname",
-      "totalPairs": "Gesamtkarten",
-      "createdAt": "Erstellt am",
-      "actions": "Aktionen",
-      "view": "Anzeigen"
     },
     "joined": "Beigetreten",
     "decks": {

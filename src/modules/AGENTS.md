@@ -1,10 +1,10 @@
 # 模块层架构指南
 
-**生成时间:** 2026-05-09
+**生成时间:** 2026-05-11
 
 ## 概述
 
-业务模块采用 Action-Service-Repository 三层架构。7 个模块 + 1 个共享工具。
+业务模块采用 Action-Service-Repository 三层架构。8 个模块 + 1 个共享工具。
 
 ## 模块清单
 
@@ -16,6 +16,7 @@
 | follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
 | dictionary | 3      | 1       | ⚠️ 不完整          | 无 service/repo — AI 管道直接调用 |
 | translator | 4      | 3       | ⚠️ 不完整          | 无 repo — AI 管道, 含废弃函数     |
+| reading    | 4      | 1       | ⚠️ 不完整          | 无 repo — AI 管道 (翻译拆句+分词对齐) |
 | shared     | 1      | 0       | N/A                | getCurrentUserId, requireAuth     |
 
 ## 文件结构 (完整 6 文件模式)
@@ -45,6 +46,13 @@
 - 无: repository, repository-dto
 - 原因: 翻译通过 AI 管道, 无数据库操作
 - 废弃: genIPA(), genLanguage() — 保留用于 text-speaker 兼容
+
+### reading (4 文件)
+
+- 有: action + action-dto + service + service-dto
+- 无: repository, repository-dto
+- 原因: 阅读理解通过 AI 管道, 无数据库操作
+- service 直接调用 `@/lib/bigmodel/reading/orchestrator`
 
 ## 跨模块依赖
 

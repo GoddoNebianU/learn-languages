@@ -155,6 +155,10 @@
       "name": "Mémoriser",
       "description": "Langue A vers Langue B, Langue B vers Langue A, prend en charge la dictée"
     },
+    "reading": {
+      "name": "Lecture",
+      "description": "Lecture phrase par phrase avec traduction mot à mot et alignement"
+    },
     "dictionary": {
       "name": "Dictionnaire",
       "description": "Rechercher des mots et des expressions avec des définitions détaillées et des exemples"
@@ -446,6 +450,25 @@
     "saveFailed": "Échec de la sauvegarde",
     "translationFailed": "La traduction a échoué, veuillez réessayer"
   },
+  "reading": {
+    "title": "Lecture",
+    "description": "Collez du texte et obtenez une traduction phrase par phrase avec alignement des mots",
+    "inputPlaceholder": "Collez votre texte ici...",
+    "sourceLanguage": "Langue source",
+    "sourceLanguageHint": "Langue du texte source",
+    "targetLanguage": "Langue cible",
+    "targetLanguageHint": "Langue cible pour la traduction",
+    "translate": "Traduire",
+    "translating": "Traduction en cours...",
+    "emptyText": "Veuillez entrer du texte",
+    "translationFailed": "La traduction a échoué",
+    "paragraphFailed": "Échec de la traduction du paragraphe",
+    "processingParagraph": "Traitement du paragraphe {current}/{total}...",
+    "otherLanguage": "Autre",
+    "customLanguage": "Ou entrez une langue...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "Dictionnaire",
     "description": "Rechercher des mots et des expressions avec des définitions détaillées et des exemples",
@@ -504,8 +527,6 @@
     "subtitle": "Découvrir les dossiers publics",
     "searchPlaceholder": "Rechercher des dossiers publics...",
     "loading": "Chargement...",
-    "noFolders": "Aucun dossier public trouvé",
-    "folderInfo": "{userName} • {totalPairs} paires",
     "unknownUser": "Utilisateur inconnu",
     "favorite": "Favori",
     "unfavorite": "Retirer des favoris",
@@ -519,7 +540,6 @@
     "title": "Détails du dossier",
     "createdBy": "Créé par : {name}",
     "unknownUser": "Utilisateur inconnu",
-    "totalPairs": "Total des paires",
     "favorites": "Favoris",
     "createdAt": "Créé le",
     "viewContent": "Voir le contenu",

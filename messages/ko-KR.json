@@ -23,12 +23,7 @@
   },
   "decks": {
     "title": "덱",
-    "noDecks": "덱이 없습니다",
     "deckName": "덱 이름",
-    "totalCards": "총 카드",
-    "createdAt": "생성일",
-    "actions": "작업",
-    "view": "보기",
     "subtitle": "학습 덱 관리",
     "newDeck": "새 덱",
     "noDecksYet": "덱이 없습니다",
@@ -159,6 +154,10 @@
     "memorize": {
       "name": "암기",
       "description": "언어 A에서 언어 B로, 언어 B에서 언어 A로, 받아쓰기 지원"
+    },
+    "reading": {
+      "name": "리딩",
+      "description": "문장별 읽기와 단어별 번역 및 정렬"
     },
     "dictionary": {
       "name": "사전",
@@ -451,6 +450,25 @@
     "saveFailed": "카드 저장 실패",
     "translationFailed": "번역에 실패했습니다. 다시 시도해주세요"
   },
+  "reading": {
+    "title": "리딩",
+    "description": "텍스트를 붙여넣고 문장별 번역과 단어 정렬 확인",
+    "inputPlaceholder": "여기에 텍스트를 붙여넣으세요...",
+    "sourceLanguage": "원본 언어",
+    "sourceLanguageHint": "입력 텍스트의 언어",
+    "targetLanguage": "대상 언어",
+    "targetLanguageHint": "번역할 언어",
+    "translate": "번역",
+    "translating": "번역 중...",
+    "emptyText": "텍스트를 입력해주세요",
+    "translationFailed": "번역에 실패했습니다",
+    "paragraphFailed": "문단 번역 실패",
+    "processingParagraph": "문단 처리 중 {current}/{total}...",
+    "otherLanguage": "기타",
+    "customLanguage": "또는 언어를 입력하세요...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "사전",
     "description": "상세한 정의와 예문으로 단어 및 구문 검색",
@@ -509,8 +527,6 @@
     "subtitle": "공개 폴더 발견",
     "searchPlaceholder": "공개 폴더 검색...",
     "loading": "로딩 중...",
-    "noFolders": "공개 폴더를 찾을 수 없습니다",
-    "folderInfo": "{userName} • {totalPairs} 쌍",
     "unknownUser": "알 수 없는 사용자",
     "favorite": "즐겨찾기",
     "unfavorite": "즐겨찾기 해제",
@@ -524,7 +540,6 @@
     "title": "폴더 상세",
     "createdBy": "생성자: {name}",
     "unknownUser": "알 수 없는 사용자",
-    "totalPairs": "총 쌍",
     "favorites": "즐겨찾기",
     "createdAt": "생성일",
     "viewContent": "내용 보기",
@@ -569,15 +584,6 @@
       "confirm": "내 계정 삭제",
       "success": "계정이 성공적으로 삭제되었습니다",
       "failed": "계정 삭제에 실패했습니다"
-    },
-    "folders": {
-      "title": "덱",
-      "noFolders": "아직 덱이 없습니다",
-      "folderName": "덱 이름",
-      "totalPairs": "총 카드 수",
-      "createdAt": "생성일",
-      "actions": "작업",
-      "view": "보기"
     },
     "joined": "가입일",
     "decks": {

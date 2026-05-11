@@ -121,6 +121,10 @@
       "name": "记忆",
       "description": "语言A到语言B，语言B到语言A，支持听写"
     },
+    "reading": {
+      "name": "阅读",
+      "description": "逐句阅读，逐词翻译对齐"
+    },
     "dictionary": {
       "name": "词典",
       "description": "查询单词和短语，提供详细的释义和例句"
@@ -411,6 +415,25 @@
     "savedToDeck": "已保存到 {deckName}",
     "saveFailed": "保存失败",
     "translationFailed": "翻译失败，请重试"
+  },
+  "reading": {
+    "title": "阅读",
+    "description": "粘贴文本，逐句翻译并显示词级对齐",
+    "inputPlaceholder": "在此粘贴文本...",
+    "sourceLanguage": "源语言",
+    "sourceLanguageHint": "输入文本的语言",
+    "targetLanguage": "目标语言",
+    "targetLanguageHint": "翻译目标语言",
+    "translate": "翻译",
+    "translating": "翻译中...",
+    "emptyText": "请输入文本",
+    "translationFailed": "翻译失败",
+    "paragraphFailed": "段落翻译失败",
+    "processingParagraph": "正在处理段落 {current}/{total}...",
+    "otherLanguage": "其他",
+    "customLanguage": "或输入语言...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
   },
   "dictionary": {
     "title": "词典",

@@ -1,10 +1,10 @@
 # AI 管道架构指南
 
-**生成时间:** 2026-05-09
+**生成时间:** 2026-05-11
 
 ## 概述
 
-AI 处理采用多阶段管道路径, 由 orchestrator 协调各 stage 执行。3 个管道 + 1 个独立服务。
+AI 处理采用多阶段管道路径, 由 orchestrator 协调各 stage 执行。4 个管道 + 1 个独立服务。
 
 ## 管道清单
 
@@ -12,6 +12,7 @@ AI 处理采用多阶段管道路径, 由 orchestrator 协调各 stage 执行。
 | ---------- | ------ | -------- | --------- | ------------------------- |
 | dictionary | 2      | 2        | ✅ 使用中 | 输入预处理 → 词条生成     |
 | translator | 3      | 2-4      | ✅ 使用中 | 语言检测 → 翻译 → 可选IPA |
+| reading    | 2      | 1+N      | ✅ 使用中 | 翻译拆句 → 逐句分词对齐   |
 | ocr        | 1      | 1        | ⚠️ 未使用 | 图片词汇提取 (GLM-4.6V)   |
 
 ## 管道详情
@@ -56,6 +57,19 @@ ocr/
 - **状态**: 已实现但零调用者
 - **功能**: 从图片中提取词汇-释义对
 
+### reading (2 阶段)
+
+```
+reading/
+├── orchestrator.ts   # 2 个阶段全部内联 (186 行)
+└── types.ts          # ReadingResult, SentencePair, Token, Alignment, Stage1/2Response
+```
+
+- **阶段 1**: translateAndSplit() — 翻译源文本并按句子拆分为一一对应的句子对 (1 LLM 调用)
+- **阶段 2**: tokenizeAndAlignOne() × N — 对每个句子对进行分词和逐词对齐 (N 次 LLM 调用, Promise.all 并行)
+- **调用者**: `reading-service.ts` 调用 `executeReadingTranslation`
+- **特点**: XML 转义源文本防注入, 细粒度 1:1 对齐, 虚词/助词可合并
+
 ## 独立服务: TTS
 
 `tts.ts` 不是管道, 而是独立的 TTS 服务类:
@@ -69,11 +83,17 @@ ocr/
 
 | 文件           | 导出                        | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
-| `llm.ts`       | `getAnswer(prompt)`         | Zhipu AI 聊天补全 API 封装 (使用 OpenAI SDK 兼容模式, 含重试: 指数退避, 最多 2 次) |
+| `llm.ts`       | `getAnswer(prompt)`         | LLM API 封装 (直接 fetch, 含重试: 指数退避, 最多 2 次, 30s 超时) |
 | `tts.ts`       | `getTTSUrl(text, voice)`    | TTS 服务                                 |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |
 | `@/lib/logger` | `createLogger()`            | 所有管道文件使用                         |
+
+## ⚠️ "use server" 类型限制
+
+`llm.ts` 标记了 `"use server"`, Turbopack 在运行时无法正确擦除 `type` 别名。
+**必须内联所有类型** — 禁止使用 `type` 别名 (`type Messages = ...`) 和 `export type {}`。
+违反会导致运行时 `ReferenceError: Xxx is not defined`。
 
 ## 阶段命名约定
 

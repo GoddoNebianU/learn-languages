@@ -155,6 +155,10 @@
       "name": "Memorizza",
       "description": "Lingua A a Lingua B, Lingua B a Lingua A, supporta dettatura"
     },
+    "reading": {
+      "name": "Lettura",
+      "description": "Lettura frase per frase con traduzione parola per parola e allineamento"
+    },
     "dictionary": {
       "name": "Dizionario",
       "description": "Cerca parole e frasi con definizioni dettagliate ed esempi"
@@ -446,6 +450,25 @@
     "saveFailed": "Salvataggio fallito",
     "translationFailed": "Traduzione fallita, riprova"
   },
+  "reading": {
+    "title": "Lettura",
+    "description": "Incolla testo e ottieni una traduzione frase per frase con allineamento delle parole",
+    "inputPlaceholder": "Incolla il tuo testo qui...",
+    "sourceLanguage": "Lingua di origine",
+    "sourceLanguageHint": "Lingua del testo di input",
+    "targetLanguage": "Lingua di destinazione",
+    "targetLanguageHint": "Lingua di destinazione",
+    "translate": "Traduci",
+    "translating": "Traduzione in corso...",
+    "emptyText": "Inserisci del testo",
+    "translationFailed": "Traduzione fallita",
+    "paragraphFailed": "Traduzione del paragrafo fallita",
+    "processingParagraph": "Elaborazione paragrafo {current}/{total}...",
+    "otherLanguage": "Altro",
+    "customLanguage": "O inserisci una lingua...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "Dizionario",
     "description": "Cerca parole e frasi con definizioni dettagliate ed esempi",
@@ -504,8 +527,6 @@
     "subtitle": "Scopri cartelle pubbliche",
     "searchPlaceholder": "Cerca cartelle pubbliche...",
     "loading": "Caricamento...",
-    "noFolders": "Nessuna cartella pubblica trovata",
-    "folderInfo": "{userName} • {totalPairs} coppie",
     "unknownUser": "Utente Sconosciuto",
     "favorite": "Preferito",
     "unfavorite": "Rimuovi dai preferiti",
@@ -519,7 +540,6 @@
     "title": "Dettagli Cartella",
     "createdBy": "Creata da: {name}",
     "unknownUser": "Utente Sconosciuto",
-    "totalPairs": "Coppie Totali",
     "favorites": "Preferiti",
     "createdAt": "Creata Il",
     "viewContent": "Visualizza Contenuto",

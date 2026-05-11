@@ -21,7 +21,6 @@ export function LanguageSelector({ label, hint, value, onChange }: LanguageSelec
       hint={hint}
       value={value}
       onChange={onChange}
-      otherLabel={t("other")}
       otherPlaceholder={t("otherLanguagePlaceholder")}
     />
   );

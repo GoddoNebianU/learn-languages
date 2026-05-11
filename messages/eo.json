@@ -121,6 +121,10 @@
       "name": "Memori",
       "description": "Lingvo A al Lingvo B, Lingvo B al Lingvo A, subtenas diktadon"
     },
+    "reading": {
+      "name": "Lectado",
+      "description": "Frazo post frazo legado kun vorto post vorto traduko kaj kongruigo"
+    },
     "dictionary": {
       "name": "Vortaro",
       "description": "Serĉi vortojn kaj frazojn kun detalaj difinoj kaj ekzemploj"
@@ -411,6 +415,25 @@
     "savedToDeck": "Karto konservita al {deckName}",
     "saveFailed": "Malsukcesis konservi karton",
     "translationFailed": "Tradukado malsukcesis, bonvolu reprovi"
+  },
+  "reading": {
+    "title": "Lectado",
+    "description": "Algluu tekston kaj ricevu frazo-post-frazan tradukon kun vorta kongruigo",
+    "inputPlaceholder": "Algluu vian tekston ĉi tie...",
+    "sourceLanguage": "Fonta Lingvo",
+    "sourceLanguageHint": "Lingvo de la eniga teksto",
+    "targetLanguage": "Cela Lingvo",
+    "targetLanguageHint": "Cellingvo por traduko",
+    "translate": "Traduki",
+    "translating": "Tradukante...",
+    "emptyText": "Bonvolu enigi tekston",
+    "translationFailed": "Tradukado malsukcesis",
+    "paragraphFailed": "Traduko de alineo malsukcesis",
+    "processingParagraph": "Traktado de alineo {current}/{total}...",
+    "otherLanguage": "Alia",
+    "customLanguage": "Aŭ tajpu lingvon...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
   },
   "dictionary": {
     "title": "Vortaro",

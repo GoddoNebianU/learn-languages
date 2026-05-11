@@ -85,10 +85,10 @@ export default async function HomePage() {
           color="#cc9988"
         ></LinkArea>
         <LinkArea
-          href="#"
-          name={t("moreFeatures.name")}
-          description={t("moreFeatures.description")}
-          color="#cab48a"
+          href="/reading"
+          name={t("reading.name")}
+          description={t("reading.description")}
+          color="#8a7aaa"
         ></LinkArea>
       </div>
     </>

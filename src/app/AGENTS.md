@@ -1,10 +1,10 @@
 # 页面架构指南
 
-**生成时间:** 2026-05-09
+**生成时间:** 2026-05-11
 
 ## 概述
 
-22 个页面, 1 个 API 路由, 3 个路由组, 单一根 layout。4 种渲染模式。
+26 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。
 
 ## 路由组
 
@@ -15,6 +15,11 @@ src/app/
 ├── error.tsx           # 根级错误边界 (Client Component)
 ├── not-found.tsx       # 404 页面
 ├── api/auth/[...all]/  # 唯一 API 路由 (better-auth catch-all, 单用户模式返回 404)
+├── admin/              # 管理后台 (密码认证, 独立于用户认证)
+│   ├── page.tsx        # Server: JWT session 验证, 加载 SystemConfig + TierCapability
+│   ├── AdminLogin.tsx  # Client: 密码登录表单
+│   ├── AdminSettings.tsx # Client: tier/services 动态配置 UI (305 行)
+│   └── admin-action.ts # Server Actions: login, logout, getSettings, updateSettings, addTier, deleteTier
 ├── (auth)/             # 认证路由组
 │   ├── login/          # 登录 (Client)
 │   ├── signup/         # 注册 (Client)
@@ -34,7 +39,8 @@ src/app/
     ├── explore/        # 公开牌组 (Server→Client) + [id]/ 详情
     ├── favorites/      # 收藏 (Server→Client)
     ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情
-    └── memorize/       # 记忆模式 (Server→Client, ?deck_id=xxx)
+    ├── memorize/       # 记忆模式 (Server→Client, ?deck_id=xxx)
+    └── reading/        # 阅读理解 (Client, AI 翻译+分词对齐, 详见子级 AGENTS.md)
 ```
 
 ## 4 种渲染模式
@@ -57,7 +63,7 @@ route/
   SomeClient.tsx    # Client: 接收 initialData prop
 ```
 
-适用页面: dictionary, explore, explore/[id], favorites, decks, decks/[deck_id], memorize
+适用页面: dictionary, explore, explore/[id], favorites, decks, decks/[deck_id], memorize, reading
 
 ### 模式 3: 纯 Server Component (4 页)
 

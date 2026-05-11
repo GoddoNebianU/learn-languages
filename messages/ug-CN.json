@@ -23,12 +23,7 @@
   },
   "decks": {
     "title": "دېكلار",
-    "noDecks": "تېخى دېك يوق",
     "deckName": "دېك ئاتى",
-    "totalCards": "جەمئىي كارتا",
-    "createdAt": "قۇرۇلغان ۋاقتى",
-    "actions": "مەشغۇلاتلار",
-    "view": "كۆرۈش",
     "subtitle": "دېكلەرنى باشقۇرۇڭ",
     "newDeck": "يېڭى دېك",
     "noDecksYet": "دېك يوق",
@@ -159,6 +154,10 @@
     "memorize": {
       "name": "يادلاش",
       "description": "تىل A دىن تىل B گە، تىل B دىن تىل A غا، دىكتات قىلىشنى قوللايدۇ"
+    },
+    "reading": {
+      "name": "ئوقۇش",
+      "description": "جۈملىمۇ-جۈملە ئوقۇش، سۆزمۇ-سۆز تەرجىمە ۋە ماسلاشتۇرۇش"
     },
     "dictionary": {
       "name": "لۇغەت",
@@ -451,6 +450,25 @@
     "saveFailed": "ساقلاش مەغلۇپ",
     "translationFailed": "تەرجىمە مەغلۇپ بولدى، قايتا سىناڭ"
   },
+  "reading": {
+    "title": "ئوقۇش",
+    "description": "تېكىست چاپلاپ جۈملىمۇ-جۈملە تەرجىمە ۋە سۆز ماسلاشتۇرۇشقا ئېرىشىڭ",
+    "inputPlaceholder": "تېكىستنى بۇ يەرگە چاپلاڭ...",
+    "sourceLanguage": "مەنبە تىلى",
+    "sourceLanguageHint": "كىرگۈزۈلگەن تېكىست تىلى",
+    "targetLanguage": "نىشان تىلى",
+    "targetLanguageHint": "تەرجىمە قىلىدىغان تىل",
+    "translate": "تەرجىمە قىلىش",
+    "translating": "تەرجىمە قىلىنىۋاتىدۇ...",
+    "emptyText": "تېكىست كىرگۈزۈڭ",
+    "translationFailed": "تەرجىمە مەغلۇپ بولدى",
+    "paragraphFailed": "ئابزاس تەرجىمىسى مەغلۇپ بولدى",
+    "processingParagraph": "ئابزاسنى بىر تەرەپ قىلىۋاتىدۇ {current}/{total}...",
+    "otherLanguage": "باشقا",
+    "customLanguage": "ياكى تىل كىرگۈزۈڭ...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "لۇغەت",
     "description": "سۆزلەر ۋە ئىبارىلەرنى تەپسىلىي ئېنىقلىما ۋە مىساللار بىلەن ئىزدەڭ",
@@ -509,8 +527,6 @@
     "subtitle": "ئاممىۋى قىسقۇچلارنى بايقاڭ",
     "searchPlaceholder": "ئاممىۋى قىسقۇچلارنى ئىزدەڭ...",
     "loading": "يۈكلىنىۋاتىدۇ...",
-    "noFolders": "ئاممىۋى قىسقۇچ تېپىلمىدى",
-    "folderInfo": "{userName} • {totalPairs} جۈپ",
     "unknownUser": "نامەلۇم ئىشلەتكۈچى",
     "favorite": "يىغىپ ساقلا",
     "unfavorite": "يىغىپ ساقلاشنى بىكار قىل",
@@ -524,7 +540,6 @@
     "title": "قىسقۇچ تەپسىلاتلىرى",
     "createdBy": "قۇرغۇچى: {name}",
     "unknownUser": "نامەلۇم ئىشلەتكۈچى",
-    "totalPairs": "جەمئىي جۈپ",
     "favorites": "يىغىپ ساقلانغانلار",
     "createdAt": "قۇرۇلغان ۋاقتى",
     "viewContent": "مەزمۇننى كۆرۈش",

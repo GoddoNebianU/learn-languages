@@ -13,6 +13,8 @@
 - **牌组与卡片** -- 创建、管理、学习词汇，多种复习模式（顺序、随机、无限、听写）
 - **社交** -- 公开牌组、收藏、用户关注
 - **单用户模式** -- 无需认证即可部署，自动创建默认管理员用户
+- **阅读理解** -- AI 驱动的阅读理解，逐句翻译+分词对齐
+- **管理后台** -- 密码保护的管理面板，管理部署层级、服务配置和功能开关
 
 ## 技术栈
 
@@ -48,7 +50,7 @@ src/
 │   └── api/auth/     # better-auth catch-all -- 唯一 API 路由
 ├── modules/          # 业务逻辑 (action → service → repository)
 ├── design-system/    # CVA 基础组件 (14 文件, 平铺, 无子目录)
-├── components/       # 业务组件 (layout, follow, ui)
+├── components/       # 业务组件 (layout, follow, ui, theme-provider, capability-hydrator)
 ├── lib/              # 集成层 (db, auth, auth-mode, env, email, AI 管道, logger)
 ├── hooks/            # useAudioPlayer
 ├── utils/            # cn, validate, json, string, random
@@ -67,9 +69,9 @@ src/
 {name}-repository-dto.ts
 ```
 
-AI 驱动的模块（translator、dictionary）没有 repository 层，直接调用 LLM 管道。
+AI 驱动的模块（translator、dictionary、reading）没有 repository 层，直接调用 LLM 管道。
 
-AI 管道在 `src/lib/bigmodel/`，每个是多阶段 orchestrator：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。共享依赖是 `llm.ts`（OpenAI 兼容 LLM 客户端）和 `tts.ts`（千问 TTS 服务）。
+AI 管道在 `src/lib/bigmodel/`，每个是多阶段 orchestrator：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。管道：dictionary（2 阶段）、translator（3 阶段）、reading（2 阶段：翻译拆句+分词对齐）、ocr（1 阶段，未使用）。共享依赖是 `llm.ts`（OpenAI 兼容 LLM 客户端）和 `tts.ts`（千问 TTS 服务）。
 
 ## 约定
 
@@ -93,7 +95,7 @@ DATABASE_URL=... pnpm prisma generate                     # 重新生成 Client
 
 ## 国际化
 
-支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN。
+支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, es-ES, ug-CN。
 
 Locale 存在 cookie 中，无 URL 前缀，无 middleware。翻译文件在 `messages/*.json`。
 

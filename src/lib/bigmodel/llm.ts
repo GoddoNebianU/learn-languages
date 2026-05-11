@@ -56,6 +56,7 @@ async function getAnswer(prompt: string | Array<
     model: modelName,
     messages,
     temperature: 0.2,
+    thinking: { type: "disabled" },
   };
 
   if (options?.jsonMode) {
@@ -63,29 +64,29 @@ async function getAnswer(prompt: string | Array<
   }
 
   const response = await fetchWithRetry(
-    apiUrl,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(body),
+      apiUrl,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`AI API 请求失败: ${response.status}`);
     }
-  );
 
-  if (!response.ok) {
-    throw new Error(`AI API 请求失败: ${response.status}`);
+    const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error("AI API 返回空响应");
+    }
+
+    return content.trim();
   }
-
-  const data = (await response.json()) as { choices?: Array<{ message?: { content?: string } }> };
-  const content = data.choices?.[0]?.message?.content;
-
-  if (!content) {
-    throw new Error("AI API 返回空响应");
-  }
-
-  return content.trim();
-}
 
 export { getAnswer };

@@ -13,6 +13,8 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Decks & Cards** -- create, manage, and study vocabulary with multiple review modes (sequential, random, infinite, dictation)
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
+- **Reading** -- AI-powered reading comprehension with sentence-by-sentence translation and word-level alignment
+- **Admin Panel** -- password-protected admin dashboard for managing deployment tier, service configs, and feature flags
 
 ## Stack
 
@@ -48,7 +50,7 @@ src/
 │   └── api/auth/     # better-auth catch-all -- the only API route
 ├── modules/          # business logic (action → service → repository)
 ├── design-system/    # CVA primitives (14 files, flat, no subdirs)
-├── components/       # business components (layout, follow, ui)
+├── components/       # business components (layout, follow, ui, theme-provider, capability-hydrator)
 ├── lib/              # integrations (db, auth, auth-mode, env, email, AI pipelines, logger)
 ├── hooks/            # useAudioPlayer
 ├── utils/            # cn, validate, json, string, random
@@ -67,9 +69,9 @@ Business modules follow a three-layer pattern. Each module has up to six files:
 {name}-repository-dto.ts
 ```
 
-AI-driven modules (translator, dictionary) skip the repository layer -- they call LLM pipelines directly.
+AI-driven modules (translator, dictionary, reading) skip the repository layer -- they call LLM pipelines directly.
 
-AI pipelines live in `src/lib/bigmodel/`. Each is a multi-stage orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`. Shared deps are `llm.ts` (OpenAI-compatible LLM client) and `tts.ts` (Qwen TTS service).
+AI pipelines live in `src/lib/bigmodel/`. Each is a multi-stage orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`. Pipelines: dictionary (2 stages), translator (3 stages), reading (2 stages: translate-split + tokenize-align), ocr (1 stage, unused). Shared deps are `llm.ts` (OpenAI-compatible LLM client) and `tts.ts` (Qwen TTS service).
 
 ## Conventions
 
@@ -93,7 +95,7 @@ DATABASE_URL=... pnpm prisma generate                     # regenerate client
 
 ## i18n
 
-Supported: en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN.
+Supported: en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, es-ES, ug-CN.
 
 Locale stored in cookie. No URL prefix, no middleware. Translation files are in `messages/*.json`.
 

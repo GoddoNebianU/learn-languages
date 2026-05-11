@@ -121,6 +121,10 @@
       "name": "暗記",
       "description": "言語Aから言語B、言語Bから言語A、書き取りをサポート"
     },
+    "reading": {
+      "name": "リーディング",
+      "description": "文ごとに読み、単語ごとに翻訳とアライメント"
+    },
     "dictionary": {
       "name": "辞書",
       "description": "詳細な定義と例文で単語やフレーズを検索"
@@ -412,6 +416,25 @@
     "saveFailed": "保存失敗",
     "translationFailed": "翻訳に失敗しました。もう一度お試しください"
   },
+  "reading": {
+    "title": "リーディング",
+    "description": "テキストを貼り付けて、文ごとの翻訳と単語アライメントを取得",
+    "inputPlaceholder": "テキストをここに貼り付けてください...",
+    "sourceLanguage": "翻訳元の言語",
+    "sourceLanguageHint": "入力テキストの言語",
+    "targetLanguage": "翻訳先の言語",
+    "targetLanguageHint": "翻訳先の言語",
+    "translate": "翻訳",
+    "translating": "翻訳中...",
+    "emptyText": "テキストを入力してください",
+    "translationFailed": "翻訳に失敗しました",
+    "paragraphFailed": "段落の翻訳に失敗しました",
+    "processingParagraph": "段落を処理中 {current}/{total}...",
+    "otherLanguage": "その他",
+    "customLanguage": "または言語を入力...",
+    "flip": "Flip",
+    "emptyTargetLanguage": "Please select or enter a target language"
+  },
   "dictionary": {
     "title": "辞書",
     "description": "詳細な定義と例文で単語やフレーズを検索",
@@ -470,8 +493,6 @@
     "subtitle": "公開フォルダーを発見",
     "searchPlaceholder": "公開フォルダーを検索...",
     "loading": "読み込み中...",
-    "noFolders": "公開フォルダーが見つかりません",
-    "folderInfo": "{userName} • {totalPairs} ペア",
     "unknownUser": "不明なユーザー",
     "favorite": "お気に入り",
     "unfavorite": "お気に入り解除",
@@ -485,7 +506,6 @@
     "title": "フォルダー詳細",
     "createdBy": "作成者: {name}",
     "unknownUser": "不明なユーザー",
-    "totalPairs": "合計ペア数",
     "favorites": "お気に入り",
     "createdAt": "作成日",
     "viewContent": "コンテンツを表示",
