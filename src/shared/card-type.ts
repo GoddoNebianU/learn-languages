@@ -19,15 +19,3 @@ export type DictionaryItemWithEntries = {
   updatedAt: Date;
   entries: DictionaryItemEntry[];
 };
-
-export type CardSide = "A" | "B";
-
-export type CardForStudy = {
-  id: number;
-  deckId: number;
-  showSideAFirst: boolean;
-  sideA: DictionaryItemWithEntries;
-  sideB: DictionaryItemWithEntries;
-  createdAt: Date;
-  updatedAt: Date;
-};

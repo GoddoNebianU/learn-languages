@@ -5,7 +5,7 @@ import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
 import { LinkButton } from "@/design-system/link-button";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
-import { repoGetDecksByUserId } from "@/modules/deck/deck-repository";
+import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
 import { notFound } from "next/navigation";
 import { hasCapability } from "@/lib/capability";
@@ -48,10 +48,12 @@ export default async function UserPage({ params }: UserPageProps) {
 
   const user = result.data;
 
-  const [decks, followStatus] = await Promise.all([
-    repoGetDecksByUserId({ userId: user.id }),
+  const [decksResult, followStatus] = await Promise.all([
+    actionGetDecksByUserId({ userId: user.id }),
     actionGetFollowStatus({ targetUserId: user.id }),
   ]);
+
+  const decks = decksResult.success && decksResult.data ? decksResult.data : [];
 
   const isOwnProfile = session?.user?.username === username || session?.user?.email === username;
 

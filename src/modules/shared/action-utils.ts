@@ -21,12 +21,3 @@ export async function getCurrentUserId(): Promise<string | null> {
   }
   return session.user.id;
 }
-
-export async function requireAuth(): Promise<string> {
-  const userId = await getCurrentUserId();
-  if (!userId) {
-    log.warn("Authentication required but rejected");
-    throw new Error("Unauthorized");
-  }
-  return userId;
-}

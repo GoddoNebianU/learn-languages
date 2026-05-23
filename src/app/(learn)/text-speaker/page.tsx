@@ -110,18 +110,13 @@ export default function TextSpeakerPage() {
     setProcessing(true);
 
     if (ipa.length === 0 && ipaEnabled && textRef.current.length !== 0) {
-      const params = new URLSearchParams({
-        text: textRef.current,
-      });
-      fetch(`/api/ipa?${params}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setIPA(data.ipa);
-        })
-        .catch((e) => {
-          console.error(t("ipaGenerationFailed"), e);
-          setIPA("");
-        });
+      try {
+        const result = await genIPA(textRef.current);
+        setIPA(result);
+      } catch (e) {
+        console.error(t("ipaGenerationFailed"), e);
+        setIPA("");
+      }
     }
 
     if (pause) {

@@ -8,6 +8,7 @@ import type {
   RepoOutputCard,
   RepoOutputCardStats,
 } from "./card-repository-dto";
+import type { ServiceInputCheckDeckOwnership } from "./card-service-dto";
 import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
 import { createLogger } from "@/lib/logger";
 import {
@@ -20,14 +21,10 @@ import {
   repoGetCardStats,
   repoCheckCardExistsByWord,
   repoGetCardByWord,
+  repoReorderCards,
 } from "./card-repository";
 
 const log = createLogger("card-service");
-
-export type ServiceInputCheckDeckOwnership = {
-  deckId: number;
-  userId: string;
-};
 
 export async function serviceCreateCard(
   input: RepoInputCreateCard
@@ -107,4 +104,19 @@ export async function serviceGetCardByWord(
 ): Promise<RepoOutputCard | null> {
   log.debug("Getting card by word", { deckId: input.deckId, word: input.word });
   return repoGetCardByWord(input);
+}
+
+export async function serviceReorderCards(
+  deckId: number,
+  cardIds: number[]
+): Promise<{ success: boolean; message: string }> {
+  log.info("Reordering cards", { deckId, count: cardIds.length });
+  try {
+    await repoReorderCards({ deckId, cardIds });
+    log.info("Cards reordered", { deckId });
+    return { success: true, message: "Cards reordered successfully" };
+  } catch (error) {
+    log.error("Failed to reorder cards", { error, deckId });
+    return { success: false, message: "Failed to reorder cards" };
+  }
 }
