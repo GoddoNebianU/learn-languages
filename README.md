@@ -44,21 +44,58 @@ This is useful for personal deployments where multi-user support is unnecessary.
 
 ## Architecture
 
-```
-src/
-├── app/              # Next.js routes (route groups: auth, account, learn)
-│   └── api/auth/     # better-auth catch-all -- the only API route
-├── modules/          # business logic (action → service → repository)
-├── design-system/    # CVA primitives (14 files, flat, no subdirs)
-├── components/       # business components (layout, follow, ui, theme-provider, capability-hydrator)
-├── lib/              # integrations (db, auth, auth-mode, env, email, AI pipelines, logger)
-├── hooks/            # useAudioPlayer
-├── utils/            # cn, validate, json, string, random
-├── shared/           # business types and constants
-└── i18n/             # next-intl config
+```mermaid
+graph TB
+    subgraph Browser["Browser (React 19)"]
+        Pages["Pages<br/>(Client Components)"]
+        Layout["Layout<br/>Navbar · NavSession"]
+        BizComps["Business Components<br/>follow · ui"]
+        DS["Design System<br/>CVA · 14 components"]
+    end
+
+    Pages -->|"Server Actions"| Action
+    Layout -->|"authClient"| AuthMod
+    Pages -->|"getTTSUrl"| TTS
+
+    subgraph Server["Server (Next.js 16 App Router)"]
+        subgraph Modules["modules/ — Action → Service → Repository"]
+            Action["Action<br/>'use server' · Zod validate"] --> Service["Service<br/>Business logic"] --> Repository["Repository<br/>Prisma queries"]
+        end
+        Action -->|"AI modules skip repo"| Pipelines
+
+        subgraph Lib["lib/"]
+            AuthMod["auth-mode.ts<br/>admin-auth.ts"]
+            Cap["capability.ts<br/>Tier · LLM/TTS/SMTP config"]
+            Pipelines["bigmodel/<br/>AI Pipelines"]
+            TTS["tts.ts<br/>Qwen TTS"]
+        end
+
+        Service -->|"ownership check"| Repository
+        Pipelines -->|"getAnswer()"| LLM
+        Pipelines --> TTS
+        Cap -->|"DB-driven config"| Action
+    end
+
+    Repository --> DB
+    Cap --> DB
+
+    subgraph Storage["PostgreSQL (Prisma 7)"]
+        DB[("User · Deck · Card<br/>SystemConfig · TierCapability")]
+    end
+
+    subgraph External["External Services"]
+        LLM["Zhipu AI LLM<br/>(OpenAI API)"]
+        Qwen["Alibaba Qwen TTS<br/>(qwen3-tts)"]
+        SMTP["SMTP Server<br/>(nodemailer)"]
+    end
+
+    TTS --> Qwen
+    Lib -->|"email.ts"| SMTP
 ```
 
-Business modules follow a three-layer pattern. Each module has up to six files:
+### Three-layer pattern
+
+Each business module has up to six files:
 
 ```
 {name}-action.ts        # server actions
@@ -71,7 +108,26 @@ Business modules follow a three-layer pattern. Each module has up to six files:
 
 AI-driven modules (translator, dictionary, reading) skip the repository layer -- they call LLM pipelines directly.
 
-AI pipelines live in `src/lib/bigmodel/`. Each is a multi-stage orchestrator: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`. Pipelines: dictionary (2 stages), translator (3 stages), reading (2 stages: translate-split + tokenize-align), ocr (1 stage, unused). Shared deps are `llm.ts` (OpenAI-compatible LLM client) and `tts.ts` (Qwen TTS service).
+### AI pipelines
+
+Located in `src/lib/bigmodel/`. Multi-stage orchestrator pattern: `orchestrator.ts` + `types.ts` + `stage{n}-name.ts`.
+
+| Pipeline | Stages | LLM Calls | Purpose |
+|----------|--------|-----------|---------|
+| dictionary | 2 | 2 | Input preprocessing → entry generation |
+| translator | 3 | 2-4 | Language detection → translation → optional IPA |
+| reading | 2 | 1+N | Translate-split → per-sentence tokenize-align |
+| ocr | 1 | 1 | Image vocabulary extraction (unused) |
+
+Shared: `llm.ts` (OpenAI-compatible client), `tts.ts` (Qwen TTS service).
+
+### Single/Multi-user mode
+
+Controlled by `NEXT_PUBLIC_AUTH_MODE`. In single-user mode, `auth-mode.ts` auto-creates an admin user and `getCurrentUserId()` returns it directly without better-auth. Auth pages return 404. In multi-user mode, better-auth handles email/password with email verification.
+
+### Capability system
+
+Deployment tier and feature flags stored in DB (`SystemConfig` + `TierCapability`). Admin panel manages which features are enabled (signup, userProfile, social, email). All service configs (LLM, TTS, SMTP) are read from DB via `capability.ts`, not env vars.
 
 ## Conventions
 

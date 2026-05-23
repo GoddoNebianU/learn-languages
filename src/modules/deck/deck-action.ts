@@ -38,6 +38,7 @@ import {
   validateActionInputGetPublicDeckById,
   validateActionInputToggleDeckFavorite,
   validateActionInputCheckDeckFavorite,
+  validateActionInputReorderDecks,
 } from "./deck-action-dto";
 import {
   serviceCreateDeck,
@@ -52,6 +53,7 @@ import {
   serviceToggleDeckFavorite,
   serviceCheckDeckFavorite,
   serviceGetUserFavoriteDecks,
+  serviceReorderDecks,
 } from "./deck-service";
 
 const log = createLogger("deck-action");
@@ -389,5 +391,32 @@ export async function actionGetUserFavoriteDecks(): Promise<ActionOutputGetUserF
   } catch (e) {
     log.error("Failed to get user favorite decks", { error: e });
     return { success: false, message: "Unknown error occurred" };
+  }
+}
+
+export async function actionReorderDecks(
+  input: unknown
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+    const validated = validateActionInputReorderDecks(input);
+    const result = await serviceGetDecksByUserId({ userId });
+    if (!result.success || !result.data) {
+      return { success: false, message: "Failed to verify deck ownership" };
+    }
+    const userDeckIds = new Set(result.data.map((d) => d.id));
+    if (!validated.deckIds.every((id) => userDeckIds.has(id))) {
+      return { success: false, message: "Some decks do not belong to you" };
+    }
+    return serviceReorderDecks({ userId, deckIds: validated.deckIds });
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to reorder decks", { error: e instanceof Error ? e.message : String(e) });
+    return { success: false, message: "Failed to reorder decks" };
   }
 }

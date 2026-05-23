@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-05-11
-**提交:** e949062
+**生成时间:** 2026-05-23
+**提交:** be64d80
 **分支:** main
 
 ## 概述
@@ -25,13 +25,13 @@ src/
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
 ├── modules/          # 业务逻辑 (action-service-repository)
 │   ├── auth/         # 认证 (12 文件: auth + forgot-password 两个子域)
-│   ├── card/         # 卡片 (5 文件, 缺 card-service-dto)
+│   ├── card/         # 卡片 (6 文件, 完整)
 │   ├── deck/         # 牌组管理 (最复杂模块, 12 actions, 310 行 repo)
 │   ├── follow/       # 用户关注系统
 │   ├── dictionary/   # 词典 (不完整: 仅 action+action-dto+service-dto — AI 驱动, 无 repo)
 │   ├── translator/   # 翻译 (不完整: 无 repo — AI 驱动, 含废弃函数 genIPA/genLanguage)
 │   ├── reading/      # 阅读理解 (4 文件: action+action-dto+service+service-dto, 无 repo — AI 驱动)
-│   └── shared/       # 跨模块工具 (action-utils.ts: getCurrentUserId, requireAuth)
+│   └── shared/       # 跨模块工具 (action-utils.ts: getCurrentUserId)
 ├── design-system/    # CVA 基础组件 (平铺 14 文件, 无子目录, 与 components/ 分离)
 │   # button, icon-button, link-button, card, input, select, textarea, range, progress,
 │   # skeleton, stack, container, modal, overflow-dropdown
@@ -52,8 +52,8 @@ src/
 │   ├── interfaces.ts # 共享接口 (TextSpeakerItemSchema, SupportedAlphabets, Letter)
 │   ├── logger/       # Winston 日志 (index.ts barrel — 唯一允许的 barrel export)
 │   └── theme/        # 主题颜色
-├── hooks/            # useAudioPlayer, useFileUpload
-├── utils/            # cn, validate, json, string, random
+├── hooks/            # useAudioPlayer
+├── utils/            # cn, validate, json, string
 ├── shared/           # card-type, dictionary-type, translator-type, languages, theme-presets, constant
 ├── config/           # i18n, images
 └── i18n/             # next-intl 请求配置 (request.ts)
@@ -78,7 +78,7 @@ src/
 | 添加 UI 组件  | `src/design-system/`            | 平铺文件, 无子目录, 使用 CVA    |
 | 添加工具函数  | `src/utils/`                    | 纯函数                          |
 | 添加类型定义  | `src/shared/`                   | 业务类型                        |
-| 跨模块工具    | `src/modules/shared/`           | getCurrentUserId, requireAuth   |
+| 跨模块工具    | `src/modules/shared/`           | getCurrentUserId                |
 | 字母学习      | `src/app/(learn)/alphabet/`     | 静态 JSON 数据                  |
 | 数据库查询    | `src/modules/*/`                | Repository 层                   |
 | i18n 翻译     | `messages/*.json`               | 8 种语言                        |
@@ -307,23 +307,6 @@ DATABASE_URL=your_db_url pnpm prisma migrate dev --name your_migration_name
 DATABASE_URL=your_db_url pnpm prisma generate
 ```
 
-## 已知死代码
-
-| 位置 | 内容 | 影响 |
-|------|------|------|
-| `src/modules/shared/action-utils.ts` | `requireAuth()` | 0 消费者, 所有 action 用 `getCurrentUserId()` + 手动检查 |
-| `src/utils/random.ts` | 整个文件 (`isNonNegativeInteger`, `shallowEqual`, `SeededRandom`) | 0 导入 |
-| `src/hooks/useFileUpload.ts` | 整个文件 | 0 导入, srt-player 有自己的本地版本 |
-| `src/utils/string.ts` | `stringNormalize()` | 0 消费者 |
-| `src/shared/card-type.ts` | `CardSide`, `CardForStudy` | 类型已定义但从未导入 |
-| `src/shared/constant.ts` | 10/18 导出 (`FIELD_SEPARATOR`, `DEFAULT_*_PER_DAY`, `SECONDS_PER_*`, `MS_PER_*`) | 0 消费者 |
-
-## 已知架构违规
-
-- `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层
-- `text-speaker/page.tsx` 中 `fetch('/api/ipa?...')` 引用不存在的 API 路由 (死代码, 运行时必然失败)
-- card 模块缺 `card-service-dto.ts`, 类型定义内联在 card-service.ts 中
-
 ## 已知运行时陷阱
 
 - **Turbopack `"use server"` + type alias bug**: `llm.ts` 中定义的 `type` 别名 (如 `type Messages = ...`) 在 `"use server"` 模块中不被正确擦除, 导致运行时 `ReferenceError`。必须内联所有类型, 不能使用 type alias 或 `export type {}`
@@ -345,7 +328,7 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)
 - 主题: CSS 自定义属性 + localStorage (15 个预设主题)
 - `"use server"` 也用于 AI 工具文件 (llm.ts, tts.ts, ocr/orchestrator.ts), 不仅限于 action 文件
-- translator-action.ts 中 genIPA() 和 genLanguage() 已废弃但保留用于 text-speaker 兼容
+- translator-action.ts 中 genIPA() 和 genLanguage() 保留用于 text-speaker
 - 所有 8 种语言翻译 key 必须完全一致 (用 `node -e` 脚本对比 en-US 与其他语言)
 - 单/多用户模式: `NEXT_PUBLIC_AUTH_MODE=single` 跳过 better-auth，自动创建 admin 用户 (详见 src/lib/auth-mode.ts)
 - 管理后台: `/admin` 路由, 密码从 `ADMIN_PASSWORD` 环境变量读取, JWT cookie 认证 (详见 src/lib/admin-auth.ts)

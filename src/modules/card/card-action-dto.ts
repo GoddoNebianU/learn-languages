@@ -68,3 +68,10 @@ export type ActionOutputGetCardByWord = {
   message: string;
   data?: ActionOutputCard;
 };
+
+export const schemaActionInputReorderCards = z.object({
+  deckId: z.number().int().positive(),
+  cardIds: z.array(z.number().int().positive()).min(1),
+});
+export type ActionInputReorderCards = z.infer<typeof schemaActionInputReorderCards>;
+export const validateActionInputReorderCards = generateValidator(schemaActionInputReorderCards);

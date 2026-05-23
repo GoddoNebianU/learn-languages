@@ -16,6 +16,7 @@ import {
   RepoOutputDeckFavorite,
   RepoInputGetUserFavoriteDecks,
   RepoOutputUserFavoriteDeck,
+  RepoInputReorderDecks,
 } from "./deck-repository-dto";
 import { Visibility } from "../../../generated/prisma/enums";
 import { createLogger } from "@/lib/logger";
@@ -52,12 +53,14 @@ function mapDeckToPublicOutput(deck: DeckWithPublicIncludes): RepoOutputPublicDe
 
 export async function repoCreateDeck(data: RepoInputCreateDeck): Promise<number> {
   log.debug("Creating deck", { name: data.name, userId: data.userId });
+  const maxSortOrder = await prisma.deck.count({ where: { userId: data.userId } });
   const deck = await prisma.deck.create({
     data: {
       name: data.name,
       desc: data.desc ?? "",
       userId: data.userId,
       visibility: data.visibility ?? Visibility.PRIVATE,
+      sortOrder: maxSortOrder,
     },
   });
   log.info("Deck created", { deckId: deck.id });
@@ -110,9 +113,7 @@ export async function repoGetDecksByUserId(
         select: { cards: true },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
   });
 
   return decks.map((deck) => ({
@@ -327,4 +328,17 @@ export async function repoGetUserFavoriteDecks(
     ...mapDeckToPublicOutput(fav.deck),
     favoritedAt: fav.createdAt,
   }));
+}
+
+export async function repoReorderDecks(input: RepoInputReorderDecks): Promise<void> {
+  log.debug("Reordering decks", { userId: input.userId, count: input.deckIds.length });
+  await prisma.$transaction(
+    input.deckIds.map((deckId, index) =>
+      prisma.deck.update({
+        where: { id: deckId },
+        data: { sortOrder: index },
+      })
+    )
+  );
+  log.info("Decks reordered", { userId: input.userId, count: input.deckIds.length });
 }

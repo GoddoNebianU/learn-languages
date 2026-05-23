@@ -168,3 +168,9 @@ export type ActionOutputGetUserFavoriteDecks = {
   success: boolean;
   data?: ActionOutputUserFavoriteDeck[];
 };
+
+export const schemaActionInputReorderDecks = z.object({
+  deckIds: z.array(z.number().int().positive()).min(1),
+});
+export type ActionInputReorderDecks = z.infer<typeof schemaActionInputReorderDecks>;
+export const validateActionInputReorderDecks = generateValidator(schemaActionInputReorderDecks);

@@ -126,6 +126,7 @@ model Deck {
   visibility Visibility     @default(PRIVATE)
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
+  sortOrder  Int            @default(0)
   user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   cards      Card[]
   favorites  DeckFavorite[]
@@ -144,6 +145,7 @@ model Card {
   cardType  CardType       @default(WORD)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+  sortOrder Int            @default(0)
   deck      Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
   meanings  CardMeaning[]
 

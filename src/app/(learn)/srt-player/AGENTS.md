@@ -74,5 +74,4 @@ Store 直接持有 `videoRef` (DOM 元素引用)，通过 `setVideoRef()` 设置
 - Zustand (状态管理)
 - Lucide React (图标)
 - `@/hooks/useAudioPlayer` (未使用, 有本地替代)
-- `@/config/images` (未使用, 有本地内联 SVG)
 - 完全自包含: 不依赖 src/modules/, 不依赖服务端数据

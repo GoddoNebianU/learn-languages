@@ -72,3 +72,8 @@ export interface RepoInputGetUserFavoriteDecks {
 export type RepoOutputUserFavoriteDeck = RepoOutputPublicDeck & {
   favoritedAt: Date;
 };
+
+export interface RepoInputReorderDecks {
+  userId: string;
+  deckIds: number[];
+}

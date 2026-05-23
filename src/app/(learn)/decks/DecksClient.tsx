@@ -20,8 +20,68 @@ import {
   actionGetDecksByUserId,
   actionUpdateDeck,
   actionGetDeckById,
+  actionReorderDecks,
 } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
+
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
+
+interface SortableDeckCardProps {
+  deck: ActionOutputDeck;
+  onUpdateDeck: (deckId: number, updates: Partial<ActionOutputDeck>) => void;
+  onDeleteDeck: (deckId: number) => void;
+}
+
+function SortableDeckCard({ deck, onUpdateDeck, onDeleteDeck }: SortableDeckCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: deck.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div className="flex items-center">
+        <div
+          className="cursor-grab px-2 text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={18} />
+        </div>
+        <div className="flex-1">
+          <DeckCard deck={deck} onUpdateDeck={onUpdateDeck} onDeleteDeck={onDeleteDeck} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface DeckCardProps {
   deck: ActionOutputDeck;
@@ -221,6 +281,39 @@ export function DecksClient({ userId }: DecksClientProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = decks.findIndex((d) => d.id === active.id);
+    const newIndex = decks.findIndex((d) => d.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Optimistic update
+    const newDecks = [...decks];
+    const [moved] = newDecks.splice(oldIndex, 1);
+    newDecks.splice(newIndex, 0, moved);
+    setDecks(newDecks);
+
+    // Persist new order
+    const result = await actionReorderDecks({ deckIds: newDecks.map((d) => d.id) });
+    if (!result.success) {
+      toast.error(result.message);
+      loadDecks(); // Revert on failure
+    }
+  };
+
   const loadDecks = async () => {
     setLoading(true);
     const result = await actionGetDecksByUserId({ userId });
@@ -288,14 +381,25 @@ const handleCreateDeckConfirm = async () => {
               <p className="text-sm">{t("noDecksYet")}</p>
             </div>
           ) : (
-            decks.map((deck) => (
-              <DeckCard
-                key={deck.id}
-                deck={deck}
-                onUpdateDeck={handleUpdateDeck}
-                onDeleteDeck={handleDeleteDeck}
-              />
-            ))
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={decks.map((d) => d.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {decks.map((deck) => (
+                  <SortableDeckCard
+                    key={deck.id}
+                    deck={deck}
+                    onUpdateDeck={handleUpdateDeck}
+                    onDeleteDeck={handleDeleteDeck}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
           )}
         </CardList>
       </PageLayout>

@@ -13,6 +13,7 @@ import {
   serviceCheckDeckOwnership,
   serviceCheckCardExistsByWord,
   serviceGetCardByWord,
+  serviceReorderCards,
 } from "./card-service";
 import type { ActionOutputCard, ActionOutputGetCardByWord } from "./card-action-dto";
 import type { RepoOutputCard } from "./card-repository-dto";
@@ -23,6 +24,7 @@ import {
   validateActionInputGetCardsByDeckId,
   validateActionInputGetRandomCard,
   validateActionInputCheckCardExistsByWord,
+  validateActionInputReorderCards,
 } from "./card-action-dto";
 
 const log = createLogger("card-action");
@@ -226,5 +228,28 @@ export async function actionGetCardByWord(input: unknown): Promise<ActionOutputG
     }
     log.error("Failed to get card by word", { error: e instanceof Error ? e.message : String(e) });
     return { success: false, message: "Failed to get card by word" };
+  }
+}
+
+export async function actionReorderCards(
+  input: unknown
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+    const validated = validateActionInputReorderCards(input);
+    const isOwner = await checkDeckOwnership(validated.deckId);
+    if (!isOwner) {
+      return { success: false, message: "You do not have permission to reorder cards in this deck" };
+    }
+    return serviceReorderCards(validated.deckId, validated.cardIds);
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to reorder cards", { error: e instanceof Error ? e.message : String(e) });
+    return { success: false, message: "Failed to reorder cards" };
   }
 }

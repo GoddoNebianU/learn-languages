@@ -12,12 +12,12 @@
 | ---------- | ------ | ------- | ------------------ | --------------------------------- |
 | auth       | 12     | 3+1     | ✅ 完整 (两个子域) | auth + forgot-password 各 6 文件; signUp/signIn/signOut 由客户端直接调用 authClient; signOutAction 仅用于 logout 页面 |
 | deck       | 6      | 12      | ✅ 完整            | 最复杂模块, 315 行 repository     |
-| card       | 5      | 7       | ⚠️ 缺 service-dto  | 跨模块依赖 deck                   |
+| card       | 6      | 7       | ✅ 完整            | 跨模块依赖 deck                   |
 | follow     | 6      | 4       | ✅ 完整            | 自包含, 无外部依赖                |
 | dictionary | 3      | 1       | ⚠️ 不完整          | 无 service/repo — AI 管道直接调用 |
 | translator | 4      | 3       | ⚠️ 不完整          | 无 repo — AI 管道, 含废弃函数     |
 | reading    | 4      | 1       | ⚠️ 不完整          | 无 repo — AI 管道 (翻译拆句+分词对齐) |
-| shared     | 1      | 0       | N/A                | getCurrentUserId, requireAuth     |
+| shared     | 1      | 0       | N/A                | getCurrentUserId                   |
 
 ## 文件结构 (完整 6 文件模式)
 
@@ -151,14 +151,6 @@ if (deckOwnerId !== userId) return { success: false, message: "无权限" };
 
 ## 已知问题
 
-- `shared/action-utils.ts` 导出 getCurrentUserId/requireAuth，但 requireAuth 零消费者 (死代码)
-- `users/[username]/page.tsx` 直接导入 `repoGetDecksByUserId` 绕过 action/service 层 (违反架构)
-- card 模块缺 `card-service-dto.ts`，类型定义内联在 card-service.ts 中
 - auth 模块的 `actionSignUp`/`actionSignIn`/`serviceSignUp`/`serviceSignIn` 已移除 (客户端直接用 authClient)
 - forgot-password-service 始终返回通用消息，防止用户枚举
-- dictionary/translator 模块不完整 (无 repo 层 — AI 驱动)
-- `src/hooks/useFileUpload.ts` 整个文件是死代码 (0 导入, srt-player 有自己的本地版本)
-- `src/utils/random.ts` 整个文件是死代码 (`isNonNegativeInteger`, `shallowEqual`, `SeededRandom` 均 0 导入)
-- `src/utils/string.ts` 中 `stringNormalize()` 0 消费者 (仅 `stripIpaBrackets` 被使用)
-- `src/shared/constant.ts` 中 10/18 导出是死代码 (`FIELD_SEPARATOR`, `DEFAULT_*_PER_DAY`, `SECONDS_PER_*`, `MS_PER_*`)
-- `src/shared/card-type.ts` 中 `CardSide` 和 `CardForStudy` 类型已定义但从未导入
+- dictionary/translator 模块不完整 (无 repo 层 — AI 驱动, 这是设计决定不是缺陷)

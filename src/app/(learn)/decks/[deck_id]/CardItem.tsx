@@ -1,4 +1,4 @@
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, GripVertical } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
@@ -13,6 +13,11 @@ interface CardItemProps {
   isReadOnly: boolean;
   onDel: () => void;
   onUpdated: () => void;
+  dragHandleProps?: {
+    attributes?: React.HTMLAttributes<HTMLElement>;
+    listeners?: React.HTMLAttributes<HTMLElement>;
+    ref?: (node: HTMLElement | null) => void;
+  };
 }
 
 const CARD_TYPE_KEYS: Record<CardType, "wordCard" | "phraseCard" | "sentenceCard"> = {
@@ -21,7 +26,7 @@ const CARD_TYPE_KEYS: Record<CardType, "wordCard" | "phraseCard" | "sentenceCard
   SENTENCE: "sentenceCard",
 };
 
-export function CardItem({ card, isReadOnly, onDel, onUpdated }: CardItemProps) {
+export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }: CardItemProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const t = useTranslations("deck_id");
@@ -48,40 +53,52 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated }: CardItemProps) 
 
   return (
     <>
-      <div className="group border-b border-gray-100 transition-colors hover:bg-gray-50">
-        <div className="p-4">
-          <div className="mb-3 flex items-start justify-between">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <span className="rounded-md bg-gray-100 px-2 py-1">{t("card")}</span>
-              <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">
-                {t(CARD_TYPE_KEYS[card.cardType])}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1">
-              {!isReadOnly && (
-                <>
-                  <IconButton
-                    onClick={() => setShowEditModal(true)}
-                    title={t("edit")}
-                    className="rounded-full text-gray-400 hover:bg-blue-50 hover:text-blue-500"
-                  >
-                    <Pencil size={14} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => setShowDeleteConfirm(true)}
-                    title={t("delete")}
-                    className="rounded-full text-gray-400 hover:bg-red-50 hover:text-red-500"
-                  >
-                    <Trash2 size={14} />
-                  </IconButton>
-                </>
-              )}
-            </div>
+      <div className="group flex items-center border-b border-gray-100 transition-colors hover:bg-gray-50">
+        {!isReadOnly && dragHandleProps && (
+          <div
+            ref={dragHandleProps.ref as React.Ref<HTMLDivElement>}
+            className="cursor-grab px-2 text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+            {...(dragHandleProps.attributes || {})}
+            {...(dragHandleProps.listeners || {})}
+          >
+            <GripVertical size={16} />
           </div>
-          <div className="grid w-3/4 grid-cols-2 gap-4 text-gray-900">
-            <div>{frontText.length > 30 ? frontText.substring(0, 30) + "..." : frontText}</div>
-            <div>{backText.length > 30 ? backText.substring(0, 30) + "..." : backText}</div>
+        )}
+        <div className="flex-1">
+          <div className="p-4">
+            <div className="mb-3 flex items-start justify-between">
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <span className="rounded-md bg-gray-100 px-2 py-1">{t("card")}</span>
+                <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">
+                  {t(CARD_TYPE_KEYS[card.cardType])}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                {!isReadOnly && (
+                  <>
+                    <IconButton
+                      onClick={() => setShowEditModal(true)}
+                      title={t("edit")}
+                      className="rounded-full text-gray-400 hover:bg-blue-50 hover:text-blue-500"
+                    >
+                      <Pencil size={14} />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => setShowDeleteConfirm(true)}
+                      title={t("delete")}
+                      className="rounded-full text-gray-400 hover:bg-red-50 hover:text-red-500"
+                    >
+                      <Trash2 size={14} />
+                    </IconButton>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="grid w-3/4 grid-cols-2 gap-4 text-gray-900">
+              <div>{frontText.length > 30 ? frontText.substring(0, 30) + "..." : frontText}</div>
+              <div>{backText.length > 30 ? backText.substring(0, 30) + "..." : backText}</div>
+            </div>
           </div>
         </div>
       </div>

@@ -44,21 +44,58 @@ pnpm dev
 
 ## 架构
 
-```
-src/
-├── app/              # Next.js 路由 (路由组: auth, account, learn)
-│   └── api/auth/     # better-auth catch-all -- 唯一 API 路由
-├── modules/          # 业务逻辑 (action → service → repository)
-├── design-system/    # CVA 基础组件 (14 文件, 平铺, 无子目录)
-├── components/       # 业务组件 (layout, follow, ui, theme-provider, capability-hydrator)
-├── lib/              # 集成层 (db, auth, auth-mode, env, email, AI 管道, logger)
-├── hooks/            # useAudioPlayer
-├── utils/            # cn, validate, json, string, random
-├── shared/           # 业务类型和常量
-└── i18n/             # next-intl 配置
+```mermaid
+graph TB
+    subgraph Browser["浏览器 (React 19)"]
+        Pages["Pages<br/>(Client Components)"]
+        Layout["Layout<br/>Navbar · NavSession"]
+        BizComps["Business Components<br/>follow · ui"]
+        DS["Design System<br/>CVA · 14 components"]
+    end
+
+    Pages -->|"Server Actions"| Action
+    Layout -->|"authClient"| AuthMod
+    Pages -->|"getTTSUrl"| TTS
+
+    subgraph Server["服务端 (Next.js 16 App Router)"]
+        subgraph Modules["modules/ — Action → Service → Repository"]
+            Action["Action<br/>'use server' · Zod validate"] --> Service["Service<br/>Business logic"] --> Repository["Repository<br/>Prisma queries"]
+        end
+        Action -->|"AI 模块跳过 repo"| Pipelines
+
+        subgraph Lib["lib/"]
+            AuthMod["auth-mode.ts<br/>admin-auth.ts"]
+            Cap["capability.ts<br/>Tier · LLM/TTS/SMTP config"]
+            Pipelines["bigmodel/<br/>AI Pipelines"]
+            TTS["tts.ts<br/>Qwen TTS"]
+        end
+
+        Service -->|"所有权检查"| Repository
+        Pipelines -->|"getAnswer()"| LLM
+        Pipelines --> TTS
+        Cap -->|"DB-driven config"| Action
+    end
+
+    Repository --> DB
+    Cap --> DB
+
+    subgraph Storage["PostgreSQL (Prisma 7)"]
+        DB[("User · Deck · Card<br/>SystemConfig · TierCapability")]
+    end
+
+    subgraph External["外部服务"]
+        LLM["Zhipu AI LLM<br/>(OpenAI API)"]
+        Qwen["Alibaba Qwen TTS<br/>(qwen3-tts)"]
+        SMTP["SMTP Server<br/>(nodemailer)"]
+    end
+
+    TTS --> Qwen
+    Lib -->|"email.ts"| SMTP
 ```
 
-业务模块遵循三层模式，每个模块最多六个文件：
+### 三层模式
+
+每个业务模块最多六个文件：
 
 ```
 {name}-action.ts        # Server Actions
@@ -69,9 +106,28 @@ src/
 {name}-repository-dto.ts
 ```
 
-AI 驱动的模块（translator、dictionary、reading）没有 repository 层，直接调用 LLM 管道。
+AI 驱动的模块（translator、dictionary、reading）跳过 repository 层，直接调用 LLM 管道。
 
-AI 管道在 `src/lib/bigmodel/`，每个是多阶段 orchestrator：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。管道：dictionary（2 阶段）、translator（3 阶段）、reading（2 阶段：翻译拆句+分词对齐）、ocr（1 阶段，未使用）。共享依赖是 `llm.ts`（OpenAI 兼容 LLM 客户端）和 `tts.ts`（千问 TTS 服务）。
+### AI 管道
+
+位于 `src/lib/bigmodel/`。多阶段 orchestrator 模式：`orchestrator.ts` + `types.ts` + `stage{n}-name.ts`。
+
+| 管道 | 阶段 | LLM 调用 | 用途 |
+|------|------|---------|------|
+| dictionary | 2 | 2 | 输入预处理 → 词条生成 |
+| translator | 3 | 2-4 | 语言检测 → 翻译 → 可选 IPA |
+| reading | 2 | 1+N | 翻译拆句 → 逐句分词对齐 |
+| ocr | 1 | 1 | 图片词汇提取（未使用） |
+
+共享：`llm.ts`（OpenAI 兼容 LLM 客户端）、`tts.ts`（千问 TTS 服务）。
+
+### 单/多用户模式
+
+由 `NEXT_PUBLIC_AUTH_MODE` 控制。单用户模式下，`auth-mode.ts` 自动创建 admin 用户，`getCurrentUserId()` 直接返回，不经过 better-auth。认证页面返回 404。多用户模式下，better-auth 处理邮箱/密码认证及邮箱验证。
+
+### 能力系统
+
+部署层级和功能开关存储在数据库（`SystemConfig` + `TierCapability`）。管理面板控制功能启用（signup、userProfile、social、email）。所有服务配置（LLM、TTS、SMTP）通过 `capability.ts` 从数据库读取，非环境变量。
 
 ## 约定
 

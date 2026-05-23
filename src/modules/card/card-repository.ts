@@ -9,6 +9,7 @@ import {
   RepoOutputCard,
   RepoOutputCardStats,
   CardMeaning,
+  RepoInputReorderCards,
 } from "./card-repository-dto";
 import { prisma } from "@/lib/db";
 import { createLogger } from "@/lib/logger";
@@ -17,6 +18,7 @@ const log = createLogger("card-repository");
 
 export async function repoCreateCard(input: RepoInputCreateCard): Promise<number> {
   log.debug("Creating card", { deckId: input.deckId, word: input.word });
+  const maxSortOrder = await prisma.card.count({ where: { deckId: input.deckId } });
   const card = await prisma.card.create({
     data: {
       deckId: input.deckId,
@@ -24,6 +26,7 @@ export async function repoCreateCard(input: RepoInputCreateCard): Promise<number
       ipa: input.ipa,
       queryLang: input.queryLang,
       cardType: input.cardType,
+      sortOrder: maxSortOrder,
       meanings: {
         create: input.meanings.map((m: CardMeaning) => ({
           partOfSpeech: m.partOfSpeech,
@@ -96,7 +99,7 @@ export async function repoGetCardsByDeckId(
   const cards = await prisma.card.findMany({
     where: { deckId },
     include: { meanings: { orderBy: { createdAt: "asc" } } },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
     take: limit,
     skip: offset,
   });
@@ -167,4 +170,17 @@ export async function repoGetCardByWord(
     include: { meanings: { orderBy: { createdAt: "asc" } } },
   });
   return card as RepoOutputCard | null;
+}
+
+export async function repoReorderCards(input: RepoInputReorderCards): Promise<void> {
+  log.debug("Reordering cards", { deckId: input.deckId, count: input.cardIds.length });
+  await prisma.$transaction(
+    input.cardIds.map((cardId, index) =>
+      prisma.card.update({
+        where: { id: cardId },
+        data: { sortOrder: index },
+      })
+    )
+  );
+  log.info("Cards reordered", { deckId: input.deckId, count: input.cardIds.length });
 }

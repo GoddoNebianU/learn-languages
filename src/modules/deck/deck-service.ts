@@ -15,6 +15,7 @@ import {
   ServiceInputGetPublicDeckById,
   ServiceOutputDeckFavorite,
   ServiceOutputUserFavoriteDeck,
+  ServiceInputReorderDecks,
 } from "./deck-service-dto";
 import {
   repoCreateDeck,
@@ -29,6 +30,7 @@ import {
   repoSearchPublicDecks,
   repoGetPublicDeckById,
   repoGetUserFavoriteDecks,
+  repoReorderDecks,
 } from "./deck-repository";
 
 const log = createLogger("deck-service");
@@ -184,5 +186,19 @@ export async function serviceGetUserFavoriteDecks(
   } catch (error) {
     log.error("Failed to get user favorite decks", { error, userId });
     return { success: false, message: "Failed to get favorite decks" };
+  }
+}
+
+export async function serviceReorderDecks(
+  input: ServiceInputReorderDecks
+): Promise<{ success: boolean; message: string }> {
+  try {
+    log.info("Reordering decks", { userId: input.userId, count: input.deckIds.length });
+    await repoReorderDecks(input);
+    log.info("Decks reordered successfully", { userId: input.userId });
+    return { success: true, message: "Decks reordered successfully" };
+  } catch (error) {
+    log.error("Failed to reorder decks", { error, userId: input.userId });
+    return { success: false, message: "Failed to reorder decks" };
   }
 }

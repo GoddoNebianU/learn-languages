@@ -12,12 +12,65 @@ import { LinkButton } from "@/design-system/link-button";
 import { CardList } from "@/components/ui/CardList";
 import { VStack } from "@/design-system/stack";
 import { Skeleton } from "@/design-system/skeleton";
-import { actionGetCardsByDeckId, actionDeleteCard } from "@/modules/card/card-action";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { actionGetCardsByDeckId, actionDeleteCard, actionReorderCards } from "@/modules/card/card-action";
 import { actionGetDeckById, actionDeleteDeck } from "@/modules/deck/deck-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import { toast } from "sonner";
 import { AddCardModal } from "./AddCardModal";
+
+interface SortableCardItemProps {
+  card: ActionOutputCard;
+  isReadOnly: boolean;
+  onDel: () => void;
+  onUpdated: () => void;
+}
+
+function SortableCardItem({ card, isReadOnly, onDel, onUpdated }: SortableCardItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: card.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 10 : undefined,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <CardItem
+        card={card}
+        isReadOnly={isReadOnly}
+        onDel={onDel}
+        onUpdated={onUpdated}
+        dragHandleProps={isReadOnly ? undefined : { attributes, listeners, ref: undefined }}
+      />
+    </div>
+  );
+}
 
 export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boolean }) {
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
@@ -27,6 +80,44 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
   const [deckInfo, setDeckInfo] = useState<ActionOutputDeck | null>(null);
   const router = useRouter();
   const t = useTranslations("deck_id");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    if (isReadOnly) return;
+    
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = cards.findIndex((c) => c.id === active.id);
+    const newIndex = cards.findIndex((c) => c.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Optimistic update
+    const newCards = [...cards];
+    const [moved] = newCards.splice(oldIndex, 1);
+    newCards.splice(newIndex, 0, moved);
+    setCards(newCards);
+
+    // Persist new order
+    const result = await actionReorderCards({
+      deckId,
+      cardIds: newCards.map((c) => c.id),
+    });
+    if (!result.success) {
+      toast.error(result.message);
+      refreshCards(); // Revert on failure
+    }
+  };
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -145,17 +236,26 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
             <p className="mb-2 text-sm text-gray-500">{t("noCards")}</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
-            {cards.map((card) => (
-              <CardItem
-                key={card.id}
-                card={card}
-                isReadOnly={isReadOnly}
-                onDel={() => handleDeleteCard(card.id)}
-                onUpdated={refreshCards}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={cards.map((c) => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {cards.map((card) => (
+                <SortableCardItem
+                  key={card.id}
+                  card={card}
+                  isReadOnly={isReadOnly}
+                  onDel={() => handleDeleteCard(card.id)}
+                  onUpdated={refreshCards}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         )}
       </CardList>
 

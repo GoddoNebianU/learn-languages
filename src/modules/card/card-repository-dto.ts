@@ -68,3 +68,8 @@ export type RepoOutputCard = {
 export type RepoOutputCardStats = {
   total: number;
 };
+
+export interface RepoInputReorderCards {
+  deckId: number;
+  cardIds: number[];
+}

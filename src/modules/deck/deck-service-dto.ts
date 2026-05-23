@@ -81,3 +81,8 @@ export type ServiceOutputDeckFavorite = {
 export type ServiceOutputUserFavoriteDeck = ServiceOutputPublicDeck & {
   favoritedAt: Date;
 };
+
+export type ServiceInputReorderDecks = {
+  userId: string;
+  deckIds: number[];
+};
