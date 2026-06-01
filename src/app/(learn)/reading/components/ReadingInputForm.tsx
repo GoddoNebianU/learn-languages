@@ -11,7 +11,7 @@ interface ReadingInputFormProps {
   targetLanguage: string;
   onTargetLanguageChange: (lang: string) => void;
   processing: boolean;
-  progress: { current: number; total: number };
+  progress: { total: number };
   onTranslate: () => void;
   onCancel: () => void;
 }
@@ -52,7 +52,7 @@ export function ReadingInputForm({
           {processing ? (
             <Button variant="light" size="lg" onClick={onCancel} className="text-xl">
               <Loader2 size={20} className="animate-spin" />
-              {t("processingParagraph", progress)}
+              {t("processingParagraphs", { count: progress.total })}
             </Button>
           ) : (
             <Button

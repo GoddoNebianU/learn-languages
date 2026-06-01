@@ -391,11 +391,15 @@
     "emptyText": "Bitte geben Sie einen Text ein",
     "translationFailed": "Übersetzung fehlgeschlagen",
     "paragraphFailed": "Absatz konnte nicht übersetzt werden",
-    "processingParagraph": "Absatz wird verarbeitet {current}/{total}...",
+    "processingParagraphs": "Verarbeitung von {count, plural, one{# Absatz} other{# Absätzen}}...",
     "otherLanguage": "Andere",
     "customLanguage": "Oder Sprache eingeben...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "Erneut versuchen",
+    "retrying": "Erneuter Versuch...",
+    "paragraphError": "Absatz {index} konnte nicht übersetzt werden",
+    "cancel": "Abbrechen"
   },
   "dictionary": {
     "title": "Wörterbuch",

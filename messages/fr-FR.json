@@ -463,11 +463,15 @@
     "emptyText": "Veuillez entrer du texte",
     "translationFailed": "La traduction a échoué",
     "paragraphFailed": "Échec de la traduction du paragraphe",
-    "processingParagraph": "Traitement du paragraphe {current}/{total}...",
+    "processingParagraphs": "Traitement de {count, plural, one{# paragraphe} other{# paragraphes}}...",
     "otherLanguage": "Autre",
     "customLanguage": "Ou entrez une langue...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "Réessayer",
+    "retrying": "Nouvelle tentative...",
+    "paragraphError": "Échec de la traduction du paragraphe {index}",
+    "cancel": "Annuler"
   },
   "dictionary": {
     "title": "Dictionnaire",

@@ -429,11 +429,15 @@
     "emptyText": "Please enter some text",
     "translationFailed": "Translation failed",
     "paragraphFailed": "Failed to translate paragraph",
-    "processingParagraph": "Processing paragraph {current}/{total}...",
+    "processingParagraphs": "Processing {count, plural, one{# paragraph} other{# paragraphs}}...",
     "otherLanguage": "Other",
     "customLanguage": "Or type a language...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "Retry",
+    "retrying": "Retrying...",
+    "paragraphError": "Failed to translate paragraph {index}",
+    "cancel": "Cancel"
   },
   "dictionary": {
     "title": "Dictionary",

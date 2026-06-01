@@ -429,11 +429,15 @@
     "emptyText": "Bonvolu enigi tekston",
     "translationFailed": "Tradukado malsukcesis",
     "paragraphFailed": "Traduko de alineo malsukcesis",
-    "processingParagraph": "Traktado de alineo {current}/{total}...",
+    "processingParagraphs": "Traktado de {count} alineoj...",
     "otherLanguage": "Alia",
     "customLanguage": "Aŭ tajpu lingvon...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "Reprovi",
+    "retrying": "Reprovante...",
+    "paragraphError": "Traduko de alineo {index} malsukcesis",
+    "cancel": "Nuligi"
   },
   "dictionary": {
     "title": "Vortaro",

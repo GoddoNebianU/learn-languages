@@ -20,92 +20,105 @@ export function ParagraphView({
 }: ParagraphViewProps) {
   const { sentences, sourceLanguage, targetLanguage } = paragraph;
 
+  const renderSourceTokens = (sentence: typeof sentences[number], sIdx: number) => {
+    const highlighted = getHighlighted(paragraphIdx, sIdx, "source");
+    return (
+      <span>
+        {sentence.sourceTokens.map((token) => {
+          const isHighlighted = highlighted.has(token.index);
+          const isHovered =
+            hovered?.paragraphIdx === paragraphIdx &&
+            hovered?.sentenceIdx === sIdx &&
+            hovered?.localIdx === token.index &&
+            hovered?.side === "source";
+
+          return (
+            <span
+              key={token.index}
+              className={`cursor-pointer rounded-sm ${
+                isHighlighted ? "bg-yellow-200/40" : ""
+              } ${isHovered ? "bg-blue-200/50" : ""}`}
+              onMouseEnter={() =>
+                onHover({
+                  paragraphIdx,
+                  sentenceIdx: sIdx,
+                  localIdx: token.index,
+                  side: "source",
+                })
+              }
+              onClick={() => {
+                const q = encodeURIComponent(token.text);
+                const ql = encodeURIComponent(sourceLanguage);
+                const dl = encodeURIComponent(targetLanguage);
+                window.open(`/dictionary?q=${q}&ql=${ql}&dl=${dl}`, "_blank");
+              }}
+            >
+              {token.text}{" "}
+            </span>
+          );
+        })}
+      </span>
+    );
+  };
+
+  const renderTargetTokens = (sentence: typeof sentences[number], sIdx: number) => {
+    const highlighted = getHighlighted(paragraphIdx, sIdx, "target");
+    return (
+      <span>
+        {sentence.targetTokens.map((token) => {
+          const isHighlighted = highlighted.has(token.index);
+          const isHovered =
+            hovered?.paragraphIdx === paragraphIdx &&
+            hovered?.sentenceIdx === sIdx &&
+            hovered?.localIdx === token.index &&
+            hovered?.side === "target";
+
+          return (
+            <span
+              key={token.index}
+              className={`cursor-pointer rounded-sm ${
+                isHighlighted ? "bg-yellow-200/40" : ""
+              } ${isHovered ? "bg-blue-200/50" : ""}`}
+              onMouseEnter={() =>
+                onHover({
+                  paragraphIdx,
+                  sentenceIdx: sIdx,
+                  localIdx: token.index,
+                  side: "target",
+                })
+              }
+              onClick={() => {
+                const q = encodeURIComponent(token.text);
+                const ql = encodeURIComponent(targetLanguage);
+                const dl = encodeURIComponent(sourceLanguage);
+                window.open(`/dictionary?q=${q}&ql=${ql}&dl=${dl}`, "_blank");
+              }}
+            >
+              {token.text}{" "}
+            </span>
+          );
+        })}
+      </span>
+    );
+  };
+
   return (
     <div
-      className="space-y-1.5"
+      className="space-y-2"
       onMouseLeave={() => {
         if (hovered?.paragraphIdx === paragraphIdx) onHover(null);
       }}
     >
-      {sentences.map((sentence, sIdx) => {
-        const highlightedSource = getHighlighted(paragraphIdx, sIdx, "source");
-        const highlightedTarget = getHighlighted(paragraphIdx, sIdx, "target");
-
-        return (
-          <div key={sIdx}>
-            <div className="text-base text-gray-900">
-              {sentence.sourceTokens.map((token) => {
-                const isHighlighted = highlightedSource.has(token.index);
-                const isHovered =
-                  hovered?.paragraphIdx === paragraphIdx &&
-                  hovered?.sentenceIdx === sIdx &&
-                  hovered?.localIdx === token.index &&
-                  hovered?.side === "source";
-
-                return (
-                  <span
-                    key={token.index}
-                    className={`cursor-pointer rounded-sm ${
-                      isHighlighted ? "bg-yellow-200/40" : ""
-                    } ${isHovered ? "bg-blue-200/50" : ""}`}
-                    onMouseEnter={() =>
-                      onHover({
-                        paragraphIdx,
-                        sentenceIdx: sIdx,
-                        localIdx: token.index,
-                        side: "source",
-                      })
-                    }
-                    onClick={() => {
-                      const q = encodeURIComponent(token.text);
-                      const ql = encodeURIComponent(sourceLanguage);
-                      const dl = encodeURIComponent(targetLanguage);
-                      window.open(`/dictionary?q=${q}&ql=${ql}&dl=${dl}`, "_blank");
-                    }}
-                  >
-                    {token.text}{" "}
-                  </span>
-                );
-              })}
-            </div>
-            <div className="text-sm text-gray-400">
-              {sentence.targetTokens.map((token) => {
-                const isHighlighted = highlightedTarget.has(token.index);
-                const isHovered =
-                  hovered?.paragraphIdx === paragraphIdx &&
-                  hovered?.sentenceIdx === sIdx &&
-                  hovered?.localIdx === token.index &&
-                  hovered?.side === "target";
-
-                return (
-                  <span
-                    key={token.index}
-                    className={`cursor-pointer rounded-sm ${
-                      isHighlighted ? "bg-yellow-200/40" : ""
-                    } ${isHovered ? "bg-blue-200/50" : ""}`}
-                    onMouseEnter={() =>
-                      onHover({
-                        paragraphIdx,
-                        sentenceIdx: sIdx,
-                        localIdx: token.index,
-                        side: "target",
-                      })
-                    }
-                    onClick={() => {
-                      const q = encodeURIComponent(token.text);
-                      const ql = encodeURIComponent(targetLanguage);
-                      const dl = encodeURIComponent(sourceLanguage);
-                      window.open(`/dictionary?q=${q}&ql=${ql}&dl=${dl}`, "_blank");
-                    }}
-                  >
-                    {token.text}{" "}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
+      <div className="text-base text-gray-900">
+        {sentences.map((sentence, sIdx) => (
+          <React.Fragment key={sIdx}>{renderSourceTokens(sentence, sIdx)}</React.Fragment>
+        ))}
+      </div>
+      <div className="text-sm text-gray-400">
+        {sentences.map((sentence, sIdx) => (
+          <React.Fragment key={sIdx}>{renderTargetTokens(sentence, sIdx)}</React.Fragment>
+        ))}
+      </div>
     </div>
   );
 }

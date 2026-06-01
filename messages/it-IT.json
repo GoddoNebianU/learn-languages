@@ -463,11 +463,15 @@
     "emptyText": "Inserisci del testo",
     "translationFailed": "Traduzione fallita",
     "paragraphFailed": "Traduzione del paragrafo fallita",
-    "processingParagraph": "Elaborazione paragrafo {current}/{total}...",
+    "processingParagraphs": "Elaborazione di {count, plural, one{# paragrafo} other{# paragrafi}}...",
     "otherLanguage": "Altro",
     "customLanguage": "O inserisci una lingua...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "Riprova",
+    "retrying": "Nuovo tentativo...",
+    "paragraphError": "Traduzione del paragrafo {index} fallita",
+    "cancel": "Annulla"
   },
   "dictionary": {
     "title": "Dizionario",

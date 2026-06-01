@@ -463,11 +463,15 @@
     "emptyText": "텍스트를 입력해주세요",
     "translationFailed": "번역에 실패했습니다",
     "paragraphFailed": "문단 번역 실패",
-    "processingParagraph": "문단 처리 중 {current}/{total}...",
+    "processingParagraphs": "{count}개 문단 처리 중...",
     "otherLanguage": "기타",
     "customLanguage": "또는 언어를 입력하세요...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "재시도",
+    "retrying": "재시도 중...",
+    "paragraphError": "문단 {index} 번역 실패",
+    "cancel": "취소"
   },
   "dictionary": {
     "title": "사전",

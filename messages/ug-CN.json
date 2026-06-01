@@ -463,11 +463,15 @@
     "emptyText": "تېكىست كىرگۈزۈڭ",
     "translationFailed": "تەرجىمە مەغلۇپ بولدى",
     "paragraphFailed": "ئابزاس تەرجىمىسى مەغلۇپ بولدى",
-    "processingParagraph": "ئابزاسنى بىر تەرەپ قىلىۋاتىدۇ {current}/{total}...",
+    "processingParagraphs": "{count} ئابزاسنى بىر تەرەپ قىلىۋاتىدۇ...",
     "otherLanguage": "باشقا",
     "customLanguage": "ياكى تىل كىرگۈزۈڭ...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "قايتا سىنا",
+    "retrying": "قايتا سىناش...",
+    "paragraphError": "{index}-ئابزاس تەرجىمىسى مەغلۇپ بولدى",
+    "cancel": "بىكار قىلىش"
   },
   "dictionary": {
     "title": "لۇغەت",

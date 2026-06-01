@@ -429,11 +429,15 @@
     "emptyText": "请输入文本",
     "translationFailed": "翻译失败",
     "paragraphFailed": "段落翻译失败",
-    "processingParagraph": "正在处理段落 {current}/{total}...",
+    "processingParagraphs": "正在处理 {count} 个段落...",
     "otherLanguage": "其他",
     "customLanguage": "或输入语言...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "重试",
+    "retrying": "重试中...",
+    "paragraphError": "第 {index} 段翻译失败",
+    "cancel": "取消"
   },
   "dictionary": {
     "title": "词典",

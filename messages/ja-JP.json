@@ -429,11 +429,15 @@
     "emptyText": "テキストを入力してください",
     "translationFailed": "翻訳に失敗しました",
     "paragraphFailed": "段落の翻訳に失敗しました",
-    "processingParagraph": "段落を処理中 {current}/{total}...",
+    "processingParagraphs": "{count} つの段落を処理中...",
     "otherLanguage": "その他",
     "customLanguage": "または言語を入力...",
     "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language"
+    "emptyTargetLanguage": "Please select or enter a target language",
+    "retry": "再試行",
+    "retrying": "再試行中...",
+    "paragraphError": "段落 {index} の翻訳に失敗しました",
+    "cancel": "キャンセル"
   },
   "dictionary": {
     "title": "辞書",
