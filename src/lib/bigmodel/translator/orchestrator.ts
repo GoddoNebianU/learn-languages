@@ -165,26 +165,37 @@ export async function executeTranslation(
       detectedLanguage = detectionResult.sourceLanguage;
     }
 
-    log.debug("[Stage 2] Performing translation");
-    const translatedText = await performTranslation(sourceText, detectedLanguage, targetLanguage);
-    log.debug("[Stage 2] Translation complete", { translatedText });
-
-    // Validate translation result
-    if (!translatedText) {
-      throw new Error("Translation result is empty");
-    }
-
-    // Stage 3 (Optional): Generate IPA
+    // Stage 2 + 3: Parallelize translation with source IPA generation when possible
+    let translatedText: string;
     let sourceIpa: string | undefined;
     let targetIpa: string | undefined;
 
     if (needIpa) {
-      log.debug("[Stage 3] Generating IPA in parallel");
-      [sourceIpa, targetIpa] = await Promise.all([
+      // Run translation and source IPA in parallel (source IPA doesn't depend on translation)
+      log.debug("[Stage 2+3] Performing translation + source IPA in parallel");
+      [translatedText, sourceIpa] = await Promise.all([
+        performTranslation(sourceText, detectedLanguage, targetLanguage),
         generateIPA(sourceText, detectedLanguage),
-        generateIPA(translatedText, targetLanguage),
       ]);
-      log.debug("[Stage 3] IPA complete", { sourceIpa, targetIpa });
+      log.debug("[Stage 2] Translation complete", { translatedText });
+      log.debug("[Stage 3] Source IPA complete", { sourceIpa });
+
+      if (!translatedText) {
+        throw new Error("Translation result is empty");
+      }
+
+      // Target IPA depends on translated text, run separately
+      log.debug("[Stage 3] Generating target IPA");
+      targetIpa = await generateIPA(translatedText, targetLanguage);
+      log.debug("[Stage 3] Target IPA complete", { targetIpa });
+    } else {
+      log.debug("[Stage 2] Performing translation");
+      translatedText = await performTranslation(sourceText, detectedLanguage, targetLanguage);
+      log.debug("[Stage 2] Translation complete", { translatedText });
+
+      if (!translatedText) {
+        throw new Error("Translation result is empty");
+      }
     }
 
     // Assemble final result

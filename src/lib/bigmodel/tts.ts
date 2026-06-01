@@ -179,20 +179,37 @@ async function getTtsService(): Promise<QwenTTSService> {
   return _ttsService;
 }
 
+const ttsCache = new Map<string, { url: string; expiresAt: number }>();
+
+function getTTSCacheKey(text: string, voice: string, lang: string): string {
+  return `${voice}:${lang}:${text}`;
+}
+
 export async function getTTSUrl(
   text: string,
   lang: TTS_SUPPORTED_LANGUAGES
 ): Promise<string | null> {
   try {
+    const voice = "Jennifer";
+    const cacheKey = getTTSCacheKey(text, voice, lang);
+    const cached = ttsCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now() / 1000) {
+      log.debug("TTS cache hit", { textLength: text.length, lang });
+      return cached.url;
+    }
+
     const service = await getTtsService();
-    const result = await service.synthesize(text, {
-      // voice: 'Cherry',
-      voice: "Jennifer",
-      language: lang,
-    });
-    return result.output.audio.url;
+    const result = await service.synthesize(text, { voice, language: lang });
+    const url = result.output.audio.url;
+    const expiresAt = result.output.audio.expires_at;
+
+    if (url && expiresAt) {
+      ttsCache.set(cacheKey, { url, expiresAt });
+    }
+
+    return url;
   } catch (error) {
-    log.error("TTS synthesis failed", { error: error instanceof Error ? error.message : error });
+    log.error("TTS synthesis failed", { error: error instanceof Error ? error.message : String(error) });
     return null;
   }
 }
