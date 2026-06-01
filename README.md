@@ -10,7 +10,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Dictionary** -- AI-driven word lookup with part-of-speech analysis, definitions, and example sentences
 - **SRT Player** -- subtitle file playback with per-word lookup links and auto-pause
 - **Text-to-Speech** -- Alibaba Qwen TTS for natural pronunciation
-- **Decks & Cards** -- create, manage, and study vocabulary with multiple review modes (sequential, random, infinite, dictation)
+- **Decks & Cards** -- create, manage, and study vocabulary with drag-and-drop reordering and multiple review modes (sequential, random, infinite, dictation)
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
 - **Reading** -- AI-powered reading comprehension with sentence-by-sentence translation and word-level alignment
@@ -18,7 +18,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 
 ## Stack
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 locales) / OpenAI-compatible LLM / Alibaba Qwen TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 locales) / OpenAI-compatible LLM / Alibaba Qwen TTS
 
 ## Getting started
 
@@ -151,7 +151,7 @@ DATABASE_URL=... pnpm prisma generate                     # regenerate client
 
 ## i18n
 
-Supported: en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, es-ES, ug-CN.
+Supported: en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN, eo.
 
 Locale stored in cookie. No URL prefix, no middleware. Translation files are in `messages/*.json`.
 

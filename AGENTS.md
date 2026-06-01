@@ -1,7 +1,7 @@
 # LEARN-LANGUAGES 知识库
 
-**生成时间:** 2026-05-23
-**提交:** be64d80
+**生成时间:** 2026-06-01
+**提交:** a42f627
 **分支:** main
 
 ## 概述
@@ -16,10 +16,11 @@ src/
 │   ├── (auth)/       # 认证: login, signup, logout, forgot/reset-password, users/[username]
 │   ├── (account)/    # 账户: profile, settings
 │   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks, memorize, reading
-│   │   └── srt-player/ # 最复杂页面: 自含 components/, hooks/, stores/, utils/
-│   │   └── memorize/  # 记忆模式: ?deck_id=xxx 查询参数, 无参数跳转 /decks
-│   │   └── reading/   # 阅读理解: AI 翻译+分词对齐, Server→Client 委托
-│   ├── admin/        # 管理后台: 密码认证, 动态配置 tier/services (Server→Client)
+│   │   ├── srt-player/ # 最复杂页面: 自含 components/, hooks/, stores/, utils/ — 详见子级 AGENTS.md
+│   │   ├── dictionary/ # 词典: 两种模式 (普通/阅读), 自有 Zustand store — 详见子级 AGENTS.md
+│   │   ├── decks/      # 牌组管理: CRUD + 卡片拖拽排序 — 详见子级 AGENTS.md
+│   │   └── reading/   # 阅读理解: AI 翻译+分词对齐, Server→Client 委托 — 详见子级 AGENTS.md
+│   ├── admin/        # 管理后台: 密码认证, 动态配置 tier/services — 详见子级 AGENTS.md
 │   ├── error.tsx     # 根级错误边界
 │   ├── not-found.tsx # 404 页面
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
@@ -58,7 +59,7 @@ src/
 ├── config/           # i18n, images
 └── i18n/             # next-intl 请求配置 (request.ts)
 
-非 src: prisma/ (Schema+3 迁移), messages/ (i18n 翻译 8+1 种语言, 18 namespaces), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体)
+非 src: prisma/ (Schema+4 迁移), messages/ (i18n 翻译 8+1 种语言, 18 namespaces), public/alphabets/ (字母 JSON), public/fonts/ (维吾尔语字体)
 ```
 
 ## 查找位置
@@ -319,7 +320,7 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - React Compiler 已启用 (next.config.ts: reactCompiler: true)
 - TypeScript 6, ESLint flat config (`eslint.config.mjs`)
 - Zod v4 (默认导入 `import z from "zod"`)
-- i18n: 8 种语言, cookie 存储 locale (无 URL 路径, 无 middleware)
+- i18n: 9 种语言, cookie 存储 locale (无 URL 路径, 无 middleware)
 - Prisma 7: `prisma-client` 生成器 (非 `prisma-client-js`), 输出到 `generated/prisma/`, 使用 PrismaPg adapter, 配置在 `prisma.config.ts`
 - TTS: 阿里云千问 (qwen3-tts-flash)
 - 数据库: PostgreSQL, 必须用 `prisma migrate dev`

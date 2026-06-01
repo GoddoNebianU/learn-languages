@@ -10,7 +10,7 @@
 - **词典** -- AI 单词查询，词性分析、释义、例句
 - **字幕播放器** -- SRT 字幕播放，逐词查词链接，自动暂停
 - **语音合成** -- 阿里云千问 TTS，自然发音
-- **牌组与卡片** -- 创建、管理、学习词汇，多种复习模式（顺序、随机、无限、听写）
+- **牌组与卡片** -- 创建、管理、学习词汇，拖拽排序，多种复习模式（顺序、随机、无限、听写）
 - **社交** -- 公开牌组、收藏、用户关注
 - **单用户模式** -- 无需认证即可部署，自动创建默认管理员用户
 - **阅读理解** -- AI 驱动的阅读理解，逐句翻译+分词对齐
@@ -18,7 +18,7 @@
 
 ## 技术栈
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (8 语言) / OpenAI 兼容 LLM / 阿里云千问 TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 语言) / OpenAI 兼容 LLM / 阿里云千问 TTS
 
 ## 快速开始
 
@@ -151,7 +151,7 @@ DATABASE_URL=... pnpm prisma generate                     # 重新生成 Client
 
 ## 国际化
 
-支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, es-ES, ug-CN。
+支持：en-US, zh-CN, ja-JP, ko-KR, de-DE, fr-FR, it-IT, ug-CN, eo。
 
 Locale 存在 cookie 中，无 URL 前缀，无 middleware。翻译文件在 `messages/*.json`。
 

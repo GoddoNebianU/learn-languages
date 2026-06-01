@@ -15,7 +15,7 @@ src/app/
 ├── error.tsx           # 根级错误边界 (Client Component)
 ├── not-found.tsx       # 404 页面
 ├── api/auth/[...all]/  # 唯一 API 路由 (better-auth catch-all, 单用户模式返回 404)
-├── admin/              # 管理后台 (密码认证, 独立于用户认证)
+├── admin/              # 管理后台 (密码认证, 独立于用户认证) — 详见子级 AGENTS.md
 │   ├── page.tsx        # Server: JWT session 验证, 加载 SystemConfig + TierCapability
 │   ├── AdminLogin.tsx  # Client: 密码登录表单
 │   ├── AdminSettings.tsx # Client: tier/services 动态配置 UI (305 行)
@@ -32,13 +32,13 @@ src/app/
 │   └── settings/       # 设置 (Client, 主题切换)
 └── (learn)/            # 功能路由组
     ├── translator/     # 翻译 (Client, 401 行单体)
-    ├── dictionary/     # 词典 (Server→Client)
+    ├── dictionary/     # 词典 (Server→Client) — 详见子级 AGENTS.md
     ├── srt-player/     # 字幕播放器 (Client, 自含子模块, 详见子级 AGENTS.md)
     ├── text-speaker/   # 语音播放 (Client, 453 行)
     ├── alphabet/       # 字母学习 (Client)
     ├── explore/        # 公开牌组 (Server→Client) + [id]/ 详情
     ├── favorites/      # 收藏 (Server→Client)
-    ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情
+    ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情 — 详见子级 AGENTS.md
     ├── memorize/       # 记忆模式 (Server→Client, ?deck_id=xxx)
     └── reading/        # 阅读理解 (Client, AI 翻译+分词对齐, 详见子级 AGENTS.md)
 ```
