@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { useSrtPlayerStore } from "../stores/srtPlayerStore";
+import { useSrtPlayerStore, getAutoPauseTimeout, setAutoPauseTimeout, clearAutoPauseTimeout, markAutoPaused } from "../stores/srtPlayerStore";
 
 export function useSubtitleSync() {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastIndexRef = useRef<number | null>(null);
 
   const subtitleData = useSrtPlayerStore((state) => state.subtitle.data);
@@ -18,10 +17,7 @@ export function useSubtitleSync() {
 
   const scheduleAutoPause = useCallback(() => {
     if (!autoPause || !isPlaying) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      clearAutoPauseTimeout();
       return;
     }
 
@@ -39,18 +35,15 @@ export function useSubtitleSync() {
       return;
     }
 
-    const advanceTime = 0.15;
-    const realTimeUntilPause = (timeUntilEnd - advanceTime) / playbackRate;
+    const realTimeUntilPause = timeUntilEnd / playbackRate;
 
-    if (realTimeUntilPause > 0) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+    clearAutoPauseTimeout();
 
-      timeoutRef.current = setTimeout(() => {
-        pause();
-      }, realTimeUntilPause * 1000);
-    }
+    setAutoPauseTimeout(setTimeout(() => {
+      setAutoPauseTimeout(null);
+      markAutoPaused();
+      pause();
+    }, realTimeUntilPause * 1000));
   }, [autoPause, isPlaying, subtitleData, playbackRate, pause]);
 
   useEffect(() => {
@@ -70,6 +63,18 @@ export function useSubtitleSync() {
       }
     }
 
+    if (newIndex === null) {
+      for (let i = subtitleData.length - 1; i >= 0; i--) {
+        if (currentTime >= subtitleData[i].end) {
+          const nextIdx = i + 1;
+          if (nextIdx >= subtitleData.length || currentTime < subtitleData[nextIdx].start) {
+            newIndex = i;
+          }
+          break;
+        }
+      }
+    }
+
     if (newIndex !== lastIndexRef.current) {
       lastIndexRef.current = newIndex;
       if (newIndex !== null) {
@@ -78,7 +83,7 @@ export function useSubtitleSync() {
         setCurrentSubtitle("", null);
       }
     }
-  }, [subtitleData, currentTime, setCurrentSubtitle]);
+  }, [subtitleData, currentTime, setCurrentSubtitle, autoPause]);
 
   useEffect(() => {
     scheduleAutoPause();
@@ -92,10 +97,7 @@ export function useSubtitleSync() {
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
+      clearAutoPauseTimeout();
     };
   }, []);
 }

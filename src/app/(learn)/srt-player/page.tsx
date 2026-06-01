@@ -11,9 +11,8 @@ import { useVideoSync } from "./hooks/useVideoSync";
 import { useSubtitleSync } from "./hooks/useSubtitleSync";
 import { useSrtPlayerShortcuts } from "./hooks/useKeyboardShortcuts";
 import { loadSubtitle } from "./utils/subtitleParser";
-import { useSrtPlayerStore } from "./stores/srtPlayerStore";
+import { useSrtPlayerStore, setVideoRef } from "./stores/srtPlayerStore";
 import { useFileUpload } from "./hooks/useFileUpload";
-import { setVideoRef } from "./stores/srtPlayerStore";
 import { SubtitleProgressBar } from "./components/SubtitleProgressBar";
 import Link from "next/link";
 
@@ -24,25 +23,23 @@ export default function SrtPlayerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { uploadVideo, uploadSubtitle } = useFileUpload();
 
-  const subtitleUrl = useSrtPlayerStore((state) => state.subtitle.url);
-  const setSubtitleData = useSrtPlayerStore((state) => state.setSubtitleData);
-  const setSubtitleUrl = useSrtPlayerStore((state) => state.setSubtitleUrl);
-  const setVideoUrl = useSrtPlayerStore((state) => state.setVideoUrl);
-
   const videoUrl = useSrtPlayerStore((state) => state.video.url);
+  const subtitleUrl = useSrtPlayerStore((state) => state.subtitle.url);
   const subtitleData = useSrtPlayerStore((state) => state.subtitle.data);
   const currentIndex = useSrtPlayerStore((state) => state.subtitle.currentIndex);
   const isPlaying = useSrtPlayerStore((state) => state.video.isPlaying);
   const playbackRate = useSrtPlayerStore((state) => state.video.playbackRate);
   const autoPause = useSrtPlayerStore((state) => state.controls.autoPause);
 
+  const setVideoUrl = useSrtPlayerStore((state) => state.setVideoUrl);
+  const setSubtitleUrl = useSrtPlayerStore((state) => state.setSubtitleUrl);
+  const setSubtitleData = useSrtPlayerStore((state) => state.setSubtitleData);
   const togglePlayPause = useSrtPlayerStore((state) => state.togglePlayPause);
   const nextSubtitle = useSrtPlayerStore((state) => state.nextSubtitle);
   const previousSubtitle = useSrtPlayerStore((state) => state.previousSubtitle);
   const restartSubtitle = useSrtPlayerStore((state) => state.restartSubtitle);
   const setPlaybackRate = useSrtPlayerStore((state) => state.setPlaybackRate);
   const toggleAutoPause = useSrtPlayerStore((state) => state.toggleAutoPause);
-  const seek = useSrtPlayerStore((state) => state.seek);
 
   useVideoSync(videoRef);
   useSubtitleSync();
@@ -57,8 +54,8 @@ export default function SrtPlayerPage() {
   useEffect(() => {
     if (subtitleUrl) {
       loadSubtitle(subtitleUrl)
-        .then((subtitleData) => {
-          setSubtitleData(subtitleData);
+        .then((data) => {
+          setSubtitleData(data);
           toast.success(srtT("subtitleLoadSuccess"));
         })
         .catch((error) => {
@@ -91,9 +88,9 @@ export default function SrtPlayerPage() {
 
   const handlePlaybackRateChange = () => {
     const rates = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
-    const currentIndexRate = rates.indexOf(playbackRate);
-    const nextIndexRate = (currentIndexRate + 1) % rates.length;
-    setPlaybackRate(rates[nextIndexRate]);
+    const currentRateIndex = rates.indexOf(playbackRate);
+    const nextRateIndex = (currentRateIndex + 1) % rates.length;
+    setPlaybackRate(rates[nextRateIndex]);
   };
 
   const currentSubtitle = currentIndex !== null ? subtitleData[currentIndex] : null;
@@ -111,15 +108,15 @@ export default function SrtPlayerPage() {
 
       <div className="items-begin mx-auto flex h-20 w-[85%] flex-wrap justify-center overflow-y-auto rounded shadow">
         {currentSubtitle &&
-          currentSubtitle.text.split(" ").map((s, i) => (
+          currentSubtitle.text.split(" ").map((word, i) => (
             <Link
               key={i}
-              href={`/dictionary?q=${s}`}
+              href={`/dictionary?q=${word}`}
               className="h-fit px-1 hover:cursor-pointer hover:bg-gray-200"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {s}
+              {word}
             </Link>
           ))}
       </div>
@@ -142,49 +139,31 @@ export default function SrtPlayerPage() {
       </div>
 
       {canPlay && (
-        <HStack gap={2} className="mx-auto mt-4 w-[85%]" justify={"center"} wrap>
-          {isPlaying ? (
-            <Button
-              variant="light"
-              onClick={togglePlayPause}
-              leftIcon={<Pause className="h-4 w-4" />}
-            >
-              {srtT("pause")}
-            </Button>
-          ) : (
-            <Button
-              variant="light"
-              onClick={togglePlayPause}
-              leftIcon={<Play className="h-4 w-4" />}
-            >
-              {srtT("play")}
-            </Button>
-          )}
-          <Button
-            variant="light"
-            onClick={previousSubtitle}
-            leftIcon={<ChevronLeft className="h-4 w-4" />}
-          >
+        <HStack justify="center" gap={2} className="mt-4">
+          <Button variant="light" size="sm" onClick={togglePlayPause}>
+            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            {isPlaying ? srtT("pause") : srtT("play")}
+          </Button>
+          <Button variant="light" size="sm" onClick={previousSubtitle}>
+            <ChevronLeft size={16} />
             {srtT("previous")}
           </Button>
-          <Button
-            variant="light"
-            onClick={nextSubtitle}
-            rightIcon={<ChevronRight className="h-4 w-4" />}
-          >
+          <Button variant="light" size="sm" onClick={nextSubtitle}>
             {srtT("next")}
+            <ChevronRight size={16} />
           </Button>
-          <Button
-            variant="light"
-            onClick={restartSubtitle}
-            leftIcon={<RotateCcw className="h-4 w-4" />}
-          >
+          <Button variant="light" size="sm" onClick={restartSubtitle}>
+            <RotateCcw size={16} />
             {srtT("restart")}
           </Button>
-          <Button variant="light" onClick={handlePlaybackRateChange}>
+          <Button variant="light" size="sm" onClick={handlePlaybackRateChange}>
             {playbackRate}x
           </Button>
-          <Button variant="light" onClick={toggleAutoPause}>
+          <Button
+            variant={autoPause ? "primary" : "light"}
+            size="sm"
+            onClick={toggleAutoPause}
+          >
             {srtT("autoPause", { enabled: autoPause ? srtT("on") : srtT("off") })}
           </Button>
         </HStack>

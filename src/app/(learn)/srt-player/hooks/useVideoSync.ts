@@ -6,7 +6,6 @@ import { useSrtPlayerStore } from "../stores/srtPlayerStore";
 export function useVideoSync(videoRef: RefObject<HTMLVideoElement | null>) {
   const setCurrentTime = useSrtPlayerStore((state) => state.setCurrentTime);
   const setDuration = useSrtPlayerStore((state) => state.setDuration);
-  const play = useSrtPlayerStore((state) => state.play);
   const pause = useSrtPlayerStore((state) => state.pause);
 
   useEffect(() => {
@@ -21,24 +20,18 @@ export function useVideoSync(videoRef: RefObject<HTMLVideoElement | null>) {
       setDuration(video.duration);
     };
 
-    const handlePlay = () => {
-      play();
-    };
-
-    const handlePause = () => {
+    const handleEnded = () => {
       pause();
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("play", handlePlay);
-    video.addEventListener("pause", handlePause);
+    video.addEventListener("ended", handleEnded);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      video.removeEventListener("play", handlePlay);
-      video.removeEventListener("pause", handlePause);
+      video.removeEventListener("ended", handleEnded);
     };
-  }, [videoRef, setCurrentTime, setDuration, play, pause]);
+  }, [videoRef, setCurrentTime, setDuration, pause]);
 }

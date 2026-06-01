@@ -3,60 +3,61 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { toast } from "sonner";
-import type {
-  SrtPlayerStore,
-  VideoState,
-  SubtitleState,
-  ControlState,
-  SubtitleSettings,
-  SubtitleEntry,
-} from "../types";
+import type { SrtPlayerStore, SubtitleEntry } from "../types";
 import type { RefObject } from "react";
 
 let videoRef: RefObject<HTMLVideoElement | null> | null;
+let autoPauseTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
 export function setVideoRef(ref: RefObject<HTMLVideoElement | null> | null) {
   videoRef = ref;
 }
 
-const initialVideoState: VideoState = {
-  url: null,
-  isPlaying: false,
-  currentTime: 0,
-  duration: 0,
-  playbackRate: 1.0,
-  volume: 1.0,
-};
+export function getAutoPauseTimeout() {
+  return autoPauseTimeoutId;
+}
 
-const initialSubtitleSettings: SubtitleSettings = {
-  fontSize: 24,
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  textColor: "#ffffff",
-  position: "bottom",
-  fontFamily: "sans-serif",
-  opacity: 1,
-};
+export function setAutoPauseTimeout(id: ReturnType<typeof setTimeout> | null) {
+  if (autoPauseTimeoutId) {
+    clearTimeout(autoPauseTimeoutId);
+  }
+  autoPauseTimeoutId = id;
+}
 
-const initialSubtitleState: SubtitleState = {
-  url: null,
-  data: [],
-  currentText: "",
-  currentIndex: null,
-  settings: initialSubtitleSettings,
-};
+export function clearAutoPauseTimeout() {
+  if (autoPauseTimeoutId) {
+    clearTimeout(autoPauseTimeoutId);
+    autoPauseTimeoutId = null;
+  }
+}
 
-const initialControlState: ControlState = {
-  autoPause: true,
-  showShortcuts: false,
-  showSettings: false,
-};
+let wasAutoPaused = false;
+
+export function markAutoPaused() {
+  wasAutoPaused = true;
+}
 
 export const useSrtPlayerStore = create<SrtPlayerStore>()(
   devtools(
     (set, get) => ({
-      video: initialVideoState,
-      subtitle: initialSubtitleState,
-      controls: initialControlState,
+      video: {
+        url: null,
+        isPlaying: false,
+        currentTime: 0,
+        duration: 0,
+        playbackRate: 1.0,
+      },
+
+      subtitle: {
+        url: null,
+        data: [] as SubtitleEntry[],
+        currentText: "",
+        currentIndex: null as number | null,
+      },
+
+      controls: {
+        autoPause: true,
+      },
 
       setVideoUrl: (url) =>
         set((state) => {
@@ -67,26 +68,16 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
           return { video: { ...state.video, url } };
         }),
 
-      setPlaying: (playing) => set((state) => ({ video: { ...state.video, isPlaying: playing } })),
-
+      setSubtitleUrl: (url) => set((state) => ({ subtitle: { ...state.subtitle, url } })),
+      setSubtitleData: (data) => set((state) => ({ subtitle: { ...state.subtitle, data } })),
+      setCurrentSubtitle: (text, index) =>
+        set((state) => ({ subtitle: { ...state.subtitle, currentText: text, currentIndex: index } })),
       setCurrentTime: (time) => set((state) => ({ video: { ...state.video, currentTime: time } })),
-
       setDuration: (duration) => set((state) => ({ video: { ...state.video, duration } })),
-
       setPlaybackRate: (rate) =>
         set((state) => {
-          if (videoRef?.current) {
-            videoRef.current.playbackRate = rate;
-          }
+          if (videoRef?.current) videoRef.current.playbackRate = rate;
           return { video: { ...state.video, playbackRate: rate } };
-        }),
-
-      setVolume: (volume) =>
-        set((state) => {
-          if (videoRef?.current) {
-            videoRef.current.volume = volume;
-          }
-          return { video: { ...state.video, volume } };
         }),
 
       play: () => {
@@ -105,9 +96,7 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
 
       pause: () => {
         if (videoRef?.current) {
-          if (!videoRef.current.paused) {
-            videoRef.current.pause();
-          }
+          if (!videoRef.current.paused) videoRef.current.pause();
           set((state) => ({ video: { ...state.video, isPlaying: false } }));
         }
       },
@@ -115,12 +104,14 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
       togglePlayPause: () => {
         const state = get();
         if (state.video.isPlaying) {
+          wasAutoPaused = false;
           get().pause();
         } else {
-          if (state.controls.autoPause && state.subtitle.currentIndex !== null) {
-            const currentSubtitle = state.subtitle.data[state.subtitle.currentIndex];
-            get().seek(currentSubtitle.start);
+          if (wasAutoPaused && state.controls.autoPause && state.subtitle.currentIndex !== null) {
+            const sub = state.subtitle.data[state.subtitle.currentIndex];
+            if (sub) get().seek(sub.start);
           }
+          wasAutoPaused = false;
           get().play();
         }
       },
@@ -132,47 +123,18 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
         }
       },
 
-      restart: () => {
-        const state = get();
-        if (state.subtitle.currentIndex !== null) {
-          const currentSubtitle = state.subtitle.data[state.subtitle.currentIndex];
-          if (currentSubtitle) {
-            get().seek(currentSubtitle.start);
-            get().play();
-          }
-        }
-      },
-
-      setSubtitleUrl: (url) => set((state) => ({ subtitle: { ...state.subtitle, url } })),
-
-      setSubtitleData: (data) => set((state) => ({ subtitle: { ...state.subtitle, data } })),
-
-      setCurrentSubtitle: (text, index) =>
-        set((state) => ({
-          subtitle: {
-            ...state.subtitle,
-            currentText: text,
-            currentIndex: index,
-          },
-        })),
-
-      updateSettings: (settings) =>
-        set((state) => ({
-          subtitle: {
-            ...state.subtitle,
-            settings: { ...state.subtitle.settings, ...settings },
-          },
-        })),
-
       nextSubtitle: () => {
         const state = get();
         if (
           state.subtitle.currentIndex !== null &&
           state.subtitle.currentIndex + 1 < state.subtitle.data.length
         ) {
-          const nextIndex = state.subtitle.currentIndex + 1;
-          const nextSubtitle = state.subtitle.data[nextIndex];
-          get().seek(nextSubtitle.start);
+          clearAutoPauseTimeout();
+          wasAutoPaused = false;
+          const nextIdx = state.subtitle.currentIndex + 1;
+          const next = state.subtitle.data[nextIdx];
+          get().seek(next.start);
+          get().setCurrentSubtitle(next.text, nextIdx);
           get().play();
         }
       },
@@ -180,9 +142,12 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
       previousSubtitle: () => {
         const state = get();
         if (state.subtitle.currentIndex !== null && state.subtitle.currentIndex > 0) {
-          const prevIndex = state.subtitle.currentIndex - 1;
-          const prevSubtitle = state.subtitle.data[prevIndex];
-          get().seek(prevSubtitle.start);
+          clearAutoPauseTimeout();
+          wasAutoPaused = false;
+          const prevIdx = state.subtitle.currentIndex - 1;
+          const prev = state.subtitle.data[prevIdx];
+          get().seek(prev.start);
+          get().setCurrentSubtitle(prev.text, prevIdx);
           get().play();
         }
       },
@@ -190,25 +155,18 @@ export const useSrtPlayerStore = create<SrtPlayerStore>()(
       restartSubtitle: () => {
         const state = get();
         if (state.subtitle.currentIndex !== null) {
-          const currentSubtitle = state.subtitle.data[state.subtitle.currentIndex];
-          get().seek(currentSubtitle.start);
+          clearAutoPauseTimeout();
+          wasAutoPaused = false;
+          const current = state.subtitle.data[state.subtitle.currentIndex];
+          get().seek(current.start);
+          get().setCurrentSubtitle(current.text, state.subtitle.currentIndex);
           get().play();
         }
       },
 
       toggleAutoPause: () =>
         set((state) => ({
-          controls: { ...state.controls, autoPause: !state.controls.autoPause },
-        })),
-
-      toggleShortcuts: () =>
-        set((state) => ({
-          controls: { ...state.controls, showShortcuts: !state.controls.showShortcuts },
-        })),
-
-      toggleSettings: () =>
-        set((state) => ({
-          controls: { ...state.controls, showSettings: !state.controls.showSettings },
+          controls: { autoPause: !state.controls.autoPause },
         })),
     }),
     { name: "srt-player-store" }

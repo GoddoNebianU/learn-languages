@@ -1,9 +1,14 @@
-import { SubtitleEntry } from "../types";
+import type { SubtitleEntry } from "../types";
+
+function toSeconds(timeStr: string): number {
+  const [h, m, s] = timeStr.replace(",", ".").split(":");
+  return parseFloat((parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s)).toFixed(3));
+}
 
 export function parseSrt(data: string): SubtitleEntry[] {
   const lines = data.split(/\r?\n/);
   const result: SubtitleEntry[] = [];
-  const re = new RegExp("(\\d{2}:\\d{2}:\\d{2},\\d{3})\\s*-->\\s*(\\d{2}:\\d{2}:\\d{2},\\d{3})");
+  const timeRe = /(\d{2}:\d{2}:\d{2},\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2},\d{3})/;
   let i = 0;
 
   while (i < lines.length) {
@@ -11,10 +16,11 @@ export function parseSrt(data: string): SubtitleEntry[] {
       i++;
       continue;
     }
-    i++;
+
+    i++; // skip sequence number
     if (i >= lines.length) break;
 
-    const timeMatch = lines[i].match(re);
+    const timeMatch = lines[i].match(timeRe);
     if (!timeMatch) {
       i++;
       continue;
@@ -42,48 +48,8 @@ export function parseSrt(data: string): SubtitleEntry[] {
   return result;
 }
 
-export function getSubtitleIndex(subtitles: SubtitleEntry[], currentTime: number): number | null {
-  for (let i = 0; i < subtitles.length; i++) {
-    if (currentTime >= subtitles[i].start && currentTime <= subtitles[i].end) {
-      return i;
-    }
-  }
-  return null;
-}
-
-export function getNearestIndex(subtitles: SubtitleEntry[], currentTime: number): number | null {
-  for (let i = 0; i < subtitles.length; i++) {
-    const subtitle = subtitles[i];
-    const isWithin = currentTime >= subtitle.start && currentTime <= subtitle.end;
-
-    if (isWithin) return i;
-    if (currentTime < subtitle.start) return i > 0 ? i - 1 : null;
-  }
-  return subtitles.length > 0 ? subtitles.length - 1 : null;
-}
-
-export function getCurrentSubtitle(
-  subtitles: SubtitleEntry[],
-  currentTime: number
-): SubtitleEntry | null {
-  return (
-    subtitles.find((subtitle) => currentTime >= subtitle.start && currentTime <= subtitle.end) ||
-    null
-  );
-}
-
-function toSeconds(timeStr: string): number {
-  const [h, m, s] = timeStr.replace(",", ".").split(":");
-  return parseFloat((parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s)).toFixed(3));
-}
-
 export async function loadSubtitle(url: string): Promise<SubtitleEntry[]> {
-  try {
-    const response = await fetch(url);
-    const data = await response.text();
-    return parseSrt(data);
-  } catch (error) {
-    console.error("加载字幕失败", error);
-    return [];
-  }
+  const response = await fetch(url);
+  const data = await response.text();
+  return parseSrt(data);
 }
