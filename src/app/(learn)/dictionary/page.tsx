@@ -1,6 +1,6 @@
 import { DictionaryClient } from "./DictionaryClient";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
-import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import { actionGetMyDecks } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 
 export default async function DictionaryPage() {
@@ -9,7 +9,7 @@ export default async function DictionaryPage() {
   let decks: ActionOutputDeck[] = [];
 
   if (userId) {
-    const result = await actionGetDecksByUserId({ userId });
+    const result = await actionGetMyDecks();
     if (result.success && result.data) {
       decks = result.data;
     }

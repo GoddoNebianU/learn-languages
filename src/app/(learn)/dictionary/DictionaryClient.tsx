@@ -12,7 +12,7 @@ import { ReadingMode } from "./ReadingMode";
 import { NormalMode } from "./NormalMode";
 import { authClient } from "@/lib/auth-client";
 import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
-import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
+import { actionGetMyDecks } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 
 interface DictionaryClientProps {
@@ -40,8 +40,7 @@ function DictionaryClientInner({ initialDecks }: DictionaryClientProps) {
 
   useEffect(() => {
     if (noSignup || session?.user?.id) {
-      const userId = session?.user?.id ?? "";
-      actionGetDecksByUserId({ userId }).then((result) => {
+      actionGetMyDecks().then((result) => {
         if (result.success && result.data) {
           setDecks(result.data);
         }
