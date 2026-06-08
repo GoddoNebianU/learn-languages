@@ -109,7 +109,9 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
         return;
       }
       onAdded();
-      resetForm();
+      setWord("");
+      setIpa("");
+      setMeanings([{ partOfSpeech: null, definition: "", example: null }]);
       toast.success(t("cardAdded") || "Card added successfully");
     }).catch(() => {
       toast.error("Unknown error");
