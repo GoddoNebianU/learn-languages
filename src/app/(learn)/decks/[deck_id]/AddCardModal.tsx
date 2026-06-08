@@ -76,7 +76,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
     setMeanings([{ partOfSpeech: null, definition: "", example: null }]);
   };
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     if (!word.trim()) {
       toast.error(t("wordRequired"));
       return;
@@ -92,33 +92,30 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
 
     const effectiveQueryLang = customQueryLang.trim() || queryLang;
 
-    try {
-      const cardResult = await actionCreateCard({
-        deckId,
-        word: word.trim(),
-        ipa: showIpa && ipa.trim() ? ipa.trim() : null,
-        queryLang: effectiveQueryLang,
-        cardType,
-        meanings: validMeanings.map((m) => ({
-          partOfSpeech: cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
-          definition: m.definition!.trim(),
-          example: m.example?.trim() || null,
-        })),
-      });
-
+    actionCreateCard({
+      deckId,
+      word: word.trim(),
+      ipa: showIpa && ipa.trim() ? ipa.trim() : null,
+      queryLang: effectiveQueryLang,
+      cardType,
+      meanings: validMeanings.map((m) => ({
+        partOfSpeech: cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
+        definition: m.definition!.trim(),
+        example: cardType === "SENTENCE" ? null : (m.example?.trim() || null),
+      })),
+    }).then((cardResult) => {
       if (!cardResult.success) {
-        throw new Error(cardResult.message || "Failed to create card");
+        toast.error(cardResult.message || "Failed to create card");
+        return;
       }
-
-      resetForm();
       onAdded();
-      onClose();
+      resetForm();
       toast.success(t("cardAdded") || "Card added successfully");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unknown error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    }).catch(() => {
+      toast.error("Unknown error");
+    });
+
+    setTimeout(() => setIsSubmitting(false), 1000);
   };
 
   const handleClose = () => {
@@ -244,12 +241,14 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
                     </IconButton>
                   )}
                 </HStack>
-                <Textarea
-                  value={meaning.example || ""}
-                  onChange={(e) => updateMeaning(index, "example", e.target.value)}
-                  placeholder={t("examplePlaceholder")}
-                  className="min-h-[40px] w-full text-sm"
-                />
+                {cardType !== "SENTENCE" && (
+                  <Textarea
+                    value={meaning.example || ""}
+                    onChange={(e) => updateMeaning(index, "example", e.target.value)}
+                    placeholder={t("examplePlaceholder")}
+                    className="min-h-[40px] w-full text-sm"
+                  />
+                )}
               </div>
             ))}
           </VStack>
