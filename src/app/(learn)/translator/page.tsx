@@ -8,14 +8,15 @@ import { Select } from "@/design-system/select";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { actionTranslateText } from "@/modules/translator/translator-action";
 import { actionCreateCard } from "@/modules/card/card-action";
 import { actionGetMyDecks } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
-import { getTTSUrl, TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
+import { getTTSUrl } from "@/lib/bigmodel/tts";
+import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts-types";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -57,46 +58,43 @@ export default function TranslatorPage() {
     });
   }, [isLoggedIn]);
 
-  const tts = useCallback(
-    async (text: string, locale: string) => {
-      try {
-        // Map language name to TTS format
-        let theLanguage = locale
-          .toLowerCase()
-          .replace(/[^a-z]/g, "")
-          .replace(/^./, (match) => match.toUpperCase());
+  const tts = async (text: string, locale: string) => {
+    try {
+      // Map language name to TTS format
+      let theLanguage = locale
+        .toLowerCase()
+        .replace(/[^a-z]/g, "")
+        .replace(/^./, (match) => match.toUpperCase());
 
-        // Check if language is in TTS supported list
-        const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-          "Auto",
-          "Chinese",
-          "English",
-          "German",
-          "Italian",
-          "Portuguese",
-          "Spanish",
-          "Japanese",
-          "Korean",
-          "French",
-          "Russian",
-        ];
+      // Check if language is in TTS supported list
+      const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
+        "Auto",
+        "Chinese",
+        "English",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Spanish",
+        "Japanese",
+        "Korean",
+        "French",
+        "Russian",
+      ];
 
-        if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
-          theLanguage = "Auto";
-        }
-
-        const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
-        if (!url) {
-          throw new Error("TTS returned no audio URL");
-        }
-        await load(url);
-        await play();
-      } catch (error) {
-        toast.error("Failed to generate audio");
+      if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
+        theLanguage = "Auto";
       }
-    },
-    [load, play]
-  );
+
+      const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
+      if (!url) {
+        throw new Error("TTS returned no audio URL");
+      }
+      await load(url);
+      await play();
+    } catch (error) {
+      toast.error("Failed to generate audio");
+    }
+  };
 
   const translate = async () => {
     if (!taref.current || processing) return;

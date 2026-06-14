@@ -14,34 +14,33 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import {
   actionSearchPublicDecks,
   actionToggleDeckFavorite,
-  actionCheckDeckFavorite,
+  actionCheckDeckFavorites,
 } from "@/modules/deck/deck-action";
 import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
 import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";
 
+type FavoriteState = { isFavorited: boolean; favoriteCount: number };
+
 interface PublicDeckCardProps {
   deck: ActionOutputPublicDeck;
   currentUserId?: string;
+  favoriteState?: FavoriteState;
   onUpdateFavorite: (deckId: number, isFavorited: boolean, favoriteCount: number) => void;
 }
 
-const PublicDeckCard = ({ deck, currentUserId, onUpdateFavorite }: PublicDeckCardProps) => {
+const PublicDeckCard = ({ deck, currentUserId, favoriteState, onUpdateFavorite }: PublicDeckCardProps) => {
   const router = useRouter();
   const t = useTranslations("explore");
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(deck.favoriteCount);
+  const [isFavorited, setIsFavorited] = useState(favoriteState?.isFavorited ?? false);
+  const [favoriteCount, setFavoriteCount] = useState(favoriteState?.favoriteCount ?? deck.favoriteCount);
 
   useEffect(() => {
-    if (currentUserId) {
-      actionCheckDeckFavorite({ deckId: deck.id }).then((result) => {
-        if (result.success && result.data) {
-          setIsFavorited(result.data.isFavorited);
-          setFavoriteCount(result.data.favoriteCount);
-        }
-      });
+    if (favoriteState) {
+      setIsFavorited(favoriteState.isFavorited);
+      setFavoriteCount(favoriteState.favoriteCount);
     }
-  }, [deck.id, currentUserId]);
+  }, [favoriteState]);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -61,9 +60,17 @@ const PublicDeckCard = ({ deck, currentUserId, onUpdateFavorite }: PublicDeckCar
 
   return (
     <div
-      className="group cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white p-3 transition-all hover:border-primary-300 hover:shadow-md sm:border-2 sm:p-5"
+      className="group cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white p-3 transition-all hover:border-primary-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:border-2 sm:p-5"
+      role="button"
+      tabIndex={0}
       onClick={() => {
         router.push(`/explore/${deck.id}`);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          router.push(`/explore/${deck.id}`);
+        }
       }}
     >
       <div className="mb-2 flex items-start justify-between sm:mb-3">
@@ -110,6 +117,7 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
   const t = useTranslations("explore");
   const router = useRouter();
   const [publicDecks, setPublicDecks] = useState<ActionOutputPublicDeck[]>(initialPublicDecks);
+  const [favoritesMap, setFavoritesMap] = useState<Record<number, FavoriteState>>({});
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortByFavorites, setSortByFavorites] = useState(false);
@@ -117,6 +125,22 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
   const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
   const { data: session } = authClient.useSession();
   const currentUserId = noSignup ? undefined : session?.user?.id;
+
+  useEffect(() => {
+    if (!currentUserId || publicDecks.length === 0) return;
+    let cancelled = false;
+    actionCheckDeckFavorites({ deckIds: publicDecks.map((d) => d.id) })
+      .then((result) => {
+        if (cancelled) return;
+        if (result.success && result.data) {
+          setFavoritesMap((prev) => ({ ...prev, ...result.data }));
+        }
+      })
+      .catch((e) => console.error("actionCheckDeckFavorites failed:", e));
+    return () => {
+      cancelled = true;
+    };
+  }, [currentUserId, publicDecks]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -141,6 +165,10 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
 
   const handleUpdateFavorite = (deckId: number, _isFavorited: boolean, favoriteCount: number) => {
     setPublicDecks((prev) => prev.map((d) => (d.id === deckId ? { ...d, favoriteCount } : d)));
+    setFavoritesMap((prev) => ({
+      ...prev,
+      [deckId]: { isFavorited: _isFavorited, favoriteCount },
+    }));
   };
 
   return (
@@ -164,7 +192,12 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
         >
           <ArrowUpDown size={18} />
         </IconButton>
-        <IconButton className="rounded-full" onClick={handleSearch}>
+        <IconButton
+          className="rounded-full"
+          onClick={handleSearch}
+          aria-label={t("searchPlaceholder")}
+          title={t("searchPlaceholder")}
+        >
           <Search size={18} />
         </IconButton>
       </HStack>
@@ -188,6 +221,7 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
               key={deck.id}
               deck={deck}
               currentUserId={currentUserId}
+              favoriteState={favoritesMap[deck.id]}
               onUpdateFavorite={handleUpdateFavorite}
             />
           ))}

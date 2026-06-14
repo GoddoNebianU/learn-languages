@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
@@ -19,7 +19,8 @@ import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
 import { Range } from "@/design-system/range";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSUrl, type TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts";
+import { getTTSUrl } from "@/lib/bigmodel/tts";
+import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts-types";
 import { useMemorizeCards } from "./useMemorizeCards";
 import type { StudyMode } from "./useMemorizeCards";
 import { MemorizeCard } from "./MemorizeCard";
@@ -57,61 +58,58 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const audioUrlRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
 
-  const cleanupAudio = useCallback(() => {
+  const cleanupAudio = () => {
     if (audioUrlRef.current) {
       URL.revokeObjectURL(audioUrlRef.current);
       audioUrlRef.current = null;
     }
     stop();
-  }, [stop]);
+  };
 
-  const handleShowAnswer = useCallback(() => {
+  const handleShowAnswer = () => {
     setShowAnswer(true);
-  }, [setShowAnswer]);
+  };
 
-  const handleNextCard = useCallback(() => {
+  const handleNextCard = () => {
     nextCard();
     cleanupAudio();
-  }, [nextCard, cleanupAudio]);
+  };
 
-  const handlePrevCard = useCallback(() => {
+  const handlePrevCard = () => {
     prevCard();
     cleanupAudio();
-  }, [prevCard, cleanupAudio]);
+  };
 
-  const playTTS = useCallback(
-    async (text: string) => {
-      if (isAudioLoading) return;
+  const playTTS = async (text: string) => {
+    if (isAudioLoading) return;
 
-      setIsAudioLoading(true);
-      try {
-        const hasChinese = /[\u4e00-\u9fff]/.test(text);
-        const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);
-        const hasKorean = /[\uac00-\ud7af]/.test(text);
+    setIsAudioLoading(true);
+    try {
+      const hasChinese = /[\u4e00-\u9fff]/.test(text);
+      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);
+      const hasKorean = /[\uac00-\ud7af]/.test(text);
 
-        let lang: TTS_SUPPORTED_LANGUAGES = "Auto";
-        if (hasChinese) lang = "Chinese";
-        else if (hasJapanese) lang = "Japanese";
-        else if (hasKorean) lang = "Korean";
-        else if (/^[a-zA-Z\s]/.test(text)) lang = "English";
+      let lang: TTS_SUPPORTED_LANGUAGES = "Auto";
+      if (hasChinese) lang = "Chinese";
+      else if (hasJapanese) lang = "Japanese";
+      else if (hasKorean) lang = "Korean";
+      else if (/^[a-zA-Z\s]/.test(text)) lang = "English";
 
-        const audioUrl = await getTTSUrl(text, lang);
+      const audioUrl = await getTTSUrl(text, lang);
 
-        if (audioUrl) {
-          audioUrlRef.current = audioUrl;
-          await load(audioUrl);
-          play();
-        }
-      } catch (e) {
-        console.error("TTS playback failed", e);
-      } finally {
-        setIsAudioLoading(false);
+      if (audioUrl) {
+        audioUrlRef.current = audioUrl;
+        await load(audioUrl);
+        play();
       }
-    },
-    [isAudioLoading, load, play]
-  );
+    } catch (e) {
+      console.error("TTS playback failed", e);
+    } finally {
+      setIsAudioLoading(false);
+    }
+  };
 
-  const playCurrentCard = useCallback(() => {
+  const playCurrentCard = () => {
     if (!currentCard) return;
 
     const text = isReversed
@@ -121,7 +119,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     if (text) {
       playTTS(text);
     }
-  }, [currentCard, isReversed, playTTS]);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

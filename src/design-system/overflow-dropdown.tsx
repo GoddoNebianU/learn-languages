@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -90,19 +90,16 @@ export function OverflowDropdown<T>({
     }
   }, [isOpen]);
 
-  const toggleDropdown = useCallback(() => {
+  const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
-  }, []);
+  };
 
-  const handleItemClick = useCallback(
-    (item: T) => {
-      onItemClick(item);
-      setIsOpen(false);
-    },
-    [onItemClick]
-  );
+  const handleItemClick = (item: T) => {
+    onItemClick(item);
+    setIsOpen(false);
+  };
 
-  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
+  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
     const menuItems = menuRef.current?.querySelectorAll('[role="menuitem"]');
     if (!menuItems || !menuItems.length) return;
 
@@ -137,7 +134,7 @@ export function OverflowDropdown<T>({
         break;
       }
     }
-  }, []);
+  };
 
   if (items.length <= visibleCount) {
     return <div className={cn("flex", className)}>{items.map(renderItem)}</div>;

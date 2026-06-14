@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/utils/cn";
 import type { NavigationItem } from "./Navbar";
@@ -35,9 +35,9 @@ export function MobileMenu({ items }: MobileMenuProps) {
   const menuPanelRef = useRef<HTMLDivElement>(null);
   const triggerWrapperRef = useRef<HTMLDivElement>(null);
 
-  const closeMenu = useCallback(() => {
+  const closeMenu = () => {
     setIsOpen(false);
-  }, []);
+  };
 
   useEffect(() => {
     if (!isOpen) {

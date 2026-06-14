@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DictionaryEntry } from "./DictionaryEntry";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
@@ -54,146 +54,143 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
     }
   }, [readingSearchResult]);
 
-  const handleReadingChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value;
-      const prevLength = prevLengthRef.current;
-      const newLength = newValue.length;
+  const handleReadingChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    const prevLength = prevLengthRef.current;
+    const newLength = newValue.length;
 
-      if (prevLength === 0 && newLength >= 2) {
-        prevLengthRef.current = newLength;
-        setInputValue(newValue);
+    if (prevLength === 0 && newLength >= 2) {
+      prevLengthRef.current = newLength;
+      setInputValue(newValue);
 
-        if (!hasDeck) {
-          toast.error(t("selectDeckFirst"));
+      if (!hasDeck) {
+        toast.error(t("selectDeckFirst"));
+        prevLengthRef.current = 0;
+        setInputValue("");
+        return;
+      }
+
+      setProcessingState("looking-up");
+      setLastResult(null);
+      setReadingSearchResult(null);
+      setCurrentCardId(null);
+
+      try {
+        const existingCard = await actionGetCardByWord({
+          deckId: selectedDeckId!,
+          word: newValue.trim(),
+        });
+
+        if (existingCard.success && existingCard.data) {
+          const card = existingCard.data;
+          const cachedResult: TSharedItem = {
+            standardForm: card.word,
+            entries: card.meanings.map((m) => ({
+              ipa: card.ipa ?? undefined,
+              definition: m.definition,
+              partOfSpeech: m.partOfSpeech ?? undefined,
+              example: m.example ?? "",
+            })),
+          };
+          setReadingSearchResult(cachedResult);
+          setCurrentCardId(card.id);
+          toast.info(t("wordAlreadyExists", { word: card.word }));
+          setProcessingState("done");
           prevLengthRef.current = 0;
           setInputValue("");
           return;
         }
 
-        setProcessingState("looking-up");
-        setLastResult(null);
-        setReadingSearchResult(null);
-        setCurrentCardId(null);
+        const lookupResult = await actionLookUpDictionary({
+          text: newValue.trim(),
+          queryLang: getNativeName(queryLang),
+          definitionLang: getNativeName(definitionLang),
+          deckId: selectedDeckId!,
+        });
 
-        try {
-          const existingCard = await actionGetCardByWord({
-            deckId: selectedDeckId!,
-            word: newValue.trim(),
-          });
-
-          if (existingCard.success && existingCard.data) {
-            const card = existingCard.data;
-            const cachedResult: TSharedItem = {
-              standardForm: card.word,
-              entries: card.meanings.map((m) => ({
-                ipa: card.ipa ?? undefined,
-                definition: m.definition,
-                partOfSpeech: m.partOfSpeech ?? undefined,
-                example: m.example ?? "",
-              })),
-            };
-            setReadingSearchResult(cachedResult);
-            setCurrentCardId(card.id);
-            toast.info(t("wordAlreadyExists", { word: card.word }));
-            setProcessingState("done");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
-
-          const lookupResult = await actionLookUpDictionary({
-            text: newValue.trim(),
-            queryLang: getNativeName(queryLang),
-            definitionLang: getNativeName(definitionLang),
-            deckId: selectedDeckId!,
-          });
-
-          if (!lookupResult.success || !lookupResult.data) {
-            toast.error(lookupResult.message || t("lookupFailed"));
-            setProcessingState("error");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
-
-          const lookupData = lookupResult.data;
-          setReadingSearchResult(lookupData);
-
-          if (lookupData.alreadyExists) {
-            const existingByForm = await actionGetCardByWord({
-              deckId: selectedDeckId!,
-              word: lookupData.standardForm,
-            });
-            if (existingByForm.success && existingByForm.data) {
-              setCurrentCardId(existingByForm.data.id);
-            }
-            toast.info(t("wordAlreadyExists", { word: lookupData.standardForm }));
-            setProcessingState("done");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
-
-          const word = lookupData.standardForm;
-
-          setProcessingState("saving");
-          const hasIpa = lookupData.entries.some((e) => e.ipa);
-          const hasSpaces = lookupData.standardForm.includes(" ");
-          let cardType: CardType = "WORD";
-          if (!hasIpa) {
-            cardType = "SENTENCE";
-          } else if (hasSpaces) {
-            cardType = "PHRASE";
-          }
-
-          const ipa = lookupData.entries.find((e) => e.ipa)?.ipa || null;
-          const meanings = lookupData.entries.map((e) => ({
-            partOfSpeech: e.partOfSpeech || null,
-            definition: e.definition,
-            example: e.example || null,
-          }));
-
-          const cardResult = await actionCreateCard({
-            deckId: selectedDeckId!,
-            word,
-            ipa,
-            queryLang: getNativeName(queryLang),
-            cardType,
-            meanings,
-          });
-
-          if (!cardResult.success) {
-            toast.error(cardResult.message || t("saveFailed"));
-            setProcessingState("error");
-            prevLengthRef.current = 0;
-            setInputValue("");
-            return;
-          }
-
-          setCurrentCardId(cardResult.cardId ?? null);
-
-          const deckName = decks.find((d) => d.id === selectedDeckId)?.name || "";
-          setLastResult({ word, deckName });
-          setProcessingState("done");
-          toast.success(t("savedStatus", { word, deckName }));
-        } catch {
-          toast.error(t("unexpectedError"));
+        if (!lookupResult.success || !lookupResult.data) {
+          toast.error(lookupResult.message || t("lookupFailed"));
           setProcessingState("error");
-        } finally {
           prevLengthRef.current = 0;
           setInputValue("");
+          return;
         }
-      } else {
-        setInputValue("");
+
+        const lookupData = lookupResult.data;
+        setReadingSearchResult(lookupData);
+
+        if (lookupData.alreadyExists) {
+          const existingByForm = await actionGetCardByWord({
+            deckId: selectedDeckId!,
+            word: lookupData.standardForm,
+          });
+          if (existingByForm.success && existingByForm.data) {
+            setCurrentCardId(existingByForm.data.id);
+          }
+          toast.info(t("wordAlreadyExists", { word: lookupData.standardForm }));
+          setProcessingState("done");
+          prevLengthRef.current = 0;
+          setInputValue("");
+          return;
+        }
+
+        const word = lookupData.standardForm;
+
+        setProcessingState("saving");
+        const hasIpa = lookupData.entries.some((e) => e.ipa);
+        const hasSpaces = lookupData.standardForm.includes(" ");
+        let cardType: CardType = "WORD";
+        if (!hasIpa) {
+          cardType = "SENTENCE";
+        } else if (hasSpaces) {
+          cardType = "PHRASE";
+        }
+
+        const ipa = lookupData.entries.find((e) => e.ipa)?.ipa || null;
+        const meanings = lookupData.entries.map((e) => ({
+          partOfSpeech: e.partOfSpeech || null,
+          definition: e.definition,
+          example: e.example || null,
+        }));
+
+        const cardResult = await actionCreateCard({
+          deckId: selectedDeckId!,
+          word,
+          ipa,
+          queryLang: getNativeName(queryLang),
+          cardType,
+          meanings,
+        });
+
+        if (!cardResult.success) {
+          toast.error(cardResult.message || t("saveFailed"));
+          setProcessingState("error");
+          prevLengthRef.current = 0;
+          setInputValue("");
+          return;
+        }
+
+        setCurrentCardId(cardResult.cardId ?? null);
+
+        const deckName = decks.find((d) => d.id === selectedDeckId)?.name || "";
+        setLastResult({ word, deckName });
+        setProcessingState("done");
+        toast.success(t("savedStatus", { word, deckName }));
+      } catch {
+        toast.error(t("unexpectedError"));
+        setProcessingState("error");
+      } finally {
         prevLengthRef.current = 0;
-        if (newLength > 0) {
-          toast.error(t("pasteOnly"));
-        }
+        setInputValue("");
       }
-    },
-    [hasDeck, selectedDeckId, decks, t, queryLang, definitionLang]
-  );
+    } else {
+      setInputValue("");
+      prevLengthRef.current = 0;
+      if (newLength > 0) {
+        toast.error(t("pasteOnly"));
+      }
+    }
+  };
 
   const getStatusIcon = () => {
     switch (processingState) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -27,38 +27,39 @@ export function ReadingClient() {
   const abortRef = useRef(false);
   const retryAbortRef = useRef(false);
 
-  const getHighlighted = useCallback(
-    (pIdx: number, sIdx: number, side: "source" | "target"): Set<number> => {
-      const indices = new Set<number>();
-      if (!hovered || hovered.paragraphIdx !== pIdx || hovered.sentenceIdx !== sIdx) {
-        return indices;
-      }
+  const getHighlighted = (
+    pIdx: number,
+    sIdx: number,
+    side: "source" | "target"
+  ): Set<number> => {
+    const indices = new Set<number>();
+    if (!hovered || hovered.paragraphIdx !== pIdx || hovered.sentenceIdx !== sIdx) {
+      return indices;
+    }
 
-      const slot = paragraphSlots[pIdx];
-      if (!slot || slot.status !== "success") return indices;
+    const slot = paragraphSlots[pIdx];
+    if (!slot || slot.status !== "success") return indices;
 
-      const sentence = slot.data.sentences[sIdx];
-      if (!sentence) return indices;
+    const sentence = slot.data.sentences[sIdx];
+    if (!sentence) return indices;
 
-      for (const alignment of sentence.alignments) {
-        const hoveredField =
-          hovered.side === "source" ? alignment.sourceIndices : alignment.targetIndices;
-        const resultField =
-          side === "source" ? alignment.sourceIndices : alignment.targetIndices;
+    for (const alignment of sentence.alignments) {
+      const hoveredField =
+        hovered.side === "source" ? alignment.sourceIndices : alignment.targetIndices;
+      const resultField =
+        side === "source" ? alignment.sourceIndices : alignment.targetIndices;
 
-        if (hoveredField.includes(hovered.localIdx)) {
-          for (const idx of resultField) {
-            indices.add(idx);
-          }
+      if (hoveredField.includes(hovered.localIdx)) {
+        for (const idx of resultField) {
+          indices.add(idx);
         }
       }
+    }
 
-      return indices;
-    },
-    [hovered, paragraphSlots]
-  );
+    return indices;
+  };
 
-  const handleTranslate = useCallback(async () => {
+  const handleTranslate = async () => {
     const textarea = document.getElementById("reading-input") as HTMLTextAreaElement | null;
     const text = textarea?.value?.trim();
     if (!text) {
@@ -131,74 +132,71 @@ export function ReadingClient() {
     setProgress({ total: 0 });
 
     setProcessing(false);
-  }, [targetLanguage, t]);
+  };
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = () => {
     abortRef.current = true;
     setProcessing(false);
-  }, []);
+  };
 
-  const handleRetry = useCallback(
-    async (index: number) => {
-      const slot = paragraphSlots[index];
-      if (!slot || slot.status !== "error") return;
+  const handleRetry = async (index: number) => {
+    const slot = paragraphSlots[index];
+    if (!slot || slot.status !== "error") return;
 
-      retryAbortRef.current = false;
-      setParagraphSlots((prev) =>
-        prev.map((s, i) => (i === index ? { ...s, retrying: true } : s))
-      );
+    retryAbortRef.current = false;
+    setParagraphSlots((prev) =>
+      prev.map((s, i) => (i === index ? { ...s, retrying: true } : s))
+    );
 
-      try {
-        const result = await actionReadText({
-          text: slot.text,
-          targetLanguage: targetLanguage.trim(),
-        });
+    try {
+      const result = await actionReadText({
+        text: slot.text,
+        targetLanguage: targetLanguage.trim(),
+      });
 
-        if (retryAbortRef.current) return;
+      if (retryAbortRef.current) return;
 
-        if (result.success && result.data) {
-          setParagraphSlots((prev) =>
-            prev.map((s, i) =>
-              i === index
-                ? {
-                    status: "success",
-                    data: {
-                      sentences: result.data!.sentences,
-                      sourceLanguage: result.data!.sourceLanguage,
-                      targetLanguage: result.data!.targetLanguage,
-                    },
-                  }
-                : s
-            )
-          );
-        } else {
-          const errorMsg = result.message || t("translationFailed");
-          toast.error(errorMsg);
-          setParagraphSlots((prev) =>
-            prev.map((s, i) =>
-              i === index ? { ...s, error: errorMsg, retrying: false } : s
-            )
-          );
-        }
-      } catch {
-        if (retryAbortRef.current) return;
-        toast.error(t("translationFailed"));
+      if (result.success && result.data) {
         setParagraphSlots((prev) =>
-          prev.map((s, i) => (i === index ? { ...s, retrying: false } : s))
+          prev.map((s, i) =>
+            i === index
+              ? {
+                  status: "success",
+                  data: {
+                    sentences: result.data!.sentences,
+                    sourceLanguage: result.data!.sourceLanguage,
+                    targetLanguage: result.data!.targetLanguage,
+                  },
+                }
+              : s
+          )
+        );
+      } else {
+        const errorMsg = result.message || t("translationFailed");
+        toast.error(errorMsg);
+        setParagraphSlots((prev) =>
+          prev.map((s, i) =>
+            i === index ? { ...s, error: errorMsg, retrying: false } : s
+          )
         );
       }
-    },
-    [paragraphSlots, targetLanguage, t]
-  );
+    } catch {
+      if (retryAbortRef.current) return;
+      toast.error(t("translationFailed"));
+      setParagraphSlots((prev) =>
+        prev.map((s, i) => (i === index ? { ...s, retrying: false } : s))
+      );
+    }
+  };
 
-  const handleCancelRetry = useCallback(() => {
+  const handleCancelRetry = () => {
     retryAbortRef.current = true;
     setParagraphSlots((prev) =>
       prev.map((s) => (s.status === "error" && s.retrying ? { ...s, retrying: false } : s))
     );
-  }, []);
+  };
 
-  const handleFlip = useCallback(() => {
+  const handleFlip = () => {
     setParagraphSlots((prev) =>
       prev.map((slot) =>
         slot.status === "success"
@@ -223,7 +221,7 @@ export function ReadingClient() {
       )
     );
     setHovered(null);
-  }, []);
+  };
 
   return (
     <PageLayout>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Languages } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -56,11 +56,11 @@ export function LanguageSettings() {
     }
   }, [pendingLocale]);
 
-  const setLocale = useCallback((locale: string) => {
+  const setLocale = (locale: string) => {
     setPendingLocale(locale);
-  }, []);
+  };
 
-  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent<HTMLButtonElement>) => {
+  const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const items = menuRef.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
     if (!items) return;
 
@@ -81,7 +81,7 @@ export function LanguageSettings() {
       e.preventDefault();
       e.currentTarget.click();
     }
-  }, []);
+  };
 
   return (
     <div className="relative" ref={menuRef}>

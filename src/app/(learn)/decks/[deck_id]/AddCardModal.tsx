@@ -15,6 +15,8 @@ import { actionCreateCard } from "@/modules/card/card-action";
 import type { CardType, CardMeaning } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
+type MeaningWithId = CardMeaning & { id: string };
+
 const QUERY_LANGUAGES = [
   { value: "en", label: "english" as const },
   { value: "zh", label: "chinese" as const },
@@ -37,15 +39,18 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
   const [ipa, setIpa] = useState("");
   const [queryLang, setQueryLang] = useState("en");
   const [customQueryLang, setCustomQueryLang] = useState("");
-  const [meanings, setMeanings] = useState<CardMeaning[]>([
-    { partOfSpeech: null, definition: "", example: null },
+  const [meanings, setMeanings] = useState<MeaningWithId[]>([
+    { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const showIpa = cardType === "WORD" || cardType === "PHRASE";
 
   const addMeaning = () => {
-    setMeanings([...meanings, { partOfSpeech: null, definition: "", example: null }]);
+    setMeanings([
+      ...meanings,
+      { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+    ]);
   };
 
   const removeMeaning = (index: number) => {
@@ -73,7 +78,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
     setIpa("");
     setQueryLang("en");
     setCustomQueryLang("");
-    setMeanings([{ partOfSpeech: null, definition: "", example: null }]);
+    setMeanings([{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]);
   };
 
   const handleAdd = () => {
@@ -111,7 +116,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
       onAdded();
       setWord("");
       setIpa("");
-      setMeanings([{ partOfSpeech: null, definition: "", example: null }]);
+      setMeanings([{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]);
       toast.success(t("cardAdded") || "Card added successfully");
     }).catch(() => {
       toast.error("Unknown error");
@@ -214,7 +219,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
 
           <VStack gap={4}>
             {meanings.map((meaning, index) => (
-              <div key={index} className="space-y-2 rounded-lg bg-gray-50 p-3">
+              <div key={meaning.id} className="space-y-2 rounded-lg bg-gray-50 p-3">
                 <HStack gap={2}>
                   {cardType !== "SENTENCE" && (
                     <div className="w-28 shrink-0">

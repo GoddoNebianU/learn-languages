@@ -14,6 +14,8 @@ import { actionUpdateCard } from "@/modules/card/card-action";
 import type { ActionOutputCard, CardMeaning } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
+type MeaningWithId = CardMeaning & { id: string };
+
 interface EditCardModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,8 +28,8 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
 
   const [word, setWord] = useState("");
   const [ipa, setIpa] = useState("");
-  const [meanings, setMeanings] = useState<CardMeaning[]>([
-    { partOfSpeech: null, definition: "", example: null },
+  const [meanings, setMeanings] = useState<MeaningWithId[]>([
+    { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,14 +41,17 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
       setIpa(card.ipa || "");
       setMeanings(
         card.meanings.length > 0
-          ? card.meanings
-          : [{ partOfSpeech: null, definition: "", example: null }]
+          ? card.meanings.map((m) => ({ ...m, id: crypto.randomUUID() }))
+          : [{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]
       );
     }
   }, [card]);
 
   const addMeaning = () => {
-    setMeanings([...meanings, { partOfSpeech: null, definition: "", example: null }]);
+    setMeanings([
+      ...meanings,
+      { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+    ]);
   };
 
   const removeMeaning = (index: number) => {
@@ -155,7 +160,7 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
 
           <VStack gap={4}>
             {meanings.map((meaning, index) => (
-              <div key={index} className="space-y-2 rounded-lg bg-gray-50 p-3">
+              <div key={meaning.id} className="space-y-2 rounded-lg bg-gray-50 p-3">
                 <HStack gap={2}>
                   {card.cardType !== "SENTENCE" && (
                     <div className="w-28 shrink-0">

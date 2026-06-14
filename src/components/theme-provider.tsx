@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   THEME_PRESETS,
   DEFAULT_THEME,
@@ -54,26 +54,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [currentTheme, hydrated]);
 
-  const setTheme = useCallback((themeId: string) => {
+  const setTheme = (themeId: string) => {
     if (getThemePreset(themeId)) {
       setCurrentTheme(themeId);
     }
-  }, []);
+  };
 
-  const themePreset = useMemo(
-    () => getThemePreset(currentTheme) || THEME_PRESETS[0],
-    [currentTheme]
-  );
+  const themePreset = getThemePreset(currentTheme) || THEME_PRESETS[0];
 
-  const value = useMemo(
-    () => ({
-      currentTheme,
-      themePreset,
-      setTheme,
-      availableThemes: THEME_PRESETS,
-    }),
-    [currentTheme, themePreset, setTheme]
-  );
+  const value = {
+    currentTheme,
+    themePreset,
+    setTheme,
+    availableThemes: THEME_PRESETS,
+  };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

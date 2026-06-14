@@ -30,13 +30,10 @@ export interface RangeProps extends Omit<React.ComponentPropsWithoutRef<"input">
 
 export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
   ({ value, min = 0, max, onChange, disabled = false, className, ...props }, ref) => {
-    const handleChange = React.useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseInt(event.target.value);
-        onChange(newValue);
-      },
-      [onChange]
-    );
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = parseInt(event.target.value);
+      onChange(newValue);
+    };
 
     const progressPercentage = ((value - min) / (max - min)) * 100;
 

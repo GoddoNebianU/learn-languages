@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/cn";
 import { useSrtPlayerStore } from "../stores/srtPlayerStore";
@@ -27,16 +27,13 @@ export function SubtitleProgressBar({ className }: SubtitleProgressBarProps) {
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const handleBarClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!barRef.current || duration <= 0) return;
-      const rect = barRef.current.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const time = (clickX / rect.width) * duration;
-      seek(time);
-    },
-    [duration, seek]
-  );
+  const handleBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!barRef.current || duration <= 0) return;
+    const rect = barRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const time = (clickX / rect.width) * duration;
+    seek(time);
+  };
 
   const totalSubtitles = subtitleData.length;
   const subtitleIndexDisplay =

@@ -2,7 +2,6 @@
 
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useId,
@@ -55,40 +54,37 @@ export function Modal({
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
 
-  const getFocusableElements = useCallback(() => {
+  const getFocusableElements = () => {
     if (!dialogRef.current) return [];
     return Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)).filter(
       (el) => !el.hasAttribute("disabled") && el.tabIndex >= 0
     );
-  }, []);
+  };
 
-  const handleTrapFocus = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+  const handleTrapFocus = (e: KeyboardEvent) => {
+    if (e.key !== "Tab") return;
 
-      const focusable = getFocusableElements();
-      if (focusable.length === 0) {
+    const focusable = getFocusableElements();
+    if (focusable.length === 0) {
+      e.preventDefault();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
         e.preventDefault();
-        return;
+        last.focus();
       }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
-    },
-    [getFocusableElements]
-  );
+    }
+  };
 
   useEffect(() => {
     if (open) {
