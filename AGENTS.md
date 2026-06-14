@@ -260,7 +260,6 @@ node -e "console.log(Object.keys(JSON.parse(require('fs').readFileSync('messages
 - ❌ npm 或 yarn (使用 pnpm)
 - ❌ 生产代码中使用 `console.log` (使用 winston logger, 客户端组件例外)
 - ❌ 擅自运行 `pnpm dev` (不需要，用 `pnpm build` 验证即可)
-- ❌ `db push` (必须用 `prisma migrate dev`)
 - ❌ 原生 `confirm()` / `prompt()` / `alert()` (使用 design-system/modal)
 - ❌ 内联 SVG 图标 (使用 Lucide React, 例外: Navbar 的 GithubIcon)
 
@@ -299,12 +298,12 @@ pnpm lint          # ESLint
 pnpm prisma studio # 数据库 GUI
 ```
 
-### 数据库迁移
+### 数据库同步
 
-**必须使用 `prisma migrate dev`，禁止 `db push`：**
+**使用 `prisma db push` 同步 schema 到数据库：**
 
 ```bash
-DATABASE_URL=your_db_url pnpm prisma migrate dev --name your_migration_name
+DATABASE_URL=your_db_url pnpm prisma db push
 DATABASE_URL=your_db_url pnpm prisma generate
 ```
 
@@ -323,7 +322,7 @@ DATABASE_URL=your_db_url pnpm prisma generate
 - i18n: 9 种语言, cookie 存储 locale (无 URL 路径, 无 middleware)
 - Prisma 7: `prisma-client` 生成器 (非 `prisma-client-js`), 输出到 `generated/prisma/`, 使用 PrismaPg adapter, 配置在 `prisma.config.ts`
 - TTS: 阿里云千问 (qwen3-tts-flash)
-- 数据库: PostgreSQL, 必须用 `prisma migrate dev`
+- 数据库: PostgreSQL, 使用 `prisma db push` 同步 schema
 - 未配置测试基础设施, 用 `pnpm build` 验证
 - 无 CI/CD 管道 (手动构建)
 - 无 middleware.ts, 无 loading.tsx (error.tsx 存在于根级)

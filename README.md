@@ -30,7 +30,7 @@ cd learn-languages
 pnpm install
 cp .env.example .env.local
 pnpm prisma generate
-DATABASE_URL=your_db_url pnpm prisma migrate dev --name init
+DATABASE_URL=your_db_url pnpm prisma db push
 pnpm dev
 ```
 
@@ -145,8 +145,8 @@ Deployment tier and feature flags stored in DB (`SystemConfig` + `TierCapability
 pnpm dev                                       # dev server
 pnpm build                                     # production build (used for verification)
 pnpm lint                                      # ESLint
-DATABASE_URL=... pnpm prisma migrate dev --name <name>   # schema migration (required, not db push)
-DATABASE_URL=... pnpm prisma generate                     # regenerate client
+DATABASE_URL=... pnpm prisma db push                            # sync schema to database
+DATABASE_URL=... pnpm prisma generate                            # regenerate client
 ```
 
 ## i18n
