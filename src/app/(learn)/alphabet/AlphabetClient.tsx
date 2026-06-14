@@ -1,0 +1,60 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Letter, SupportedAlphabets } from "@/lib/interfaces";
+import { PageLayout } from "@/components/ui/PageLayout";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { AlphabetCard } from "./AlphabetCard";
+
+const alphabetOptions: { value: SupportedAlphabets; label: string; color: string }[] = [
+  { value: "japanese", label: "あいうえお", color: "#a56068" },
+  { value: "english", label: "ABC", color: "#578aad" },
+  { value: "uyghur", label: "ئۇيغۇر", color: "#3c988d" },
+  { value: "esperanto", label: "ABCĜĤ", color: "#dd7486" },
+];
+
+interface AlphabetClientProps {
+  alphabets: Record<SupportedAlphabets, Letter[]>;
+}
+
+export default function AlphabetClient({ alphabets }: AlphabetClientProps) {
+  const t = useTranslations("alphabet");
+  const [chosenAlphabet, setChosenAlphabet] = useState<SupportedAlphabets | null>(null);
+
+  // 语言选择界面
+  if (!chosenAlphabet) {
+    return (
+      <PageLayout>
+        <PageHeader title={t("chooseCharacters")} subtitle={t("chooseAlphabetHint")} />
+
+        <div className="grid grid-cols-2 gap-4">
+          {alphabetOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setChosenAlphabet(option.value)}
+              className="group cursor-pointer rounded-lg border border-gray-200 bg-white p-4 text-center transition-all hover:border-primary-300 hover:shadow-md sm:border-2 sm:p-6"
+            >
+              <span
+                className="mb-2 block text-3xl font-bold sm:text-4xl"
+                style={{ color: option.color }}
+              >
+                {option.label}
+              </span>
+              <span className="text-sm text-gray-600 sm:text-base">{t(option.value)}</span>
+            </button>
+          ))}
+        </div>
+      </PageLayout>
+    );
+  }
+
+  // 字母卡片界面
+  return (
+    <AlphabetCard
+      alphabet={alphabets[chosenAlphabet]}
+      alphabetType={chosenAlphabet}
+      onBack={() => setChosenAlphabet(null)}
+    />
+  );
+}

@@ -13,12 +13,16 @@ export function MemoryCard({
   setChosenAlphabet: Dispatch<SetStateAction<SupportedAlphabets | null>>;
 }) {
   const t = useTranslations("alphabet");
-  const [index, setIndex] = useState(() =>
-    alphabet.length > 0 ? Math.floor(Math.random() * alphabet.length) : 0
-  );
+  const [index, setIndex] = useState(0);
   const [more, setMore] = useState(false);
   const [ipaDisplay, setIPADisplay] = useState(true);
   const [letterDisplay, setLetterDisplay] = useState(true);
+
+  useEffect(() => {
+    if (alphabet.length > 0) {
+      setIndex(Math.floor(Math.random() * alphabet.length));
+    }
+  }, [alphabet.length]);
 
   const refresh = useCallback(() => {
     if (alphabet.length > 0) {
