@@ -9,6 +9,8 @@ import {
   validateActionInputLookUpDictionary,
 } from "./dictionary-action-dto";
 import { serviceGetCardByWord } from "@/modules/card/card-service";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
 
 const log = createLogger("dictionary-action");
 
@@ -16,7 +18,17 @@ export async function actionLookUpDictionary(
   input: unknown
 ): Promise<ActionOutputLookUpDictionary> {
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, message: "Unauthorized" };
+
     const validated = validateActionInputLookUpDictionary(input);
+
+    if (validated.deckId) {
+      const deckOwnerId = await repoGetUserIdByDeckId(validated.deckId);
+      if (!deckOwnerId || deckOwnerId !== userId) {
+        return { success: false, message: "Unauthorized" };
+      }
+    }
 
     const result = await executeDictionaryLookup(
       validated.text,

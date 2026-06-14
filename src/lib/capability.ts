@@ -5,43 +5,77 @@ export type DeploymentTier = string;
 const CAPABILITY_KEYS = ["signup", "userProfile", "social", "email"] as const;
 export type CapabilityKey = (typeof CAPABILITY_KEYS)[number];
 
-let _capabilitiesCache: Map<string, boolean> | null = null;
-let _tierCache: DeploymentTier | null = null;
-let _servicesCache: Record<string, unknown> | null = null;
+// --- Defaults (must match schema @default values) ---
+const DEFAULT_TIER = "SINGLE";
+const DEFAULT_CAPABILITIES: Record<string, boolean> = {
+  signup: true,
+  userProfile: true,
+  social: true,
+  email: true,
+};
 
-async function loadCapabilities(): Promise<{ capabilities: Map<string, boolean>; tier: DeploymentTier; services: Record<string, unknown> }> {
-  if (_capabilitiesCache && _tierCache && _servicesCache) {
-    return { capabilities: _capabilitiesCache, tier: _tierCache, services: _servicesCache };
-  }
+// --- Tier name normalization ---
+export function normalizeTier(name: string): string {
+  return name.trim().toUpperCase();
+}
 
-  const [config, tierRow] = await Promise.all([
+// --- Cache with TTL + single-flight ---
+const CACHE_TTL_MS = 60_000; // 60 seconds
+
+interface CachedState {
+  capabilities: Map<string, boolean>;
+  tier: DeploymentTier;
+  services: Record<string, unknown>;
+  cachedAt: number;
+}
+
+let _cache: CachedState | null = null;
+let _loadPromise: Promise<CachedState> | null = null;
+
+function isCacheValid(): boolean {
+  return _cache !== null && Date.now() - _cache.cachedAt < CACHE_TTL_MS;
+}
+
+async function doLoad(): Promise<CachedState> {
+  const [config, tierRows] = await Promise.all([
     prisma.systemConfig.findUnique({ where: { id: 1 } }),
     prisma.tierCapability.findMany(),
   ]);
 
-  const tier = config?.tier ?? "SINGLE";
+  const tier = config?.tier ?? DEFAULT_TIER;
   const services = (config?.services ?? {}) as Record<string, unknown>;
 
-  const row = tierRow.find((r) => r.tier === tier);
+  // Case-insensitive match to handle legacy data
+  const normalized = normalizeTier(tier);
+  const row = tierRows.find((r) => normalizeTier(r.tier) === normalized);
+
   const capabilities = new Map<string, boolean>();
-  if (row) {
-    for (const key of CAPABILITY_KEYS) {
-      capabilities.set(key, row[key]);
-    }
+  for (const key of CAPABILITY_KEYS) {
+    // If tier row exists use its values; otherwise use defaults (matching schema @default)
+    capabilities.set(key, row ? row[key] : DEFAULT_CAPABILITIES[key]);
   }
 
-  _capabilitiesCache = capabilities;
-  _tierCache = tier;
-  _servicesCache = services;
-
-  return { capabilities, tier, services };
+  return { capabilities, tier, services, cachedAt: Date.now() };
 }
 
-export function invalidateCapabilityCache() {
-  _capabilitiesCache = null;
-  _tierCache = null;
-  _servicesCache = null;
+async function loadCapabilities(): Promise<CachedState> {
+  if (isCacheValid() && _cache) return _cache;
+  // Single-flight: concurrent callers share the same in-flight load
+  if (_loadPromise) return _loadPromise;
+  _loadPromise = doLoad();
+  try {
+    _cache = await _loadPromise;
+    return _cache;
+  } finally {
+    _loadPromise = null;
+  }
 }
+
+export function invalidateCapabilityCache(): void {
+  _cache = null;
+}
+
+// --- Public API ---
 
 export async function getTier(): Promise<DeploymentTier> {
   const { tier } = await loadCapabilities();
@@ -67,18 +101,20 @@ export async function getServices(): Promise<Record<string, unknown>> {
   return services;
 }
 
+// --- Service config accessors (no hardcoded vendor defaults) ---
+
 export function getLlmConfig(services: Record<string, unknown>) {
-  const llm = (services.llm ?? {}) as Record<string, string>;
+  const llm = (services.llm ?? {}) as Record<string, unknown>;
   return {
-    apiKey: llm.apiKey ?? "",
-    apiUrl: llm.apiUrl ?? "https://api.deepseek.com/chat/completions",
-    modelName: llm.modelName ?? "deepseek-v4-flash",
+    apiKey: (llm.apiKey as string) ?? "",
+    apiUrl: (llm.apiUrl as string) ?? "",
+    modelName: (llm.modelName as string) ?? "",
   };
 }
 
 export function getTtsConfig(services: Record<string, unknown>) {
-  const tts = (services.tts ?? {}) as Record<string, string>;
-  return { apiKey: tts.apiKey ?? "" };
+  const tts = (services.tts ?? {}) as Record<string, unknown>;
+  return { apiKey: (tts.apiKey as string) ?? "" };
 }
 
 export function getSmtpConfig(services: Record<string, unknown>) {

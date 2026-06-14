@@ -1,23 +1,17 @@
-"use server-headers";
+"use server";
 
+import { auth } from "@/auth";
 import { getSingleUserId } from "@/lib/auth-mode";
-import { hasCapability } from "@/lib/capability";
 import { headers } from "next/headers";
-import { createLogger } from "@/lib/logger";
-
-const log = createLogger("shared-action-utils");
 
 export async function getCurrentUserId(): Promise<string | null> {
-  const hasSignup = await hasCapability("signup");
-  if (!hasSignup) {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") {
     return getSingleUserId();
   }
-
-  const { auth } = await import("@/auth");
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
-    log.warn("Unauthenticated access attempt");
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    return session?.user?.id ?? null;
+  } catch {
     return null;
   }
-  return session.user.id;
 }

@@ -7,10 +7,12 @@ const log = createLogger("admin-auth");
 
 const COOKIE_NAME = "admin_session";
 const ALGORITHM = "HS256";
-const EXPIRES_IN = "24h";
+const EXPIRES_IN = "8h";
+const ISSUER = "learn-languages-admin";
+const AUDIENCE = "admin-panel";
 
 function getSecret(): Uint8Array {
-  return new TextEncoder().encode(serverEnv.BETTER_AUTH_SECRET);
+  return new TextEncoder().encode(process.env.ADMIN_JWT_SECRET || serverEnv.BETTER_AUTH_SECRET);
 }
 
 export function getAdminPassword(): string {
@@ -22,6 +24,8 @@ export async function createAdminSession(): Promise<void> {
   const token = await new SignJWT({ role: "admin" })
     .setProtectedHeader({ alg: ALGORITHM })
     .setIssuedAt()
+    .setIssuer(ISSUER)
+    .setAudience(AUDIENCE)
     .setExpirationTime(EXPIRES_IN)
     .sign(secret);
 
@@ -29,9 +33,9 @@ export async function createAdminSession(): Promise<void> {
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60 * 8,
   });
 
   log.info("Admin session created");
@@ -46,6 +50,8 @@ export async function verifyAdminSession(): Promise<boolean> {
     const secret = getSecret();
     const { payload } = await jwtVerify(token, secret, {
       algorithms: [ALGORITHM],
+      issuer: ISSUER,
+      audience: AUDIENCE,
     });
 
     return payload.role === "admin";

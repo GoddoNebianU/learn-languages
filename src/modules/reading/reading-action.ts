@@ -5,6 +5,7 @@ import {
   ActionOutputReadText,
   validateActionInputReadText,
 } from "./reading-action-dto";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
 
@@ -12,6 +13,9 @@ const log = createLogger("reading-action");
 
 export const actionReadText = async (input: unknown): Promise<ActionOutputReadText> => {
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, message: "Unauthorized" };
+
     const validated = validateActionInputReadText(input);
     const result = await serviceReadText(validated);
     return {

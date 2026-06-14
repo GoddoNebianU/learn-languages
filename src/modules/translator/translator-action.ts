@@ -6,6 +6,7 @@ import {
   ActionOutputTranslateText,
   validateActionInputTranslateText,
 } from "./translator-action-dto";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
 
@@ -13,6 +14,9 @@ const log = createLogger("translator-action");
 
 export const actionTranslateText = async (input: unknown): Promise<ActionOutputTranslateText> => {
   try {
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, message: "Unauthorized" };
+
     const validated = validateActionInputTranslateText(input);
     const result = await serviceTranslateText(validated);
     return {
@@ -31,9 +35,19 @@ export const actionTranslateText = async (input: unknown): Promise<ActionOutputT
 };
 
 export const genIPA = async (text: string): Promise<string> => {
-  return serviceGenIPA({ text });
+  try {
+    return await serviceGenIPA({ text });
+  } catch (e) {
+    log.error("genIPA failed", { error: String(e) });
+    return "";
+  }
 };
 
 export const genLanguage = async (text: string): Promise<string> => {
-  return serviceGenLanguage({ text });
+  try {
+    return await serviceGenLanguage({ text });
+  } catch (e) {
+    log.error("genLanguage failed", { error: String(e) });
+    return "";
+  }
 };
