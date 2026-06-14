@@ -11,6 +11,7 @@ import {
   ServiceOutputPublicDeck,
   ServiceInputToggleDeckFavorite,
   ServiceInputCheckDeckFavorite,
+  ServiceInputCheckDeckFavorites,
   ServiceInputSearchPublicDecks,
   ServiceInputGetPublicDeckById,
   ServiceOutputDeckFavorite,
@@ -27,6 +28,7 @@ import {
   repoGetUserIdByDeckId,
   repoToggleDeckFavorite,
   repoCheckDeckFavorite,
+  repoCheckDeckFavorites,
   repoSearchPublicDecks,
   repoGetPublicDeckById,
   repoGetUserFavoriteDecks,
@@ -162,6 +164,18 @@ export async function serviceCheckDeckFavorite(
   } catch (error) {
     log.error("Failed to check deck favorite", { error, deckId: input.deckId });
     return { success: false, message: "Failed to check favorite status" };
+  }
+}
+
+export async function serviceCheckDeckFavorites(
+  input: ServiceInputCheckDeckFavorites
+): Promise<{ success: boolean; data?: Record<number, ServiceOutputDeckFavorite>; message: string }> {
+  try {
+    const result = await repoCheckDeckFavorites(input);
+    return { success: true, data: Object.fromEntries(result), message: "Favorite statuses retrieved" };
+  } catch (error) {
+    log.error("Failed to check deck favorites batch", { error, deckCount: input.deckIds.length });
+    return { success: false, message: "Failed to check favorite statuses" };
   }
 }
 

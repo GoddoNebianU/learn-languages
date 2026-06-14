@@ -54,6 +54,10 @@ export interface RepoInputCheckDeckFavorite {
   deckId: number;
   userId: string;
 }
+export interface RepoInputCheckDeckFavorites {
+  deckIds: number[];
+  userId: string;
+}
 export interface RepoInputSearchPublicDecks {
   query: string;
   limit?: number;

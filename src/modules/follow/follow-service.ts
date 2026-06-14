@@ -28,18 +28,16 @@ export async function serviceToggleFollow(
     throw new Error("Cannot follow yourself");
   }
 
-  const isFollowing = await repoToggleFollow({
+  const result = await repoToggleFollow({
     followerId: currentUserId,
     followingId: targetUserId,
   });
 
-  log.info("Follow toggled", { currentUserId, targetUserId, isFollowing });
-
-  const followersCount = await repoGetFollowersCount(targetUserId);
+  log.info("Follow toggled", { currentUserId, targetUserId, isFollowing: result.isFollowing });
 
   return {
-    isFollowing,
-    followersCount,
+    isFollowing: result.isFollowing,
+    followersCount: result.followersCount,
   };
 }
 

@@ -130,6 +130,14 @@ export const validateActionInputCheckDeckFavorite = generateValidator(
   schemaActionInputCheckDeckFavorite
 );
 
+export const schemaActionInputCheckDeckFavorites = z.object({
+  deckIds: z.array(z.number().int().positive()).min(1),
+});
+export type ActionInputCheckDeckFavorites = z.infer<typeof schemaActionInputCheckDeckFavorites>;
+export const validateActionInputCheckDeckFavorites = generateValidator(
+  schemaActionInputCheckDeckFavorites
+);
+
 export type ActionOutputDeckFavorite = {
   isFavorited: boolean;
   favoriteCount: number;
@@ -157,6 +165,12 @@ export type ActionOutputCheckDeckFavorite = {
   message: string;
   success: boolean;
   data?: ActionOutputDeckFavorite;
+};
+
+export type ActionOutputCheckDeckFavorites = {
+  message: string;
+  success: boolean;
+  data?: Record<number, ActionOutputDeckFavorite>;
 };
 
 export type ActionOutputUserFavoriteDeck = ActionOutputPublicDeck & {

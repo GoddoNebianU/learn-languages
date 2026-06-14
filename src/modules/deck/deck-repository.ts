@@ -11,6 +11,7 @@ import {
   RepoOutputDeckOwnership,
   RepoInputToggleDeckFavorite,
   RepoInputCheckDeckFavorite,
+  RepoInputCheckDeckFavorites,
   RepoInputSearchPublicDecks,
   RepoInputGetPublicDeckById,
   RepoOutputDeckFavorite,
@@ -206,7 +207,7 @@ export async function repoToggleDeckFavorite(
   input: RepoInputToggleDeckFavorite
 ): Promise<RepoOutputDeckFavorite> {
   log.debug("Toggling deck favorite", { userId: input.userId, deckId: input.deckId });
-  const isFavorited = await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const deleted = await tx.deckFavorite.deleteMany({
       where: {
         userId: input.userId,
@@ -214,33 +215,27 @@ export async function repoToggleDeckFavorite(
       },
     });
 
+    let isFavorited: boolean;
     if (deleted.count > 0) {
-      return false;
+      isFavorited = false;
+    } else {
+      await tx.deckFavorite.create({
+        data: {
+          userId: input.userId,
+          deckId: input.deckId,
+        },
+      });
+      isFavorited = true;
     }
 
-    await tx.deckFavorite.create({
-      data: {
-        userId: input.userId,
-        deckId: input.deckId,
-      },
+    const favoriteCount = await tx.deckFavorite.count({
+      where: { deckId: input.deckId },
     });
-    return true;
+
+    return { isFavorited, favoriteCount };
   });
 
-  const deck = await prisma.deck.findUnique({
-    where: { id: input.deckId },
-    include: {
-      _count: {
-        select: { favorites: true },
-      },
-    },
-  });
-
-  const result = {
-    isFavorited,
-    favoriteCount: deck?._count?.favorites ?? 0,
-  };
-  log.info("Deck favorite toggled", { isFavorited, favoriteCount: result.favoriteCount, deckId: input.deckId });
+  log.info("Deck favorite toggled", { isFavorited: result.isFavorited, favoriteCount: result.favoriteCount, deckId: input.deckId });
   return result;
 }
 
@@ -269,6 +264,45 @@ export async function repoCheckDeckFavorite(
     isFavorited: !!favorite,
     favoriteCount: deck?._count?.favorites ?? 0,
   };
+}
+
+export async function repoCheckDeckFavorites(
+  input: RepoInputCheckDeckFavorites
+): Promise<Map<number, RepoOutputDeckFavorite>> {
+  if (input.deckIds.length === 0) {
+    return new Map();
+  }
+
+  const [favoritedRows, countRows] = await Promise.all([
+    prisma.deckFavorite.findMany({
+      where: { userId: input.userId, deckId: { in: input.deckIds } },
+      select: { deckId: true },
+    }),
+    prisma.deckFavorite.groupBy({
+      by: ["deckId"],
+      where: { deckId: { in: input.deckIds } },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const favoritedSet = new Set(favoritedRows.map((r) => r.deckId));
+  const result = new Map<number, RepoOutputDeckFavorite>();
+
+  for (const deckId of input.deckIds) {
+    result.set(deckId, {
+      isFavorited: favoritedSet.has(deckId),
+      favoriteCount: 0,
+    });
+  }
+
+  for (const row of countRows) {
+    const entry = result.get(row.deckId);
+    if (entry) {
+      entry.favoriteCount = row._count._all;
+    }
+  }
+
+  return result;
 }
 
 export async function repoSearchPublicDecks(

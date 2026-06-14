@@ -8,7 +8,6 @@ export type ServiceInputGetUserProfileById = {
 
 export type ServiceOutputUserProfile = {
   id: string;
-  email: string;
   emailVerified: boolean;
   username: string | null;
   displayUsername: string | null;

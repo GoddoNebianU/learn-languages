@@ -63,6 +63,11 @@ export type ServiceInputCheckDeckFavorite = {
   userId: string;
 };
 
+export type ServiceInputCheckDeckFavorites = {
+  deckIds: number[];
+  userId: string;
+};
+
 export type ServiceInputSearchPublicDecks = {
   query: string;
   limit?: number;

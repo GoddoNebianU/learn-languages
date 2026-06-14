@@ -11,6 +11,7 @@ import type {
   RepoOutputFollowWithUser,
   RepoOutputFollowingCount,
   RepoOutputIsFollowing,
+  RepoOutputToggleFollow,
 } from "./follow-repository-dto";
 
 const log = createLogger("follow-repository");
@@ -57,8 +58,8 @@ export async function repoCheckFollow(dto: RepoInputCheckFollow): Promise<RepoOu
   return !!follow;
 }
 
-export async function repoToggleFollow(dto: RepoInputCheckFollow): Promise<RepoOutputIsFollowing> {
-  const isNowFollowing = await prisma.$transaction(async (tx) => {
+export async function repoToggleFollow(dto: RepoInputCheckFollow): Promise<RepoOutputToggleFollow> {
+  const { isNowFollowing, followersCount } = await prisma.$transaction(async (tx) => {
     const deleted = await tx.follow.deleteMany({
       where: {
         followerId: dto.followerId,
@@ -66,26 +67,34 @@ export async function repoToggleFollow(dto: RepoInputCheckFollow): Promise<RepoO
       },
     });
 
+    let isNowFollowing: boolean;
     if (deleted.count > 0) {
-      return false;
+      isNowFollowing = false;
+    } else {
+      await tx.follow.create({
+        data: {
+          followerId: dto.followerId,
+          followingId: dto.followingId,
+        },
+      });
+      isNowFollowing = true;
     }
 
-    await tx.follow.create({
-      data: {
-        followerId: dto.followerId,
-        followingId: dto.followingId,
-      },
+    const followersCount = await tx.follow.count({
+      where: { followingId: dto.followingId },
     });
-    return true;
+
+    return { isNowFollowing, followersCount };
   });
 
   log.info("Follow toggled atomically", {
     followerId: dto.followerId,
     followingId: dto.followingId,
     isNowFollowing,
+    followersCount,
   });
 
-  return isNowFollowing;
+  return { isFollowing: isNowFollowing, followersCount };
 }
 
 export async function repoGetFollowersCount(userId: string): Promise<RepoOutputFollowerCount> {

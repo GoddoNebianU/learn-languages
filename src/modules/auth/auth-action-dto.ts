@@ -19,7 +19,6 @@ export type ActionOutputUserProfile = {
   message: string;
   data?: {
     id: string;
-    email: string;
     emailVerified: boolean;
     username: string | null;
     displayUsername: string | null;

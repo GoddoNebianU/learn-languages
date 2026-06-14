@@ -49,3 +49,7 @@ export type RepoOutputFollowWithUser = {
 export type RepoOutputFollowerCount = number;
 export type RepoOutputFollowingCount = number;
 export type RepoOutputIsFollowing = boolean;
+export type RepoOutputToggleFollow = {
+  isFollowing: boolean;
+  followersCount: number;
+};

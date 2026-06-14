@@ -177,9 +177,9 @@ export async function repoReorderCards(input: RepoInputReorderCards): Promise<vo
   await prisma.$transaction(
     input.cardIds.map((cardId, index) =>
       prisma.card.update({
-        where: { id: cardId },
-        data: { sortOrder: index },
-      })
+          where: { id: cardId, deckId: input.deckId },
+          data: { sortOrder: index },
+        })
     )
   );
   log.info("Cards reordered", { deckId: input.deckId, count: input.cardIds.length });

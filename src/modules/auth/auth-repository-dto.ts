@@ -3,7 +3,6 @@
 // User profile data types
 export type RepoOutputUserProfile = {
   id: string;
-  email: string;
   emailVerified: boolean;
   username: string | null;
   displayUsername: string | null;

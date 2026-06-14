@@ -13,7 +13,6 @@ const log = createLogger("auth-repository");
 
 const USER_PUBLIC_SELECT = {
   id: true,
-  email: true,
   emailVerified: true,
   username: true,
   displayUsername: true,

@@ -15,6 +15,7 @@ import {
   ActionInputGetPublicDeckById,
   ActionInputToggleDeckFavorite,
   ActionInputCheckDeckFavorite,
+  ActionInputCheckDeckFavorites,
   ActionOutputCreateDeck,
   ActionOutputUpdateDeck,
   ActionOutputDeleteDeck,
@@ -27,6 +28,7 @@ import {
   ActionOutputGetPublicDeckById,
   ActionOutputToggleDeckFavorite,
   ActionOutputCheckDeckFavorite,
+  ActionOutputCheckDeckFavorites,
   ActionOutputGetUserFavoriteDecks,
   validateActionInputCreateDeck,
   validateActionInputUpdateDeck,
@@ -38,6 +40,7 @@ import {
   validateActionInputGetPublicDeckById,
   validateActionInputToggleDeckFavorite,
   validateActionInputCheckDeckFavorite,
+  validateActionInputCheckDeckFavorites,
   validateActionInputReorderDecks,
 } from "./deck-action-dto";
 import {
@@ -52,6 +55,7 @@ import {
   serviceGetPublicDeckById,
   serviceToggleDeckFavorite,
   serviceCheckDeckFavorite,
+  serviceCheckDeckFavorites,
   serviceGetUserFavoriteDecks,
   serviceReorderDecks,
 } from "./deck-service";
@@ -363,6 +367,35 @@ export async function actionCheckDeckFavorite(
       return { success: false, message: e.message };
     }
     log.error("Failed to check deck favorite", { error: e });
+    return { success: false, message: "Unknown error occurred" };
+  }
+}
+
+export async function actionCheckDeckFavorites(
+  input: ActionInputCheckDeckFavorites
+): Promise<ActionOutputCheckDeckFavorites> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return {
+        success: true,
+        message: "Not logged in",
+        data: {},
+      };
+    }
+
+    const validatedInput = validateActionInputCheckDeckFavorites(input);
+    const result = await serviceCheckDeckFavorites({
+      deckIds: validatedInput.deckIds,
+      userId,
+    });
+
+    return result;
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to check deck favorites batch", { error: e });
     return { success: false, message: "Unknown error occurred" };
   }
 }

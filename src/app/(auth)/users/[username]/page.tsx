@@ -83,7 +83,7 @@ export default async function UserPage({ params }: UserPageProps) {
             <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-4 border-primary-500">
               <Image
                 src={user.image}
-                alt={user.displayUsername || user.username || user.email}
+                alt={user.displayUsername || user.username || t("anonymous")}
                 fill
                 className="object-cover"
                 unoptimized
@@ -92,7 +92,7 @@ export default async function UserPage({ params }: UserPageProps) {
           ) : (
             <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full border-4 border-primary-500 bg-primary-500">
               <span className="text-3xl font-bold text-white">
-                {(user.displayUsername || user.username || user.email)[0].toUpperCase()}
+                {(user.displayUsername || user.username || t("anonymous"))[0].toUpperCase()}
               </span>
             </div>
           )}
