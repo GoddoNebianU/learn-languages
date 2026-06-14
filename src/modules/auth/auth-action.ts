@@ -15,7 +15,6 @@ import {
   serviceDeleteAccount,
 } from "./auth-service";
 
-export type { ActionOutputUserProfile } from "./auth-action-dto";
 
 const log = createLogger("auth-action");
 

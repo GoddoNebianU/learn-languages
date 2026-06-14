@@ -2,43 +2,19 @@
 
 import { createLogger } from "@/lib/logger";
 import { getServices, getTtsConfig } from "@/lib/capability";
+import type { TTS_SUPPORTED_LANGUAGES } from "./tts-types";
 
 const log = createLogger("tts");
 
-// ==================== 类型定义 ====================
-/**
- * 支持的语音合成模型
- */
-type TTSModel = "qwen3-tts-flash" | string; // 主要模型为 'qwen3-tts-flash'
-
-/**
- * API 支持的语言类型（必须严格按文档使用）
- */
-type SupportedLanguage =
-  | "Auto" // 自动检测（混合语言场景）
-  | "Chinese" // 中文
-  | "English" // 英文
-  | "German" // 德文
-  | "Italian"
-  | "Portuguese"
-  | "Spanish"
-  | "Japanese"
-  | "Korean"
-  | "French"
-  | "Russian";
-
-/**
- * API 请求参数接口
- */
 interface TTSRequest {
-  model: TTSModel;
+  model: string;
   input: {
-    text: string; // 要合成的文本（qwen3-tts-flash最长600字符）
-    voice: string; // 音色名称，如 'Cherry'
-    language_type?: SupportedLanguage; // 可选，默认为 'Auto'
+    text: string;
+    voice: string;
+    language_type?: TTS_SUPPORTED_LANGUAGES;
   };
   parameters?: {
-    stream?: boolean; // 是否流式输出（需配合特定Header）
+    stream?: boolean;
   };
 }
 
@@ -93,7 +69,7 @@ class QwenTTSService {
   /**
    * 验证文本长度（qwen3-tts-flash模型限制600字符）
    */
-  private validateTextLength(text: string, model: TTSModel): void {
+  private validateTextLength(text: string, model: string): void {
     const maxLength = model.includes("qwen3-tts-flash") ? 600 : 512;
     if (text.length > maxLength) {
       throw new Error(`文本长度 ${text.length} 字符超过模型限制（最大 ${maxLength} 字符）`);
@@ -107,8 +83,8 @@ class QwenTTSService {
     text: string,
     options: {
       voice?: string; // 音色，默认 'Cherry'
-      language?: SupportedLanguage; // 语种，默认 'Auto'
-      model?: TTSModel; // 模型，默认 'qwen3-tts-flash'
+      language?: TTS_SUPPORTED_LANGUAGES;
+      model?: string;
     } = {}
   ): Promise<TTSResponse> {
     const { voice = "Cherry", language = "Auto", model = "qwen3-tts-flash" } = options;
@@ -151,19 +127,6 @@ class QwenTTSService {
     }
   }
 }
-
-export type TTS_SUPPORTED_LANGUAGES =
-  | "Auto"
-  | "Chinese"
-  | "English"
-  | "German"
-  | "Italian"
-  | "Portuguese"
-  | "Spanish"
-  | "Japanese"
-  | "Korean"
-  | "French"
-  | "Russian";
 
 let _ttsService: QwenTTSService | null = null;
 
