@@ -81,7 +81,7 @@
     "resetProgress": "진행 초기화",
     "resetProgressTitle": "학습 진행 초기화",
     "resetProgressConfirm": "이 덱의 학습 진행을 초기화하시겠습니까?",
-    "resetSuccess": "초기화됨",
+    "resetSuccess": "{count}개 카드 재설정 완료",
     "resetting": "초기화 중...",
     "cancel": "취소",
     "settings": "설정",
@@ -466,8 +466,8 @@
     "processingParagraphs": "{count}개 문단 처리 중...",
     "otherLanguage": "기타",
     "customLanguage": "또는 언어를 입력하세요...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "뒤집기",
+    "emptyTargetLanguage": "대상 언어를 선택하거나 입력하세요",
     "retry": "재시도",
     "retrying": "재시도 중...",
     "paragraphError": "문단 {index} 번역 실패",
@@ -538,7 +538,7 @@
     "sortByFavorites": "즐겨찾기순 정렬",
     "sortByFavoritesActive": "즐겨찾기순 정렬 해제",
     "noDecks": "공개 덱 없음",
-    "deckInfo": "{userName} · {totalCards}장"
+    "deckInfo": "{userName} · {cardCount}장"
   },
   "exploreDetail": {
     "title": "폴더 상세",
@@ -552,7 +552,7 @@
     "favorited": "즐겨찾기됨",
     "unfavorited": "즐겨찾기 해제됨",
     "pleaseLogin": "먼저 로그인해주세요",
-    "totalCards": "총 {count}장"
+    "totalCards": "전체 카드"
   },
   "favorites": {
     "title": "내 즐겨찾기",

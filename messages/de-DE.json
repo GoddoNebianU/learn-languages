@@ -394,8 +394,8 @@
     "processingParagraphs": "Verarbeitung von {count, plural, one{# Absatz} other{# Absätzen}}...",
     "otherLanguage": "Andere",
     "customLanguage": "Oder Sprache eingeben...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "Umdrehen",
+    "emptyTargetLanguage": "Bitte Zielsprache wählen oder eingeben",
     "retry": "Erneut versuchen",
     "retrying": "Erneuter Versuch...",
     "paragraphError": "Absatz {index} konnte nicht übersetzt werden",
@@ -466,7 +466,7 @@
     "sortByFavorites": "Nach Favoriten sortieren",
     "sortByFavoritesActive": "Sortierung nach Favoriten aufheben",
     "noDecks": "Keine öffentlichen Decks",
-    "deckInfo": "{userName} · {totalCards} Karten"
+    "deckInfo": "{userName} · {cardCount} Karten"
   },
   "exploreDetail": {
     "title": "Ordnerdetails",
@@ -480,7 +480,7 @@
     "favorited": "Favorisiert",
     "unfavorited": "Aus Favoriten entfernt",
     "pleaseLogin": "Bitte melden Sie sich zuerst an",
-    "totalCards": "{count} Karten"
+    "totalCards": "Karten gesamt"
   },
   "favorites": {
     "title": "Meine Favoriten",
@@ -564,7 +564,7 @@
     "resetProgress": "Fortschritt zurücksetzen",
     "resetProgressTitle": "Lernfortschritt zurücksetzen",
     "resetProgressConfirm": "Fortschritt wirklich zurücksetzen?",
-    "resetSuccess": "Fortschritt zurückgesetzt",
+    "resetSuccess": "{count} Karten erfolgreich zurückgesetzt",
     "resetting": "Zurücksetzen...",
     "cancel": "Abbrechen",
     "settings": "Einstellungen",

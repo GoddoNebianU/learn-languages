@@ -47,7 +47,7 @@
     "resetProgress": "進捗をリセット",
     "resetProgressTitle": "学習進捗をリセット",
     "resetProgressConfirm": "このデッキの学習進捗をリセットしますか？",
-    "resetSuccess": "リセットしました",
+    "resetSuccess": "{count} 枚のカードをリセットしました",
     "resetting": "リセット中...",
     "cancel": "キャンセル",
     "settings": "設定",
@@ -432,8 +432,8 @@
     "processingParagraphs": "{count} つの段落を処理中...",
     "otherLanguage": "その他",
     "customLanguage": "または言語を入力...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "裏返す",
+    "emptyTargetLanguage": "対象言語を選択または入力してください",
     "retry": "再試行",
     "retrying": "再試行中...",
     "paragraphError": "段落 {index} の翻訳に失敗しました",
@@ -504,7 +504,7 @@
     "sortByFavorites": "お気に入り順に並べ替え",
     "sortByFavoritesActive": "お気に入り順の並べ替えを解除",
     "noDecks": "公開デッキなし",
-    "deckInfo": "{userName} · {totalCards}枚"
+    "deckInfo": "{userName} · {cardCount}枚"
   },
   "exploreDetail": {
     "title": "フォルダー詳細",
@@ -518,7 +518,7 @@
     "favorited": "お気に入りに追加しました",
     "unfavorited": "お気に入りから削除しました",
     "pleaseLogin": "まずログインしてください",
-    "totalCards": "{count}枚"
+    "totalCards": "カード総数"
   },
   "favorites": {
     "title": "マイお気に入り",

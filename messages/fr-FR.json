@@ -81,7 +81,7 @@
     "resetProgress": "Réinitialiser progression",
     "resetProgressTitle": "Réinitialiser la progression",
     "resetProgressConfirm": "Réinitialiser la progression?",
-    "resetSuccess": "Progression réinitialisée",
+    "resetSuccess": "{count} cartes réinitialisées avec succès",
     "resetting": "Réinitialisation...",
     "cancel": "Annuler",
     "settings": "Paramètres",
@@ -466,8 +466,8 @@
     "processingParagraphs": "Traitement de {count, plural, one{# paragraphe} other{# paragraphes}}...",
     "otherLanguage": "Autre",
     "customLanguage": "Ou entrez une langue...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "Retourner",
+    "emptyTargetLanguage": "Veuillez sélectionner ou saisir une langue cible",
     "retry": "Réessayer",
     "retrying": "Nouvelle tentative...",
     "paragraphError": "Échec de la traduction du paragraphe {index}",
@@ -538,7 +538,7 @@
     "sortByFavorites": "Trier par favoris",
     "sortByFavoritesActive": "Annuler le tri par favoris",
     "noDecks": "Pas de decks publics",
-    "deckInfo": "{userName} · {totalCards} cartes"
+    "deckInfo": "{userName} · {cardCount} cartes"
   },
   "exploreDetail": {
     "title": "Détails du dossier",
@@ -552,7 +552,7 @@
     "favorited": "Ajouté aux favoris",
     "unfavorited": "Retiré des favoris",
     "pleaseLogin": "Veuillez vous connecter d'abord",
-    "totalCards": "{count} cartes"
+    "totalCards": "Total des cartes"
   },
   "favorites": {
     "title": "Mes favoris",

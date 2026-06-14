@@ -81,7 +81,7 @@
     "resetProgress": "Reimposta progresso",
     "resetProgressTitle": "Reimposta progresso di apprendimento",
     "resetProgressConfirm": "Reimpostare il progresso?",
-    "resetSuccess": "Progresso reimpostato",
+    "resetSuccess": "{count} carte reimpostate con successo",
     "resetting": "Reimpostazione...",
     "cancel": "Annulla",
     "settings": "Impostazioni",
@@ -265,10 +265,10 @@
       "easy": "Facile",
       "now": "Ora",
       "lessThanMinute": "meno di 1 minuto",
-      "inMinutes": "tra {n} minuti",
-      "inHours": "tra {n} ore",
-      "inDays": "tra {n} giorni",
-      "inMonths": "tra {n} mesi",
+      "inMinutes": "tra {count} minuti",
+      "inHours": "tra {count} ore",
+      "inDays": "tra {count} giorni",
+      "inMonths": "tra {count} mesi",
       "minutes": "minuti",
       "days": "giorni",
       "months": "mesi",
@@ -466,8 +466,8 @@
     "processingParagraphs": "Elaborazione di {count, plural, one{# paragrafo} other{# paragrafi}}...",
     "otherLanguage": "Altro",
     "customLanguage": "O inserisci una lingua...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "Capovolgi",
+    "emptyTargetLanguage": "Seleziona o inserisci una lingua di destinazione",
     "retry": "Riprova",
     "retrying": "Nuovo tentativo...",
     "paragraphError": "Traduzione del paragrafo {index} fallita",
@@ -538,7 +538,7 @@
     "sortByFavorites": "Ordina per preferiti",
     "sortByFavoritesActive": "Annulla ordinamento per preferiti",
     "noDecks": "Nessun deck pubblico",
-    "deckInfo": "{userName} · {totalCards} carte"
+    "deckInfo": "{userName} · {cardCount} carte"
   },
   "exploreDetail": {
     "title": "Dettagli Cartella",
@@ -552,7 +552,7 @@
     "favorited": "Aggiunto ai preferiti",
     "unfavorited": "Rimosso dai preferiti",
     "pleaseLogin": "Per favore accedi prima",
-    "totalCards": "{count} carte"
+    "totalCards": "Totale carte"
   },
   "favorites": {
     "title": "I Miei Preferiti",

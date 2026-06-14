@@ -81,7 +81,7 @@
     "resetProgress": "ئىلگىرىلەشنى ئەسلىگە قايتۇرۇش",
     "resetProgressTitle": "ئۆگىنىش ئىلگىرىلەشىنى ئەسلىگە قايتۇرۇش",
     "resetProgressConfirm": "ئىلگىرىلەشنى ئەسلىگە قايتۇرامسىز؟",
-    "resetSuccess": "ئەسلىگە قايتۇرۇلدى",
+    "resetSuccess": "{count} كارتىنى مۇۋەپپەقىيەتلىك ئەسلىگە كەلتۈردى",
     "resetting": "ئەسلىگە قايتۇرۇۋاتىدۇ...",
     "cancel": "بىكار قىلىش",
     "settings": "تەڭشەكلەر",
@@ -264,10 +264,10 @@
       "easy": "ئاسان",
       "now": "ھازىر",
       "lessThanMinute": "1 مىنۇتتىن ئاز",
-      "inMinutes": "{n} مىنۇتتىن كېيىن",
-      "inHours": "{n} سائەتتىن كېيىن",
-      "inDays": "{n} كۈندىن كېيىن",
-      "inMonths": "{n} ئايدىن كېيىن",
+      "inMinutes": "{count} مىنۇتتىن كېيىن",
+      "inHours": "{count} سائەتتىن كېيىن",
+      "inDays": "{count} كۈندىن كېيىن",
+      "inMonths": "{count} ئايدىن كېيىن",
       "minutes": "مىنۇت",
       "days": "كۈن",
       "months": "ئاي",
@@ -466,8 +466,8 @@
     "processingParagraphs": "{count} ئابزاسنى بىر تەرەپ قىلىۋاتىدۇ...",
     "otherLanguage": "باشقا",
     "customLanguage": "ياكى تىل كىرگۈزۈڭ...",
-    "flip": "Flip",
-    "emptyTargetLanguage": "Please select or enter a target language",
+    "flip": "ئۆرۈش",
+    "emptyTargetLanguage": "نىشان تىلنى تاللاڭ ياكى كىرگۈزۈڭ",
     "retry": "قايتا سىنا",
     "retrying": "قايتا سىناش...",
     "paragraphError": "{index}-ئابزاس تەرجىمىسى مەغلۇپ بولدى",
@@ -538,7 +538,7 @@
     "sortByFavorites": "يىغىپ ساقلاش بويىچە تەرتىپلەش",
     "sortByFavoritesActive": "يىغىپ ساقلاش بويىچە تەرتىپلەشنى بىكار قىلىش",
     "noDecks": "ئاممىۋىي دېك يوق",
-    "deckInfo": "{userName} · {totalCards} كارتا"
+    "deckInfo": "{userName} · {cardCount} كارتا"
   },
   "exploreDetail": {
     "title": "قىسقۇچ تەپسىلاتلىرى",
@@ -552,7 +552,7 @@
     "favorited": "يىغىپ ساقلاندى",
     "unfavorited": "يىغىپ ساقلاش بىكار قىلىندى",
     "pleaseLogin": "ئاۋۋال تىزىمغا كىرىڭ",
-    "totalCards": "{count} كارتا"
+    "totalCards": "بارلىق كارتا"
   },
   "favorites": {
     "title": "يىغىپ ساقلىغانلىرىم",
