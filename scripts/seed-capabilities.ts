@@ -1,10 +1,8 @@
 /**
- * Seed script for SystemConfig and TierCapability tables.
+ * Seed script for SystemConfig table.
  *
  * Usage:
  *   DATABASE_URL=xxx npx tsx scripts/seed-capabilities.ts
- *   DATABASE_URL=xxx npx tsx scripts/seed-capabilities.ts --tier=SINGLE
- *   DATABASE_URL=xxx npx tsx scripts/seed-capabilities.ts --tier=MULTI
  */
 
 import { PrismaClient } from "../generated/prisma/client";
@@ -19,53 +17,26 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-const TIER_DEFAULTS: Record<string, { signup: boolean; userProfile: boolean; social: boolean; email: boolean }> = {
-  SINGLE: { signup: false, userProfile: false, social: false, email: false },
-  MULTI: { signup: true, userProfile: true, social: true, email: true },
+const DEFAULT_CAPABILITIES = {
+  signup: true,
+  userProfile: true,
+  social: true,
+  email: true,
 };
 
-const DEFAULT_SERVICES: Record<string, InputJsonValue> = {
-  SINGLE: {
-    llm: { apiKey: "", apiUrl: "https://api.deepseek.com/chat/completions", modelName: "deepseek-v3" },
-    tts: { apiKey: "" },
-    smtp: { host: "localhost", port: 587, secure: false, user: "unused", pass: "unused", from: "" },
-  },
-  MULTI: {
-    llm: { apiKey: "", apiUrl: "https://api.deepseek.com/chat/completions", modelName: "deepseek-v3" },
-    tts: { apiKey: "" },
-    smtp: { host: "", port: 587, secure: false, user: "", pass: "", from: "" },
-  },
+const DEFAULT_SERVICES: InputJsonValue = {
+  llm: { apiKey: "", apiUrl: "https://api.deepseek.com/chat/completions", modelName: "deepseek-v4-flash" },
+  tts: { apiKey: "", primaryUrl: "", primaryUsername: "", primaryPassword: "" },
+  smtp: { host: "", port: 587, secure: false, user: "", pass: "", from: "" },
 };
 
 async function main() {
-  const tierArg = process.argv.find((a) => a.startsWith("--tier="));
-  const tierInput = tierArg ? tierArg.split("=")[1] : undefined;
-
-  if (tierInput && tierInput !== "SINGLE" && tierInput !== "MULTI") {
-    console.error("Invalid tier. Use SINGLE or MULTI.");
-    process.exit(1);
-  }
-
-  const configTier: string = tierInput === "MULTI" ? "MULTI" : "SINGLE";
-
-  for (const tierName of Object.keys(TIER_DEFAULTS)) {
-    const caps = TIER_DEFAULTS[tierName];
-    await prisma.tierCapability.upsert({
-      where: { tier: tierName },
-      update: caps,
-      create: { tier: tierName, ...caps },
-    });
-    console.log(`Seeded capabilities for tier: ${tierName}`);
-  }
-
-  const services = DEFAULT_SERVICES[configTier];
-
   await prisma.systemConfig.upsert({
     where: { id: 1 },
-    update: { tier: configTier, services },
-    create: { id: 1, tier: configTier, services },
+    update: { ...DEFAULT_CAPABILITIES, services: DEFAULT_SERVICES },
+    create: { id: 1, ...DEFAULT_CAPABILITIES, services: DEFAULT_SERVICES },
   });
-  console.log(`SystemConfig set to tier: ${configTier}`);
+  console.log("SystemConfig seeded with default capabilities (all enabled) and services");
 }
 
 main()

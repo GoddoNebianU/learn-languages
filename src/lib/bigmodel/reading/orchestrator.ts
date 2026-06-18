@@ -1,6 +1,6 @@
 "use server";
 
-import { getAnswer } from "../llm";
+import { getAnswer } from "@/lib/providers/llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { createLogger } from "@/lib/logger";
 import type {

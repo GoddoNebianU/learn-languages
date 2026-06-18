@@ -1,16 +1,29 @@
+import { randomUUID } from "crypto";
+import { hashPassword } from "better-auth/crypto";
 import { createLogger } from "@/lib/logger";
-import { invalidateCapabilityCache, normalizeTier } from "@/lib/capability";
+import { invalidateCapabilityCache } from "@/lib/capability";
 import {
   repoGetSystemConfig,
-  repoGetTierCapability,
-  repoGetAllTierCapabilities,
   repoUpdateSystemConfig,
-  repoUpdateSettingsAtomic,
-  repoCreateTierCapability,
-  repoDeleteTierCapability,
+  repoCheckUserExists,
+  repoCreateUser,
+  repoDeleteUserCascade,
+  repoSetUserEmailVerified,
+  repoCheckUserConflict,
+  repoUpdateUser,
+  repoUpdateUserPassword,
+  repoGetUserUsername,
 } from "./admin-repository";
+import type { Capabilities, AdminUserRow } from "./admin-repository";
 
 const log = createLogger("admin-service");
+
+const DEFAULT_CAPABILITIES: Capabilities = {
+  signup: true,
+  userProfile: true,
+  social: true,
+  email: true,
+};
 
 // --- H4: secret masking helpers ---
 
@@ -30,16 +43,15 @@ export function preserveSecret(incoming: string, current: string | undefined): s
 // --- Service types ---
 
 export interface ServiceInputUpdateAdminSettings {
-  tier?: string;
-  capabilities?: {
-    signup: boolean;
-    userProfile: boolean;
-    social: boolean;
-    email: boolean;
-  };
+  capabilities?: Capabilities;
   services?: {
     llm?: { apiKey: string; apiUrl: string; modelName: string };
-    tts?: { apiKey: string };
+    tts?: {
+      apiKey: string;
+      primaryUrl: string;
+      primaryUsername: string;
+      primaryPassword: string;
+    };
     smtp?: {
       host: string;
       port: number;
@@ -51,31 +63,8 @@ export interface ServiceInputUpdateAdminSettings {
   };
 }
 
-export interface ServiceInputAddTier {
-  name: string;
-}
-
-export interface ServiceInputDeleteTier {
-  tier: string;
-}
-
 export interface AdminSettingsData {
-  tier: string;
-  allTiers: Array<{
-    tier: string;
-    capabilities: {
-      signup: boolean;
-      userProfile: boolean;
-      social: boolean;
-      email: boolean;
-    };
-  }>;
-  capabilities: {
-    signup: boolean;
-    userProfile: boolean;
-    social: boolean;
-    email: boolean;
-  };
+  capabilities: Capabilities;
   services: {
     llm: {
       apiKey: string;
@@ -84,6 +73,9 @@ export interface AdminSettingsData {
     };
     tts: {
       apiKey: string;
+      primaryUrl: string;
+      primaryUsername: string;
+      primaryPassword: string;
     };
     smtp: {
       host: string;
@@ -106,7 +98,7 @@ export async function serviceGetAdminSettings(): Promise<{
   try {
     let config = await repoGetSystemConfig();
     if (!config) {
-      await repoUpdateSystemConfig({ tier: "SINGLE", services: {} });
+      await repoUpdateSystemConfig({ services: {}, capabilities: DEFAULT_CAPABILITIES });
       config = await repoGetSystemConfig();
       if (!config) {
         return { success: false, message: "Failed to initialize system config" };
@@ -114,11 +106,7 @@ export async function serviceGetAdminSettings(): Promise<{
       log.info("Auto-created default SystemConfig");
     }
 
-    const tier = config.tier;
-    const tierRow = await repoGetTierCapability(tier);
-    const allTiers = await repoGetAllTierCapabilities();
     const services = (config.services ?? {}) as Record<string, unknown>;
-
     const llm = (services.llm ?? {}) as Record<string, string>;
     const tts = (services.tts ?? {}) as Record<string, string>;
     const smtp = (services.smtp ?? {}) as Record<string, unknown>;
@@ -127,21 +115,11 @@ export async function serviceGetAdminSettings(): Promise<{
       success: true,
       message: "Settings loaded",
       data: {
-        tier,
-        allTiers: allTiers.map((t) => ({
-          tier: t.tier,
-          capabilities: {
-            signup: t.signup,
-            userProfile: t.userProfile,
-            social: t.social,
-            email: t.email,
-          },
-        })),
         capabilities: {
-          signup: tierRow?.signup ?? true,
-          userProfile: tierRow?.userProfile ?? true,
-          social: tierRow?.social ?? true,
-          email: tierRow?.email ?? true,
+          signup: config.signup,
+          userProfile: config.userProfile,
+          social: config.social,
+          email: config.email,
         },
         services: {
           llm: {
@@ -149,7 +127,12 @@ export async function serviceGetAdminSettings(): Promise<{
             apiUrl: llm.apiUrl ?? "",
             modelName: llm.modelName ?? "",
           },
-          tts: { apiKey: maskSecret(tts.apiKey) },
+          tts: {
+            apiKey: maskSecret(tts.apiKey),
+            primaryUrl: tts.primaryUrl ?? "",
+            primaryUsername: tts.primaryUsername ?? "",
+            primaryPassword: maskSecret(tts.primaryPassword),
+          },
           smtp: {
             host: (smtp.host as string) ?? "",
             port: (smtp.port as number) ?? 587,
@@ -173,16 +156,14 @@ export async function serviceUpdateAdminSettings(
   try {
     const config = await repoGetSystemConfig();
     const currentServices = (config?.services ?? {}) as Record<string, unknown>;
-    const currentTier = normalizeTier(config?.tier ?? "SINGLE");
-
-    const newTier = normalizeTier(input.tier ?? currentTier);
-
-    if (newTier !== currentTier) {
-      const targetTier = await repoGetTierCapability(newTier);
-      if (!targetTier) {
-        return { success: false, message: `Tier "${newTier}" does not exist. Add it first.` };
-      }
-    }
+    const currentCaps: Capabilities = config
+      ? {
+          signup: config.signup,
+          userProfile: config.userProfile,
+          social: config.social,
+          email: config.email,
+        }
+      : DEFAULT_CAPABILITIES;
 
     const currentLlm = (currentServices.llm ?? {}) as Record<string, string>;
     const currentTts = (currentServices.tts ?? {}) as Record<string, string>;
@@ -199,6 +180,10 @@ export async function serviceUpdateAdminSettings(
       mergedServices.tts = {
         ...input.services.tts,
         apiKey: preserveSecret(input.services.tts.apiKey, currentTts.apiKey),
+        primaryPassword: preserveSecret(
+          input.services.tts.primaryPassword,
+          currentTts.primaryPassword
+        ),
       };
     }
     if (input.services?.smtp) {
@@ -208,14 +193,15 @@ export async function serviceUpdateAdminSettings(
       };
     }
 
-    await repoUpdateSettingsAtomic({
-      tier: newTier,
+    const capabilities = input.capabilities ?? currentCaps;
+
+    await repoUpdateSystemConfig({
       services: mergedServices,
-      capabilities: input.capabilities,
+      capabilities,
     });
 
     invalidateCapabilityCache();
-    log.info("Admin settings updated", { tier: newTier });
+    log.info("Admin settings updated");
 
     return { success: true, message: "Settings saved" };
   } catch (error) {
@@ -224,53 +210,113 @@ export async function serviceUpdateAdminSettings(
   }
 }
 
-export async function serviceAddTier(
-  input: ServiceInputAddTier
-): Promise<{ success: boolean; message: string }> {
-  const name = normalizeTier(input.name);
+export interface ServiceInputCreateUser {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  emailVerified?: boolean;
+}
 
+export async function serviceCreateUser(
+  input: ServiceInputCreateUser
+): Promise<{ success: boolean; message: string; data?: AdminUserRow }> {
   try {
-    const existing = await repoGetTierCapability(name);
-    if (existing) {
-      return { success: false, message: "Tier already exists" };
-    }
+    const exists = await repoCheckUserExists(input.email, input.username);
+    if (exists.email) return { success: false, message: "Email already exists" };
+    if (exists.username) return { success: false, message: "Username already exists" };
 
-    await repoCreateTierCapability({
-      tier: name,
-      signup: true,
-      userProfile: true,
-      social: true,
-      email: true,
+    const passwordHash = await hashPassword(input.password);
+    const user = await repoCreateUser({
+      id: randomUUID(),
+      accountId: randomUUID(),
+      name: input.name,
+      email: input.email,
+      username: input.username,
+      passwordHash,
+      emailVerified: input.emailVerified ?? true,
     });
-
-    log.info("Tier added", { tier: name });
-    return { success: true, message: `Tier "${name}" added` };
+    return { success: true, message: "User created", data: user };
   } catch (error) {
-    log.error("Failed to add tier", { error: String(error) });
-    return { success: false, message: "Failed to add tier" };
+    log.error("Failed to create user", { error: String(error) });
+    return { success: false, message: "Failed to create user" };
   }
 }
 
-export async function serviceDeleteTier(
-  input: ServiceInputDeleteTier
+export async function serviceDeleteUser(
+  userId: string
 ): Promise<{ success: boolean; message: string }> {
-  const tier = normalizeTier(input.tier);
-
   try {
-    const config = await repoGetSystemConfig();
-    if (normalizeTier(config?.tier ?? "") === tier) {
-      return { success: false, message: "Cannot delete the active tier" };
+    if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") {
+      const username = await repoGetUserUsername(userId);
+      if (username === "admin") {
+        return {
+          success: false,
+          message: "Cannot delete the system admin user in single-user mode",
+        };
+      }
     }
-
-    const deletedCount = await repoDeleteTierCapability(tier);
-    if (deletedCount === 0) {
-      return { success: false, message: "Tier not found" };
-    }
-
-    log.info("Tier deleted", { tier });
-    return { success: true, message: `Tier "${tier}" deleted` };
+    await repoDeleteUserCascade(userId);
+    return { success: true, message: "User deleted" };
   } catch (error) {
-    log.error("Failed to delete tier", { error: String(error) });
-    return { success: false, message: "Failed to delete tier" };
+    log.error("Failed to delete user", { userId, error: String(error) });
+    return { success: false, message: "Failed to delete user" };
+  }
+}
+
+export async function serviceSetUserEmailVerified(
+  userId: string,
+  verified: boolean
+): Promise<{ success: boolean; message: string }> {
+  try {
+    await repoSetUserEmailVerified(userId, verified);
+    return { success: true, message: verified ? "Email verified" : "Email unverified" };
+  } catch (error) {
+    log.error("Failed to update emailVerified", { userId, error: String(error) });
+    return { success: false, message: "Failed to update" };
+  }
+}
+
+export interface ServiceInputUpdateUser {
+  userId: string;
+  name: string;
+  email: string;
+  username: string;
+  password?: string;
+}
+
+export async function serviceUpdateUser(
+  input: ServiceInputUpdateUser
+): Promise<{ success: boolean; message: string }> {
+  try {
+    if (process.env.NEXT_PUBLIC_AUTH_MODE === "single") {
+      const currentUsername = await repoGetUserUsername(input.userId);
+      if (currentUsername === "admin" && input.username !== "admin") {
+        return {
+          success: false,
+          message: "Cannot change the system admin username in single-user mode",
+        };
+      }
+    }
+    const conflict = await repoCheckUserConflict(input.email, input.username, input.userId);
+    if (conflict.email) return { success: false, message: "Email already in use" };
+    if (conflict.username) return { success: false, message: "Username already in use" };
+
+    await repoUpdateUser({
+      userId: input.userId,
+      name: input.name,
+      email: input.email,
+      username: input.username,
+    });
+
+    if (input.password && input.password.length >= 8) {
+      const passwordHash = await hashPassword(input.password);
+      await repoUpdateUserPassword(input.userId, passwordHash);
+    }
+
+    return { success: true, message: "User updated" };
+  } catch (error) {
+    log.error("Failed to update user", { userId: input.userId, error: String(error) });
+    return { success: false, message: "Failed to update user" };
   }
 }

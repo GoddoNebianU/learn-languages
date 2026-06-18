@@ -1,4 +1,4 @@
-import { getAnswer } from "../llm";
+import { getAnswer } from "@/lib/providers/llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { PreprocessResult } from "./types";
 import { createLogger } from "@/lib/logger";

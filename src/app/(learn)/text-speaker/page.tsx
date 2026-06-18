@@ -15,8 +15,8 @@ import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { getTTSUrl } from "@/lib/bigmodel/tts";
-import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/bigmodel/tts-types";
+import { getTTSUrl } from "@/lib/providers/tts";
+import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
 
 const TTS_LANGUAGES = [
   { value: "Auto", label: "auto" },

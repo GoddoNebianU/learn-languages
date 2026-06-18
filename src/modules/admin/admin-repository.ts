@@ -6,33 +6,27 @@ const log = createLogger("admin-repository");
 
 // --- Types ---
 
+export interface Capabilities {
+  signup: boolean;
+  userProfile: boolean;
+  social: boolean;
+  email: boolean;
+}
+
 export interface RepoOutputSystemConfig {
   id: number;
-  tier: string;
+  signup: boolean;
+  userProfile: boolean;
+  social: boolean;
+  email: boolean;
   services: Prisma.JsonValue;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface RepoOutputTierCapability {
-  tier: string;
-  signup: boolean;
-  userProfile: boolean;
-  social: boolean;
-  email: boolean;
-}
-
 export interface RepoInputUpdateSystemConfig {
-  tier: string;
   services: Record<string, unknown>;
-}
-
-export interface RepoInputUpsertTierCapability {
-  tier: string;
-  signup: boolean;
-  userProfile: boolean;
-  social: boolean;
-  email: boolean;
+  capabilities: Capabilities;
 }
 
 // --- SystemConfig ---
@@ -45,99 +39,178 @@ export async function repoGetSystemConfig(): Promise<RepoOutputSystemConfig | nu
 export async function repoUpdateSystemConfig(input: RepoInputUpdateSystemConfig): Promise<void> {
   await prisma.systemConfig.upsert({
     where: { id: 1 },
-    update: { tier: input.tier, services: input.services as Prisma.InputJsonValue },
-    create: { id: 1, tier: input.tier, services: input.services as Prisma.InputJsonValue },
-  });
-  log.info("SystemConfig updated", { tier: input.tier });
-}
-
-// --- TierCapability ---
-
-export async function repoGetTierCapability(tier: string): Promise<RepoOutputTierCapability | null> {
-  const row = await prisma.tierCapability.findUnique({ where: { tier } });
-  return row;
-}
-
-export async function repoGetAllTierCapabilities(): Promise<RepoOutputTierCapability[]> {
-  const rows = await prisma.tierCapability.findMany({ orderBy: { tier: "asc" } });
-  return rows;
-}
-
-export async function repoUpsertTierCapability(input: RepoInputUpsertTierCapability): Promise<void> {
-  await prisma.tierCapability.upsert({
-    where: { tier: input.tier },
     update: {
-      signup: input.signup,
-      userProfile: input.userProfile,
-      social: input.social,
-      email: input.email,
+      signup: input.capabilities.signup,
+      userProfile: input.capabilities.userProfile,
+      social: input.capabilities.social,
+      email: input.capabilities.email,
+      services: input.services as Prisma.InputJsonValue,
     },
     create: {
-      tier: input.tier,
-      signup: input.signup,
-      userProfile: input.userProfile,
-      social: input.social,
-      email: input.email,
+      id: 1,
+      signup: input.capabilities.signup,
+      userProfile: input.capabilities.userProfile,
+      social: input.capabilities.social,
+      email: input.capabilities.email,
+      services: input.services as Prisma.InputJsonValue,
     },
   });
-  log.info("TierCapability upserted", { tier: input.tier });
+  log.info("SystemConfig updated");
 }
 
-export async function repoCreateTierCapability(input: RepoInputUpsertTierCapability): Promise<void> {
-  await prisma.tierCapability.create({
-    data: {
-      tier: input.tier,
-      signup: input.signup,
-      userProfile: input.userProfile,
-      social: input.social,
-      email: input.email,
-    },
+// --- User Management ---
+
+export interface AdminUserRow {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  emailVerified: boolean;
+  createdAt: Date;
+}
+
+const ADMIN_USER_SELECT = {
+  id: true,
+  name: true,
+  email: true,
+  username: true,
+  emailVerified: true,
+  createdAt: true,
+} as const;
+
+export async function repoListUsers(search?: string): Promise<AdminUserRow[]> {
+  return prisma.user.findMany({
+    where: search
+      ? {
+          OR: [
+            { username: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : undefined,
+    select: ADMIN_USER_SELECT,
+    orderBy: { createdAt: "desc" },
+    take: 200,
   });
-  log.info("TierCapability created", { tier: input.tier });
 }
 
-export async function repoDeleteTierCapability(tier: string): Promise<number> {
-  const result = await prisma.tierCapability.deleteMany({ where: { tier } });
-  log.info("TierCapability deleted", { tier, count: result.count });
-  return result.count;
+export async function repoCheckUserExists(
+  email: string,
+  username: string
+): Promise<{ email: boolean; username: boolean }> {
+  const [byEmail, byUsername] = await Promise.all([
+    prisma.user.findUnique({ where: { email }, select: { id: true } }),
+    prisma.user.findUnique({ where: { username }, select: { id: true } }),
+  ]);
+  return { email: !!byEmail, username: !!byUsername };
 }
 
-export interface RepoInputUpdateSettingsAtomic {
-  tier: string;
-  services: Record<string, unknown>;
-  capabilities?: {
-    signup: boolean;
-    userProfile: boolean;
-    social: boolean;
-    email: boolean;
-  };
+export interface RepoInputCreateUser {
+  id: string;
+  accountId: string;
+  name: string;
+  email: string;
+  username: string;
+  passwordHash: string;
+  emailVerified: boolean;
 }
 
-export async function repoUpdateSettingsAtomic(input: RepoInputUpdateSettingsAtomic): Promise<void> {
-  await prisma.$transaction(async (tx) => {
-    await tx.systemConfig.upsert({
-      where: { id: 1 },
-      update: { tier: input.tier, services: input.services as Prisma.InputJsonValue },
-      create: { id: 1, tier: input.tier, services: input.services as Prisma.InputJsonValue },
+export async function repoCreateUser(input: RepoInputCreateUser): Promise<AdminUserRow> {
+  return prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        id: input.id,
+        name: input.name,
+        email: input.email,
+        username: input.username,
+        emailVerified: input.emailVerified,
+      },
+      select: ADMIN_USER_SELECT,
     });
-    if (input.capabilities) {
-      await tx.tierCapability.upsert({
-        where: { tier: input.tier },
-        update: {
-          signup: input.capabilities.signup,
-          userProfile: input.capabilities.userProfile,
-          social: input.capabilities.social,
-          email: input.capabilities.email,
-        },
-        create: {
-          tier: input.tier,
-          signup: input.capabilities.signup,
-          userProfile: input.capabilities.userProfile,
-          social: input.capabilities.social,
-          email: input.capabilities.email,
-        },
-      });
-    }
+    await tx.account.create({
+      data: {
+        id: input.accountId,
+        userId: user.id,
+        providerId: "credential",
+        accountId: user.id,
+        password: input.passwordHash,
+      },
+    });
+    log.info("User created", { userId: user.id, username: user.username });
+    return user;
   });
-  log.info("Settings updated atomically", { tier: input.tier });
+}
+
+export async function repoDeleteUserCascade(userId: string): Promise<void> {
+  log.info("Cascade delete user", { userId });
+  await prisma.$transaction(async (tx) => {
+    await tx.card.deleteMany({ where: { deck: { userId } } });
+    await tx.deckFavorite.deleteMany({ where: { userId } });
+    await tx.deck.deleteMany({ where: { userId } });
+    await tx.follow.deleteMany({
+      where: { OR: [{ followerId: userId }, { followingId: userId }] },
+    });
+    await tx.session.deleteMany({ where: { userId } });
+    await tx.account.deleteMany({ where: { userId } });
+    await tx.user.delete({ where: { id: userId } });
+  });
+  log.info("User deleted", { userId });
+}
+
+export async function repoSetUserEmailVerified(
+  userId: string,
+  verified: boolean
+): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { emailVerified: verified },
+  });
+  log.info("User emailVerified updated", { userId, verified });
+}
+
+export interface RepoInputUpdateUser {
+  userId: string;
+  name: string;
+  email: string;
+  username: string;
+}
+
+export async function repoCheckUserConflict(
+  email: string,
+  username: string,
+  excludeUserId: string
+): Promise<{ email: boolean; username: boolean }> {
+  const existing = await prisma.user.findFirst({
+    where: { OR: [{ email }, { username }], NOT: { id: excludeUserId } },
+    select: { email: true, username: true },
+  });
+  if (!existing) return { email: false, username: false };
+  return { email: existing.email === email, username: existing.username === username };
+}
+
+export async function repoUpdateUser(input: RepoInputUpdateUser): Promise<void> {
+  await prisma.user.update({
+    where: { id: input.userId },
+    data: { name: input.name, email: input.email, username: input.username },
+  });
+  log.info("User updated", { userId: input.userId });
+}
+
+export async function repoUpdateUserPassword(
+  userId: string,
+  passwordHash: string
+): Promise<void> {
+  await prisma.account.updateMany({
+    where: { userId, providerId: "credential" },
+    data: { password: passwordHash },
+  });
+  log.info("User password updated", { userId });
+}
+
+export async function repoGetUserUsername(userId: string): Promise<string | null> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { username: true },
+  });
+  return user?.username ?? null;
 }

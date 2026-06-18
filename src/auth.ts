@@ -8,11 +8,8 @@ import { createLogger } from "./lib/logger";
 
 const log = createLogger("auth");
 
-import {
-  sendEmail,
-  generateVerificationEmailHtml,
-  generateResetPasswordEmailHtml,
-} from "./lib/email";
+import { sendEmail } from "./lib/providers/smtp";
+import { generateVerificationEmailHtml, generateResetPasswordEmailHtml } from "./lib/email";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

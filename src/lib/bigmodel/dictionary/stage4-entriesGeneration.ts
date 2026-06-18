@@ -1,4 +1,4 @@
-import { getAnswer } from "../llm";
+import { getAnswer } from "@/lib/providers/llm";
 import { parseAIGeneratedJSON } from "@/utils/json";
 import { stripIpaBrackets } from "@/utils/string";
 import { EntriesGenerationResult } from "./types";

@@ -1,12 +1,9 @@
 import { prisma } from "./db";
 
-export type DeploymentTier = string;
-
 const CAPABILITY_KEYS = ["signup", "userProfile", "social", "email"] as const;
 export type CapabilityKey = (typeof CAPABILITY_KEYS)[number];
 
 // --- Defaults (must match schema @default values) ---
-const DEFAULT_TIER = "SINGLE";
 const DEFAULT_CAPABILITIES: Record<string, boolean> = {
   signup: true,
   userProfile: true,
@@ -14,17 +11,11 @@ const DEFAULT_CAPABILITIES: Record<string, boolean> = {
   email: true,
 };
 
-// --- Tier name normalization ---
-export function normalizeTier(name: string): string {
-  return name.trim().toUpperCase();
-}
-
 // --- Cache with TTL + single-flight ---
 const CACHE_TTL_MS = 60_000; // 60 seconds
 
 interface CachedState {
   capabilities: Map<string, boolean>;
-  tier: DeploymentTier;
   services: Record<string, unknown>;
   cachedAt: number;
 }
@@ -37,25 +28,17 @@ function isCacheValid(): boolean {
 }
 
 async function doLoad(): Promise<CachedState> {
-  const [config, tierRows] = await Promise.all([
-    prisma.systemConfig.findUnique({ where: { id: 1 } }),
-    prisma.tierCapability.findMany(),
-  ]);
+  const config = await prisma.systemConfig.findUnique({ where: { id: 1 } });
 
-  const tier = config?.tier ?? DEFAULT_TIER;
   const services = (config?.services ?? {}) as Record<string, unknown>;
-
-  // Case-insensitive match to handle legacy data
-  const normalized = normalizeTier(tier);
-  const row = tierRows.find((r) => normalizeTier(r.tier) === normalized);
 
   const capabilities = new Map<string, boolean>();
   for (const key of CAPABILITY_KEYS) {
-    // If tier row exists use its values; otherwise use defaults (matching schema @default)
-    capabilities.set(key, row ? row[key] : DEFAULT_CAPABILITIES[key]);
+    // If config row exists use its values; otherwise use defaults (matching schema @default)
+    capabilities.set(key, config ? config[key] : DEFAULT_CAPABILITIES[key]);
   }
 
-  return { capabilities, tier, services, cachedAt: Date.now() };
+  return { capabilities, services, cachedAt: Date.now() };
 }
 
 async function loadCapabilities(): Promise<CachedState> {
@@ -76,11 +59,6 @@ export function invalidateCapabilityCache(): void {
 }
 
 // --- Public API ---
-
-export async function getTier(): Promise<DeploymentTier> {
-  const { tier } = await loadCapabilities();
-  return tier;
-}
 
 export async function getCapabilities(): Promise<Record<string, boolean>> {
   const { capabilities } = await loadCapabilities();
@@ -114,7 +92,12 @@ export function getLlmConfig(services: Record<string, unknown>) {
 
 export function getTtsConfig(services: Record<string, unknown>) {
   const tts = (services.tts ?? {}) as Record<string, unknown>;
-  return { apiKey: (tts.apiKey as string) ?? "" };
+  return {
+    apiKey: (tts.apiKey as string) ?? "",
+    primaryUrl: (tts.primaryUrl as string) ?? "",
+    primaryUsername: (tts.primaryUsername as string) ?? "",
+    primaryPassword: (tts.primaryPassword as string) ?? "",
+  };
 }
 
 export function getSmtpConfig(services: Record<string, unknown>) {

@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from '@vercel/analytics/next';
-import { getCapabilities, getTier } from "@/lib/capability";
+import { getCapabilities } from "@/lib/capability";
 import { CapabilityHydrator } from "@/components/capability-hydrator";
 
 export const viewport: Viewport = {
@@ -27,7 +27,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const tier = await getTier();
   const capabilities = await getCapabilities();
 
   return (
@@ -36,7 +35,7 @@ export default async function RootLayout({
         <StrictMode>
           <ThemeProvider>
             <NextIntlClientProvider>
-              <CapabilityHydrator tier={tier} capabilities={capabilities}>
+              <CapabilityHydrator capabilities={capabilities}>
                 <Navbar />
                 {children}
                 <Toaster />

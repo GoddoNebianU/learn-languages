@@ -12,23 +12,16 @@ datasource db {
 // ============================================
 
 model SystemConfig {
-  id        Int      @id @default(1)
-  tier      String   @default("SINGLE")
-  services  Json     @default("{}")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(1)
+  signup      Boolean  @default(true)
+  userProfile Boolean  @default(true)
+  social      Boolean  @default(true)
+  email       Boolean  @default(true)
+  services    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("system_config")
-}
-
-model TierCapability {
-  tier        String  @id
-  signup      Boolean @default(true)
-  userProfile Boolean @default(true)
-  social      Boolean @default(true)
-  email       Boolean @default(true)
-
-  @@map("tier_capabilities")
 }
 
 // ============================================

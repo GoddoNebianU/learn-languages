@@ -13,8 +13,10 @@ import {
 import {
   serviceGetAdminSettings,
   serviceUpdateAdminSettings,
-  serviceAddTier,
-  serviceDeleteTier,
+  serviceCreateUser,
+  serviceDeleteUser,
+  serviceSetUserEmailVerified,
+  serviceUpdateUser,
 } from "@/modules/admin/admin-service";
 
 const log = createLogger("admin-action");
@@ -114,7 +116,6 @@ export async function actionGetAdminSettings() {
 }
 
 const settingsSchema = z.object({
-  tier: z.string().min(1).optional(),
   capabilities: z
     .object({
       signup: z.boolean(),
@@ -126,7 +127,14 @@ const settingsSchema = z.object({
   services: z
     .object({
       llm: z.object({ apiKey: z.string(), apiUrl: z.string(), modelName: z.string() }).optional(),
-      tts: z.object({ apiKey: z.string() }).optional(),
+      tts: z
+        .object({
+          apiKey: z.string(),
+          primaryUrl: z.string(),
+          primaryUsername: z.string(),
+          primaryPassword: z.string(),
+        })
+        .optional(),
       smtp: z
         .object({
           host: z.string(),
@@ -158,33 +166,81 @@ export async function actionUpdateAdminSettings(input: unknown) {
   return serviceUpdateAdminSettings(result.data);
 }
 
-const addTierSchema = z.object({
-  name: z.string().min(1).max(50),
+const createUserSchema = z.object({
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/, "letters, numbers, underscores only"),
+  password: z.string().min(8),
+  emailVerified: z.boolean().optional(),
 });
 
-export async function actionAddTier(input: unknown) {
+export async function actionCreateUser(input: unknown) {
   const isAuth = await verifyAdminSession();
   if (!isAuth) {
     return { success: false as const, message: "Unauthorized" };
   }
 
-  const result = addTierSchema.safeParse(input);
+  const result = createUserSchema.safeParse(input);
   if (!result.success) {
-    return { success: false as const, message: "Invalid tier name" };
+    const errors = result.error.issues
+      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+      .join("; ");
+    return { success: false as const, message: `Validation failed: ${errors}` };
   }
 
-  return serviceAddTier(result.data);
+  return serviceCreateUser(result.data);
 }
 
-export async function actionDeleteTier(tier: string) {
+export async function actionDeleteUser(userId: string) {
   const isAuth = await verifyAdminSession();
   if (!isAuth) {
     return { success: false as const, message: "Unauthorized" };
   }
 
-  if (!tier || typeof tier !== "string") {
-    return { success: false as const, message: "Invalid tier name" };
+  if (!userId || typeof userId !== "string") {
+    return { success: false as const, message: "Invalid user id" };
   }
 
-  return serviceDeleteTier({ tier });
+  return serviceDeleteUser(userId);
+}
+
+export async function actionSetUserEmailVerified(userId: string, verified: boolean) {
+  const isAuth = await verifyAdminSession();
+  if (!isAuth) {
+    return { success: false as const, message: "Unauthorized" };
+  }
+
+  if (!userId || typeof userId !== "string") {
+    return { success: false as const, message: "Invalid user id" };
+  }
+  if (typeof verified !== "boolean") {
+    return { success: false as const, message: "Invalid verified flag" };
+  }
+
+  return serviceSetUserEmailVerified(userId, verified);
+}
+
+const updateUserSchema = z.object({
+  userId: z.string().min(1),
+  name: z.string().min(1).max(100),
+  email: z.string().email(),
+  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/, "letters, numbers, underscores only"),
+  password: z.string().optional(),
+});
+
+export async function actionUpdateUser(input: unknown) {
+  const isAuth = await verifyAdminSession();
+  if (!isAuth) {
+    return { success: false as const, message: "Unauthorized" };
+  }
+
+  const result = updateUserSchema.safeParse(input);
+  if (!result.success) {
+    const errors = result.error.issues
+      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+      .join("; ");
+    return { success: false as const, message: `Validation failed: ${errors}` };
+  }
+
+  return serviceUpdateUser(result.data);
 }

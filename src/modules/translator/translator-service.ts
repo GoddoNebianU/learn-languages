@@ -1,5 +1,5 @@
 import { executeTranslation } from "@/lib/bigmodel/translator/orchestrator";
-import { getAnswer } from "@/lib/bigmodel/llm";
+import { getAnswer } from "@/lib/providers/llm";
 import {
   ServiceInputTranslateText,
   ServiceOutputTranslateText,
