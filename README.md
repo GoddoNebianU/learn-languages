@@ -14,7 +14,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
 - **Reading** -- AI-powered reading comprehension with sentence-by-sentence translation and word-level alignment
-- **Admin Panel** -- password-protected admin dashboard for managing deployment tier, service configs, and feature flags
+- **Admin Panel** -- password-protected admin dashboard for managing feature flags and service configurations
 
 ## Stack
 
@@ -34,7 +34,7 @@ DATABASE_URL=your_db_url pnpm prisma db push
 pnpm dev
 ```
 
-Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`) will crash immediately if missing. SMTP is required in multi-user mode, optional in single-user mode. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. Service configs (LLM, TTS, SMTP) and feature flags are stored in the database via `system_config` and `tier_capabilities` tables. See `.env.example` for details.
+Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`) will crash immediately if missing. SMTP is required in multi-user mode, optional in single-user mode. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. Service configs (LLM, TTS, SMTP) and feature flags are stored in the database via the `system_config` table. See `.env.example` for details.
 
 ### Single-user mode
 
@@ -65,7 +65,7 @@ graph TB
 
         subgraph Lib["lib/"]
             AuthMod["auth-mode.ts<br/>admin-auth.ts"]
-            Cap["capability.ts<br/>Tier · LLM/TTS/SMTP config"]
+            Cap["capability.ts<br/>Feature flags · LLM/TTS/SMTP config"]
             Pipelines["bigmodel/<br/>AI Pipelines"]
             TTS["tts.ts<br/>Qwen TTS"]
         end
@@ -80,7 +80,7 @@ graph TB
     Cap --> DB
 
     subgraph Storage["PostgreSQL (Prisma 7)"]
-        DB[("User · Deck · Card<br/>SystemConfig · TierCapability")]
+        DB[("User · Deck · Card<br/>SystemConfig")]
     end
 
     subgraph External["External Services"]
@@ -127,7 +127,7 @@ Controlled by `NEXT_PUBLIC_AUTH_MODE`. In single-user mode, `auth-mode.ts` auto-
 
 ### Capability system
 
-Deployment tier and feature flags stored in DB (`SystemConfig` + `TierCapability`). Admin panel manages which features are enabled (signup, userProfile, social, email). All service configs (LLM, TTS, SMTP) are read from DB via `capability.ts`, not env vars.
+Feature flags stored in DB (`SystemConfig`). Admin panel manages which features are enabled (signup, userProfile, social, email) -- all enabled by default, individually toggleable. All service configs (LLM, TTS, SMTP) are read from DB via `capability.ts`, not env vars.
 
 ## Conventions
 
@@ -164,8 +164,7 @@ ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
 ## Data model
 
 ```
-SystemConfig          # deployment tier + services config (single row)
-TierCapability        # per-tier feature flags (signup, userProfile, social, email)
+SystemConfig          # feature flags (signup, userProfile, social, email) + services config (single row)
 User
 ├── Account
 ├── Session

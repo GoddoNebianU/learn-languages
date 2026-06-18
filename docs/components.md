@@ -1,14 +1,61 @@
-# 设计系统指南
+# 组件层
 
-**生成时间:** 2026-05-11
+两层组件:**设计原语** (`src/design-system/`,CVA 基础组件) 和**业务组件** (`src/components/`,布局/UI/关注系统)。
 
-## 概述
+## 业务组件 `src/components/`
 
-基于 CVA 的可复用 UI 组件库, 与业务组件 (`src/components/`) 分离。14 个组件文件, 平铺在 `src/design-system/` 目录下 (无子目录)。
+非设计原语,非页面专属组件 (页面专属组件随 page.tsx 放置)。
 
-所有组件使用 Lucide React 图标 (非内联 SVG)。按钮加载状态用 `<Loader2>`, 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>`。唯一例外: Navbar 的 GithubIcon 保持内联 SVG。
+### 结构
 
-## 组件列表
+```
+components/
+├── layout/
+│   ├── Navbar.tsx          # Server, 主导航, capability 驱动链接显示
+│   ├── NavSession.tsx      # Client, 登录态导航项 (UserLink, MobileMenuSession)
+│   ├── MobileMenu.tsx      # Client, 响应式汉堡菜单
+│   └── LanguageSettings.tsx # Client, 学习语言/UI 语言切换
+├── follow/
+│   ├── FollowButton.tsx    # Client, 关注/取关切换
+│   ├── FollowStats.tsx     # Client, 粉丝/关注数 + 链接
+│   └── UserList.tsx        # Client, 粉丝/关注列表
+├── ui/
+│   ├── PageLayout.tsx      # Server OK, 居中卡片/全宽/全屏变体
+│   ├── PageHeader.tsx      # Server OK, 页面标题 + 副标题
+│   ├── CardList.tsx        # Client, 牌组列表 + 收藏切换
+│   └── LanguageSelector.tsx # Client, 语言对下拉
+├── capability-hydrator.tsx # Client, Server→Client 能力注入 Zustand
+└── theme-provider.tsx      # Client, CSS 自定义属性主题上下文
+```
+
+### 查找位置
+
+| 任务 | 位置 | 备注 |
+|------|------|------|
+| 修改导航栏 | `layout/Navbar.tsx` | Server Component, 需 session 则委托 NavSession |
+| 添加登录态 UI | `layout/NavSession.tsx` | 所有依赖 session 的导航项 |
+| 关注功能 UI | `follow/` | FollowButton/FollowStats/UserList |
+| 页面布局包装 | `ui/PageLayout.tsx` | 三种变体, 多数页面使用 |
+| 语言选择 | `ui/LanguageSelector.tsx` | 学习语言对, 非界面语言 |
+| 界面语言切换 | `layout/LanguageSettings.tsx` | UI locale (cookie 存储) + 学习语言切换 |
+| 能力注入 | `capability-hydrator.tsx` | Server 数据 → Zustand 客户端。详见 [config-system.md](./config-system.md) |
+| 主题切换 | `theme-provider.tsx` | CSS 变量 + localStorage |
+
+### 约定
+
+- 导入设计原语: `@/design-system/button`, `@/design-system/card` 等
+- Server/Client: Navbar 是 Server, 需交互/状态/hooks 的用 Client
+- 页面专属组件 (如 srt-player/components/) 不放此处, 随页面放置
+- `capability-hydrator.tsx` 必须在 layout 层渲染, 确保客户端能力状态可用
+- `theme-provider.tsx` 提供 CSS 变量上下文, 主题预设定义在 `@/shared/theme-presets`
+
+---
+
+## 设计系统 `src/design-system/`
+
+基于 CVA 的可复用 UI 组件库。14 个组件文件, 平铺在目录下 (无子目录)。所有组件使用 Lucide React 图标 (非内联 SVG)。
+
+### 组件列表
 
 | 组件                                              | 文件                    | 说明                   |
 | ------------------------------------------------- | ----------------------- | ---------------------- |
@@ -27,7 +74,7 @@
 | Modal                                             | `modal.tsx`             | 模态框                 |
 | OverflowDropdown                                  | `overflow-dropdown.tsx` | 溢出下拉               |
 
-## Button 变体
+### Button 变体
 
 只有两种: `primary` (实心主色) 和 `light` (浅灰背景)。
 
@@ -37,7 +84,7 @@
 <Button variant="light" selected>选中态</Button>
 ```
 
-## 导入方式
+### 导入方式
 
 ```tsx
 import { Button } from "@/design-system/button";
@@ -45,7 +92,7 @@ import { IconButton } from "@/design-system/icon-button";
 import { LinkButton } from "@/design-system/link-button";
 ```
 
-## CVA 使用模式
+### CVA 使用模式
 
 10/14 组件使用 CVA (button, card, input, select, textarea, range, progress, skeleton, stack, container)。4 个不使用: icon-button, link-button, modal, overflow-dropdown。
 
@@ -64,19 +111,20 @@ className={cn(componentVariants({ variant, size }), className)}
 
 compoundVariants 用于: input (filled+error), select (filled+error, filled+size), textarea (filled+error)。
 
-## cn 工具函数
+### cn 工具函数
 
 ```tsx
 import { cn } from "@/utils/cn";
 ```
 
-## 图标规范
+### 图标规范
 
 - 使用 Lucide React (`import { X } from "lucide-react"`)
 - 禁止内联 `<svg>` (Navbar GithubIcon 是唯一例外)
 - 图标按钮使用 `IconButton` 组件, 非 `<button>` + SVG
+- 按钮加载状态用 `<Loader2>`, 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>`
 
-## 添加新组件
+### 添加新组件
 
 1. 在 `src/design-system/` 创建 `{name}.tsx`
 2. 使用 CVA 定义变体

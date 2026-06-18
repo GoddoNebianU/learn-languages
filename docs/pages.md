@@ -1,10 +1,6 @@
-# 页面架构指南
+# 页面架构
 
-**生成时间:** 2026-05-11
-
-## 概述
-
-26 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。
+26 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。9 个路由段有 loading.tsx (Skeleton 骨架屏), 4 个 error.tsx (根级 + dictionary/reading/translator)。
 
 ## 路由组
 
@@ -15,11 +11,7 @@ src/app/
 ├── error.tsx           # 根级错误边界 (Client Component)
 ├── not-found.tsx       # 404 页面
 ├── api/auth/[...all]/  # 唯一 API 路由 (better-auth catch-all, 单用户模式返回 404)
-├── admin/              # 管理后台 (密码认证, 独立于用户认证) — 详见子级 AGENTS.md
-│   ├── page.tsx        # Server: JWT session 验证, 加载 SystemConfig + TierCapability
-│   ├── AdminLogin.tsx  # Client: 密码登录表单
-│   ├── AdminSettings.tsx # Client: tier/services 动态配置 UI (305 行)
-│   └── admin-action.ts # Server Actions: login, logout, getSettings, updateSettings, addTier, deleteTier
+├── admin/              # 管理后台 (独立认证) — 详见 config-system.md
 ├── (auth)/             # 认证路由组
 │   ├── login/          # 登录 (Client)
 │   ├── signup/         # 注册 (Client)
@@ -32,16 +24,18 @@ src/app/
 │   └── settings/       # 设置 (Client, 主题切换)
 └── (learn)/            # 功能路由组
     ├── translator/     # 翻译 (Client, 401 行单体)
-    ├── dictionary/     # 词典 (Server→Client) — 详见子级 AGENTS.md
-    ├── srt-player/     # 字幕播放器 (Client, 自含子模块, 详见子级 AGENTS.md)
+    ├── dictionary/     # 词典 (Server→Client) — 详见 features.md
+    ├── srt-player/     # 字幕播放器 (Client, 自含子模块) — 详见 features.md
     ├── text-speaker/   # 语音播放 (Client, 453 行)
-    ├── alphabet/       # 字母学习 (Client)
+    ├── alphabet/       # 字母学习 (Server Component 读 JSON → AlphabetClient 交互)
     ├── explore/        # 公开牌组 (Server→Client) + [id]/ 详情
     ├── favorites/      # 收藏 (Server→Client)
-    ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情 — 详见子级 AGENTS.md
+    ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情 — 详见 features.md
     ├── memorize/       # 记忆模式 (Server→Client, ?deck_id=xxx)
-    └── reading/        # 阅读理解 (Client, AI 翻译+分词对齐, 详见子级 AGENTS.md)
+    └── reading/        # 阅读理解 (Client, AI 翻译+分词对齐) — 详见 features.md
 ```
+
+> 功能页 (decks/dictionary/srt-player/reading) 详细结构见 [features.md](./features.md)。
 
 ## 4 种渲染模式
 
@@ -49,11 +43,11 @@ src/app/
 
 页面标记 `"use client"`, 所有逻辑在客户端处理。
 
-- translator, srt-player, text-speaker, alphabet (高频交互)
+- translator, srt-player, text-speaker (高频交互)
 - login, signup, forgot-password, reset-password (表单)
 - settings
 
-### 模式 2: Server→Client 委托 (8 页) ⭐ 最常用
+### 模式 2: Server→Client 委托 (9 页) — 最常用
 
 Server page 获取数据, 传给同目录的 Client 子组件。
 
@@ -63,7 +57,7 @@ route/
   SomeClient.tsx    # Client: 接收 initialData prop
 ```
 
-适用页面: dictionary, explore, explore/[id], favorites, decks, decks/[deck_id], memorize, reading
+适用页面: dictionary, explore, explore/[id], favorites, decks, decks/[deck_id], memorize, reading, alphabet
 
 ### 模式 3: 纯 Server Component (4 页)
 
@@ -94,27 +88,12 @@ route/
 
 ## 认证保护模式
 
-### 服务端 (Server Pages/Actions)
+页面级认证两种写法:
 
-```typescript
-import { getCurrentUserId } from "@/modules/shared/action-utils";
-const userId = await getCurrentUserId();
-if (!userId) redirect("/login");
-```
+- **Server Page/Action**: 调 `getCurrentUserId()` (`@/modules/shared/action-utils`),未认证时 `redirect("/login")`
+- **Client Page**: `authClient.useSession()` 获取登录态
 
-### 客户端 (Client Pages)
-
-```typescript
-import { authClient } from "@/lib/auth-client";
-const { data } = authClient.useSession();
-```
-
-### 单用户模式守卫
-
-- auth 页面 (login/signup 等) → `notFound()`
-- 用户资料页 (/users/*) → `notFound()`
-- API 路由 (/api/auth/*) → 404
-- Navbar 始终显示已登录状态
+> `getCurrentUserId()` 的机制 (single/multi 模式) 及单用户模式下的页面行为 (auth 页面 404、Navbar 始终登录态) 详见 [config-system.md](./config-system.md#认证模式)。
 
 ## i18n Namespace 映射
 
@@ -147,6 +126,8 @@ const { data } = authClient.useSession();
 | CardList | explore, favorites, decks |
 | LanguageSelector | translator, dictionary |
 | LocaleSelector | Navbar |
+
+> 组件详情见 [components.md](./components.md)。
 
 ## 关键数据流
 
