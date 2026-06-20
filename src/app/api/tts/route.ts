@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import { fetchPrimaryTtsAudio, getQwenTtsUrl } from "@/lib/providers/tts";
 import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 /**
  * TTS 代理路由。
@@ -18,6 +21,12 @@ export async function GET(request: NextRequest) {
   // 1. 优先 primary TTS (自定义接口, 返回 wav 二进制)
   const primary = await fetchPrimaryTtsAudio(text);
   if (primary.ok) {
+    void logActivity({
+      userId: await getCurrentUserId(),
+      action: ACTIVITY_ACTIONS.TTS.SYNTHESIZE,
+      entityType: "tts",
+      metadata: { provider: "primary", lang: langParam, textLength: text.length },
+    });
     return new Response(primary.buffer, {
       headers: {
         "Content-Type": primary.contentType,
@@ -29,6 +38,12 @@ export async function GET(request: NextRequest) {
   // 2. Fallback: DashScope (重定向到其音频 URL, <audio> 可跨域加载)
   const qwenUrl = await getQwenTtsUrl(text, langParam);
   if (qwenUrl) {
+    void logActivity({
+      userId: await getCurrentUserId(),
+      action: ACTIVITY_ACTIONS.TTS.SYNTHESIZE,
+      entityType: "tts",
+      metadata: { provider: "fallback", lang: langParam, textLength: text.length },
+    });
     return Response.redirect(qwenUrl, 302);
   }
 
