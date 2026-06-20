@@ -14,6 +14,7 @@ export function useMemorizeCards(deckId: number) {
   const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
   const [isDictation, setIsDictation] = useState(false);
+  const [isCardMode, setIsCardMode] = useState(false);
   const [studyMode, setStudyMode] = useState<StudyMode>("order-infinite");
 
   const shuffleCards = useCallback((cardArray: ActionOutputCard[]): ActionOutputCard[] => {
@@ -41,6 +42,7 @@ export function useMemorizeCards(deckId: number) {
             setShowAnswer(false);
             setIsReversed(false);
             setIsDictation(false);
+            setIsCardMode(false);
           } else {
             setError(result.message);
           }
@@ -105,9 +107,11 @@ export function useMemorizeCards(deckId: number) {
     studyMode,
     isReversed,
     isDictation,
+    isCardMode,
     setStudyMode,
     setIsReversed,
     setIsDictation,
+    setIsCardMode,
     setShowAnswer,
     setCurrentIndex,
     nextCard,
