@@ -11,6 +11,8 @@ import {
 import { serviceGetCardByWord } from "@/modules/card/card-service";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { repoGetUserIdByDeckId } from "@/modules/deck/deck-repository";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("dictionary-action");
 
@@ -55,6 +57,17 @@ export async function actionLookUpDictionary(
           }
         : undefined
     );
+
+    await logActivity({
+      userId,
+      action: ACTIVITY_ACTIONS.DICTIONARY.LOOKUP,
+      entityType: "dictionary",
+      metadata: {
+        text: validated.text,
+        queryLang: validated.queryLang,
+        definitionLang: validated.definitionLang,
+      },
+    });
 
     return {
       success: true,

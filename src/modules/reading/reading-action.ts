@@ -8,6 +8,8 @@ import {
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("reading-action");
 
@@ -18,6 +20,16 @@ export const actionReadText = async (input: unknown): Promise<ActionOutputReadTe
 
     const validated = validateActionInputReadText(input);
     const result = await serviceReadText(validated);
+    await logActivity({
+      userId,
+      action: ACTIVITY_ACTIONS.READING.READ,
+      entityType: "reading",
+      metadata: {
+        sourceLanguage: validated.sourceLanguage,
+        targetLanguage: validated.targetLanguage,
+        textLength: validated.text.length,
+      },
+    });
     return {
       success: true,
       message: "Reading translation completed",

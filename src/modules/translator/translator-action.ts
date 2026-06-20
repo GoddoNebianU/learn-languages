@@ -9,6 +9,8 @@ import {
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("translator-action");
 
@@ -19,6 +21,16 @@ export const actionTranslateText = async (input: unknown): Promise<ActionOutputT
 
     const validated = validateActionInputTranslateText(input);
     const result = await serviceTranslateText(validated);
+    await logActivity({
+      userId,
+      action: ACTIVITY_ACTIONS.TRANSLATOR.TRANSLATE,
+      entityType: "translator",
+      metadata: {
+        sourceLanguage: validated.sourceLanguage,
+        targetLanguage: validated.targetLanguage,
+        textLength: validated.sourceText.length,
+      },
+    });
     return {
       success: true,
       message: "Translation completed",
