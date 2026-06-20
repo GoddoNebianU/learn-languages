@@ -491,6 +491,7 @@
     "currentSettings": "현재 설정: 질의 {queryLang}, 정의 {definitionLang}",
     "relookup": "다시 검색",
     "saveToFolder": "폴더에 저장",
+    "readAloud": "음성 재생",
     "loading": "로딩 중...",
     "noResults": "검색 결과 없음",
     "tryOtherWords": "다른 단어나 구문을 시도하세요",

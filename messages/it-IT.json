@@ -491,6 +491,7 @@
     "currentSettings": "Impostazioni attuali: Query {queryLang}, Definizione {definitionLang}",
     "relookup": "Ricerca di nuovo",
     "saveToFolder": "Salva nella cartella",
+    "readAloud": "Leggi ad alta voce",
     "loading": "Caricamento...",
     "noResults": "Nessun risultato trovato",
     "tryOtherWords": "Prova altre parole o frasi",

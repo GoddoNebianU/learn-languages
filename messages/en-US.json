@@ -457,6 +457,7 @@
     "currentSettings": "Current settings: Query {queryLang}, Definition {definitionLang}",
     "relookup": "Re-search",
     "saveToFolder": "Save to folder",
+    "readAloud": "Read aloud",
     "loading": "Loading...",
     "noResults": "No results found",
     "tryOtherWords": "Try other words or phrases",

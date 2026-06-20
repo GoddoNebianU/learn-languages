@@ -457,6 +457,7 @@
     "currentSettings": "当前设置：查询 {queryLang}，释义 {definitionLang}",
     "relookup": "重新查询",
     "saveToFolder": "保存到文件夹",
+    "readAloud": "朗读",
     "loading": "加载中...",
     "noResults": "未找到结果",
     "tryOtherWords": "尝试其他单词或短语",

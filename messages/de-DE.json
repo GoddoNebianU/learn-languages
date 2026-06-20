@@ -419,6 +419,7 @@
     "currentSettings": "Aktuelle Einstellungen: Abfrage {queryLang}, Definition {definitionLang}",
     "relookup": "Erneut suchen",
     "saveToFolder": "In Ordner speichern",
+    "readAloud": "Vorlesen",
     "loading": "Wird geladen...",
     "noResults": "Keine Ergebnisse gefunden",
     "tryOtherWords": "Versuchen Sie andere Wörter oder Ausdrücke",

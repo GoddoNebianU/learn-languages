@@ -457,6 +457,7 @@
     "currentSettings": "現在の設定: クエリ {queryLang}, 定義 {definitionLang}",
     "relookup": "再検索",
     "saveToFolder": "フォルダーに保存",
+    "readAloud": "読み上げ",
     "loading": "読み込み中...",
     "noResults": "結果が見つかりません",
     "tryOtherWords": "別の単語やフレーズを試してください",
