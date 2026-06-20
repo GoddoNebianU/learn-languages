@@ -1,11 +1,13 @@
 import { TSharedEntry } from "@/shared/dictionary-type";
 import { useTranslations } from "next-intl";
+import { SpeakButton } from "./SpeakButton";
 
 interface DictionaryEntryProps {
   entry: TSharedEntry;
+  queryLang: string;
 }
 
-export function DictionaryEntry({ entry }: DictionaryEntryProps) {
+export function DictionaryEntry({ entry, queryLang }: DictionaryEntryProps) {
   const t = useTranslations("dictionary");
 
   return (
@@ -27,7 +29,10 @@ export function DictionaryEntry({ entry }: DictionaryEntryProps) {
       {entry.example && (
         <div>
           <h3 className="mb-1 text-sm font-semibold text-gray-700">{t("example")}</h3>
-          <p className="border-l-4 border-[#35786f] pl-4 text-gray-700">{entry.example}</p>
+          <div className="flex items-center gap-2">
+            <p className="border-l-4 border-[#35786f] pl-4 text-gray-700">{entry.example}</p>
+            <SpeakButton text={entry.example} queryLang={queryLang} />
+          </div>
         </div>
       )}
     </div>

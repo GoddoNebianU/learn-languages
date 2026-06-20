@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DictionaryEntry } from "./DictionaryEntry";
+import { SpeakButton } from "./SpeakButton";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
 import { actionGetCardByWord, actionCreateCard, actionUpdateCard, actionDeleteCard } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
@@ -335,8 +336,9 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
         <div className="rounded-lg bg-white p-6 shadow-lg min-h-[calc(100vh-14rem)]">
           <div className="mb-6 flex items-start justify-between">
             <div className="flex-1">
-              <h2 className="mb-2 text-3xl font-bold text-gray-800">
+              <h2 className="mb-2 flex items-center gap-2 text-3xl font-bold text-gray-800">
                 {readingSearchResult.standardForm}
+                <SpeakButton text={readingSearchResult.standardForm} queryLang={queryLang} />
               </h2>
             </div>
             {currentCardId && (
@@ -363,7 +365,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
           <div className="space-y-6">
             {readingSearchResult.entries.map((entry, index) => (
               <div key={index} className="border-t border-gray-200 pt-4">
-                <DictionaryEntry entry={entry} />
+                <DictionaryEntry entry={entry} queryLang={queryLang} />
               </div>
             ))}
           </div>
