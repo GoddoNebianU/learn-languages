@@ -18,6 +18,8 @@ import {
   serviceSetUserEmailVerified,
   serviceUpdateUser,
 } from "@/modules/admin/admin-service";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("admin-action");
 
@@ -163,7 +165,15 @@ export async function actionUpdateAdminSettings(input: unknown) {
     return { success: false as const, message: `Validation failed: ${errors}` };
   }
 
-  return serviceUpdateAdminSettings(result.data);
+  const updateResult = await serviceUpdateAdminSettings(result.data);
+  if (updateResult.success) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.CONFIG_UPDATE,
+      entityType: "system_config",
+    });
+  }
+  return updateResult;
 }
 
 const createUserSchema = z.object({
@@ -188,7 +198,16 @@ export async function actionCreateUser(input: unknown) {
     return { success: false as const, message: `Validation failed: ${errors}` };
   }
 
-  return serviceCreateUser(result.data);
+  const createResult = await serviceCreateUser(result.data);
+  if (createResult.success && createResult.data) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.USER_CREATE,
+      entityType: "user",
+      entityId: createResult.data.id,
+    });
+  }
+  return createResult;
 }
 
 export async function actionDeleteUser(userId: string) {
@@ -201,7 +220,16 @@ export async function actionDeleteUser(userId: string) {
     return { success: false as const, message: "Invalid user id" };
   }
 
-  return serviceDeleteUser(userId);
+  const deleteResult = await serviceDeleteUser(userId);
+  if (deleteResult.success) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.USER_DELETE,
+      entityType: "user",
+      entityId: userId,
+    });
+  }
+  return deleteResult;
 }
 
 export async function actionSetUserEmailVerified(userId: string, verified: boolean) {
@@ -217,7 +245,17 @@ export async function actionSetUserEmailVerified(userId: string, verified: boole
     return { success: false as const, message: "Invalid verified flag" };
   }
 
-  return serviceSetUserEmailVerified(userId, verified);
+  const verifyResult = await serviceSetUserEmailVerified(userId, verified);
+  if (verifyResult.success) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.USER_UPDATE,
+      entityType: "user",
+      entityId: userId,
+      metadata: { field: "emailVerified", value: verified },
+    });
+  }
+  return verifyResult;
 }
 
 const updateUserSchema = z.object({
@@ -242,5 +280,14 @@ export async function actionUpdateUser(input: unknown) {
     return { success: false as const, message: `Validation failed: ${errors}` };
   }
 
-  return serviceUpdateUser(result.data);
+  const updateResult = await serviceUpdateUser(result.data);
+  if (updateResult.success) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.USER_UPDATE,
+      entityType: "user",
+      entityId: result.data.userId,
+    });
+  }
+  return updateResult;
 }

@@ -15,6 +15,8 @@ import {
   schemaActionInputToggleFollow,
 } from "./follow-action-dto";
 import { createLogger } from "@/lib/logger";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("follow-action");
 
@@ -29,6 +31,12 @@ export async function actionToggleFollow(input: unknown) {
     const result = await serviceToggleFollow({
       currentUserId: userId,
       targetUserId: dto.targetUserId,
+    });
+    await logActivity({
+      userId,
+      action: result.isFollowing ? ACTIVITY_ACTIONS.FOLLOW.CREATE : ACTIVITY_ACTIONS.FOLLOW.DELETE,
+      entityType: "user",
+      entityId: dto.targetUserId,
     });
     return { success: true, message: "Follow toggled successfully", data: result };
   } catch (error) {
