@@ -9,6 +9,8 @@ import {
   type ActionOutputForgotPassword,
 } from "./forgot-password-action-dto";
 import { serviceRequestPasswordReset } from "./forgot-password-service";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("forgot-password-action");
 
@@ -18,7 +20,16 @@ export async function actionRequestPasswordReset(
   try {
     const dto = validate(input, schemaActionInputForgotPassword) as ActionInputForgotPassword;
 
-    return await serviceRequestPasswordReset({ email: dto.email });
+    const result = await serviceRequestPasswordReset({ email: dto.email });
+    if (result.success) {
+      await logActivity({
+        userId: null,
+        action: ACTIVITY_ACTIONS.AUTH.PASSWORD_RESET_REQUEST,
+        entityType: "user",
+        metadata: { email: dto.email },
+      });
+    }
+    return result;
   } catch (e) {
     if (e instanceof ValidateError) {
       return {

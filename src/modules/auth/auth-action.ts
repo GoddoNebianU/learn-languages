@@ -14,14 +14,23 @@ import {
   serviceGetUserProfileByUsername,
   serviceDeleteAccount,
 } from "./auth-service";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
 
 
 const log = createLogger("auth-action");
 
 export async function signOutAction() {
   try {
+    const userId = await getCurrentUserId();
     await auth.api.signOut({
       headers: await headers(),
+    });
+    await logActivity({
+      userId,
+      action: ACTIVITY_ACTIONS.AUTH.LOGOUT,
+      entityType: "session",
     });
 
     redirect("/login");
@@ -80,6 +89,13 @@ export async function actionDeleteAccount(): Promise<ActionOutputDeleteAccount> 
     if (!result.success) {
       return { success: false, message: "Failed to delete account" };
     }
+
+    await logActivity({
+      userId: session.user.id,
+      action: ACTIVITY_ACTIONS.AUTH.DELETE_ACCOUNT,
+      entityType: "user",
+      entityId: session.user.id,
+    });
 
     return { success: true, message: "Account deleted successfully" };
   } catch (e) {

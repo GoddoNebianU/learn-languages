@@ -10,6 +10,8 @@ const log = createLogger("auth");
 
 import { sendEmail } from "./lib/providers/smtp";
 import { generateVerificationEmailHtml, generateResetPasswordEmailHtml } from "./lib/email";
+import { logActivity } from "./modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "./modules/activity/activity-constants";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -78,5 +80,34 @@ export const auth = betterAuth({
         }
       }
     }),
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await logActivity({
+            userId: user.id,
+            action: ACTIVITY_ACTIONS.AUTH.SIGNUP,
+            entityType: "user",
+            entityId: user.id,
+            metadata: { email: user.email },
+          });
+        },
+      },
+    },
+    session: {
+      create: {
+        after: async (session) => {
+          await logActivity({
+            userId: session.userId,
+            action: ACTIVITY_ACTIONS.AUTH.LOGIN,
+            entityType: "session",
+            entityId: session.id,
+            ip: session.ipAddress ?? null,
+            userAgent: session.userAgent ?? null,
+          });
+        },
+      },
+    },
   },
 });
