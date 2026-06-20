@@ -165,6 +165,7 @@ ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
 
 ```
 SystemConfig          # 功能开关 (signup, userProfile, social, email) + 服务配置 (单行)
+ActivityLog           # 用户操作审计日志 (userId?, action, entityType?, ip?, userAgent?, metadata?)
 User
 ├── Account
 ├── Session

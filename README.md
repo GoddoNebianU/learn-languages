@@ -165,6 +165,7 @@ ast-grep --pattern 'useTranslations($ARG)' --lang tsx --paths src/
 
 ```
 SystemConfig          # feature flags (signup, userProfile, social, email) + services config (single row)
+ActivityLog           # audit trail of user operations (userId?, action, entityType?, ip?, userAgent?, metadata?)
 User
 ├── Account
 ├── Session

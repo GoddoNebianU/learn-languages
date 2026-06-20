@@ -49,7 +49,7 @@ src/
 
 ## 模块架构: Action-Service-Repository
 
-业务模块采用三层架构。9 个模块 + 1 个共享工具。每个模块最多 6 个文件:
+业务模块采用三层架构。10 个模块 + 1 个共享工具。每个模块最多 6 个文件:
 
 ```
 {name}/
@@ -62,6 +62,8 @@ src/
 ```
 
 AI 驱动模块 (dictionary, translator, reading) 跳过 repository 层。
+
+横切模块 `activity` 跳过 action/action-dto 层 — 它只对外暴露 `logActivity()` 供其他 action 调用做审计日志,本身没有面向用户的入口。
 
 ### 模块清单
 
@@ -76,6 +78,7 @@ AI 驱动模块 (dictionary, translator, reading) 跳过 repository 层。
 | reading    | 4      | 1       | 不完整             | 无 repo — AI 管道 (翻译拆句+分词对齐) |
 | shared     | 1      | 0       | N/A                | getCurrentUserId                   |
 | admin      | 2      | 0       | service+repository only | admin-action.ts 在 app/admin/ 调用, 无独立 action 文件 |
+| activity   | 3      | 0       | 不完整 (横切)      | constants + repository + service; 无 action 层; `logActivity()` 被所有 action + better-auth databaseHooks + api/tts 调用做审计 |
 
 ### 不完整模块说明
 
@@ -83,12 +86,14 @@ AI 驱动模块 (dictionary, translator, reading) 跳过 repository 层。
 - **translator (4 文件)**: 有 action + action-dto + service + service-dto,无 repository/repository-dto。翻译通过 AI 管道。genIPA()/genLanguage() 失败返回空字符串 (用于 text-speaker 兼容)
 - **reading (4 文件)**: 有 action + action-dto + service + service-dto,无 repository/repository-dto。service 直接调用 `@/lib/bigmodel/reading/orchestrator`
 - **admin (2 文件)**: admin-repository.ts + admin-service.ts,无 action/action-dto/service-dto/repository-dto。action 在 `app/admin/` 页面中直接调用 service
+- **activity (3 文件)**: activity-constants.ts + activity-repository.ts + activity-service.ts,无 action/action-dto。横切审计模块。`logActivity(params)` 自动从请求头解析 IP/User-Agent (解析失败不阻断写入),支持 `ip`/`userAgent` 覆盖参数 (better-auth DB hook 已捕获 session.ipAddress/userAgent 时用)。内部所有错误被吞,**绝不影响主操作**。记录点: auth (signup/login via databaseHooks, logout/delete/reset)、deck/card CRUD、dictionary/translator/reading 查询、tts 合成、follow、admin 配置/用户管理。schema 见 `ActivityLog` 模型 (userId? SetNull,action/entityType?/entityId?/ip?/userAgent?/metadata?/createdAt,索引 userId/action/createdAt)。
 
 ### 跨模块依赖
 
 ```
 card-service ──> deck-repository (repoGetUserIdByDeckId 用于所有权检查)
 admin-service ──> capability (invalidateCapabilityCache)
+所有 action + auth.ts (databaseHooks) + api/tts/route ──> activity-service (logActivity 审计)
 ```
 
 其余模块完全自包含。
@@ -168,6 +173,8 @@ if (deckOwnerId !== userId) return { success: false, message: "Unauthorized" };
 | follow     | users/[username]/\*, FollowButton                                      |
 | translator | translator/page, text-speaker/page                                     |
 | dictionary | dictionary/DictionaryClient                                            |
+
+> `activity` 不列入此表 — 它是横切模块,消费者是其他模块的 action (以及 better-auth databaseHooks 和 `/api/tts`),不是页面。
 
 ### 已知问题
 
