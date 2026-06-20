@@ -3,6 +3,8 @@
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 import {
   serviceCreateCard,
   serviceUpdateCard,
@@ -61,6 +63,14 @@ export async function actionCreateCard(input: unknown) {
       return { success: false, message: "You do not have permission to add cards to this deck" };
     }
     const result = await serviceCreateCard(validated);
+    if (result.success) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.CARD.CREATE,
+        entityType: "card",
+        entityId: result.cardId,
+      });
+    }
     return result;
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -83,6 +93,14 @@ export async function actionUpdateCard(input: unknown) {
       return { success: false, message: "You do not have permission to update this card" };
     }
     const result = await serviceUpdateCard(validated);
+    if (result.success) {
+      await logActivity({
+        userId: await getCurrentUserId(),
+        action: ACTIVITY_ACTIONS.CARD.UPDATE,
+        entityType: "card",
+        entityId: validated.cardId,
+      });
+    }
     return result;
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -105,6 +123,14 @@ export async function actionDeleteCard(input: unknown) {
       return { success: false, message: "You do not have permission to delete this card" };
     }
     const result = await serviceDeleteCard(validated);
+    if (result.success) {
+      await logActivity({
+        userId: await getCurrentUserId(),
+        action: ACTIVITY_ACTIONS.CARD.DELETE,
+        entityType: "card",
+        entityId: validated.cardId,
+      });
+    }
     return result;
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -244,7 +270,17 @@ export async function actionReorderCards(
     if (!isOwner) {
       return { success: false, message: "You do not have permission to reorder cards in this deck" };
     }
-    return serviceReorderCards(validated.deckId, validated.cardIds);
+    const result = await serviceReorderCards(validated.deckId, validated.cardIds);
+    if (result.success) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.CARD.REORDER,
+        entityType: "deck",
+        entityId: validated.deckId,
+        metadata: { count: validated.cardIds.length },
+      });
+    }
+    return result;
   } catch (e) {
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };

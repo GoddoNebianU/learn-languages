@@ -3,6 +3,8 @@
 import { createLogger } from "@/lib/logger";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { ValidateError } from "@/lib/errors";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 import { Visibility } from "../../../generated/prisma/enums";
 import {
   ActionInputCreateDeck,
@@ -93,6 +95,15 @@ export async function actionCreateDeck(
       visibility: mapVisibilityToService(validatedInput.visibility),
     });
 
+    if (result.success) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.DECK.CREATE,
+        entityType: "deck",
+        entityId: result.deckId,
+      });
+    }
+
     return result;
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -114,12 +125,23 @@ export async function actionUpdateDeck(
       return { success: false, message: "You do not have permission to update this deck" };
     }
 
-    return serviceUpdateDeck({
+    const result = await serviceUpdateDeck({
       deckId: validatedInput.deckId,
       name: validatedInput.name,
       desc: validatedInput.desc,
       visibility: mapVisibilityToService(validatedInput.visibility),
     });
+
+    if (result.success) {
+      await logActivity({
+        userId: await getCurrentUserId(),
+        action: ACTIVITY_ACTIONS.DECK.UPDATE,
+        entityType: "deck",
+        entityId: validatedInput.deckId,
+      });
+    }
+
+    return result;
   } catch (e) {
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };
@@ -140,7 +162,18 @@ export async function actionDeleteDeck(
       return { success: false, message: "You do not have permission to delete this deck" };
     }
 
-    return serviceDeleteDeck({ deckId: validatedInput.deckId });
+    const result = await serviceDeleteDeck({ deckId: validatedInput.deckId });
+
+    if (result.success) {
+      await logActivity({
+        userId: await getCurrentUserId(),
+        action: ACTIVITY_ACTIONS.DECK.DELETE,
+        entityType: "deck",
+        entityId: validatedInput.deckId,
+      });
+    }
+
+    return result;
   } catch (e) {
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };
@@ -332,6 +365,15 @@ export async function actionToggleDeckFavorite(
       userId,
     });
 
+    if (result.success) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.DECK.FAVORITE_TOGGLE,
+        entityType: "deck",
+        entityId: validatedInput.deckId,
+      });
+    }
+
     return result;
   } catch (e) {
     if (e instanceof ValidateError) {
@@ -444,7 +486,16 @@ export async function actionReorderDecks(
     if (!validated.deckIds.every((id) => userDeckIds.has(id))) {
       return { success: false, message: "Some decks do not belong to you" };
     }
-    return serviceReorderDecks({ userId, deckIds: validated.deckIds });
+    const reorderResult = await serviceReorderDecks({ userId, deckIds: validated.deckIds });
+    if (reorderResult.success) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.DECK.REORDER,
+        entityType: "deck",
+        metadata: { count: validated.deckIds.length },
+      });
+    }
+    return reorderResult;
   } catch (e) {
     if (e instanceof ValidateError) {
       return { success: false, message: e.message };
