@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Repeat,
   Infinity,
+  BookOpen,
 } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
@@ -44,9 +45,11 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     studyMode,
     isReversed,
     isDictation,
+    isCardMode,
     setStudyMode,
     setIsReversed,
     setIsDictation,
+    setIsCardMode,
     setShowAnswer,
     setCurrentIndex,
     nextCard,
@@ -109,25 +112,13 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     }
   };
 
-  const playCurrentCard = () => {
-    if (!currentCard) return;
-
-    const text = isReversed
-      ? currentCard.meanings.map((m) => m.definition).join("; ")
-      : currentCard.word;
-
-    if (text) {
-      playTTS(text);
-    }
-  };
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
         return;
       }
 
-      if (!showAnswer) {
+      if (!showAnswer && !isCardMode) {
         if (e.key === " " || e.key === "Enter") {
           e.preventDefault();
           handleShowAnswer();
@@ -145,7 +136,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showAnswer, handleShowAnswer, handleNextCard, handlePrevCard]);
+  }, [showAnswer, isCardMode, handleShowAnswer, handleNextCard, handlePrevCard]);
 
   if (isLoading) {
     return (
@@ -261,6 +252,18 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         >
           {t("dictation")}
         </Button>
+        <Button
+          variant="light"
+          onClick={() => {
+            setIsCardMode(!isCardMode);
+            setShowAnswer(false);
+          }}
+          selected={isCardMode}
+          leftIcon={<BookOpen className="h-4 w-4" />}
+          size="sm"
+        >
+          {t("cardMode")}
+        </Button>
       </HStack>
 
       <MemorizeCard
@@ -268,10 +271,13 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         showAnswer={showAnswer}
         isReversed={isReversed}
         isDictation={isDictation}
+        isCardMode={isCardMode}
+        isAudioLoading={isAudioLoading}
+        onPlayText={playTTS}
       />
 
       <HStack justify="center">
-        {!showAnswer ? (
+        {!showAnswer && !isCardMode ? (
           <Button
             variant="light"
             onClick={handleShowAnswer}

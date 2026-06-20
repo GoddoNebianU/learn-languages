@@ -2,6 +2,7 @@
 
 import localFont from "next/font/local";
 import { useTranslations } from "next-intl";
+import { Volume2 } from "lucide-react";
 import { VStack } from "@/design-system/stack";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 
@@ -16,6 +17,13 @@ function getFrontText(card: ActionOutputCard, isReversed: boolean): string {
       .join("; ");
   }
   return card.word;
+}
+
+function getBackText(card: ActionOutputCard, isReversed: boolean): string {
+  if (isReversed) {
+    return card.word;
+  }
+  return card.meanings.map((m) => m.definition).join("; ");
 }
 
 function getBackContent(card: ActionOutputCard, isReversed: boolean): React.ReactNode {
@@ -51,11 +59,47 @@ interface MemorizeCardProps {
   showAnswer: boolean;
   isReversed: boolean;
   isDictation: boolean;
+  isCardMode: boolean;
+  isAudioLoading: boolean;
+  onPlayText: (text: string) => void;
 }
 
-function MemorizeCard({ card, showAnswer, isReversed, isDictation }: MemorizeCardProps) {
+function PlayButton({
+  label,
+  disabled,
+  onClick,
+}: {
+  label: string;
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      title={label}
+      className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      <Volume2 className="h-5 w-5" />
+    </button>
+  );
+}
+
+function MemorizeCard({
+  card,
+  showAnswer,
+  isReversed,
+  isDictation,
+  isCardMode,
+  isAudioLoading,
+  onPlayText,
+}: MemorizeCardProps) {
   const t = useTranslations("memorize.review");
   const displayFront = getFrontText(card, isReversed);
+  const backText = getBackText(card, isReversed);
+  const reveal = showAnswer || isCardMode;
 
   return (
     <div
@@ -66,15 +110,18 @@ function MemorizeCard({ card, showAnswer, isReversed, isDictation }: MemorizeCar
           <>
             <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] p-8">
               {card.ipa ? (
-                <div className="text-center font-mono text-2xl text-gray-700">
-                  [{card.ipa}]
-                </div>
+                <div className="text-center font-mono text-2xl text-gray-700">[{card.ipa}]</div>
               ) : (
                 <div className="text-lg text-gray-400">{t("noIpa")}</div>
               )}
+              <PlayButton
+                label={t("readAloud")}
+                disabled={isAudioLoading || !backText}
+                onClick={() => onPlayText(backText)}
+              />
             </VStack>
 
-            {showAnswer && (
+            {reveal && (
               <>
                 <div className="border-t border-gray-200" />
                 <VStack
@@ -97,13 +144,16 @@ function MemorizeCard({ card, showAnswer, isReversed, isDictation }: MemorizeCar
                 {displayFront}
               </div>
               {!isReversed && card.ipa && (
-                <div className="text-center font-mono text-lg text-gray-500">
-                  [{card.ipa}]
-                </div>
+                <div className="text-center font-mono text-lg text-gray-500">[{card.ipa}]</div>
               )}
+              <PlayButton
+                label={t("readAloud")}
+                disabled={isAudioLoading || !displayFront}
+                onClick={() => onPlayText(displayFront)}
+              />
             </VStack>
 
-            {showAnswer && (
+            {reveal && (
               <>
                 <div className="border-t border-gray-200" />
                 <VStack
@@ -112,6 +162,11 @@ function MemorizeCard({ card, showAnswer, isReversed, isDictation }: MemorizeCar
                   className="min-h-[20dvh] rounded-b-xl bg-gray-50 p-8"
                 >
                   {getBackContent(card, isReversed)}
+                  <PlayButton
+                    label={t("readAloud")}
+                    disabled={isAudioLoading || !backText}
+                    onClick={() => onPlayText(backText)}
+                  />
                 </VStack>
               </>
             )}
