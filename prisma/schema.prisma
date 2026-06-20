@@ -45,6 +45,7 @@ model User {
   sessions        Session[]
   followers       Follow[]       @relation("UserFollowers")
   following       Follow[]       @relation("UserFollowing")
+  activities      ActivityLog[]
 
   @@map("user")
 }
@@ -192,4 +193,27 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@map("follows")
+}
+
+// ============================================
+// Activity Log (audit trail of user operations)
+// ============================================
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String?
+  entityId   String?
+  ip         String?
+  userAgent  String?  @db.Text
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("activity_logs")
 }
