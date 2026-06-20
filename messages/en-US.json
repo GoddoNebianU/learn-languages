@@ -252,10 +252,12 @@
       "correct": "Correct",
       "incorrect": "Incorrect",
       "orderLimited": "Order",
-      "orderInfinite": "Loop",
+      "orderInfinite": "Sequential",
       "randomLimited": "Random",
-      "randomInfinite": "Random Loop",
-      "noIpa": "No IPA available"
+      "randomInfinite": "Random",
+      "noIpa": "No IPA available",
+      "cardMode": "Card Mode",
+      "readAloud": "Read aloud"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

@@ -255,7 +255,9 @@
       "orderInfinite": "Iteracio",
       "randomLimited": "Hazarda",
       "randomInfinite": "Hazarda Iteracio",
-      "noIpa": "Neniu IFA disponebla"
+      "noIpa": "Neniu IFA disponebla",
+      "cardMode": "Karta reĝimo",
+      "readAloud": "Laŭtlegi"
     },
     "page": {
       "unauthorized": "Vi ne rajtas aliri ĉi tiun kartaron"

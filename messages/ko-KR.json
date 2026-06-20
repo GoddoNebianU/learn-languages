@@ -286,10 +286,12 @@
       "incorrect": "오답",
       "restart": "다시 시작",
       "orderLimited": "순서 제한",
-      "orderInfinite": "순서 무제한",
+      "orderInfinite": "순서",
       "randomLimited": "무작위 제한",
-      "randomInfinite": "무작위 무제한",
-      "noIpa": "IPA 없음"
+      "randomInfinite": "무작위",
+      "noIpa": "IPA 없음",
+      "cardMode": "카드 모드",
+      "readAloud": "음성 재생"
     },
     "page": {
       "unauthorized": "권한이 없습니다"

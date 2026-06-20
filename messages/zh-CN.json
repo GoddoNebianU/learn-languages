@@ -252,10 +252,12 @@
       "incorrect": "错误",
       "restart": "重新开始",
       "orderLimited": "顺序有限",
-      "orderInfinite": "顺序无限",
+      "orderInfinite": "顺序",
       "randomLimited": "随机有限",
-      "randomInfinite": "随机无限",
-      "noIpa": "无音标"
+      "randomInfinite": "随机",
+      "noIpa": "无音标",
+      "cardMode": "记忆卡模式",
+      "readAloud": "朗读"
     },
     "page": {
       "unauthorized": "您无权访问该牌组"

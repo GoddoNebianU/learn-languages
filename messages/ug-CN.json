@@ -286,10 +286,12 @@
       "incorrect": "خاتا",
       "restart": "قايتا باشلا",
       "orderLimited": "تەرتىپلى چەكلەنگەن",
-      "orderInfinite": "تەرتىپلى چەكسىز",
+      "orderInfinite": "تەرتىپلى",
       "randomLimited": "ئىختىيارى چەكلەنگەن",
-      "randomInfinite": "ئىختىيارى چەكسىز",
-      "noIpa": "IPA يوق"
+      "randomInfinite": "ئىختىيارى",
+      "noIpa": "IPA يوق",
+      "cardMode": "كارتا مودېلى",
+      "readAloud": "ئوقۇش"
     },
     "page": {
       "unauthorized": "ھوقۇقسىز"

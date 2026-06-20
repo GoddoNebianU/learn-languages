@@ -286,10 +286,12 @@
       "incorrect": "Incorrect",
       "restart": "Recommencer",
       "orderLimited": "Ordre limité",
-      "orderInfinite": "Ordre infini",
+      "orderInfinite": "Ordre",
       "randomLimited": "Aléatoire limité",
-      "randomInfinite": "Aléatoire infini",
-      "noIpa": "Pas d'IPA disponible"
+      "randomInfinite": "Aléatoire",
+      "noIpa": "Pas d'IPA disponible",
+      "cardMode": "Mode carte",
+      "readAloud": "Lire à voix haute"
     },
     "page": {
       "unauthorized": "Non autorisé"

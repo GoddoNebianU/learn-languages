@@ -214,10 +214,12 @@
       "incorrect": "Falsch",
       "restart": "Neustart",
       "orderLimited": "Reihenfolge begrenzt",
-      "orderInfinite": "Reihenfolge unbegrenzt",
+      "orderInfinite": "Reihenfolge",
       "randomLimited": "Zufällig begrenzt",
-      "randomInfinite": "Zufällig unbegrenzt",
-      "noIpa": "Kein IPA verfügbar"
+      "randomInfinite": "Zufällig",
+      "noIpa": "Kein IPA verfügbar",
+      "cardMode": "Kartenmodus",
+      "readAloud": "Vorlesen"
     },
     "page": {
       "unauthorized": "Nicht autorisiert"

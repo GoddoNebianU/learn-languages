@@ -252,10 +252,12 @@
       "incorrect": "不正解",
       "restart": "最初から",
       "orderLimited": "順序制限",
-      "orderInfinite": "順序無限",
+      "orderInfinite": "順序",
       "randomLimited": "ランダム制限",
-      "randomInfinite": "ランダム無限",
-      "noIpa": "IPAなし"
+      "randomInfinite": "ランダム",
+      "noIpa": "IPAなし",
+      "cardMode": "カードモード",
+      "readAloud": "読み上げ"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"
