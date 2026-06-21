@@ -129,11 +129,11 @@ import { cn } from "@/utils/cn";
 
 ### 密度模式 (Compact Design System)
 
-项目支持两套密度: **comfortable** (默认, 卡片式) 和 **compact** (高密度, 列表/网格优先)。用户在 `/settings` 切换。
+项目支持两套密度: **compact** (默认, 高密度, 列表/网格优先) 和 **comfortable** (卡片式)。用户在 `/settings` 切换。
 
 **切换机制** (`density-provider.tsx` + `globals.css`):
 - `<html data-density="compact">` 属性切换 (非 inline style)
-- localStorage `"density-mode"`, 默认 `"comfortable"`
+- localStorage `"density-mode"`, 默认 `"compact"`
 - `@custom-variant compact` 启用 `compact:` 前缀
 
 **Token 层** (全局自动生效, 零组件迁移) — 在 `[data-density="compact"]` 下覆盖:

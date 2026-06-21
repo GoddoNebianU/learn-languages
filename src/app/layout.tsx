@@ -35,7 +35,7 @@ export default async function RootLayout({
       <body className={`antialiased`}>
         <script dangerouslySetInnerHTML={{
           __html:
-            "(function(){try{var d=localStorage.getItem('density-mode');if(d==='compact')document.documentElement.dataset.density='compact';}catch(e){}})();",
+            "(function(){try{var d=localStorage.getItem('density-mode');if(d!=='comfortable')document.documentElement.dataset.density='compact';}catch(e){document.documentElement.dataset.density='compact';}})();",
         }} />
         <StrictMode>
           <ThemeProvider>

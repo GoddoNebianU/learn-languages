@@ -12,12 +12,12 @@ type DensityContextType = {
 const DensityContext = createContext<DensityContextType | null>(null);
 
 const STORAGE_KEY = "density-mode";
-const DEFAULT_DENSITY: Density = "comfortable";
+const DEFAULT_DENSITY: Density = "compact";
 
 function getInitialDensity(): Density {
   if (typeof window === "undefined") return DEFAULT_DENSITY;
   const saved = localStorage.getItem(STORAGE_KEY);
-  return saved === "compact" ? "compact" : DEFAULT_DENSITY;
+  return saved === "compact" || saved === "comfortable" ? saved : DEFAULT_DENSITY;
 }
 
 function applyDensity(density: Density): void {
