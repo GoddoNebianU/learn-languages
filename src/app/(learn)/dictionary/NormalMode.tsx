@@ -41,6 +41,21 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
   } = useDictionaryStore();
 
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedDeckId, setSelectedDeckId] = useState<number | undefined>(
+    () => {
+      if (typeof window === "undefined") return undefined;
+      const saved = localStorage.getItem("dictionary-deck-id");
+      const parsed = saved ? Number(saved) : undefined;
+      return Number.isNaN(parsed) ? undefined : parsed;
+    }
+  );
+
+  useEffect(() => {
+    if (decks.length === 0) return;
+    if (selectedDeckId === undefined || !decks.some((d) => d.id === selectedDeckId)) {
+      setSelectedDeckId(decks[0].id);
+    }
+  }, [decks, selectedDeckId]);
 
   useEffect(() => {
     const q = searchParams.get("q") || undefined;
@@ -82,8 +97,7 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
       return;
     }
 
-    const deckSelect = document.getElementById("deck-select") as HTMLSelectElement;
-    const deckId = deckSelect?.value ? Number(deckSelect.value) : decks[0]?.id;
+    const deckId = selectedDeckId ?? decks[0]?.id;
 
     if (!deckId) {
       toast.error(t("noDeckSelected"));
@@ -178,7 +192,17 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
               </div>
               <HStack align="center" gap={2} className="ml-4">
                 {isLoggedIn && decks.length > 0 && (
-                  <Select id="deck-select" variant="bordered" size="sm">
+                  <Select
+                    id="deck-select"
+                    variant="bordered"
+                    size="sm"
+                    value={selectedDeckId}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+                      setSelectedDeckId(id);
+                      localStorage.setItem("dictionary-deck-id", String(id));
+                    }}
+                  >
                     {decks.map((deck) => (
                       <option key={deck.id} value={deck.id}>
                         {deck.name}
