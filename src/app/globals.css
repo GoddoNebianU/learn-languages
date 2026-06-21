@@ -218,7 +218,7 @@
 
 html {
   height: 100%;
-  background: var(--color-primary-50);
+  background: var(--color-primary-500);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -227,7 +227,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--color-primary-50);
+  background: var(--color-primary-500);
   color: var(--foreground);
   font-family:
     var(--font-geist-sans),
