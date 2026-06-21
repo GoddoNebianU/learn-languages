@@ -140,6 +140,7 @@ InDeck: `actionGetCardsByDeckId` → 渲染 CardItem 列表 → AddCardModal/Edi
 
 Server page: `getCurrentUserId` → `actionGetDeckById` → `Memorize(deckId, deckName)`
 Memorize: `actionGetCardsByDeckId` → 多种复习模式 (顺序/随机/无限/听写)
+卡片字段: 正面 (word + IPA) / 翻面 (词性 + 释义 + 例句, 例句可选)
 
 ### 公开探索 (explore)
 

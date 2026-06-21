@@ -47,7 +47,14 @@ function getBackContent(card: ActionOutputCard, isReversed: boolean): React.Reac
               {m.partOfSpeech}
             </span>
           )}
-          <span className="text-gray-800">{m.definition}</span>
+          <div className="flex flex-col gap-1">
+            <span className="text-gray-800">{m.definition}</span>
+            {m.example && (
+              <span className="border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
+                {m.example}
+              </span>
+            )}
+          </div>
         </div>
       ))}
     </VStack>
