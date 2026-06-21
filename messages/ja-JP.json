@@ -257,7 +257,9 @@
       "randomInfinite": "ランダム",
       "noIpa": "IPAなし",
       "cardMode": "カードモード",
-      "readAloud": "読み上げ"
+      "readAloud": "読み上げ",
+      "group": "グループ",
+      "groupProgress": "グループ {current}/{total}"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

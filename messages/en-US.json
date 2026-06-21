@@ -257,7 +257,9 @@
       "randomInfinite": "Random",
       "noIpa": "No IPA available",
       "cardMode": "Card Mode",
-      "readAloud": "Read aloud"
+      "readAloud": "Read aloud",
+      "group": "Group",
+      "groupProgress": "Group {current}/{total}"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"

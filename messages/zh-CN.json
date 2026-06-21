@@ -257,7 +257,9 @@
       "randomInfinite": "随机",
       "noIpa": "无音标",
       "cardMode": "记忆卡模式",
-      "readAloud": "朗读"
+      "readAloud": "朗读",
+      "group": "分组",
+      "groupProgress": "第 {current}/{total} 组"
     },
     "page": {
       "unauthorized": "您无权访问该牌组"

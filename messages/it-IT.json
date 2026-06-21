@@ -291,7 +291,9 @@
       "randomInfinite": "Casuale",
       "noIpa": "Nessun IPA disponibile",
       "cardMode": "Modalità carta",
-      "readAloud": "Leggi ad alta voce"
+      "readAloud": "Leggi ad alta voce",
+      "group": "Gruppo",
+      "groupProgress": "Gruppo {current}/{total}"
     },
     "page": {
       "unauthorized": "Non autorizzato"

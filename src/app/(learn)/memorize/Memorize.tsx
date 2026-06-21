@@ -13,6 +13,7 @@ import {
   Repeat,
   Infinity,
   BookOpen,
+  LayoutGrid,
 } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
@@ -46,10 +47,18 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     isReversed,
     isDictation,
     isCardMode,
+    groupSize,
+    currentGroup,
+    totalGroups,
+    groupStart,
+    groupEnd,
     setStudyMode,
     setIsReversed,
     setIsDictation,
     setIsCardMode,
+    setGroupSize,
+    nextGroup,
+    prevGroup,
     setShowAnswer,
     setCurrentIndex,
     nextCard,
@@ -202,11 +211,11 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </span>
       </HStack>
 
-      {!studyMode.startsWith("random") && (
+      {(!studyMode.startsWith("random") || groupSize > 0) && (
         <Range
           value={currentIndex}
-          min={0}
-          max={cards.length - 1}
+          min={groupStart}
+          max={Math.max(groupStart, groupEnd - 1)}
           onChange={(value) => {
             setCurrentIndex(value);
             setShowAnswer(false);
@@ -214,6 +223,30 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           }}
           className="mb-4"
         />
+      )}
+
+      {groupSize > 0 && totalGroups > 1 && (
+        <HStack justify="center" gap={4} className="mb-4">
+          <Button
+            variant="light"
+            onClick={prevGroup}
+            disabled={currentGroup === 0}
+            size="sm"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-sm text-gray-500">
+            {t("groupProgress", { current: currentGroup + 1, total: totalGroups })}
+          </span>
+          <Button
+            variant="light"
+            onClick={nextGroup}
+            disabled={currentGroup >= totalGroups - 1}
+            size="sm"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </HStack>
       )}
 
       <HStack justify="center" gap={2} className="mb-4 flex-wrap">
@@ -264,6 +297,27 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         >
           {t("cardMode")}
         </Button>
+        <Button
+          variant="light"
+          onClick={() => setGroupSize(groupSize > 0 ? 0 : 10)}
+          selected={groupSize > 0}
+          leftIcon={<LayoutGrid className="h-4 w-4" />}
+          size="sm"
+        >
+          {t("group")}
+        </Button>
+        {groupSize > 0 &&
+          ([10, 20, 50] as const).map((size) => (
+            <Button
+              key={size}
+              variant="light"
+              onClick={() => setGroupSize(size)}
+              selected={groupSize === size}
+              size="sm"
+            >
+              {size}
+            </Button>
+          ))}
       </HStack>
 
       <MemorizeCard

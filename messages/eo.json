@@ -257,7 +257,9 @@
       "randomInfinite": "Hazarda Iteracio",
       "noIpa": "Neniu IFA disponebla",
       "cardMode": "Karta reĝimo",
-      "readAloud": "Laŭtlegi"
+      "readAloud": "Laŭtlegi",
+      "group": "Grupo",
+      "groupProgress": "Grupo {current}/{total}"
     },
     "page": {
       "unauthorized": "Vi ne rajtas aliri ĉi tiun kartaron"

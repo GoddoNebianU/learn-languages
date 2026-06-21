@@ -291,7 +291,9 @@
       "randomInfinite": "무작위",
       "noIpa": "IPA 없음",
       "cardMode": "카드 모드",
-      "readAloud": "음성 재생"
+      "readAloud": "음성 재생",
+      "group": "그룹",
+      "groupProgress": "그룹 {current}/{total}"
     },
     "page": {
       "unauthorized": "권한이 없습니다"

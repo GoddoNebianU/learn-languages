@@ -219,7 +219,9 @@
       "randomInfinite": "Zufällig",
       "noIpa": "Kein IPA verfügbar",
       "cardMode": "Kartenmodus",
-      "readAloud": "Vorlesen"
+      "readAloud": "Vorlesen",
+      "group": "Gruppe",
+      "groupProgress": "Gruppe {current}/{total}"
     },
     "page": {
       "unauthorized": "Nicht autorisiert"

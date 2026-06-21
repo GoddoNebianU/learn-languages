@@ -16,6 +16,8 @@ export function useMemorizeCards(deckId: number) {
   const [isDictation, setIsDictation] = useState(false);
   const [isCardMode, setIsCardMode] = useState(false);
   const [studyMode, setStudyMode] = useState<StudyMode>("order-infinite");
+  const [groupSize, setGroupSizeState] = useState(0);
+  const [currentGroup, setCurrentGroup] = useState(0);
 
   const shuffleCards = useCallback((cardArray: ActionOutputCard[]): ActionOutputCard[] => {
     const shuffled = [...cardArray];
@@ -40,9 +42,10 @@ export function useMemorizeCards(deckId: number) {
             setCards(result.data);
             setCurrentIndex(0);
             setShowAnswer(false);
-            setIsReversed(false);
-            setIsDictation(false);
-            setIsCardMode(false);
+          setIsReversed(false);
+          setIsDictation(false);
+          setIsCardMode(false);
+          setCurrentGroup(0);
           } else {
             setError(result.message);
           }
@@ -65,17 +68,47 @@ export function useMemorizeCards(deckId: number) {
       setCards(originalCards);
     }
     setCurrentIndex(0);
+    setCurrentGroup(0);
     setShowAnswer(false);
   }, [studyMode, originalCards, shuffleCards]);
 
+  const totalGroups = groupSize > 0 ? Math.ceil(cards.length / groupSize) : 1;
+  const groupStart = groupSize > 0 ? currentGroup * groupSize : 0;
+  const groupEnd = groupSize > 0 ? Math.min(groupStart + groupSize, cards.length) : cards.length;
+
   const findNextIndex = useCallback(
     (from: number, direction: 1 | -1): number => {
+      if (groupSize > 0) {
+        const gLen = groupEnd - groupStart;
+        const relIdx = from - groupStart;
+        return groupStart + (((relIdx + direction) % gLen) + gLen) % gLen;
+      }
       const len = cards.length;
       const next = from + direction;
       return ((next % len) + len) % len;
     },
-    [cards]
+    [cards.length, groupSize, groupStart, groupEnd]
   );
+
+  const setGroupSize = useCallback((size: number) => {
+    setGroupSizeState(size);
+    setCurrentGroup(0);
+    setCurrentIndex(0);
+    setShowAnswer(false);
+  }, []);
+
+  const goToGroup = useCallback(
+    (group: number) => {
+      if (group < 0 || group >= totalGroups) return;
+      setCurrentGroup(group);
+      setCurrentIndex(group * groupSize);
+      setShowAnswer(false);
+    },
+    [totalGroups, groupSize]
+  );
+
+  const nextGroup = useCallback(() => goToGroup(currentGroup + 1), [currentGroup, goToGroup]);
+  const prevGroup = useCallback(() => goToGroup(currentGroup - 1), [currentGroup, goToGroup]);
 
   const nextCard = useCallback(() => {
     setCurrentIndex(findNextIndex(currentIndex, 1));
@@ -101,10 +134,18 @@ export function useMemorizeCards(deckId: number) {
     isReversed,
     isDictation,
     isCardMode,
+    groupSize,
+    currentGroup,
+    totalGroups,
+    groupStart,
+    groupEnd,
     setStudyMode,
     setIsReversed,
     setIsDictation,
     setIsCardMode,
+    setGroupSize,
+    nextGroup,
+    prevGroup,
     setShowAnswer,
     setCurrentIndex,
     nextCard,

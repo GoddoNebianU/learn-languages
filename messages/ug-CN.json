@@ -291,7 +291,9 @@
       "randomInfinite": "ئىختىيارى",
       "noIpa": "IPA يوق",
       "cardMode": "كارتا مودېلى",
-      "readAloud": "ئوقۇش"
+      "readAloud": "ئوقۇش",
+      "group": "گۇرۇپپا",
+      "groupProgress": "گۇرۇپپا {current}/{total}"
     },
     "page": {
       "unauthorized": "ھوقۇقسىز"
