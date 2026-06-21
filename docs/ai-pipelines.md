@@ -55,20 +55,18 @@ reading/
 
 ## 独立服务: TTS
 
-TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**主备双层**结构:
+TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接自部署的 Primary TTS 接口, 返回 wav 音频, 走 HTTP basic auth。
 
-- **Primary (自定义接口)**: 自部署 TTS 接口 (`tts.goddonebianu.me`), 返回 wav 音频, 走 HTTP basic auth
-- **Fallback (DashScope)**: 阿里云 DashScope (qwen3-tts-flash), 302 重定向到音频 URL
+- **Primary (自定义接口)**: 自部署 TTS 接口, 返回 wav 音频, 走 HTTP basic auth
 
 ### `providers/tts.ts` 导出
 
-- `getTTSUrl(text, lang)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由, 由代理处理优先级); 否则 → 直接返回 DashScope URL (旧行为)
+- `getTTSUrl(text, lang)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由); 否则 → 返回 null
 - `fetchPrimaryTtsAudio(text, lang)` — 调 primary 接口 (basic auth), 返回 wav 音频流
-- `getQwenTtsUrl(text, lang)` — 拼 DashScope URL (fallback 路径)
 
 ### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)
 
-`GET /api/tts?text=&lang=`。优先级: primary 配置存在 → 调 primary 取 wav 返回客户端; 失败或未配置 → 302 重定向到 DashScope URL。**primary 凭据 (URL/用户名/密码) 服务端从 DB 读取, 永不暴露给前端**。
+`GET /api/tts?text=&lang=`。调 primary 接口取 wav 返回客户端。**primary 凭据 (URL/用户名/密码) 服务端从 DB 读取, 永不暴露给前端**。
 
 ### 调用与错误处理
 
@@ -76,7 +74,7 @@ TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/pr
 - **错误处理**: 捕获错误, 日志记录, 返回 `"error"` 字符串
 - **类型分离**: `TTS_SUPPORTED_LANGUAGES` 类型放在独立的 `providers/tts-languages.ts` (非 `"use server"` 模块), 避免 Turbopack 在 `"use server"` 模块中无法擦除 `type` 别名的运行时 bug
 
-TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 URL, 不涉及数据库操作, 无需 action-service-repository 层。凭据和 primary/fallback 调度收口在 `/api/tts` 代理 + `providers/tts.ts`, 页面只拿 URL。
+TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 URL, 不涉及数据库操作, 无需 action-service-repository 层。凭据调度收口在 `/api/tts` 代理 + `providers/tts.ts`, 页面只拿 URL。
 
 ## 共享依赖
 
@@ -85,7 +83,7 @@ TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 U
 | 文件 | 导出 | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
 | `@/lib/providers/llm.ts` | `getAnswer(prompt)` | LLM API 封装 (直接 fetch, 含重试: 指数退避, 最多 2 次, 30s 超时) |
-| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` / `getQwenTtsUrl` | TTS 服务 (primary 自定义接口 + DashScope fallback) |
+| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (primary 自定义接口) |
 | `@/lib/providers/tts-languages.ts` | `TTS_SUPPORTED_LANGUAGES`   | TTS 支持语言类型 (非 use server, 避免 Turbopack bug) |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |

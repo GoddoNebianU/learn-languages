@@ -48,7 +48,7 @@ model SystemConfig {
   userProfile Boolean  @default(true)
   social      Boolean  @default(true)
   email       Boolean  @default(true)
-  services    Json     @default("{}")    // { llm:{}, tts:{ apiKey, primaryUrl, primaryUsername, primaryPassword }, smtp:{} }
+  services    Json     @default("{}")    // { llm:{}, tts:{ primaryUrl, primaryUsername, primaryPassword }, smtp:{} }
   ...
 }
 ```
@@ -74,7 +74,7 @@ const { apiKey, apiUrl, modelName } = getLlmConfig(services);
 - `getServices()` → 原始 services JSON
 - `getLlmConfig(services)` / `getTtsConfig(services)` / `getSmtpConfig(services)` → 解构后的配置对象
 
-> `getTtsConfig(services)` 返回 `{ apiKey, primaryUrl, primaryUsername, primaryPassword }`。`apiKey` 是 DashScope 密钥 (现作 fallback); `primaryUrl`/`primaryUsername`/`primaryPassword` 是自部署 TTS 接口的 basic auth 凭据 (**仅服务端使用**, 经 `/api/tts` 代理转发, 永不下发前端)。primary 任一字段缺失则降级走 DashScope。TTS 主备调度细节见 [ai-pipelines.md](./ai-pipelines.md)。
+> `getTtsConfig(services)` 返回 `{ primaryUrl, primaryUsername, primaryPassword }`。`primaryUrl`/`primaryUsername`/`primaryPassword` 是自部署 TTS 接口的 basic auth 凭据 (**仅服务端使用**, 经 `/api/tts` 代理转发, 永不下发前端)。primary 任一字段缺失则 TTS 不可用。TTS 调度细节见 [ai-pipelines.md](./ai-pipelines.md)。
 
 ### 客户端状态 `src/lib/capability-store.ts`
 
@@ -171,7 +171,7 @@ export function preserveSecret(incoming, current) {
 }
 ```
 
-LLM apiKey、TTS apiKey、TTS primaryPassword、SMTP pass 四处敏感字段走此逻辑。
+LLM apiKey、TTS primaryPassword、SMTP pass 三处敏感字段走此逻辑。
 
 ### 配置更新流程
 
@@ -208,10 +208,10 @@ AdminSettings 保存
 | 可热改 (admin 面板,无需重启) | 不可热改 (改 env + 重启) |
 |-------------------------------|--------------------------|
 | LLM apiKey / apiUrl / modelName | DATABASE_URL |
-| TTS apiKey (DashScope, fallback) | BETTER_AUTH_SECRET |
-| TTS primary 接口配置 (primaryUrl / primaryUsername / primaryPassword) | ADMIN_PASSWORD |
-| SMTP 全套 (host/port/user/pass/from/secure) | ADMIN_JWT_SECRET |
-| 4 个功能开关 (signup/userProfile/social/email) | NEXT_PUBLIC_AUTH_MODE |
+| TTS primary 接口配置 (primaryUrl / primaryUsername / primaryPassword) | BETTER_AUTH_SECRET |
+| SMTP 全套 (host/port/user/pass/from/secure) | ADMIN_PASSWORD |
+| 4 个功能开关 (signup/userProfile/social/email) | ADMIN_JWT_SECRET |
+|  | NEXT_PUBLIC_AUTH_MODE |
 
 > TTS primary 凭据 (basic auth) 虽可热改, 但**仅服务端读取**, 由 `/api/tts` 代理消费, 前端只拿到最终音频 URL, 凭据不暴露。
 

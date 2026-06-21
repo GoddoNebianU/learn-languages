@@ -31,7 +31,6 @@ export default async function AdminPage() {
         modelName: llm.modelName ?? "deepseek-v3",
       },
       tts: {
-        apiKey: tts.apiKey ?? "",
         primaryUrl: tts.primaryUrl ?? "",
         primaryUsername: tts.primaryUsername ?? "",
         primaryPassword: tts.primaryPassword ?? "",

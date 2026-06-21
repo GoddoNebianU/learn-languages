@@ -187,7 +187,7 @@ if (deckOwnerId !== userId) return { success: false, message: "Unauthorized" };
 | 文件 | 用途 |
 |------|------|
 | `db.ts` | Prisma 客户端单例 (Prisma 7 PrismaPg adapter),生成路径 `generated/prisma/` |
-| `providers/` | 外部 API 对接统一层: `llm.ts` (getAnswer) / `tts.ts` (getTTSUrl, primary+fallback) / `smtp.ts` (sendEmail)。对外暴露统一接口, 凭据服务端从 DB 读 |
+| `providers/` | 外部 API 对接统一层: `llm.ts` (getAnswer) / `tts.ts` (getTTSUrl, primary 自定义接口) / `smtp.ts` (sendEmail)。对外暴露统一接口, 凭据服务端从 DB 读 |
 | `email.ts` | 邮件模板 (generateVerificationEmailHtml 等); SMTP 发送已移至 `providers/smtp.ts` |
 | `errors.ts` | 自定义错误类 `ValidateError`, `LookUpError` |
 | `interfaces.ts` | 共享接口/Schema (TextSpeakerItemSchema, SupportedAlphabets) |

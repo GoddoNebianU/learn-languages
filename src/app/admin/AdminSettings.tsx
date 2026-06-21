@@ -30,7 +30,6 @@ interface AdminSettingsProps {
     services: {
       llm: { apiKey: string; apiUrl: string; modelName: string };
       tts: {
-        apiKey: string;
         primaryUrl: string;
         primaryUsername: string;
         primaryPassword: string;
@@ -178,7 +177,6 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
             <LabeledInput label="Primary TTS URL" value={tts.primaryUrl} onChange={(v) => updateTts("primaryUrl", v)} placeholder="https://tts.example.com/generate" />
             <LabeledInput label="Primary Username" value={tts.primaryUsername} onChange={(v) => updateTts("primaryUsername", v)} placeholder="Basic auth username" />
             <PasswordInput label="Primary Password" value={tts.primaryPassword} onChange={(v) => updateTts("primaryPassword", v)} placeholder="Basic auth password" />
-            <PasswordInput label="Fallback API Key (DashScope)" value={tts.apiKey} onChange={(v) => updateTts("apiKey", v)} placeholder="DashScope API Key (fallback)" />
           </div>
         </SectionCard>
 

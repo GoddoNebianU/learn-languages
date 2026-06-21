@@ -9,7 +9,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Translation** -- multi-language AI translation with automatic language detection and IPA phonetic annotation
 - **Dictionary** -- AI-driven word lookup with part-of-speech analysis, definitions, and example sentences
 - **SRT Player** -- subtitle file playback with per-word lookup links and auto-pause
-- **Text-to-Speech** -- Alibaba Qwen TTS for natural pronunciation
+- **Text-to-Speech** -- custom primary TTS endpoint for natural pronunciation
 - **Decks & Cards** -- create, manage, and study vocabulary with drag-and-drop reordering and multiple review modes (sequential, random, infinite, dictation)
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
@@ -19,7 +19,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 
 ## Stack
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 locales) / OpenAI-compatible LLM / Alibaba Qwen TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 locales) / OpenAI-compatible LLM / Custom TTS
 
 ## Getting started
 
@@ -35,7 +35,7 @@ DATABASE_URL=your_db_url pnpm prisma db push
 pnpm dev
 ```
 
-Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`) will crash immediately if missing. SMTP is required in multi-user mode, optional in single-user mode. Optional API keys (`LLM_*`, `DASHSCORE_API_KEY`) are validated on first use. Service configs (LLM, TTS, SMTP) and feature flags are stored in the database via the `system_config` table. See `.env.example` for details.
+Environment variables are validated at startup via `src/lib/env.ts` (Zod). Required vars (`DATABASE_URL`, `BETTER_AUTH_SECRET`) will crash immediately if missing. SMTP is required in multi-user mode, optional in single-user mode. Optional API keys (`LLM_*`) are validated on first use. Service configs (LLM, TTS, SMTP) and feature flags are stored in the database via the `system_config` table. See `.env.example` for details.
 
 ### Single-user mode
 
@@ -68,7 +68,7 @@ graph TB
             AuthMod["auth-mode.ts<br/>admin-auth.ts"]
             Cap["capability.ts<br/>Feature flags · LLM/TTS/SMTP config"]
             Pipelines["bigmodel/<br/>AI Pipelines"]
-            TTS["providers/tts.ts<br/>Qwen TTS"]
+            TTS["providers/tts.ts<br/>Primary TTS"]
         end
 
         Service -->|"ownership check"| Repository
@@ -86,7 +86,7 @@ graph TB
 
     subgraph External["External Services"]
         LLM["Zhipu AI LLM<br/>(OpenAI API)"]
-        Qwen["Alibaba Qwen TTS<br/>(qwen3-tts)"]
+        Qwen["Primary TTS<br/>(custom endpoint)"]
         SMTP["SMTP Server<br/>(nodemailer)"]
     end
 
@@ -120,7 +120,7 @@ Located in `src/lib/bigmodel/`. Multi-stage orchestrator pattern: `orchestrator.
 | reading | 2 | 1+N | Translate-split → per-sentence tokenize-align |
 | ocr | 1 | 1 | Image vocabulary extraction (unused) |
 
-Shared: `llm.ts` (OpenAI-compatible client), `tts.ts` (Qwen TTS service).
+Shared: `llm.ts` (OpenAI-compatible client), `tts.ts` (primary TTS service).
 
 ### Single/Multi-user mode
 

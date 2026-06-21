@@ -93,7 +93,6 @@ export function getLlmConfig(services: Record<string, unknown>) {
 export function getTtsConfig(services: Record<string, unknown>) {
   const tts = (services.tts ?? {}) as Record<string, unknown>;
   return {
-    apiKey: (tts.apiKey as string) ?? "",
     primaryUrl: (tts.primaryUrl as string) ?? "",
     primaryUsername: (tts.primaryUsername as string) ?? "",
     primaryPassword: (tts.primaryPassword as string) ?? "",

@@ -131,7 +131,6 @@ const settingsSchema = z.object({
       llm: z.object({ apiKey: z.string(), apiUrl: z.string(), modelName: z.string() }).optional(),
       tts: z
         .object({
-          apiKey: z.string(),
           primaryUrl: z.string(),
           primaryUsername: z.string(),
           primaryPassword: z.string(),
