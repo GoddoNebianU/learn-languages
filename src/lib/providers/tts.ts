@@ -2,9 +2,20 @@
 
 import { createLogger } from "@/lib/logger";
 import { getServices, getTtsConfig } from "@/lib/capability";
-import type { TTS_SUPPORTED_LANGUAGES } from "./tts-languages";
 
 const log = createLogger("tts");
+
+/**
+ * lang 参数语义:
+ * - 空串或 "Auto": 不带 lang 参数, 由 OmniVoice 自动从 text 推导朗读语言
+ * - 其他值: 首字母大写的英文语言名 (如 "Chinese" / "English" / "Esperanto");
+ *   OmniVoice 支持 600+ 语言, 无法识别时也会回退到自动推导
+ */
+const AUTO_DETECT = "Auto";
+
+function shouldSkipLang(lang: string): boolean {
+  return !lang || lang === AUTO_DETECT;
+}
 
 // ==================== 配置访问 ====================
 
@@ -26,17 +37,21 @@ function hasPrimary(config: {
   return !!(config.primaryUrl && config.primaryUsername && config.primaryPassword);
 }
 
-// ==================== Primary TTS (自定义接口, 返回 wav) ====================
+// ==================== Primary TTS (OmniVoice, 返回 wav) ====================
 // 供 /api/tts route 调用。凭据从 DB 读取,不暴露前端。
 
 export async function fetchPrimaryTtsAudio(
-  text: string
+  text: string,
+  lang?: string
 ): Promise<{ ok: true; buffer: ArrayBuffer; contentType: string } | { ok: false }> {
   const config = await getTtsProviderConfig();
   if (!hasPrimary(config)) return { ok: false };
 
   try {
-    const url = `${config.primaryUrl}?text=${encodeURIComponent(text)}`;
+    let url = `${config.primaryUrl}?text=${encodeURIComponent(text)}`;
+    if (lang && !shouldSkipLang(lang)) {
+      url += `&lang=${encodeURIComponent(lang)}`;
+    }
     const auth = Buffer.from(`${config.primaryUsername}:${config.primaryPassword}`).toString("base64");
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -65,18 +80,20 @@ export async function fetchPrimaryTtsAudio(
 
 /**
  * 获取 TTS 音频 URL。
- * - 配了 primary (自定义接口): 返回 `/api/tts` 代理 URL,由 route 处理请求
+ * - 配了 primary: 返回 `/api/tts` 代理 URL, 由 route 调 OmniVoice
  * - 没配 primary: 返回 null
+ * lang 为 "Auto" 或空时不带 lang 参数, 由 OmniVoice 自动推导。
  */
 export async function getTTSUrl(
   text: string,
-  lang: TTS_SUPPORTED_LANGUAGES,
+  lang: string,
   regenerate = false
 ): Promise<string | null> {
   const config = await getTtsProviderConfig();
 
   if (hasPrimary(config)) {
-    const base = `/api/tts?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`;
+    const langParam = shouldSkipLang(lang) ? "" : `&lang=${encodeURIComponent(lang)}`;
+    const base = `/api/tts?text=${encodeURIComponent(text)}${langParam}`;
     return regenerate ? `${base}&_t=${Date.now()}` : base;
   }
 

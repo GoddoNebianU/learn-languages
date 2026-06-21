@@ -16,7 +16,6 @@ import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { getTTSUrl } from "@/lib/providers/tts";
-import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
 
 const TTS_LANGUAGES = [
   { value: "Auto", label: "auto" },
@@ -153,28 +152,7 @@ export default function TextSpeakerPage() {
               .replace(/[^a-z]/g, "")
               .replace(/^./, (match) => match.toUpperCase());
 
-            const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-              "Auto",
-              "Chinese",
-              "English",
-              "German",
-              "Italian",
-              "Portuguese",
-              "Spanish",
-              "Japanese",
-              "Korean",
-              "French",
-              "Russian",
-            ];
-
-            if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
-              theLanguage = "Auto";
-            }
-
-            objurlRef.current = await getTTSUrl(
-              textRef.current,
-              theLanguage as TTS_SUPPORTED_LANGUAGES
-            );
+            objurlRef.current = await getTTSUrl(textRef.current, theLanguage);
             if (!objurlRef.current) {
               throw new Error("TTS returned no audio URL");
             }

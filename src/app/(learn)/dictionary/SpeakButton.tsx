@@ -5,17 +5,6 @@ import { useTranslations } from "next-intl";
 import { Volume2 } from "lucide-react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl } from "@/lib/providers/tts";
-import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
-
-// Map dictionary query language codes to TTS-supported languages.
-// Unmapped codes (e.g. uyghur) fall back to "Auto".
-const QUERY_LANG_TO_TTS: Record<string, TTS_SUPPORTED_LANGUAGES> = {
-  english: "English",
-  chinese: "Chinese",
-  japanese: "Japanese",
-  korean: "Korean",
-  italian: "Italian",
-};
 
 interface SpeakButtonProps {
   text: string;
@@ -32,7 +21,9 @@ export function SpeakButton({ text, queryLang, className }: SpeakButtonProps) {
     if (isLoading || !text) return;
     setIsLoading(true);
     try {
-      const lang: TTS_SUPPORTED_LANGUAGES = QUERY_LANG_TO_TTS[queryLang] ?? "Auto";
+      const lang = queryLang
+        ? queryLang.charAt(0).toUpperCase() + queryLang.slice(1)
+        : "Auto";
       const audioUrl = await getTTSUrl(text, lang);
       if (audioUrl) {
         await load(audioUrl);

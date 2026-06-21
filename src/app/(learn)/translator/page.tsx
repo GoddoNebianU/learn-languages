@@ -16,7 +16,6 @@ import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 import { getTTSUrl } from "@/lib/providers/tts";
-import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -60,32 +59,12 @@ export default function TranslatorPage() {
 
   const tts = async (text: string, locale: string) => {
     try {
-      // Map language name to TTS format
-      let theLanguage = locale
+      const theLanguage = locale
         .toLowerCase()
         .replace(/[^a-z]/g, "")
         .replace(/^./, (match) => match.toUpperCase());
 
-      // Check if language is in TTS supported list
-      const supportedLanguages: TTS_SUPPORTED_LANGUAGES[] = [
-        "Auto",
-        "Chinese",
-        "English",
-        "German",
-        "Italian",
-        "Portuguese",
-        "Spanish",
-        "Japanese",
-        "Korean",
-        "French",
-        "Russian",
-      ];
-
-      if (!supportedLanguages.includes(theLanguage as TTS_SUPPORTED_LANGUAGES)) {
-        theLanguage = "Auto";
-      }
-
-      const url = await getTTSUrl(text, theLanguage as TTS_SUPPORTED_LANGUAGES);
+      const url = await getTTSUrl(text, theLanguage);
       if (!url) {
         throw new Error("TTS returned no audio URL");
       }

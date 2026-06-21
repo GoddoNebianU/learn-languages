@@ -55,14 +55,15 @@ reading/
 
 ## 独立服务: TTS
 
-TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接自部署的 Primary TTS 接口, 返回 wav 音频, 走 HTTP basic auth。
+TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接自部署的 Primary TTS 接口 (OmniVoice, 支持 600+ 语言), 返回 wav 音频, 走 HTTP basic auth。
 
-- **Primary (自定义接口)**: 自部署 TTS 接口, 返回 wav 音频, 走 HTTP basic auth
+- **Primary (OmniVoice)**: 自部署 TTS 接口, 返回 wav 音频, 走 HTTP basic auth
+- **lang 参数**: 可选, 格式为首字母大写的英文语言名 (如 `Chinese` / `English` / `Esperanto`)。缺省 (`Auto`) 或 OmniVoice 无法识别时, 自动从 `text` 推导朗读语言
 
 ### `providers/tts.ts` 导出
 
-- `getTTSUrl(text, lang)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由); 否则 → 返回 null
-- `fetchPrimaryTtsAudio(text, lang)` — 调 primary 接口 (basic auth), 返回 wav 音频流
+- `getTTSUrl(text, lang)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由, lang 为 `Auto` 时不带 lang 参数); 否则 → 返回 null
+- `fetchPrimaryTtsAudio(text, lang?)` — 调 primary 接口 (basic auth), 返回 wav 音频流
 
 ### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)
 
@@ -70,9 +71,8 @@ TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/pr
 
 ### 调用与错误处理
 
-- **调用者**: translator/page, text-speaker/page, memorize/Memorize (直接从页面组件调用 `getTTSUrl`)
+- **调用者**: translator/page, text-speaker/page, memorize/Memorize, dictionary/SpeakButton (直接从页面组件调用 `getTTSUrl`)
 - **错误处理**: 捕获错误, 日志记录, 返回 `"error"` 字符串
-- **类型分离**: `TTS_SUPPORTED_LANGUAGES` 类型放在独立的 `providers/tts-languages.ts` (非 `"use server"` 模块), 避免 Turbopack 在 `"use server"` 模块中无法擦除 `type` 别名的运行时 bug
 
 TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 URL, 不涉及数据库操作, 无需 action-service-repository 层。凭据调度收口在 `/api/tts` 代理 + `providers/tts.ts`, 页面只拿 URL。
 
@@ -83,20 +83,18 @@ TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 U
 | 文件 | 导出 | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
 | `@/lib/providers/llm.ts` | `getAnswer(prompt)` | LLM API 封装 (直接 fetch, 含重试: 指数退避, 最多 2 次, 30s 超时) |
-| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (primary 自定义接口) |
-| `@/lib/providers/tts-languages.ts` | `TTS_SUPPORTED_LANGUAGES`   | TTS 支持语言类型 (非 use server, 避免 Turbopack bug) |
+| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (OmniVoice, 600+ 语言) |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |
 | `@/lib/logger` | `createLogger()`            | 所有管道文件使用                         |
 
 ## "use server" 类型限制
 
-`providers/llm.ts` 和 `providers/tts.ts` 标记了 `"use server"`, Turbopack 在运行时无法正确擦除 `type` 别名。**两种解决模式**:
+`providers/llm.ts` 和 `providers/tts.ts` 标记了 `"use server"`, Turbopack 在运行时无法正确擦除 `type` 别名。
 
-1. **内联类型** (`providers/llm.ts`): 禁止使用 `type` 别名 (`type Messages = ...`) 和 `export type {}`, 所有类型直接内联
-2. **类型外移** (`providers/tts.ts`): 将共享类型 (如 `TTS_SUPPORTED_LANGUAGES`) 移到独立的非 `"use server"` 文件 `providers/tts-languages.ts`, 再以 `import type` 引用
+- **内联类型** (`providers/llm.ts`): 禁止使用 `type` 别名 (`type Messages = ...`) 和 `export type {}`, 所有类型直接内联
 
-违反会导致运行时 `ReferenceError: Xxx is not defined`。
+违反会导致运行时 `ReferenceError: Xxx is not defined`。`providers/tts.ts` 仅使用内联的原始类型 (`string` 等), 不涉及 `type` 别式。
 
 ## 阶段命名约定
 

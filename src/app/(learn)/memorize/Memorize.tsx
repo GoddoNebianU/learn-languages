@@ -22,7 +22,6 @@ import { HStack, VStack } from "@/design-system/stack";
 import { Range } from "@/design-system/range";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { getTTSUrl } from "@/lib/providers/tts";
-import type { TTS_SUPPORTED_LANGUAGES } from "@/lib/providers/tts-languages";
 import { useMemorizeCards } from "./useMemorizeCards";
 import type { StudyMode } from "./useMemorizeCards";
 import { MemorizeCard } from "./MemorizeCard";
@@ -108,17 +107,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
     setIsAudioLoading(true);
     try {
-      const hasChinese = /[\u4e00-\u9fff]/.test(text);
-      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff]/.test(text);
-      const hasKorean = /[\uac00-\ud7af]/.test(text);
-
-      let lang: TTS_SUPPORTED_LANGUAGES = "Auto";
-      if (hasChinese) lang = "Chinese";
-      else if (hasJapanese) lang = "Japanese";
-      else if (hasKorean) lang = "Korean";
-      else if (/^[a-zA-Z\s]/.test(text)) lang = "English";
-
-      const audioUrl = await getTTSUrl(text, lang, regenerate);
+      const audioUrl = await getTTSUrl(text, "Auto", regenerate);
 
       if (audioUrl) {
         cleanupAudio();
