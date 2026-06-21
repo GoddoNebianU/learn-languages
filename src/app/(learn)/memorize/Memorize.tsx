@@ -76,6 +76,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       audioUrlRef.current = null;
     }
     stop();
+    setIsAudioLoading(false);
   };
 
   const handleShowAnswer = () => {
