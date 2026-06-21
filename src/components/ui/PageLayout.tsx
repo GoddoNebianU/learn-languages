@@ -33,7 +33,7 @@ export function PageLayout({
     return (
       <div
         className={cn(
-          "flex min-h-[calc(100vh-64px)] justify-center bg-primary-500 px-4 py-8",
+          "flex min-h-[var(--page-min-h)] justify-center bg-primary-500 px-4 py-8",
           alignClasses[align],
           className
         )}
@@ -50,11 +50,11 @@ export function PageLayout({
   // 全宽布局
   if (variant === "full-width") {
     return (
-      <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500 px-4 py-8", className)}>
+      <div className={cn("min-h-[var(--page-min-h)] bg-primary-500 px-4 py-8", className)}>
         <Container size="7xl">{children}</Container>
       </div>
     );
   }
 
-  return <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500", className)}>{children}</div>;
+  return <div className={cn("min-h-[var(--page-min-h)] bg-primary-500", className)}>{children}</div>;
 }

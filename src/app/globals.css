@@ -198,6 +198,11 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
 
+  /* 导航栏高度 — 跟着 --spacing 动态变化 (compact 模式缩小) */
+  --navbar-h: calc(var(--spacing) * 16);
+  /* 页面主区域最小高度 = 视口 - 导航栏, 消除底部缝隙 */
+  --page-min-h: calc(100vh - var(--navbar-h));
+
   /* 过渡 */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
