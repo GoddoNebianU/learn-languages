@@ -39,7 +39,7 @@ export const validateActionInputDeleteCard = generateValidator(schemaActionInput
 
 export const schemaActionInputGetCardsByDeckId = z.object({
   deckId: z.number().int().positive(),
-  limit: z.number().int().min(1).max(100).optional(),
+  limit: z.number().int().min(1).optional(),
   offset: z.number().int().min(0).optional(),
 });
 export type ActionInputGetCardsByDeckId = z.infer<typeof schemaActionInputGetCardsByDeckId>;

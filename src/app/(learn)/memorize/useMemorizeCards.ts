@@ -35,7 +35,7 @@ export function useMemorizeCards(deckId: number) {
       setIsLoading(true);
       setError(null);
       startTransition(async () => {
-        const result = await actionGetCardsByDeckId({ deckId, limit: 100 });
+        const result = await actionGetCardsByDeckId({ deckId });
         if (!ignore) {
           if (result.success && result.data) {
             setOriginalCards(result.data);

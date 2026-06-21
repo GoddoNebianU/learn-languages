@@ -95,12 +95,12 @@ export async function repoGetCardById(cardId: number): Promise<RepoOutputCard | 
 export async function repoGetCardsByDeckId(
   input: RepoInputGetCardsByDeckId
 ): Promise<RepoOutputCard[]> {
-  const { deckId, limit = 50, offset = 0 } = input;
+  const { deckId, limit, offset = 0 } = input;
   const cards = await prisma.card.findMany({
     where: { deckId },
     include: { meanings: { orderBy: { createdAt: "asc" } } },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
-    take: limit,
+    ...(limit !== undefined ? { take: limit } : {}),
     skip: offset,
   });
   log.debug("Fetched cards by deck", { deckId, count: cards.length });
