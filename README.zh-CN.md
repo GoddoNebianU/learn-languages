@@ -14,6 +14,7 @@
 - **社交** -- 公开牌组、收藏、用户关注
 - **单用户模式** -- 无需认证即可部署，自动创建默认管理员用户
 - **阅读理解** -- AI 驱动的阅读理解，逐句翻译+分词对齐
+- **紧凑模式** -- 可切换的高密度布局，每屏显示更多信息
 - **管理后台** -- 密码保护的管理面板，管理功能开关和服务配置
 
 ## 技术栈
@@ -67,7 +68,7 @@ graph TB
             AuthMod["auth-mode.ts<br/>admin-auth.ts"]
             Cap["capability.ts<br/>Feature flags · LLM/TTS/SMTP config"]
             Pipelines["bigmodel/<br/>AI Pipelines"]
-            TTS["tts.ts<br/>Qwen TTS"]
+            TTS["providers/tts.ts<br/>Qwen TTS"]
         end
 
         Service -->|"所有权检查"| Repository

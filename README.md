@@ -14,6 +14,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
 - **Reading** -- AI-powered reading comprehension with sentence-by-sentence translation and word-level alignment
+- **Compact Mode** -- toggleable high-density layout that maximizes information per screen
 - **Admin Panel** -- password-protected admin dashboard for managing feature flags and service configurations
 
 ## Stack
@@ -67,7 +68,7 @@ graph TB
             AuthMod["auth-mode.ts<br/>admin-auth.ts"]
             Cap["capability.ts<br/>Feature flags · LLM/TTS/SMTP config"]
             Pipelines["bigmodel/<br/>AI Pipelines"]
-            TTS["tts.ts<br/>Qwen TTS"]
+            TTS["providers/tts.ts<br/>Qwen TTS"]
         end
 
         Service -->|"ownership check"| Repository
