@@ -40,7 +40,7 @@ export default async function HomePage() {
           <p className="text-2xl font-medium md:text-5xl">{t("description")}</p>
         </div>
       </div>
-      <div className="flex h-[25dvh] min-h-64 w-full flex-col items-center justify-center font-serif">
+      <div className="flex h-[25dvh] min-h-64 w-full flex-col items-center justify-center bg-white font-serif">
         <p className="text-3xl">{t("fortune.quote")}</p>
         <cite className="text-xl text-[#e9b353]">{t("fortune.author")}</cite>
       </div>
