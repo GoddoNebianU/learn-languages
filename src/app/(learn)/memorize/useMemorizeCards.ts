@@ -71,17 +71,10 @@ export function useMemorizeCards(deckId: number) {
   const findNextIndex = useCallback(
     (from: number, direction: 1 | -1): number => {
       const len = cards.length;
-      if (!isDictation) {
-        const next = from + direction;
-        return ((next % len) + len) % len;
-      }
-      for (let i = 1; i <= len; i++) {
-        const idx = (((from + direction * i) % len) + len) % len;
-        if (cards[idx]?.ipa) return idx;
-      }
-      return from;
+      const next = from + direction;
+      return ((next % len) + len) % len;
     },
-    [cards, isDictation]
+    [cards]
   );
 
   const nextCard = useCallback(() => {

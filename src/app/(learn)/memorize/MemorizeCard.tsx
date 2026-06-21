@@ -109,15 +109,13 @@ function MemorizeCard({
         {isDictation ? (
           <>
             <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] compact:min-h-[12dvh] p-8">
-              {card.ipa ? (
+              {card.ipa && (
                 <div className="text-center font-mono text-2xl text-gray-700">[{card.ipa}]</div>
-              ) : (
-                <div className="text-lg text-gray-400">{t("noIpa")}</div>
               )}
               <PlayButton
                 label={t("readAloud")}
-                disabled={isAudioLoading || !backText}
-                onClick={() => onPlayText(backText)}
+                disabled={isAudioLoading || !displayFront}
+                onClick={() => onPlayText(displayFront)}
               />
             </VStack>
 
