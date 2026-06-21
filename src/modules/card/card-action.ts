@@ -12,12 +12,17 @@ import {
   serviceGetCardById,
   serviceGetCardsByDeckId,
   serviceGetRandomCard,
+  serviceGetCardStats,
   serviceCheckDeckOwnership,
   serviceCheckCardExistsByWord,
   serviceGetCardByWord,
   serviceReorderCards,
 } from "./card-service";
-import type { ActionOutputCard, ActionOutputGetCardByWord } from "./card-action-dto";
+import type {
+  ActionOutputCard,
+  ActionOutputGetCardByWord,
+  ActionOutputGetCardCount,
+} from "./card-action-dto";
 import type { RepoOutputCard } from "./card-repository-dto";
 import {
   validateActionInputCreateCard,
@@ -26,6 +31,7 @@ import {
   validateActionInputGetCardsByDeckId,
   validateActionInputGetRandomCard,
   validateActionInputCheckCardExistsByWord,
+  validateActionInputGetCardCount,
   validateActionInputReorderCards,
 } from "./card-action-dto";
 
@@ -164,6 +170,32 @@ export async function actionGetCardsByDeckId(input: unknown) {
     }
     log.error("Failed to get cards", { error: e instanceof Error ? e.message : String(e) });
     return { success: false, message: "Failed to get cards" };
+  }
+}
+
+export async function actionGetCardCount(input: unknown): Promise<ActionOutputGetCardCount> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      return { success: false, message: "Unauthorized" };
+    }
+    const validated = validateActionInputGetCardCount(input);
+    const isOwner = await checkDeckOwnership(validated.deckId);
+    if (!isOwner) {
+      return { success: false, message: "You do not have permission to view cards in this deck" };
+    }
+    const stats = await serviceGetCardStats(validated.deckId);
+    return {
+      success: true,
+      message: "Card count fetched",
+      data: { total: stats.total },
+    };
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to get card count", { error: e instanceof Error ? e.message : String(e) });
+    return { success: false, message: "Failed to get card count" };
   }
 }
 

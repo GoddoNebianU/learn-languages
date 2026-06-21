@@ -34,6 +34,7 @@ import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import { toast } from "sonner";
 import { AddCardModal } from "./AddCardModal";
+import { useBatchedCards } from "@/hooks/useBatchedCards";
 
 interface SortableCardItemProps {
   card: ActionOutputCard;
@@ -73,8 +74,15 @@ function SortableCardItem({ card, isReadOnly, onDel, onUpdated }: SortableCardIt
 }
 
 export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boolean }) {
+  const {
+    cards: batchedCards,
+    total,
+    loaded,
+    isLoading,
+    error: cardsError,
+    progress,
+  } = useBatchedCards(deckId);
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
-  const [loading, setLoading] = useState(true);
   const [openAddModal, setAddModal] = useState(false);
   const [showDeleteDeckConfirm, setShowDeleteDeckConfirm] = useState(false);
   const [deckInfo, setDeckInfo] = useState<ActionOutputDeck | null>(null);
@@ -92,9 +100,35 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
     })
   );
 
+  useEffect(() => {
+    let ignore = false;
+    const fetchDeckInfo = async () => {
+      const deckResult = await actionGetDeckById({ deckId });
+      if (!ignore && deckResult.success && deckResult.data) {
+        setDeckInfo(deckResult.data);
+      }
+    };
+    fetchDeckInfo();
+    return () => {
+      ignore = true;
+    };
+  }, [deckId]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setCards(batchedCards);
+    }
+  }, [isLoading, batchedCards]);
+
+  useEffect(() => {
+    if (cardsError) {
+      toast.error(cardsError);
+    }
+  }, [cardsError]);
+
   const handleDragEnd = async (event: DragEndEvent) => {
     if (isReadOnly) return;
-    
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -118,32 +152,6 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
       refreshCards(); // Revert on failure
     }
   };
-
-  useEffect(() => {
-    const fetchCards = async () => {
-      setLoading(true);
-      try {
-        const [cardsResult, deckResult] = await Promise.all([
-          actionGetCardsByDeckId({ deckId }),
-          actionGetDeckById({ deckId }),
-        ]);
-
-        if (!cardsResult.success || !cardsResult.data) {
-          throw new Error(cardsResult.message || "Failed to load cards");
-        }
-        setCards(cardsResult.data);
-
-        if (deckResult.success && deckResult.data) {
-          setDeckInfo(deckResult.data);
-        }
-      } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCards();
-  }, [deckId]);
 
   const refreshCards = async () => {
     const result = await actionGetCardsByDeckId({ deckId });
@@ -226,10 +234,18 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
       </div>
 
       <CardList>
-        {loading ? (
-          <VStack align="center" className="p-8">
+        {isLoading ? (
+          <VStack align="center" gap={4} className="p-8">
             <Skeleton variant="circular" className="h-8 w-8" />
-            <p className="text-sm text-gray-500">{t("loadingCards")}</p>
+            <p className="text-sm text-gray-600">
+              {t("loadingProgress", { loaded, total })}
+            </p>
+            <div className="h-2 w-64 overflow-hidden rounded-full bg-primary-200">
+              <div
+                className="h-full rounded-full bg-primary-500 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </VStack>
         ) : cards.length === 0 ? (
           <div className="p-12 text-center">

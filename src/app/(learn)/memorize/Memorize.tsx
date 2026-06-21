@@ -40,8 +40,10 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     currentIndex,
     showAnswer,
     isLoading,
-    isPending,
     error,
+    total,
+    loaded,
+    progress,
     studyMode,
     isReversed,
     isDictation,
@@ -161,9 +163,17 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   if (isLoading) {
     return (
       <PageLayout>
-        <VStack align="center" className="py-12">
+        <VStack align="center" gap={4} className="py-12">
           <Skeleton variant="circular" className="mb-4 h-12 w-12" />
-          <p className="text-gray-600">{t("loading")}</p>
+          <p className="text-gray-600">
+            {t("loadingProgress", { loaded, total })}
+          </p>
+          <div className="h-2 w-64 overflow-hidden rounded-full bg-primary-200">
+            <div
+              className="h-full rounded-full bg-primary-500 transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </VStack>
       </PageLayout>
     );
@@ -346,7 +356,6 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           <Button
             variant="light"
             onClick={handleShowAnswer}
-            disabled={isPending}
             className="rounded-full px-8 text-lg"
           >
             {t("showAnswer")}

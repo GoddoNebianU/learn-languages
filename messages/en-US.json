@@ -28,6 +28,7 @@
     "itemsCount": "{count} items",
     "memorize": "Memorize",
     "loadingCards": "Loading cards...",
+    "loadingProgress": "Loading cards... {loaded} / {total}",
     "noCards": "No cards in this deck",
     "card": "Card",
     "addNewCard": "Add New Card",
@@ -213,6 +214,7 @@
     },
     "review": {
       "loading": "Loading cards...",
+      "loadingProgress": "Loading cards... {loaded} / {total}",
       "backToDecks": "Back to Decks",
       "allDone": "All Done!",
       "allDoneDesc": "You've reviewed all due cards.",

@@ -28,6 +28,7 @@
     "itemsCount": "{count} 个",
     "memorize": "记忆",
     "loadingCards": "加载卡片中...",
+    "loadingProgress": "正在加载卡片... {loaded} / {total}",
     "noCards": "此牌组中没有卡片",
     "card": "卡片",
     "addNewCard": "添加新卡片",
@@ -213,6 +214,7 @@
     },
     "review": {
       "loading": "加载中...",
+      "loadingProgress": "正在加载卡片... {loaded} / {total}",
       "backToDecks": "返回牌组",
       "allDone": "全部完成！",
       "allDoneDesc": "您已完成所有待复习卡片。",

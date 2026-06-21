@@ -1,17 +1,22 @@
-import { useState, useEffect, useTransition, useCallback, useMemo } from "react";
-import { actionGetCardsByDeckId } from "@/modules/card/card-action";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useBatchedCards } from "@/hooks/useBatchedCards";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 
 export type StudyMode = "order-infinite" | "random-infinite";
 
 export function useMemorizeCards(deckId: number) {
-  const [isPending, startTransition] = useTransition();
+  const {
+    cards: loadedCards,
+    total,
+    loaded,
+    isLoading,
+    error,
+    progress,
+  } = useBatchedCards(deckId);
   const [originalCards, setOriginalCards] = useState<ActionOutputCard[]>([]);
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isReversed, setIsReversed] = useState(false);
   const [isDictation, setIsDictation] = useState(false);
   const [isCardMode, setIsCardMode] = useState(false);
@@ -29,37 +34,17 @@ export function useMemorizeCards(deckId: number) {
   }, []);
 
   useEffect(() => {
-    let ignore = false;
-
-    const loadCards = async () => {
-      setIsLoading(true);
-      setError(null);
-      startTransition(async () => {
-        const result = await actionGetCardsByDeckId({ deckId });
-        if (!ignore) {
-          if (result.success && result.data) {
-            setOriginalCards(result.data);
-            setCards(result.data);
-            setCurrentIndex(0);
-            setShowAnswer(false);
-          setIsReversed(false);
-          setIsDictation(false);
-          setIsCardMode(false);
-          setCurrentGroup(0);
-          } else {
-            setError(result.message);
-          }
-          setIsLoading(false);
-        }
-      });
-    };
-
-    loadCards();
-
-    return () => {
-      ignore = true;
-    };
-  }, [deckId]);
+    if (!isLoading) {
+      setOriginalCards(loadedCards);
+      setCards(loadedCards);
+      setCurrentIndex(0);
+      setShowAnswer(false);
+      setIsReversed(false);
+      setIsDictation(false);
+      setIsCardMode(false);
+      setCurrentGroup(0);
+    }
+  }, [isLoading, loadedCards]);
 
   const totalGroups = groupSize > 0 ? Math.ceil(cards.length / groupSize) : 1;
   const groupStart = groupSize > 0 ? currentGroup * groupSize : 0;
@@ -124,8 +109,10 @@ export function useMemorizeCards(deckId: number) {
     currentIndex,
     showAnswer,
     isLoading,
-    isPending,
     error,
+    total,
+    loaded,
+    progress,
     studyMode,
     isReversed,
     isDictation,

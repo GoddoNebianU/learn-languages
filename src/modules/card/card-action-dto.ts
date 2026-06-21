@@ -69,6 +69,18 @@ export type ActionOutputGetCardByWord = {
   data?: ActionOutputCard;
 };
 
+export const schemaActionInputGetCardCount = z.object({
+  deckId: z.number().int().positive(),
+});
+export type ActionInputGetCardCount = z.infer<typeof schemaActionInputGetCardCount>;
+export const validateActionInputGetCardCount = generateValidator(schemaActionInputGetCardCount);
+
+export type ActionOutputGetCardCount = {
+  success: boolean;
+  message: string;
+  data?: { total: number };
+};
+
 export const schemaActionInputReorderCards = z.object({
   deckId: z.number().int().positive(),
   cardIds: z.array(z.number().int().positive()).min(1),
