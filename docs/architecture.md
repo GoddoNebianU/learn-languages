@@ -193,7 +193,7 @@ if (deckOwnerId !== userId) return { success: false, message: "Unauthorized" };
 | `interfaces.ts` | 共享接口/Schema (TextSpeakerItemSchema, SupportedAlphabets) |
 | `logger/` | Winston 日志 `createLogger("name")`,唯一允许的 barrel export |
 | `browser/` | 客户端工具 (localStorage 操作) |
-| `theme/` | 主题颜色定义 (CSS 自定义属性 + localStorage, 15 个预设) |
+| `theme/` | 主题颜色定义 (CSS 自定义属性 + localStorage, 14 个预设) |
 
 > 配置相关 (env/auth-mode/capability/admin-auth) 详见 [config-system.md](./config-system.md);AI 管道详见 [ai-pipelines.md](./ai-pipelines.md)。
 

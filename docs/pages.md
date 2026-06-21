@@ -139,7 +139,7 @@ InDeck: `actionGetCardsByDeckId` → 渲染 CardItem 列表 → AddCardModal/Edi
 ### 记忆模式 (memorize)
 
 Server page: `getCurrentUserId` → `actionGetDeckById` → `Memorize(deckId, deckName)`
-Memorize: `actionGetRandomCard` → 多种复习模式 (顺序/随机/无限/听写)
+Memorize: `actionGetCardsByDeckId` → 多种复习模式 (顺序/随机/无限/听写)
 
 ### 公开探索 (explore)
 
