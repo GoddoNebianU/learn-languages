@@ -153,12 +153,12 @@ const handleDeleteConfirm = async () => {
   return (
     <>
       <div
-        className="group flex cursor-pointer items-center justify-between border-b border-gray-200 px-5 py-4 transition-colors last:border-b-0 hover:bg-gray-50"
+        className="group flex cursor-pointer flex-col gap-2 border-b border-gray-200 px-5 py-4 transition-colors last:border-b-0 hover:bg-gray-50"
         onClick={() => {
           router.push(`/decks/${deck.id}`);
         }}
       >
-        <div className="flex flex-1 items-center gap-4">
+        <div className="flex items-center gap-4">
           <div className="shrink-0 text-primary-500">
             <Layers size={24} />
           </div>
@@ -181,7 +181,7 @@ const handleDeleteConfirm = async () => {
           </div>
         </div>
 
-        <div className="ml-4 flex items-center gap-1">
+        <div className="flex items-center justify-end gap-1">
           <IconButton
             className="rounded-full"
             onClick={handleToggleVisibility}
