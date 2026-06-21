@@ -38,7 +38,7 @@ export function PageLayout({
           className
         )}
       >
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl compact:max-w-7xl">
           <Card padding="lg" className="p-6 md:p-8">
             {children}
           </Card>
@@ -51,7 +51,7 @@ export function PageLayout({
   if (variant === "full-width") {
     return (
       <div className={cn("min-h-[calc(100vh-64px)] bg-primary-500 px-4 py-8", className)}>
-        <Container size="2xl">{children}</Container>
+        <Container size="7xl">{children}</Container>
       </div>
     );
   }

@@ -96,8 +96,8 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
               </div>
             </div>
             <div className="grid w-3/4 grid-cols-2 gap-4 text-gray-900">
-              <div>{frontText.length > 30 ? frontText.substring(0, 30) + "..." : frontText}</div>
-              <div>{backText.length > 30 ? backText.substring(0, 30) + "..." : backText}</div>
+              <div className="truncate compact:truncate-none compact:line-clamp-2">{frontText}</div>
+              <div className="truncate compact:truncate-none compact:line-clamp-2">{backText}</div>
             </div>
           </div>
         </div>

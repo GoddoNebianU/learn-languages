@@ -319,15 +319,20 @@
       "amber": "كەھرىۋا",
       "emerald": "زۇمۇرت",
       "orange": "قىزغۇچ سېرىق",
-      "indigo": "نىل",
-      "slate": "گرافىت",
+        "slate": "گرافىت",
       "sage": "ياۋا ئوت",
       "taupe": "ئىللىق قۇم",
       "mauve": "لاۋاندا",
       "mist": "تۇمان كۆك",
       "dusty": "ئەتىرگۈل كۈلرەڭ",
       "olive": "زەيتۇن"
-    }
+    },
+    "density": "زىچلىق",
+    "densityDescription": "ئارايۈزنىڭ ئارىلىقى ۋە زىچلىقىنى تەڭشەڭ",
+    "densityComfortable": "راحەت",
+    "densityCompact": "زىچ",
+    "densityComfortableDescription": "تېخىمۇ كەڭ بوشلۇق، كۆزگە تېخىمۇ راھەت",
+    "densityCompactDescription": "تېخىمۇ زىچ ئارىلىق، ھەر ئېكراندا تېخىمۇ كۆپ ئۇچۇر"
   },
   "srt_player": {
     "uploadVideo": "ۋىدېئو يۈكلەش",

@@ -1,6 +1,50 @@
 @import "tailwindcss";
 
 /**
+ * Compact 密度模式 — 自定义 Tailwind variant
+ * 启用 compact: 前缀,仅在 [data-density="compact"] 下生效
+ */
+@custom-variant compact (&:where([data-density="compact"], [data-density="compact"] *));
+
+/**
+ * Compact 密度模式 — 运行时 token 覆盖
+ *
+ * 非分层 CSS (unlayered),优先级高于 @layer theme 的 :root 默认值
+ * 覆盖 --spacing 基准单位 → 全站间距类按比例收紧
+ * 覆盖 --text- 及其 --line-height 对 → 字号整体下移一档
+ * 覆盖 --radius- → 圆角更锐利 (更"数据表"感)
+ */
+[data-density="compact"] {
+  /* 间距基准 — 从 0.25rem 降至 0.1875rem (收紧 25%) */
+  --spacing: 0.1875rem;
+
+  /* 字号 — 整体下移一档,必须同时覆盖 size 和 line-height 对 */
+  --text-xs: 0.6875rem;
+  --text-xs--line-height: calc(1 / 0.6875);
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: calc(1.125 / 0.8125);
+  --text-base: 0.875rem;
+  --text-base--line-height: calc(1.375 / 0.875);
+  --text-lg: 1rem;
+  --text-lg--line-height: calc(1.5 / 1);
+  --text-xl: 1.125rem;
+  --text-xl--line-height: calc(1.375 / 1.125);
+  --text-2xl: 1.25rem;
+  --text-2xl--line-height: calc(1.375 / 1.25);
+  --text-3xl: 1.5rem;
+  --text-3xl--line-height: calc(1.5 / 1.5);
+
+  /* 圆角 — 下移一档,更紧凑 */
+  --radius-xs: 0.0625rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.625rem;
+  --radius-3xl: 0.75rem;
+}
+
+/**
  * Tailwind CSS v4 主题配置
  * 使用 @theme 指令定义主题变量
  */

@@ -25,7 +25,8 @@ components/
 │   ├── CardList.tsx        # Client, 牌组列表 + 收藏切换
 │   └── LanguageSelector.tsx # Client, 语言对下拉
 ├── capability-hydrator.tsx # Client, Server→Client 能力注入 Zustand
-└── theme-provider.tsx      # Client, CSS 自定义属性主题上下文
+├── theme-provider.tsx      # Client, CSS 自定义属性主题上下文 (颜色)
+└── density-provider.tsx    # Client, 密度模式上下文 (comfortable/compact)
 ```
 
 ### 查找位置
@@ -40,6 +41,7 @@ components/
 | 界面语言切换 | `layout/LanguageSettings.tsx` | UI locale (cookie 存储) + 学习语言切换 |
 | 能力注入 | `capability-hydrator.tsx` | Server 数据 → Zustand 客户端。详见 [config-system.md](./config-system.md) |
 | 主题切换 | `theme-provider.tsx` | CSS 变量 + localStorage |
+| 密度切换 | `density-provider.tsx` | comfortable/compact 模式,`<html data-density>` + localStorage |
 
 ### 约定
 
@@ -48,6 +50,7 @@ components/
 - 页面专属组件 (如 srt-player/components/) 不放此处, 随页面放置
 - `capability-hydrator.tsx` 必须在 layout 层渲染, 确保客户端能力状态可用
 - `theme-provider.tsx` 提供 CSS 变量上下文, 主题预设定义在 `@/shared/theme-presets`
+- `density-provider.tsx` 与 theme-provider 平级, 提供 comfortable/compact 密度切换。`<html data-density="compact">` 触发 `compact:` Tailwind variant + token 覆盖 (见下"密度模式")
 
 ---
 
@@ -123,6 +126,39 @@ import { cn } from "@/utils/cn";
 - 禁止内联 `<svg>` (Navbar GithubIcon 是唯一例外)
 - 图标按钮使用 `IconButton` 组件, 非 `<button>` + SVG
 - 按钮加载状态用 `<Loader2>`, 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>`
+
+### 密度模式 (Compact Design System)
+
+项目支持两套密度: **comfortable** (默认, 卡片式) 和 **compact** (高密度, 列表/网格优先)。用户在 `/settings` 切换。
+
+**切换机制** (`density-provider.tsx` + `globals.css`):
+- `<html data-density="compact">` 属性切换 (非 inline style)
+- localStorage `"density-mode"`, 默认 `"comfortable"`
+- `@custom-variant compact` 启用 `compact:` 前缀
+
+**Token 层** (全局自动生效, 零组件迁移) — 在 `[data-density="compact"]` 下覆盖:
+- `--spacing`: 0.25rem → 0.1875rem (全站 `p-*`/`gap-*`/`m-*` 按比例收紧 25%)
+- `--text-*`: 整体下移一档 (必须同时覆盖 `--text-*` 和 `--text-*--line-height` 对)
+- `--radius-*`: 下移一档 (更锐利圆角)
+- 覆盖块在 `globals.css` 中为**非分层 CSS** (unlayered), 优先级高于 `@layer theme`
+
+**结构层** (`compact:` variant 逐文件修) — 已应用的页面:
+
+| 文件 | compact: 效果 |
+|---|---|
+| `ui/CardList.tsx` | 去掉 384px 天花板 (`compact:max-h-none`) |
+| `ui/PageLayout.tsx` | 宽度从 max-w-2xl → max-w-7xl |
+| `(learn)/explore/ExploreClient.tsx` | 移动端 2 列, XL 6 列, 去截断 |
+| `(learn)/decks/DecksClient.tsx` | 行标题 2 行不截断 |
+| `(learn)/favorites/FavoritesClient.tsx` | 同上 |
+| `(learn)/decks/[deck_id]/CardItem.tsx` | JS substring → CSS truncate, compact 2 行 |
+| `(learn)/memorize/MemorizeCard.tsx` | 固定 h-[50dvh] → 内容驱动高度 |
+| `(learn)/translator/page.tsx` | 固定 h-64 面板 → 内容驱动高度 |
+
+添加 `compact:` 类时,只增不改 comfortable 行为:
+```tsx
+<div className="max-h-96 overflow-y-auto compact:max-h-none compact:overflow-visible">
+```
 
 ### 添加新组件
 

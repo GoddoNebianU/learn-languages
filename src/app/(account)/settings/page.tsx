@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "@/components/theme-provider";
+import { useDensity } from "@/components/density-provider";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/cn";
 import { Button } from "@/design-system/button";
@@ -10,6 +11,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const { currentTheme, setTheme, availableThemes } = useTheme();
+  const { density, setDensity } = useDensity();
 
   const themeNames: Record<string, string> = {
     teal: t("themeNames.teal"),
@@ -19,7 +21,6 @@ export default function SettingsPage() {
     amber: t("themeNames.amber"),
     emerald: t("themeNames.emerald"),
     orange: t("themeNames.orange"),
-    indigo: t("themeNames.indigo"),
     slate: t("themeNames.slate"),
     sage: t("themeNames.sage"),
     taupe: t("themeNames.taupe"),
@@ -59,6 +60,46 @@ export default function SettingsPage() {
               </span>
             </Button>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-1 text-lg font-semibold text-gray-800">{t("density")}</h2>
+        <p className="mb-3 text-sm text-gray-500">{t("densityDescription")}</p>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            variant="light"
+            onClick={() => setDensity("comfortable")}
+            className={cn(
+              "flex h-auto flex-col items-start gap-1 rounded-lg p-4 transition-all",
+              density === "comfortable"
+                ? "ring-2 ring-offset-2"
+                : "hover:bg-gray-50"
+            )}
+          >
+            <span className="font-semibold text-gray-800">
+              {t("densityComfortable")}
+            </span>
+            <span className="text-xs text-gray-500">
+              {t("densityComfortableDescription")}
+            </span>
+          </Button>
+          <Button
+            variant="light"
+            onClick={() => setDensity("compact")}
+            className={cn(
+              "flex h-auto flex-col items-start gap-1 rounded-lg p-4 transition-all",
+              density === "compact" ? "ring-2 ring-offset-2" : "hover:bg-gray-50"
+            )}
+          >
+            <span className="font-semibold text-gray-800">
+              {t("densityCompact")}
+            </span>
+            <span className="text-xs text-gray-500">
+              {t("densityCompactDescription")}
+            </span>
+          </Button>
         </div>
       </div>
     </PageLayout>

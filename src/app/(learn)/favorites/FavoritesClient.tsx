@@ -50,7 +50,7 @@ const FavoriteCard = ({ favorite, onRemoveFavorite }: FavoriteCardProps) => {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="truncate font-semibold text-gray-900">{favorite.name}</h3>
+          <h3 className="truncate compact:truncate-none compact:line-clamp-2 font-semibold text-gray-900">{favorite.name}</h3>
           <p className="mt-0.5 text-sm text-gray-500">
             {t("folderInfo", {
               userName: favorite.userName ?? favorite.userUsername ?? t("unknownUser"),

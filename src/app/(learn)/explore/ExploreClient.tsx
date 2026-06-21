@@ -60,7 +60,7 @@ const PublicDeckCard = ({ deck, currentUserId, favoriteState, onUpdateFavorite }
 
   return (
     <div
-      className="group cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white p-3 transition-all hover:border-primary-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:border-2 sm:p-5"
+      className="group cursor-pointer overflow-hidden compact:overflow-visible rounded-lg border border-gray-200 bg-white p-3 transition-all hover:border-primary-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none sm:border-2 sm:p-5"
       role="button"
       tabIndex={0}
       onClick={() => {
@@ -90,11 +90,11 @@ const PublicDeckCard = ({ deck, currentUserId, favoriteState, onUpdateFavorite }
         </IconButton>
       </div>
 
-      <h3 className="mb-1 truncate text-sm font-semibold text-gray-900 sm:mb-2 sm:text-base">
+      <h3 className="mb-1 truncate compact:truncate-none compact:line-clamp-2 text-sm font-semibold text-gray-900 sm:mb-2 sm:text-base">
         {deck.name}
       </h3>
 
-      <p className="mb-2 line-clamp-2 text-xs text-gray-500 sm:mb-3 sm:text-sm">
+      <p className="mb-2 line-clamp-2 compact:line-clamp-4 text-xs text-gray-500 sm:mb-3 sm:text-sm">
         {t("deckInfo", {
           userName: deck.userName ?? deck.userUsername ?? t("unknownUser"),
           cardCount: deck.cardCount ?? 0,
@@ -215,7 +215,7 @@ export function ExploreClient({ initialPublicDecks }: ExploreClientProps) {
           <p className="text-sm">{t("noDecks")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 compact:grid-cols-2 compact:gap-2 compact:sm:grid-cols-3 compact:lg:grid-cols-4 compact:xl:grid-cols-6">
           {sortedDecks.map((deck) => (
             <PublicDeckCard
               key={deck.id}

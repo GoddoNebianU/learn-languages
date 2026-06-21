@@ -247,15 +247,20 @@
       "amber": "Bernstein",
       "emerald": "Smaragd",
       "orange": "Orange",
-      "indigo": "Indigo",
-      "slate": "Schiefer",
+        "slate": "Schiefer",
       "sage": "Salbei",
       "taupe": "Taupe",
       "mauve": "Malve",
       "mist": "Nebel",
       "dusty": "Staubiges Rosa",
       "olive": "Oliv"
-    }
+    },
+    "density": "Dichte",
+    "densityDescription": "Passen Sie den Abstand und die Kompaktheit der Benutzeroberfläche an",
+    "densityComfortable": "Komfortabel",
+    "densityCompact": "Kompakt",
+    "densityComfortableDescription": "Mehr Freiraum, augenschonender",
+    "densityCompactDescription": "Engere Abstände, mehr Informationen pro Bildschirm"
   },
   "srt_player": {
     "uploadVideo": "Video hochladen",

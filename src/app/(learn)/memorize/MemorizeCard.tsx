@@ -103,12 +103,12 @@ function MemorizeCard({
 
   return (
     <div
-      className={`mb-6 flex h-[50dvh] flex-col rounded-xl border border-gray-200 bg-white shadow-sm ${myFont.className}`}
+      className={`mb-6 flex h-[50dvh] compact:min-h-[30dvh] compact:h-auto flex-col rounded-xl border border-gray-200 bg-white shadow-sm ${myFont.className}`}
     >
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto compact:overflow-visible">
         {isDictation ? (
           <>
-            <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] p-8">
+            <VStack align="center" justify="center" gap={4} className="min-h-[20dvh] compact:min-h-[12dvh] p-8">
               {card.ipa ? (
                 <div className="text-center font-mono text-2xl text-gray-700">[{card.ipa}]</div>
               ) : (
@@ -127,7 +127,7 @@ function MemorizeCard({
                 <VStack
                   align="center"
                   justify="center"
-                  className="min-h-[20dvh] rounded-b-xl bg-gray-50 p-8"
+                  className="min-h-[20dvh] compact:min-h-[12dvh] rounded-b-xl bg-gray-50 p-8"
                 >
                   <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
                     {displayFront}
@@ -139,7 +139,7 @@ function MemorizeCard({
           </>
         ) : (
           <>
-            <VStack align="center" justify="center" className="min-h-[20dvh] p-8" gap={2}>
+            <VStack align="center" justify="center" className="min-h-[20dvh] compact:min-h-[12dvh] p-8" gap={2}>
               <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
                 {displayFront}
               </div>
@@ -159,7 +159,7 @@ function MemorizeCard({
                 <VStack
                   align="center"
                   justify="center"
-                  className="min-h-[20dvh] rounded-b-xl bg-gray-50 p-8"
+                  className="min-h-[20dvh] compact:min-h-[12dvh] rounded-b-xl bg-gray-50 p-8"
                 >
                   {getBackContent(card, isReversed)}
                   <PlayButton

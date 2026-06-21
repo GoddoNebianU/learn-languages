@@ -285,15 +285,20 @@
       "amber": "アンバー",
       "emerald": "エメラルド",
       "orange": "オレンジ",
-      "indigo": "インディゴ",
-      "slate": "スレート",
+        "slate": "スレート",
       "sage": "セージ",
       "taupe": "トープ",
       "mauve": "モーブ",
       "mist": "ミスト",
       "dusty": "ダスティローズ",
       "olive": "オリーブ"
-    }
+    },
+    "density": "密度",
+    "densityDescription": "インターフェースの間隔とコンパクトさを調整します",
+    "densityComfortable": "快適",
+    "densityCompact": "コンパクト",
+    "densityComfortableDescription": "よりゆとりがあり、目に優しい",
+    "densityCompactDescription": "より狭い間隔で、画面ごとにより多くの情報を表示"
   },
   "srt_player": {
     "uploadVideo": "ビデオをアップロード",

@@ -319,15 +319,20 @@
       "amber": "앰버",
       "emerald": "에메랄드",
       "orange": "오렌지",
-      "indigo": "인디고",
-      "slate": "슬레이트",
+        "slate": "슬레이트",
       "sage": "세이지",
       "taupe": "토프",
       "mauve": "모브",
       "mist": "미스트",
       "dusty": "더스티 로즈",
       "olive": "올리브"
-    }
+    },
+    "density": "밀도",
+    "densityDescription": "인터페이스의 간격과 콤팩트함을 조정합니다",
+    "densityComfortable": "편안하게",
+    "densityCompact": "콤팩트",
+    "densityComfortableDescription": "더 넓은 여백으로 눈이 편안합니다",
+    "densityCompactDescription": "좁은 간격으로 화면당 더 많은 정보를 표시"
   },
   "srt_player": {
     "uploadVideo": "비디오 업로드",

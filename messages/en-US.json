@@ -285,15 +285,20 @@
       "amber": "Amber",
       "emerald": "Emerald",
       "orange": "Orange",
-      "indigo": "Indigo",
-      "slate": "Slate",
+        "slate": "Slate",
       "sage": "Sage",
       "taupe": "Taupe",
       "mauve": "Mauve",
       "mist": "Mist",
       "dusty": "Dusty Rose",
       "olive": "Olive"
-    }
+    },
+    "density": "Density",
+    "densityDescription": "Adjust the spacing and compactness of the interface",
+    "densityComfortable": "Comfortable",
+    "densityCompact": "Compact",
+    "densityComfortableDescription": "More breathing room, easier on the eyes",
+    "densityCompactDescription": "Tighter spacing, more information per screen"
   },
   "srt_player": {
     "uploadVideo": "Upload Video",

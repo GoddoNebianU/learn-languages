@@ -126,7 +126,7 @@ export function CardBody({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
   return (
-    <div className={cn("p-6", className)} {...props}>
+    <div className={cn(className)} {...props}>
       {children}
     </div>
   );

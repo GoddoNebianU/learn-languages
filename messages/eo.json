@@ -285,15 +285,20 @@
       "amber": "Ambro",
       "emerald": "Smeraldo",
       "orange": "Oranĝo",
-      "indigo": "Indigo",
-      "slate": "Ardezo",
+        "slate": "Ardezo",
       "sage": "Salvio",
       "taupe": "Taŭpo",
       "mauve": "Malvo",
       "mist": "Nebulo",
       "dusty": "Polva Rozo",
       "olive": "Olivo"
-    }
+    },
+    "density": "Denseco",
+    "densityDescription": "Alĝustigu la spacon kaj kompaktecon de la interfaco",
+    "densityComfortable": "Komforta",
+    "densityCompact": "Kompakta",
+    "densityComfortableDescription": "Pli da spaco, pli facila por la okuloj",
+    "densityCompactDescription": "Pli mallarĝaj spacoj, pli da informo po ekrano"
   },
   "srt_player": {
     "uploadVideo": "Alŝuti Videon",

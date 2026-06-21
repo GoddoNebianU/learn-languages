@@ -37,7 +37,7 @@ export function ForgotPasswordClient() {
   if (sent) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-96">
+        <Card className="w-96" padding="lg">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
               <h1 className="w-full text-center text-2xl font-bold">{t("checkYourEmail")}</h1>
@@ -54,7 +54,7 @@ export function ForgotPasswordClient() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-96">
+      <Card className="w-96" padding="lg">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
             <h1 className="w-full text-center text-3xl font-bold">{t("forgotPassword")}</h1>

@@ -165,7 +165,7 @@ const handleDeleteConfirm = async () => {
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="truncate font-semibold text-gray-900">{deck.name}</h3>
+              <h3 className="truncate compact:truncate-none compact:line-clamp-2 font-semibold text-gray-900">{deck.name}</h3>
               <span className="flex items-center gap-1 text-xs text-gray-400">
                 {deck.visibility === "PUBLIC" ? <Globe size={12} /> : <Lock size={12} />}
                 {deck.visibility === "PUBLIC" ? t("public") : t("private")}

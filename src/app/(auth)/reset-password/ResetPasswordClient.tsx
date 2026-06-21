@@ -64,7 +64,7 @@ export function ResetPasswordClient() {
   if (success) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-96">
+        <Card className="w-96" padding="lg">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
               <h1 className="w-full text-center text-2xl font-bold">
@@ -84,7 +84,7 @@ export function ResetPasswordClient() {
   if (!token) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-96">
+        <Card className="w-96" padding="lg">
           <CardBody>
             <VStack gap={4} align="center" justify="center">
               <h1 className="w-full text-center text-2xl font-bold">{t("invalidToken")}</h1>
@@ -101,7 +101,7 @@ export function ResetPasswordClient() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-96">
+      <Card className="w-96" padding="lg">
         <CardBody>
           <VStack gap={4} align="center" justify="center">
             <h1 className="w-full text-center text-3xl font-bold">{t("resetPassword")}</h1>

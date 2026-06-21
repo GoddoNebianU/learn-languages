@@ -16,7 +16,7 @@ src/
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
 ├── modules/          # 业务逻辑 (action-service-repository)
 ├── design-system/    # CVA 基础组件 (14 文件, 平铺, 全部 "use client")
-├── components/       # 业务组件 (layout/follow/ui + capability-hydrator + theme-provider)
+├── components/       # 业务组件 (layout/follow/ui + capability-hydrator + theme-provider + density-provider)
 ├── lib/              # 集成层 (env/db/auth/capability/providers/bigmodel/email/logger/browser/theme)
 │   ├── providers/    # 外部 API 对接统一层 (llm/tts/smtp), 对外暴露统一接口
 │   └── bigmodel/     # AI 管道编排 (orchestrator/types); LLM/TTS 集成已移至 providers/
@@ -29,7 +29,7 @@ src/
 非 src: prisma/ (Schema, 使用 db push), messages/ (9 种语言), public/alphabets/, public/fonts/
 ```
 
-> 页面路由、渲染模式详见 [pages.md](./pages.md);功能页详解见 [features.md](./features.md);管理后台见 [config-system.md](./config-system.md)。
+> 页面路由、渲染模式详见 [pages.md](./pages.md);功能页详解见 [features.md](./features.md);管理后台见 [config-system.md](./config-system.md);密度模式 (comfortable/compact) 详见 [components.md](./components.md#密度模式-compact-design-system)。
 
 ## 查找位置
 

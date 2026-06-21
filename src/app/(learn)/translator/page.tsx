@@ -203,18 +203,18 @@ export default function TranslatorPage() {
 
       <div className="flex flex-col gap-2 md:flex-row md:justify-between">
         <div className="flex w-full flex-col-reverse gap-2 md:w-1/2">
-          <div className="h-64 w-full rounded-lg border border-gray-200 p-2">
+          <div className="h-64 compact:h-auto compact:min-h-48 w-full rounded-lg border border-gray-200 p-2">
             <Textarea
-              className="h-8/12 w-full resize-none"
+              className="h-8/12 compact:h-auto compact:min-h-32 w-full resize-none"
               ref={taref}
               onKeyDown={(e) => {
                 if (e.ctrlKey && e.key === "Enter") translate();
               }}
             />
-            <div className="ipa h-2/12 w-full overflow-auto text-gray-600">
+            <div className="ipa h-2/12 compact:h-auto w-full overflow-auto text-gray-600">
               {translationResult?.sourceIpa ? `[${translationResult.sourceIpa}]` : ""}
             </div>
-            <div className="flex h-2/12 w-full items-center justify-end">
+            <div className="flex h-2/12 compact:h-auto w-full items-center justify-end">
               <IconButton
                 iconSrc={IMAGES.copy_all}
                 iconAlt="copy"
@@ -279,14 +279,14 @@ export default function TranslatorPage() {
         </div>
 
         <div className="flex w-full flex-col-reverse gap-2 md:w-1/2">
-          <div className="h-64 w-full rounded-lg bg-gray-100 p-2">
-            <div className="h-2/3 w-full overflow-y-auto">
+          <div className="h-64 compact:h-auto compact:min-h-48 w-full rounded-lg bg-gray-100 p-2">
+            <div className="h-2/3 compact:h-auto compact:min-h-32 w-full overflow-y-auto">
               {translationResult?.translatedText || ""}
             </div>
-            <div className="ipa h-1/6 w-full overflow-y-auto text-gray-600">
+            <div className="ipa h-1/6 compact:h-auto w-full overflow-y-auto text-gray-600">
               {translationResult?.targetIpa ? `[${translationResult.targetIpa}]` : ""}
             </div>
-            <div className="flex h-1/6 w-full items-center justify-end">
+            <div className="flex h-1/6 compact:h-auto w-full items-center justify-end">
               <IconButton
                 iconSrc={IMAGES.copy_all}
                 iconAlt="copy"

@@ -285,15 +285,20 @@
       "amber": "琥珀",
       "emerald": "翡翠",
       "orange": "橙色",
-      "indigo": "靛蓝",
-      "slate": "石墨",
+        "slate": "石墨",
       "sage": "鼠尾草",
       "taupe": "暖沙",
       "mauve": "薰衣草",
       "mist": "雾蓝",
       "dusty": "玫瑰灰",
       "olive": "橄榄"
-    }
+    },
+    "density": "密度",
+    "densityDescription": "调整界面的间距和紧凑程度",
+    "densityComfortable": "舒适",
+    "densityCompact": "紧凑",
+    "densityComfortableDescription": "更多留白，更适合阅读",
+    "densityCompactDescription": "更紧凑，每屏显示更多信息"
   },
   "srt_player": {
     "upload": "上传",

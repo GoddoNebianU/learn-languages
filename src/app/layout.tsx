@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DensityProvider } from "@/components/density-provider";
 import { Analytics } from '@vercel/analytics/next';
 import { getCapabilities } from "@/lib/capability";
 import { CapabilityHydrator } from "@/components/capability-hydrator";
@@ -30,17 +31,23 @@ export default async function RootLayout({
   const capabilities = await getCapabilities();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`antialiased`}>
+        <script dangerouslySetInnerHTML={{
+          __html:
+            "(function(){try{var d=localStorage.getItem('density-mode');if(d==='compact')document.documentElement.dataset.density='compact';}catch(e){}})();",
+        }} />
         <StrictMode>
           <ThemeProvider>
-            <NextIntlClientProvider>
-              <CapabilityHydrator capabilities={capabilities}>
-                <Navbar />
-                {children}
-                <Toaster />
-              </CapabilityHydrator>
-            </NextIntlClientProvider>
+            <DensityProvider>
+              <NextIntlClientProvider>
+                <CapabilityHydrator capabilities={capabilities}>
+                  <Navbar />
+                  {children}
+                  <Toaster />
+                </CapabilityHydrator>
+              </NextIntlClientProvider>
+            </DensityProvider>
           </ThemeProvider>
         </StrictMode>
         <Analytics />

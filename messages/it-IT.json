@@ -319,15 +319,20 @@
       "amber": "Ambra",
       "emerald": "Smeraldo",
       "orange": "Arancione",
-      "indigo": "Indaco",
-      "slate": "Ardesia",
+        "slate": "Ardesia",
       "sage": "Salvia",
       "taupe": "Talpa",
       "mauve": "Malva",
       "mist": "Nebbia",
       "dusty": "Rosa Polveroso",
       "olive": "Oliva"
-    }
+    },
+    "density": "Densità",
+    "densityDescription": "Regola la spaziatura e la compattezza dell'interfaccia",
+    "densityComfortable": "Comodo",
+    "densityCompact": "Compatto",
+    "densityComfortableDescription": "Più spazio, più riposante per gli occhi",
+    "densityCompactDescription": "Spaziatura più stretta, più informazioni per schermata"
   },
   "srt_player": {
     "uploadVideo": "Carica Video",
