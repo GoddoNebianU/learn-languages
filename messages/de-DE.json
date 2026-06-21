@@ -221,7 +221,8 @@
       "cardMode": "Kartenmodus",
       "readAloud": "Vorlesen",
       "group": "Gruppe",
-      "groupProgress": "Gruppe {current}/{total}"
+      "groupProgress": "Gruppe {current}/{total}",
+      "regenerateTts": "Audio neu generieren"
     },
     "page": {
       "unauthorized": "Nicht autorisiert"

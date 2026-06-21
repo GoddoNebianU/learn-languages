@@ -259,7 +259,8 @@
       "cardMode": "カードモード",
       "readAloud": "読み上げ",
       "group": "グループ",
-      "groupProgress": "グループ {current}/{total}"
+      "groupProgress": "グループ {current}/{total}",
+      "regenerateTts": "再生成"
     },
     "page": {
       "unauthorized": "このデッキにアクセスする権限がありません"

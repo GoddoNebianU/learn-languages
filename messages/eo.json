@@ -259,7 +259,8 @@
       "cardMode": "Karta reĝimo",
       "readAloud": "Laŭtlegi",
       "group": "Grupo",
-      "groupProgress": "Grupo {current}/{total}"
+      "groupProgress": "Grupo {current}/{total}",
+      "regenerateTts": "Regeneri sonon"
     },
     "page": {
       "unauthorized": "Vi ne rajtas aliri ĉi tiun kartaron"

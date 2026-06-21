@@ -293,7 +293,8 @@
       "cardMode": "كارتا مودېلى",
       "readAloud": "ئوقۇش",
       "group": "گۇرۇپپا",
-      "groupProgress": "گۇرۇپپا {current}/{total}"
+      "groupProgress": "گۇرۇپپا {current}/{total}",
+      "regenerateTts": "ئاۋازنى قايتا ھاسىللاش"
     },
     "page": {
       "unauthorized": "ھوقۇقسىز"

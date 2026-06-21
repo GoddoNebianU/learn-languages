@@ -93,7 +93,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     cleanupAudio();
   };
 
-  const playTTS = async (text: string) => {
+  const playTTS = async (text: string, regenerate = false) => {
     if (isAudioLoading) return;
 
     setIsAudioLoading(true);
@@ -108,9 +108,10 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       else if (hasKorean) lang = "Korean";
       else if (/^[a-zA-Z\s]/.test(text)) lang = "English";
 
-      const audioUrl = await getTTSUrl(text, lang);
+      const audioUrl = await getTTSUrl(text, lang, regenerate);
 
       if (audioUrl) {
+        cleanupAudio();
         audioUrlRef.current = audioUrl;
         await load(audioUrl);
         play();

@@ -156,23 +156,25 @@ const ttsCache = new Map<string, { url: string; expiresAt: number }>();
  */
 export async function getTTSUrl(
   text: string,
-  lang: TTS_SUPPORTED_LANGUAGES
+  lang: TTS_SUPPORTED_LANGUAGES,
+  regenerate = false
 ): Promise<string | null> {
   const config = await getTtsProviderConfig();
 
-  // 配了 primary → 返回代理 URL,优先级与 fallback 由 /api/tts route 处理
   if (hasPrimary(config)) {
-    return `/api/tts?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`;
+    const base = `/api/tts?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`;
+    return regenerate ? `${base}&_t=${Date.now()}` : base;
   }
 
-  // 没配 primary → 走 DashScope (带缓存)
   try {
     const voice = "Jennifer";
     const cacheKey = `${voice}:${lang}:${text}`;
-    const cached = ttsCache.get(cacheKey);
-    if (cached && cached.expiresAt > Date.now() / 1000) {
-      log.debug("TTS cache hit", { textLength: text.length, lang });
-      return cached.url;
+    if (!regenerate) {
+      const cached = ttsCache.get(cacheKey);
+      if (cached && cached.expiresAt > Date.now() / 1000) {
+        log.debug("TTS cache hit", { textLength: text.length, lang });
+        return cached.url;
+      }
     }
     if (!config.apiKey) return null;
     const service = new QwenTTSService(config.apiKey);

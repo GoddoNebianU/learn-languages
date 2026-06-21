@@ -293,7 +293,8 @@
       "cardMode": "Modalità carta",
       "readAloud": "Leggi ad alta voce",
       "group": "Gruppo",
-      "groupProgress": "Gruppo {current}/{total}"
+      "groupProgress": "Gruppo {current}/{total}",
+      "regenerateTts": "Rigenera audio"
     },
     "page": {
       "unauthorized": "Non autorizzato"

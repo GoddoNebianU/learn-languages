@@ -259,7 +259,8 @@
       "cardMode": "Card Mode",
       "readAloud": "Read aloud",
       "group": "Group",
-      "groupProgress": "Group {current}/{total}"
+      "groupProgress": "Group {current}/{total}",
+      "regenerateTts": "Regenerate audio"
     },
     "page": {
       "unauthorized": "You are not authorized to access this deck"
