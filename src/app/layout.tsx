@@ -43,7 +43,7 @@ export default async function RootLayout({
               <NextIntlClientProvider>
                 <CapabilityHydrator capabilities={capabilities}>
                   <Navbar />
-                  {children}
+                  <main className="bg-primary-500 min-h-[calc(100vh-64px)]">{children}</main>
                   <Toaster />
                 </CapabilityHydrator>
               </NextIntlClientProvider>

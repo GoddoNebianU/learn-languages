@@ -213,6 +213,7 @@
 
 html {
   height: 100%;
+  background: var(--color-primary-50);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -221,7 +222,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--primary-50);
+  background: var(--color-primary-50);
   color: var(--foreground);
   font-family:
     var(--font-geist-sans),
@@ -232,6 +233,7 @@ body {
   font-size: 1rem;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
+  transition: background-color var(--transition-base);
 }
 
 /**

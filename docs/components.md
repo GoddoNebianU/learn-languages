@@ -51,6 +51,7 @@ components/
 - `capability-hydrator.tsx` 必须在 layout 层渲染, 确保客户端能力状态可用
 - `theme-provider.tsx` 提供 CSS 变量上下文, 主题预设定义在 `@/shared/theme-presets`
 - `density-provider.tsx` 与 theme-provider 平级, 提供 comfortable/compact 密度切换。`<html data-density="compact">` 触发 `compact:` Tailwind variant + token 覆盖 (见下"密度模式")
+- root `layout.tsx` 用 `<main className="bg-primary-500 min-h-[calc(100vh-64px)]">` 包装 `{children}`, 确保所有路由 (含 `loading.tsx`) 继承动态主题色, 切页时无白屏闪烁。`globals.css` 的 `body`/`html` 用 `var(--color-primary-50)` (动态 token) 作兜底
 
 ---
 
