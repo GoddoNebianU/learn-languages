@@ -26,7 +26,13 @@ function getBackText(card: ActionOutputCard, isReversed: boolean): string {
   return card.meanings.map((m) => m.definition).join("; ");
 }
 
-function getBackContent(card: ActionOutputCard, isReversed: boolean): React.ReactNode {
+function getBackContent(
+  card: ActionOutputCard,
+  isReversed: boolean,
+  isAudioLoading: boolean,
+  onPlayText: (text: string, regenerate?: boolean) => void,
+  readAloudLabel: string,
+): React.ReactNode {
   if (isReversed) {
     return (
       <VStack align="center" gap={1}>
@@ -50,8 +56,13 @@ function getBackContent(card: ActionOutputCard, isReversed: boolean): React.Reac
           <div className="flex flex-col gap-1">
             <span className="text-gray-800">{m.definition}</span>
             {m.example && (
-              <span className="border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
-                {m.example}
+              <span className="flex items-center gap-1 border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
+                <PlayButton
+                  label={readAloudLabel}
+                  disabled={isAudioLoading}
+                  onClick={() => onPlayText(m.example)}
+                />
+                <span>{m.example}</span>
               </span>
             )}
           </div>
@@ -149,7 +160,7 @@ function MemorizeCard({
                   <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
                     {displayFront}
                   </div>
-                  {getBackContent(card, isReversed)}
+                  {getBackContent(card, isReversed, isAudioLoading, onPlayText, t("readAloud"))}
                 </VStack>
               </>
             )}
@@ -190,7 +201,7 @@ function MemorizeCard({
                   justify="center"
                   className="min-h-[20dvh] compact:min-h-[12dvh] rounded-b-xl bg-gray-50 p-8"
                 >
-                  {getBackContent(card, isReversed)}
+                  {getBackContent(card, isReversed, isAudioLoading, onPlayText, t("readAloud"))}
                   <div className="flex items-center gap-1">
                     <PlayButton
                       label={t("readAloud")}
