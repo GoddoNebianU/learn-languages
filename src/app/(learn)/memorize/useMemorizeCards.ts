@@ -61,33 +61,29 @@ export function useMemorizeCards(deckId: number) {
     };
   }, [deckId]);
 
-  useEffect(() => {
-    if (studyMode.startsWith("random")) {
-      setCards(shuffleCards(originalCards));
-    } else {
-      setCards(originalCards);
-    }
-    setCurrentIndex(groupSize > 0 ? currentGroup * groupSize : 0);
-    setShowAnswer(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [studyMode, originalCards, shuffleCards]);
-
   const totalGroups = groupSize > 0 ? Math.ceil(cards.length / groupSize) : 1;
   const groupStart = groupSize > 0 ? currentGroup * groupSize : 0;
   const groupEnd = groupSize > 0 ? Math.min(groupStart + groupSize, cards.length) : cards.length;
 
   const findNextIndex = useCallback(
     (from: number, direction: 1 | -1): number => {
-      if (groupSize > 0) {
-        const gLen = groupEnd - groupStart;
-        const relIdx = from - groupStart;
-        return groupStart + (((relIdx + direction) % gLen) + gLen) % gLen;
+      const start = groupSize > 0 ? groupStart : 0;
+      const end = groupSize > 0 ? groupEnd : cards.length;
+      const range = end - start;
+
+      if (studyMode.startsWith("random")) {
+        if (range <= 1) return from;
+        let next;
+        do {
+          next = start + Math.floor(Math.random() * range);
+        } while (next === from);
+        return next;
       }
-      const len = cards.length;
-      const next = from + direction;
-      return ((next % len) + len) % len;
+
+      const relIdx = from - start;
+      return start + (((relIdx + direction) % range) + range) % range;
     },
-    [cards.length, groupSize, groupStart, groupEnd]
+    [studyMode, cards.length, groupSize, groupStart, groupEnd]
   );
 
   const setGroupSize = useCallback((size: number) => {

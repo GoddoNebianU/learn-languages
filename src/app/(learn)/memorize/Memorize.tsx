@@ -136,7 +136,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter") {
           e.preventDefault();
           handleNextCard();
-        } else if (e.key === "ArrowLeft") {
+        } else if (e.key === "ArrowLeft" && !studyMode.startsWith("random")) {
           e.preventDefault();
           handlePrevCard();
         }
@@ -146,6 +146,15 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showAnswer, isCardMode, handleShowAnswer, handleNextCard, handlePrevCard]);
+
+  useEffect(() => {
+    if (!isDictation || !currentCard) return;
+    const text = isReversed
+      ? currentCard.meanings.map((m) => (m.partOfSpeech ? `${m.partOfSpeech}: ${m.definition}` : m.definition)).join("; ")
+      : currentCard.word;
+    if (text) playTTS(text);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, isDictation]);
 
   if (isLoading) {
     return (
@@ -211,7 +220,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </span>
       </HStack>
 
-      {(!studyMode.startsWith("random") || groupSize > 0) && (
+      {!studyMode.startsWith("random") && (
         <Range
           value={currentIndex}
           min={groupStart}
@@ -343,9 +352,11 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
           </Button>
         ) : (
           <HStack gap={4}>
-            <Button variant="light" onClick={handlePrevCard}>
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
+            {!studyMode.startsWith("random") && (
+              <Button variant="light" onClick={handlePrevCard}>
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+            )}
             <span className="text-sm text-gray-500">
               {t("nextCard")}
               <span className="ml-2 text-xs opacity-60">Space</span>
