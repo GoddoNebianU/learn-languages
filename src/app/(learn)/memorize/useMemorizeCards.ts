@@ -67,9 +67,9 @@ export function useMemorizeCards(deckId: number) {
     } else {
       setCards(originalCards);
     }
-    setCurrentIndex(0);
-    setCurrentGroup(0);
+    setCurrentIndex(groupSize > 0 ? currentGroup * groupSize : 0);
     setShowAnswer(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studyMode, originalCards, shuffleCards]);
 
   const totalGroups = groupSize > 0 ? Math.ceil(cards.length / groupSize) : 1;
