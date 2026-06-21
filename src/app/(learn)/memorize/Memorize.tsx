@@ -68,6 +68,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const { play, stop, load } = useAudioPlayer();
   const audioUrlRef = useRef<string | null>(null);
+  const loadedTextRef = useRef<string | null>(null);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
 
   const cleanupAudio = () => {
@@ -75,6 +76,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
       URL.revokeObjectURL(audioUrlRef.current);
       audioUrlRef.current = null;
     }
+    loadedTextRef.current = null;
     stop();
     setIsAudioLoading(false);
   };
@@ -96,6 +98,14 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
   const playTTS = async (text: string, regenerate = false) => {
     if (isAudioLoading) return;
 
+    if (!regenerate && loadedTextRef.current === text && audioUrlRef.current) {
+      try {
+        await play();
+        return;
+      } catch {
+      }
+    }
+
     setIsAudioLoading(true);
     try {
       const hasChinese = /[\u4e00-\u9fff]/.test(text);
@@ -112,6 +122,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
       if (audioUrl) {
         cleanupAudio();
+        loadedTextRef.current = text;
         audioUrlRef.current = audioUrl;
         await load(audioUrl);
         play();
