@@ -80,7 +80,7 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
             <GripVertical size={16} />
           </div>
         )}
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="p-4">
             <div className="mb-3 flex items-start justify-between">
               <div className="flex items-center gap-2 text-xs text-gray-500">
