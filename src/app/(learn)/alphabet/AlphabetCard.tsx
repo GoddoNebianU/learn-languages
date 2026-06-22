@@ -126,6 +126,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
               selected={showLetter}
               onClick={() => setShowLetter(!showLetter)}
               className="rounded-full px-3 py-1 text-sm transition-colors"
+              pill
             >
               {t("letter")}
             </Button>
@@ -135,6 +136,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
               selected={showIPA}
               onClick={() => setShowIPA(!showIPA)}
               className="rounded-full px-3 py-1 text-sm transition-colors"
+              pill
             >
               IPA
             </Button>
@@ -145,6 +147,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
                 selected={showRoman}
                 onClick={() => setShowRoman(!showRoman)}
                 className="rounded-full px-3 py-1 text-sm transition-colors"
+              pill
               >
                 {t("roman")}
               </Button>
@@ -155,6 +158,7 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
               selected={isRandomMode}
               onClick={() => setIsRandomMode(!isRandomMode)}
               className="rounded-full px-3 py-1 text-sm transition-colors"
+              pill
             >
               {t("random")}
             </Button>

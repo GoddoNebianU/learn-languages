@@ -2,6 +2,8 @@ import { Trash2, Pencil, GripVertical, EyeOff, Eye } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
+import { Modal } from "@/design-system/modal";
+import { Badge } from "@/design-system/badge";
 import { useTranslations } from "next-intl";
 import type { ActionOutputCard, CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
@@ -82,10 +84,8 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
           <div className="p-4">
             <div className="mb-3 flex items-start justify-between">
               <div className="flex items-center gap-2 text-xs text-gray-500">
-                <span className="rounded-md bg-gray-100 px-2 py-1">{t("card")}</span>
-                <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">
-                  {t(CARD_TYPE_KEYS[card.cardType])}
-                </span>
+                <Badge>{t("card")}</Badge>
+                <Badge variant="info">{t(CARD_TYPE_KEYS[card.cardType])}</Badge>
               </div>
 
               <div className="flex items-center gap-1">
@@ -124,21 +124,19 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
         </div>
       </div>
 
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 max-w-sm rounded-lg bg-white p-4">
-            <p className="mb-4 text-gray-700">{t("deleteConfirm")}</p>
-            <div className="flex justify-end gap-2">
-              <Button variant="light" size="sm" onClick={() => setShowDeleteConfirm(false)}>
-                {t("cancel")}
-              </Button>
-              <Button variant="light" size="sm" onClick={handleDelete}>
-                {t("delete")}
-              </Button>
-            </div>
+      <Modal open={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} size="sm">
+        <div className="p-4">
+          <p className="mb-4 text-gray-700">{t("deleteConfirm")}</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="light" size="sm" onClick={() => setShowDeleteConfirm(false)}>
+              {t("cancel")}
+            </Button>
+            <Button variant="light" size="sm" onClick={handleDelete}>
+              {t("delete")}
+            </Button>
           </div>
         </div>
-      )}
+      </Modal>
 
       <EditCardModal
         isOpen={showEditModal}

@@ -6,6 +6,7 @@ import { LinkButton } from "@/design-system/link-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { Modal } from "@/design-system/modal";
+import { Badge } from "@/design-system/badge";
 import { VStack, HStack } from "@/design-system/stack";
 import { Plus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -126,9 +127,9 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
 
       <Modal.Body className="space-y-4">
         <HStack gap={2} className="text-sm text-gray-500">
-          <span className="rounded-md bg-gray-100 px-2 py-1">{t("card")}</span>
-          <span className="rounded-md bg-blue-50 px-2 py-1 text-blue-600">{cardTypeLabel}</span>
-          <span className="rounded-md bg-gray-100 px-2 py-1">{card.queryLang}</span>
+        <Badge>{t("card")}</Badge>
+        <Badge variant="info">{cardTypeLabel}</Badge>
+        <Badge>{card.queryLang}</Badge>
         </HStack>
 
         <div>

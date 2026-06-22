@@ -24,11 +24,16 @@ const buttonVariants = cva(
         true: "w-full",
         false: "",
       },
+      pill: {
+        true: "rounded-full",
+        false: "",
+      },
     },
     defaultVariants: {
       variant: "light",
       size: "md",
       fullWidth: false,
+      pill: false,
     },
   }
 );
@@ -54,6 +59,7 @@ export function Button({
   variant = "light",
   size = "md",
   fullWidth = false,
+  pill = false,
   href,
   openInNewTab = false,
   iconSrc,
@@ -71,7 +77,7 @@ export function Button({
   const actualSize = size ?? "md";
 
   const computedClass = cn(
-    buttonVariants({ variant, size: actualSize, fullWidth }),
+    buttonVariants({ variant, size: actualSize, fullWidth, pill }),
     selected && "bg-gray-200",
     className
   );
