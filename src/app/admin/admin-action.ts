@@ -67,6 +67,12 @@ export async function actionAdminLogin(formData: FormData) {
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
   if (!checkRateLimit(ip)) {
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.LOGIN_FAILED,
+      entityType: "admin",
+      metadata: { ip, reason: "rate_limited" },
+    });
     return {
       success: false as const,
       message: "Too many login attempts. Please try again later.",
@@ -79,10 +85,23 @@ export async function actionAdminLogin(formData: FormData) {
     if (safeCompare(password, adminPassword)) {
       loginAttempts.delete(ip);
       await createAdminSession();
+      await logActivity({
+        userId: null,
+        action: ACTIVITY_ACTIONS.ADMIN.LOGIN,
+        entityType: "admin",
+        ip,
+      });
       log.info("Admin authenticated");
       return { success: true as const, message: "Logged in" };
     }
 
+    await logActivity({
+      userId: null,
+      action: ACTIVITY_ACTIONS.ADMIN.LOGIN_FAILED,
+      entityType: "admin",
+      ip,
+      metadata: { reason: "invalid_password" },
+    });
     recordFailedAttempt(ip);
     return { success: false as const, message: "Invalid password" };
   } catch (error) {
@@ -93,6 +112,11 @@ export async function actionAdminLogin(formData: FormData) {
 
 export async function actionAdminLogout() {
   await clearAdminSession();
+  await logActivity({
+    userId: null,
+    action: ACTIVITY_ACTIONS.ADMIN.LOGOUT,
+    entityType: "admin",
+  });
   return { success: true as const, message: "Logged out" };
 }
 

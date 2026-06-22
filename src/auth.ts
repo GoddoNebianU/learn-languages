@@ -35,6 +35,12 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
+      await logActivity({
+        userId: user.id,
+        action: ACTIVITY_ACTIONS.AUTH.EMAIL_VERIFY_SEND,
+        entityType: "user",
+        entityId: user.id,
+      });
       const result = await sendEmail({
         to: user.email,
         subject: "验证您的邮箱 - Learn Languages",
@@ -73,6 +79,12 @@ export const auth = betterAuth({
           });
 
           if (user && !user.emailVerified) {
+            await logActivity({
+              userId: null,
+              action: ACTIVITY_ACTIONS.AUTH.LOGIN_FAILED,
+              entityType: "user",
+              metadata: { email: user.email, reason: "email_not_verified" },
+            });
             throw new APIError("FORBIDDEN", {
               message: "Please verify your email address before signing in",
             });

@@ -48,7 +48,17 @@ export const actionTranslateText = async (input: unknown): Promise<ActionOutputT
 
 export const genIPA = async (text: string): Promise<string> => {
   try {
-    return await serviceGenIPA({ text });
+    const userId = await getCurrentUserId();
+    const result = await serviceGenIPA({ text });
+    if (userId) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.TRANSLATOR.GEN_IPA,
+        entityType: "translator",
+        metadata: { textLength: text.length },
+      });
+    }
+    return result;
   } catch (e) {
     log.error("genIPA failed", { error: String(e) });
     return "";
@@ -57,7 +67,17 @@ export const genIPA = async (text: string): Promise<string> => {
 
 export const genLanguage = async (text: string): Promise<string> => {
   try {
-    return await serviceGenLanguage({ text });
+    const userId = await getCurrentUserId();
+    const result = await serviceGenLanguage({ text });
+    if (userId) {
+      await logActivity({
+        userId,
+        action: ACTIVITY_ACTIONS.TRANSLATOR.GEN_LANGUAGE,
+        entityType: "translator",
+        metadata: { textLength: text.length },
+      });
+    }
+    return result;
   } catch (e) {
     log.error("genLanguage failed", { error: String(e) });
     return "";

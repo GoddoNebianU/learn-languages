@@ -13,6 +13,7 @@ export const ACTIVITY_ACTIONS = {
     LOGOUT: "auth.logout",
     DELETE_ACCOUNT: "auth.delete_account",
     PASSWORD_RESET_REQUEST: "auth.password_reset_request",
+    EMAIL_VERIFY_SEND: "auth.email_verify_send",
   },
   DECK: {
     CREATE: "deck.create",
@@ -32,6 +33,8 @@ export const ACTIVITY_ACTIONS = {
   },
   TRANSLATOR: {
     TRANSLATE: "translator.translate",
+    GEN_IPA: "translator.gen_ipa",
+    GEN_LANGUAGE: "translator.gen_language",
   },
   READING: {
     READ: "reading.read",
@@ -44,6 +47,9 @@ export const ACTIVITY_ACTIONS = {
     SYNTHESIZE: "tts.synthesize",
   },
   ADMIN: {
+    LOGIN: "admin.login",
+    LOGIN_FAILED: "admin.login_failed",
+    LOGOUT: "admin.logout",
     CONFIG_UPDATE: "admin.config_update",
     USER_CREATE: "admin.user_create",
     USER_UPDATE: "admin.user_update",
