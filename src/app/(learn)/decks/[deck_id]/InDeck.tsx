@@ -12,6 +12,7 @@ import { LinkButton } from "@/design-system/link-button";
 import { CardList } from "@/components/ui/CardList";
 import { VStack } from "@/design-system/stack";
 import { Skeleton } from "@/design-system/skeleton";
+import { Modal } from "@/design-system/modal";
 import {
   DndContext,
   closestCenter,
@@ -282,21 +283,23 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
         onAdded={refreshCards}
       />
 
-      {showDeleteDeckConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 max-w-sm rounded-lg bg-white p-4">
-            <p className="mb-4 text-gray-700">{t("deleteDeckConfirm")}</p>
-            <div className="flex justify-end gap-2">
-              <Button variant="light" size="sm" onClick={() => setShowDeleteDeckConfirm(false)}>
-                {t("cancel")}
-              </Button>
-              <Button variant="light" size="sm" onClick={handleDeleteDeck}>
-                {t("delete")}
-              </Button>
-            </div>
+      <Modal
+        open={showDeleteDeckConfirm}
+        onClose={() => setShowDeleteDeckConfirm(false)}
+        size="sm"
+      >
+        <div className="p-4">
+          <p className="mb-4 text-gray-700">{t("deleteDeckConfirm")}</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="light" size="sm" onClick={() => setShowDeleteDeckConfirm(false)}>
+              {t("cancel")}
+            </Button>
+            <Button variant="light" size="sm" onClick={handleDeleteDeck}>
+              {t("delete")}
+            </Button>
           </div>
         </div>
-      )}
+      </Modal>
     </PageLayout>
   );
 }

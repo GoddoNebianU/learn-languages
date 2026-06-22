@@ -15,6 +15,7 @@ import { IconButton } from "@/design-system/icon-button";
 import { Select } from "@/design-system/select";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack } from "@/design-system/stack";
+import { Modal } from "@/design-system/modal";
 import { RefreshCw, Trash2, ClipboardPaste, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getNativeName } from "@/shared/languages";
@@ -374,21 +375,19 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
         <div className="min-h-[calc(100vh-14rem)]" />
       )}
 
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 max-w-sm rounded-lg bg-white p-4">
-            <p className="mb-4 text-gray-700">{t("deleteCardConfirm")}</p>
-            <div className="flex justify-end gap-2">
-              <Button variant="light" size="sm" onClick={() => setShowDeleteConfirm(false)}>
-                {t("cancel")}
-              </Button>
-              <Button variant="light" size="sm" onClick={handleDeleteCard}>
-                {t("deleteCard")}
-              </Button>
-            </div>
+      <Modal open={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} size="sm">
+        <div className="p-4">
+          <p className="mb-4 text-gray-700">{t("deleteCardConfirm")}</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="light" size="sm" onClick={() => setShowDeleteConfirm(false)}>
+              {t("cancel")}
+            </Button>
+            <Button variant="light" size="sm" onClick={handleDeleteCard}>
+              {t("deleteCard")}
+            </Button>
           </div>
         </div>
-      )}
+      </Modal>
     </>
   );
 }

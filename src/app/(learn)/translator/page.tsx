@@ -5,6 +5,7 @@ import { IconButton } from "@/design-system/icon-button";
 import { Input } from "@/design-system/input";
 import { Textarea } from "@/design-system/textarea";
 import { Select } from "@/design-system/select";
+import { Modal } from "@/design-system/modal";
 import { IMAGES } from "@/config/images";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { useTranslations } from "next-intl";
@@ -339,39 +340,37 @@ export default function TranslatorPage() {
         )}
       </div>
 
-      {showSaveModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6">
-            <h2 className="mb-4 text-xl font-semibold">{t("saveAsCard")}</h2>
-            <div className="mb-4">
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                {t("selectDeck")}
-              </label>
-              <Select id="deck-select-translator" className="w-full">
-                {decks.map((deck) => (
-                  <option key={deck.id} value={deck.id}>
-                    {deck.name}
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div className="mb-4 rounded bg-gray-50 p-3 text-sm">
-              <div className="mb-1 font-medium">{t("front")}:</div>
-              <div className="mb-2 text-gray-700">{lastTranslation?.sourceText}</div>
-              <div className="mb-1 font-medium">{t("back")}:</div>
-              <div className="text-gray-700">{translationResult?.translatedText}</div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="light" onClick={() => setShowSaveModal(false)}>
-                {t("cancel")}
-              </Button>
-              <Button variant="primary" onClick={handleSaveCard} loading={isSaving}>
-                {t("save")}
-              </Button>
-            </div>
+      <Modal open={showSaveModal} onClose={() => setShowSaveModal(false)} size="sm">
+        <div className="p-6">
+          <h2 className="mb-4 text-xl font-semibold">{t("saveAsCard")}</h2>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              {t("selectDeck")}
+            </label>
+            <Select id="deck-select-translator" className="w-full">
+              {decks.map((deck) => (
+                <option key={deck.id} value={deck.id}>
+                  {deck.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="mb-4 rounded bg-gray-50 p-3 text-sm">
+            <div className="mb-1 font-medium">{t("front")}:</div>
+            <div className="mb-2 text-gray-700">{lastTranslation?.sourceText}</div>
+            <div className="mb-1 font-medium">{t("back")}:</div>
+            <div className="text-gray-700">{translationResult?.translatedText}</div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="light" onClick={() => setShowSaveModal(false)}>
+              {t("cancel")}
+            </Button>
+            <Button variant="primary" onClick={handleSaveCard} loading={isSaving}>
+              {t("save")}
+            </Button>
           </div>
         </div>
-      )}
+      </Modal>
     </PageLayout>
   );
 }
