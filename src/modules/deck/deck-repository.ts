@@ -169,6 +169,14 @@ export async function repoGetUserIdByDeckId(deckId: number): Promise<string | nu
   return deck?.userId ?? null;
 }
 
+export async function repoIsDeckPublic(deckId: number): Promise<boolean> {
+  const deck = await prisma.deck.findUnique({
+    where: { id: deckId },
+    select: { visibility: true },
+  });
+  return deck?.visibility === Visibility.PUBLIC;
+}
+
 export async function repoGetDeckOwnership(
   deckId: number
 ): Promise<RepoOutputDeckOwnership | null> {

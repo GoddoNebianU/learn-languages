@@ -1,6 +1,7 @@
 "use server";
 
 import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { repoIsDeckPublic } from "@/modules/deck/deck-repository";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
 import { logActivity } from "@/modules/activity/activity-service";
@@ -56,6 +57,15 @@ async function checkDeckOwnership(deckId: number): Promise<boolean> {
   const userId = await getCurrentUserId();
   if (!userId) return false;
   return serviceCheckDeckOwnership({ deckId, userId });
+}
+
+async function checkDeckAccess(deckId: number): Promise<boolean> {
+  const userId = await getCurrentUserId();
+  if (userId) {
+    const isOwner = await serviceCheckDeckOwnership({ deckId, userId });
+    if (isOwner) return true;
+  }
+  return repoIsDeckPublic(deckId);
 }
 
 export async function actionCreateCard(input: unknown) {
@@ -150,13 +160,9 @@ export async function actionDeleteCard(input: unknown) {
 
 export async function actionGetCardsByDeckId(input: unknown) {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
-      return { success: false, message: "Unauthorized" };
-    }
     const validated = validateActionInputGetCardsByDeckId(input);
-    const isOwner = await checkDeckOwnership(validated.deckId);
-    if (!isOwner) {
+    const hasAccess = await checkDeckAccess(validated.deckId);
+    if (!hasAccess) {
       return { success: false, message: "You do not have permission to view cards in this deck" };
     }
     const cards = await serviceGetCardsByDeckId(validated);
@@ -176,13 +182,9 @@ export async function actionGetCardsByDeckId(input: unknown) {
 
 export async function actionGetCardCount(input: unknown): Promise<ActionOutputGetCardCount> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
-      return { success: false, message: "Unauthorized" };
-    }
     const validated = validateActionInputGetCardCount(input);
-    const isOwner = await checkDeckOwnership(validated.deckId);
-    if (!isOwner) {
+    const hasAccess = await checkDeckAccess(validated.deckId);
+    if (!hasAccess) {
       return { success: false, message: "You do not have permission to view cards in this deck" };
     }
     const stats = await serviceGetCardStats(validated.deckId, validated.includeHidden ?? false);
