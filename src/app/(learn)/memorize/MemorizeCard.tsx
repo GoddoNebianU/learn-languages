@@ -26,7 +26,13 @@ function getBackText(card: ActionOutputCard, isReversed: boolean): string {
   return card.meanings.map((m) => m.example).filter(Boolean).join(" ");
 }
 
-function getBackContent(card: ActionOutputCard, isReversed: boolean): React.ReactNode {
+function getBackContent(
+  card: ActionOutputCard,
+  isReversed: boolean,
+  isAudioLoading: boolean,
+  onPlayText: (text: string, regenerate?: boolean) => void,
+  readAloudLabel: string,
+): React.ReactNode {
   if (isReversed) {
     return (
       <VStack align="center" gap={1}>
@@ -50,8 +56,20 @@ function getBackContent(card: ActionOutputCard, isReversed: boolean): React.Reac
           <div className="flex flex-col gap-1">
             <span className="text-gray-800">{m.definition}</span>
             {m.example && (
-              <span className="border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
-                {m.example}
+              <span className="flex items-center gap-1 border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
+                <span className="flex-1">{m.example}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (m.example) onPlayText(m.example);
+                  }}
+                  disabled={isAudioLoading}
+                  aria-label={readAloudLabel}
+                  title={readAloudLabel}
+                  className="inline-flex shrink-0 items-center justify-center rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Volume2 className="h-4 w-4" />
+                </button>
               </span>
             )}
           </div>
@@ -149,7 +167,7 @@ function MemorizeCard({
                   <div className="text-center text-xl whitespace-pre-line text-gray-900 md:text-2xl">
                     {displayFront}
                   </div>
-                  {getBackContent(card, isReversed)}
+                  {getBackContent(card, isReversed, isAudioLoading, onPlayText, t("readAloud"))}
                 </VStack>
               </>
             )}
@@ -190,24 +208,26 @@ function MemorizeCard({
                   justify="center"
                   className="min-h-[20dvh] compact:min-h-[12dvh] rounded-b-xl bg-gray-50 p-8"
                 >
-                  {getBackContent(card, isReversed)}
-                  <div className="flex items-center gap-1">
-                    <PlayButton
-                      label={t("readAloud")}
-                      disabled={isAudioLoading || !backText}
-                      onClick={() => onPlayText(backText)}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => onPlayText(backText, true)}
-                      disabled={isAudioLoading || !backText}
-                      aria-label={t("regenerateTts")}
-                      title={t("regenerateTts")}
-                      className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      <RefreshCw className="h-4 w-4" />
-                    </button>
-                  </div>
+                  {getBackContent(card, isReversed, isAudioLoading, onPlayText, t("readAloud"))}
+                  {isReversed && (
+                    <div className="flex items-center gap-1">
+                      <PlayButton
+                        label={t("readAloud")}
+                        disabled={isAudioLoading || !backText}
+                        onClick={() => onPlayText(backText)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onPlayText(backText, true)}
+                        disabled={isAudioLoading || !backText}
+                        aria-label={t("regenerateTts")}
+                        title={t("regenerateTts")}
+                        className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
                 </VStack>
               </>
             )}
