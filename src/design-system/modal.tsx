@@ -290,7 +290,7 @@ Modal.CloseButton = function ModalCloseButton({
       type="button"
       aria-label="Close"
       className={cn(
-        "rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600",
+        "rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
         className
       )}
       onClick={onClick}

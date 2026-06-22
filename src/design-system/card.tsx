@@ -56,7 +56,7 @@ const cardVariants = cva(
         xl: "p-10",
       },
       clickable: {
-        true: "cursor-pointer hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0",
+        true: "cursor-pointer hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
         false: "",
       },
     },

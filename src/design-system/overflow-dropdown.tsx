@@ -145,7 +145,7 @@ export function OverflowDropdown<T>({
       <button
         ref={triggerRef}
         onClick={toggleDropdown}
-        className="flex items-center justify-center rounded-md bg-gray-100 px-3 py-1.5 text-sm transition-colors hover:bg-gray-200"
+        className="flex items-center justify-center rounded-md bg-gray-100 px-3 py-1.5 text-sm transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none"
         aria-label="显示更多选项"
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -169,7 +169,7 @@ export function OverflowDropdown<T>({
             <div
               key={getKey(item)}
               onClick={() => handleItemClick(item)}
-              className="w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-gray-50"
+              className="w-full cursor-pointer px-3 py-2 text-left transition-colors hover:bg-gray-50 focus-visible:bg-gray-50 focus-visible:outline-none"
               role="menuitem"
               tabIndex={0}
               onKeyDown={(e) => {

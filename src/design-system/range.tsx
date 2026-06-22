@@ -48,7 +48,7 @@ export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
         disabled={disabled}
         className={cn(
           "h-2 w-full cursor-pointer appearance-none rounded-lg",
-          "focus:ring-2 focus:ring-primary-500 focus:outline-none",
+          "focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
           disabled && "cursor-not-allowed opacity-50",
           className
         )}
