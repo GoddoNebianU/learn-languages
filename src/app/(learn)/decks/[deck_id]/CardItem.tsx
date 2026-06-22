@@ -116,9 +116,9 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
                 )}
               </div>
             </div>
-            <div className="grid w-3/4 grid-cols-2 gap-4 text-gray-900">
+            <div className="flex w-3/4 flex-col gap-1 text-gray-900">
               <div className="truncate compact:truncate-none compact:line-clamp-2">{frontText}</div>
-              <div className="truncate compact:truncate-none compact:line-clamp-2">{backText}</div>
+              <div className="truncate compact:truncate-none compact:line-clamp-2 text-gray-500">{backText}</div>
             </div>
           </div>
         </div>
