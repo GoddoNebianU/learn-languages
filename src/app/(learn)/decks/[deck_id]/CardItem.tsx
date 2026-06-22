@@ -117,8 +117,8 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
               </div>
             </div>
             <div className="flex w-3/4 flex-col gap-1 text-gray-900">
-              <div className="truncate compact:truncate-none compact:line-clamp-2">{frontText}</div>
-              <div className="truncate compact:truncate-none compact:line-clamp-2 text-gray-500">{backText}</div>
+              <div className="overflow-x-auto whitespace-nowrap">{frontText}</div>
+              <div className="overflow-x-auto whitespace-nowrap text-gray-500">{backText}</div>
             </div>
           </div>
         </div>
