@@ -27,6 +27,7 @@ export const schemaActionInputUpdateCard = z.object({
   word: z.string().min(1).optional(),
   ipa: z.string().optional().nullable(),
   meanings: z.array(CardMeaningSchema).min(1).optional(),
+  hidden: z.boolean().optional(),
 });
 export type ActionInputUpdateCard = z.infer<typeof schemaActionInputUpdateCard>;
 export const validateActionInputUpdateCard = generateValidator(schemaActionInputUpdateCard);
@@ -41,6 +42,7 @@ export const schemaActionInputGetCardsByDeckId = z.object({
   deckId: z.number().int().positive(),
   limit: z.number().int().min(1).optional(),
   offset: z.number().int().min(0).optional(),
+  includeHidden: z.boolean().optional(),
 });
 export type ActionInputGetCardsByDeckId = z.infer<typeof schemaActionInputGetCardsByDeckId>;
 export const validateActionInputGetCardsByDeckId = generateValidator(
@@ -71,6 +73,7 @@ export type ActionOutputGetCardByWord = {
 
 export const schemaActionInputGetCardCount = z.object({
   deckId: z.number().int().positive(),
+  includeHidden: z.boolean().optional(),
 });
 export type ActionInputGetCardCount = z.infer<typeof schemaActionInputGetCardCount>;
 export const validateActionInputGetCardCount = generateValidator(schemaActionInputGetCardCount);

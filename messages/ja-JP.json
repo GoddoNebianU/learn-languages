@@ -91,6 +91,10 @@
     "deleteConfirm": "このカードを削除しますか？",
     "deleteDeckConfirm": "このデッキを削除しますか？すべてのカードが失われます。",
     "cardDeleted": "カードを削除しました",
+      "hide": "非表示",
+      "show": "表示",
+      "cardHidden": "カードを非表示にしました",
+      "cardShown": "カードを表示しました",
     "cardUpdated": "カードを更新しました"
   },
   "home": {

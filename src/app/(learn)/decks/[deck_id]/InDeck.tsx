@@ -81,7 +81,7 @@ export function InDeck({ deckId, isReadOnly }: { deckId: number; isReadOnly: boo
     isLoading,
     error: cardsError,
     progress,
-  } = useBatchedCards(deckId);
+  } = useBatchedCards(deckId, true);
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [openAddModal, setAddModal] = useState(false);
   const [showDeleteDeckConfirm, setShowDeleteDeckConfirm] = useState(false);

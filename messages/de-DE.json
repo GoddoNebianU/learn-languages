@@ -619,6 +619,10 @@
     "deleteConfirm": "Karte wirklich löschen?",
     "deleteDeckConfirm": "Dieses Deck wirklich löschen? Alle Karten gehen verloren.",
     "cardDeleted": "Karte gelöscht",
+      "hide": "Ausblenden",
+      "show": "Anzeigen",
+      "cardHidden": "Karte ausgeblendet",
+      "cardShown": "Karte eingeblendet",
     "cardUpdated": "Karte aktualisiert"
   }
 }

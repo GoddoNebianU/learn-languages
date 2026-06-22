@@ -79,9 +79,12 @@ export async function serviceGetRandomCard(
   return repoGetRandomCard(input);
 }
 
-export async function serviceGetCardStats(deckId: number): Promise<RepoOutputCardStats> {
+export async function serviceGetCardStats(
+  deckId: number,
+  includeHidden: boolean = false
+): Promise<RepoOutputCardStats> {
   log.debug("Getting card stats", { deckId });
-  return repoGetCardStats(deckId);
+  return repoGetCardStats(deckId, includeHidden);
 }
 
 export async function serviceCheckDeckOwnership(

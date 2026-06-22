@@ -125,6 +125,10 @@
     "deleteConfirm": "Supprimer cette carte?",
     "deleteDeckConfirm": "Supprimer ce deck ? Toutes les cartes seront perdues.",
     "cardDeleted": "Carte supprimée",
+      "hide": "Masquer",
+      "show": "Afficher",
+      "cardHidden": "Carte masquée",
+      "cardShown": "Carte affichée",
     "cardUpdated": "Carte mise à jour"
   },
   "home": {

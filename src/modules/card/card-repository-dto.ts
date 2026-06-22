@@ -26,6 +26,7 @@ export interface RepoInputUpdateCard {
   word?: string;
   ipa?: string | null;
   meanings?: CardMeaning[];
+  hidden?: boolean;
 }
 
 export interface RepoInputDeleteCard {
@@ -36,6 +37,7 @@ export interface RepoInputGetCardsByDeckId {
   deckId: number;
   limit?: number;
   offset?: number;
+  includeHidden?: boolean;
 }
 
 export interface RepoInputGetRandomCard {
@@ -61,6 +63,7 @@ export type RepoOutputCard = {
   queryLang: string;
   cardType: CardType;
   meanings: CardMeaning[];
+  hidden: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

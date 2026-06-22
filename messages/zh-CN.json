@@ -92,6 +92,10 @@
     "deleteConfirm": "确定删除这张卡片吗？",
     "deleteDeckConfirm": "确定删除这个牌组吗？所有卡片将丢失。",
     "cardDeleted": "卡片已删除",
+      "hide": "隐藏",
+      "show": "显示",
+      "cardHidden": "卡片已隐藏",
+      "cardShown": "卡片已显示",
     "cardUpdated": "卡片已更新"
   },
   "home": {

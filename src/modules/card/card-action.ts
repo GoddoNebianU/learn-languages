@@ -46,6 +46,7 @@ function mapCardToOutput(card: RepoOutputCard): ActionOutputCard {
     queryLang: card.queryLang,
     cardType: card.cardType,
     meanings: card.meanings,
+    hidden: card.hidden,
     createdAt: card.createdAt,
     updatedAt: card.updatedAt,
   };
@@ -184,7 +185,7 @@ export async function actionGetCardCount(input: unknown): Promise<ActionOutputGe
     if (!isOwner) {
       return { success: false, message: "You do not have permission to view cards in this deck" };
     }
-    const stats = await serviceGetCardStats(validated.deckId);
+    const stats = await serviceGetCardStats(validated.deckId, validated.includeHidden ?? false);
     return {
       success: true,
       message: "Card count fetched",

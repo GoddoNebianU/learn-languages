@@ -68,6 +68,12 @@ export async function repoUpdateCard(input: RepoInputUpdateCard): Promise<void> 
         })),
       });
     }
+    if (input.hidden !== undefined) {
+      await tx.card.update({
+        where: { id: input.cardId },
+        data: { hidden: input.hidden },
+      });
+    }
     await tx.card.update({
       where: { id: input.cardId },
       data: { updatedAt: new Date() },
@@ -95,9 +101,9 @@ export async function repoGetCardById(cardId: number): Promise<RepoOutputCard | 
 export async function repoGetCardsByDeckId(
   input: RepoInputGetCardsByDeckId
 ): Promise<RepoOutputCard[]> {
-  const { deckId, limit, offset = 0 } = input;
+  const { deckId, limit, offset = 0, includeHidden = false } = input;
   const cards = await prisma.card.findMany({
-    where: { deckId },
+    where: includeHidden ? { deckId } : { deckId, hidden: false },
     include: { meanings: { orderBy: { createdAt: "asc" } } },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
     ...(limit !== undefined ? { take: limit } : {}),
@@ -148,8 +154,12 @@ export async function repoCheckCardOwnership(input: RepoInputCheckCardOwnership)
   return ownerId === input.userId;
 }
 
-export async function repoGetCardStats(deckId: number): Promise<RepoOutputCardStats> {
-  const total = await prisma.card.count({ where: { deckId } });
+export async function repoGetCardStats(
+  deckId: number,
+  includeHidden: boolean = false
+): Promise<RepoOutputCardStats> {
+  const where = includeHidden ? { deckId } : { deckId, hidden: false };
+  const total = await prisma.card.count({ where });
   return { total };
 }
 

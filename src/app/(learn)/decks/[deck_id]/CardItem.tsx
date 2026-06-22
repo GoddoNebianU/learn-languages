@@ -1,11 +1,11 @@
-import { Trash2, Pencil, GripVertical } from "lucide-react";
+import { Trash2, Pencil, GripVertical, EyeOff, Eye } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { useTranslations } from "next-intl";
 import type { ActionOutputCard, CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
-import { actionDeleteCard } from "@/modules/card/card-action";
+import { actionDeleteCard, actionUpdateCard } from "@/modules/card/card-action";
 import { EditCardModal } from "./EditCardModal";
 
 interface CardItemProps {
@@ -51,9 +51,23 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
     setShowDeleteConfirm(false);
   };
 
+  const handleToggleHidden = async () => {
+    try {
+      const result = await actionUpdateCard({ cardId: card.id, hidden: !card.hidden });
+      if (result.success) {
+        toast.success(card.hidden ? t("cardShown") : t("cardHidden"));
+        onUpdated();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unknown error");
+    }
+  };
+
   return (
     <>
-      <div className="group flex items-center border-b border-gray-100 transition-colors hover:bg-gray-50">
+      <div className={`group flex items-center border-b border-gray-100 transition-colors hover:bg-gray-50 ${card.hidden ? "opacity-40" : ""}`}>
         {!isReadOnly && dragHandleProps && (
           <div
             ref={dragHandleProps.ref as React.Ref<HTMLDivElement>}
@@ -77,6 +91,13 @@ export function CardItem({ card, isReadOnly, onDel, onUpdated, dragHandleProps }
               <div className="flex items-center gap-1">
                 {!isReadOnly && (
                   <>
+                    <IconButton
+                      onClick={handleToggleHidden}
+                      title={card.hidden ? t("show") : t("hide")}
+                      className="rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    >
+                      {card.hidden ? <Eye size={14} /> : <EyeOff size={14} />}
+                    </IconButton>
                     <IconButton
                       onClick={() => setShowEditModal(true)}
                       title={t("edit")}

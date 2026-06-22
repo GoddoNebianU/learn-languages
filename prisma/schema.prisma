@@ -115,7 +115,7 @@ enum CardType {
 model Deck {
   id         Int            @id @default(autoincrement())
   name       String
-  desc       String         @db.Text @default("")
+  desc       String         @default("") @db.Text
   userId     String
   visibility Visibility     @default(PRIVATE)
   createdAt  DateTime       @default(now())
@@ -131,16 +131,17 @@ model Deck {
 }
 
 model Card {
-  id        Int            @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   deckId    Int
   word      String
   ipa       String?
   queryLang String
-  cardType  CardType       @default(WORD)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  sortOrder Int            @default(0)
-  deck      Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  cardType  CardType      @default(WORD)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  sortOrder Int           @default(0)
+  hidden    Boolean       @default(false)
+  deck      Deck          @relation(fields: [deckId], references: [id], onDelete: Cascade)
   meanings  CardMeaning[]
 
   @@index([deckId])
@@ -210,7 +211,7 @@ model ActivityLog {
   metadata   Json?
   createdAt  DateTime @default(now())
 
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([action])

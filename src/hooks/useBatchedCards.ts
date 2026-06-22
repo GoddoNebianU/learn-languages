@@ -6,7 +6,7 @@ import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 
 const BATCH_SIZE = 50;
 
-export function useBatchedCards(deckId: number) {
+export function useBatchedCards(deckId: number, includeHidden: boolean = false) {
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
   const [total, setTotal] = useState(0);
   const [loaded, setLoaded] = useState(0);
@@ -24,9 +24,9 @@ export function useBatchedCards(deckId: number) {
 
       try {
         // Step 1: get total count
-        const countResult = await actionGetCardCount({ deckId });
-        if (ignore) return;
-        if (!countResult.success || countResult.data === undefined) {
+        const countResult = await actionGetCardCount({ deckId, includeHidden });
+      if (ignore) return;
+      if (!countResult.success || countResult.data === undefined) {
           setError(countResult.message);
           setIsLoading(false);
           return;
@@ -37,7 +37,7 @@ export function useBatchedCards(deckId: number) {
         let offset = 0;
         const allCards: ActionOutputCard[] = [];
         while (true) {
-          const result = await actionGetCardsByDeckId({ deckId, limit: BATCH_SIZE, offset });
+          const result = await actionGetCardsByDeckId({ deckId, limit: BATCH_SIZE, offset, includeHidden });
           if (ignore) return;
           if (!result.success || !result.data) {
             setError(result.message);
@@ -63,7 +63,7 @@ export function useBatchedCards(deckId: number) {
     return () => {
       ignore = true;
     };
-  }, [deckId]);
+  }, [deckId, includeHidden]);
 
   const progress = total > 0 ? Math.round((loaded / total) * 100) : 0;
 

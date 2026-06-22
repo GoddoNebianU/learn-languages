@@ -125,6 +125,10 @@
     "deleteConfirm": "Eliminare questa carta?",
     "deleteDeckConfirm": "Eliminare questo mazzo? Tutte le carte andranno perse.",
     "cardDeleted": "Carta eliminata",
+      "hide": "Nascondi",
+      "show": "Mostra",
+      "cardHidden": "Carta nascosta",
+      "cardShown": "Carta mostrata",
     "cardUpdated": "Carta aggiornata"
   },
   "home": {
