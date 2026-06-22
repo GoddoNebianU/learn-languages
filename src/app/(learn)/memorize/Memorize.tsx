@@ -58,8 +58,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     setIsDictation,
     setIsCardMode,
     setGroupSize,
-    nextGroup,
-    prevGroup,
+    goToGroup,
     setShowAnswer,
     setCurrentIndex,
     nextCard,
@@ -232,43 +231,55 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
         </span>
       </HStack>
 
-      {!studyMode.startsWith("random") && (
-        <Range
-          value={currentIndex}
-          min={groupStart}
-          max={Math.max(groupStart, groupEnd - 1)}
-          onChange={(value) => {
-            setCurrentIndex(value);
-            setShowAnswer(false);
-            cleanupAudio();
-          }}
-          className="mb-4"
-        />
-      )}
-
-      {groupSize > 0 && totalGroups > 1 && (
-        <HStack justify="center" gap={4} className="mb-4">
-          <Button
-            variant="light"
-            onClick={prevGroup}
-            disabled={currentGroup === 0}
-            size="sm"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <span className="text-sm text-gray-500">
-            {t("groupProgress", { current: currentGroup + 1, total: totalGroups })}
-          </span>
-          <Button
-            variant="light"
-            onClick={nextGroup}
-            disabled={currentGroup >= totalGroups - 1}
-            size="sm"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </HStack>
-      )}
+      {!studyMode.startsWith("random") &&
+        (groupSize > 0 && totalGroups > 1 ? (
+          <VStack gap={2} className="mb-4">
+            <div>
+              <span className="mb-1 block text-center text-xs text-gray-500">
+                {t("groupProgress", { current: currentGroup + 1, total: totalGroups })}
+              </span>
+              <Range
+                value={currentGroup}
+                min={0}
+                max={totalGroups - 1}
+                onChange={(value) => {
+                  goToGroup(value);
+                  cleanupAudio();
+                }}
+              />
+            </div>
+            <div>
+              <span className="mb-1 block text-center text-xs text-gray-500">
+                {t("progress", {
+                  current: currentIndex - groupStart + 1,
+                  total: groupEnd - groupStart,
+                })}
+              </span>
+              <Range
+                value={currentIndex}
+                min={groupStart}
+                max={Math.max(groupStart, groupEnd - 1)}
+                onChange={(value) => {
+                  setCurrentIndex(value);
+                  setShowAnswer(false);
+                  cleanupAudio();
+                }}
+              />
+            </div>
+          </VStack>
+        ) : (
+          <Range
+            value={currentIndex}
+            min={groupStart}
+            max={Math.max(groupStart, groupEnd - 1)}
+            onChange={(value) => {
+              setCurrentIndex(value);
+              setShowAnswer(false);
+              cleanupAudio();
+            }}
+            className="mb-4"
+          />
+        ))}
 
       <HStack justify="center" gap={2} className="mb-4 flex-wrap">
         {studyModeOptions.map((option) => (

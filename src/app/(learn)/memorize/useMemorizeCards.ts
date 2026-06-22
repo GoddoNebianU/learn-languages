@@ -129,6 +129,7 @@ export function useMemorizeCards(deckId: number) {
     setGroupSize,
     nextGroup,
     prevGroup,
+    goToGroup,
     setShowAnswer,
     setCurrentIndex,
     nextCard,
