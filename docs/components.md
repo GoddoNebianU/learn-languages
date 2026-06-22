@@ -57,14 +57,15 @@ components/
 
 ## 设计系统 `src/design-system/`
 
-基于 CVA 的可复用 UI 组件库。14 个组件文件, 平铺在目录下 (无子目录)。所有组件使用 Lucide React 图标 (非内联 SVG)。
+基于 CVA 的可复用 UI 组件库。15 个组件文件, 平铺在目录下 (无子目录)。所有组件使用 Lucide React 图标 (非内联 SVG)。
 
 ### 组件列表
 
 | 组件                                              | 文件                    | 说明                   |
 | ------------------------------------------------- | ----------------------- | ---------------------- |
 | Button                                            | `button.tsx`            | 按钮 (primary / light) |
-| IconButton                                        | `icon-button.tsx`       | 纯图标按钮 (透明背景)  |
+| IconButton                                        | `icon-button.tsx`       | 图标按钮 (shape: default/round, tone: default/muted) |
+| Badge                                             | `badge.tsx`             | 标签 (neutral/info/success/warning/error) |
 | LinkButton                                        | `link-button.tsx`       | 文字链接按钮           |
 | Card, CardBody                                     | `card.tsx`              | 卡片容器               |
 | Input                                             | `input.tsx`             | 输入框                 |
@@ -80,12 +81,14 @@ components/
 
 ### Button 变体
 
-只有两种: `primary` (实心主色) 和 `light` (浅灰背景)。
+`variant`: `primary` (实心主色) 和 `light` (浅灰背景)。布尔变体: `pill` (圆角胶囊), `fullWidth` (全宽), `selected` (选中态)。
 
 ```tsx
 <Button variant="primary">主操作</Button>
 <Button variant="light">次要操作</Button>
 <Button variant="light" selected>选中态</Button>
+<Button variant="light" pill>圆角胶囊</Button>
+<Button variant="primary" fullWidth>全宽</Button>
 ```
 
 ### 导入方式
@@ -98,7 +101,7 @@ import { LinkButton } from "@/design-system/link-button";
 
 ### CVA 使用模式
 
-10/14 组件使用 CVA (button, card, input, select, textarea, range, progress, skeleton, stack, container)。4 个不使用: icon-button, link-button, modal, overflow-dropdown。
+12/15 组件使用 CVA (button, card, input, select, textarea, range, progress, skeleton, stack, container, icon-button, badge)。3 个不使用: link-button, modal, overflow-dropdown。
 
 ```tsx
 // 标准模式
@@ -152,7 +155,7 @@ import { cn } from "@/utils/cn";
 | `(learn)/explore/ExploreClient.tsx` | 移动端 2 列, XL 6 列, 去截断 |
 | `(learn)/decks/DecksClient.tsx` | 行标题 2 行不截断 |
 | `(learn)/favorites/FavoritesClient.tsx` | 同上 |
-| `(learn)/decks/[deck_id]/CardItem.tsx` | JS substring → CSS truncate, compact 2 行 |
+| `(learn)/decks/[deck_id]/CardItem.tsx` | 长文本横向滚动 `overflow-x-auto whitespace-nowrap` |
 | `(learn)/memorize/MemorizeCard.tsx` | 固定 h-[50dvh] → 内容驱动高度 |
 | `(learn)/translator/page.tsx` | 固定 h-64 面板 → 内容驱动高度 |
 
@@ -165,7 +168,7 @@ import { cn } from "@/utils/cn";
 
 1. 在 `src/design-system/` 创建 `{name}.tsx`
 2. 使用 CVA 定义变体
-3. 添加 `"use client"`
+3. 按需添加 `"use client"` (纯展示组件如 Container/Stack/Skeleton/Progress 不需要)
 4. 导出组件、变体类型
 5. 从 `@/utils/cn` 导入 cn
 6. 如果有条件样式组合 (如 variant+error), 使用 compoundVariants

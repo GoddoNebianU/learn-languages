@@ -13,7 +13,7 @@
 | [ai-pipelines.md](./ai-pipelines.md) | AI 管道实现 (dictionary/translator/reading)、TTS 服务、共享依赖、"use server" 类型限制 | 页面如何调用 → pages/features;模块层 → architecture |
 | [pages.md](./pages.md) | 路由组、4 种渲染模式、同目录组件约定、i18n namespace 映射、关键数据流 (简单页) | 复杂功能页详情 → features;认证机制 → config-system;组件定义 → components |
 | [features.md](./features.md) | 复杂功能页详解 (decks/dictionary/srt-player/reading 的组件结构和交互) | 通用页面架构 → pages;AI 管道实现 → ai-pipelines |
-| [components.md](./components.md) | 业务组件 (layout/follow/ui)、设计系统 (14 个 CVA 组件) | 页面如何使用 → pages/features |
+| [components.md](./components.md) | 业务组件 (layout/follow/ui)、设计系统 (15 个 CVA 组件) | 页面如何使用 → pages/features |
 
 ## 项目理念
 

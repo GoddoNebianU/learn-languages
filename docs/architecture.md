@@ -6,7 +6,7 @@
 
 ```
 src/
-├── app/              # Next.js 路由 (26 pages, 1 API route, 单一根 layout)
+├── app/              # Next.js 路由 (25 pages, 1 API route, 单一根 layout)
 │   ├── (auth)/       # 认证: login, signup, logout, forgot/reset-password, users/[username]
 │   ├── (account)/    # 账户: profile, settings
 │   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks, memorize, reading
@@ -15,7 +15,7 @@ src/
 │   ├── not-found.tsx
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
 ├── modules/          # 业务逻辑 (action-service-repository)
-├── design-system/    # CVA 基础组件 (14 文件, 平铺, 全部 "use client")
+├── design-system/    # CVA 基础组件 (15 文件, 平铺, 纯展示组件无需 "use client")
 ├── components/       # 业务组件 (layout/follow/ui + capability-hydrator + theme-provider + density-provider)
 ├── lib/              # 集成层 (env/db/auth/capability/providers/bigmodel/email/logger/browser/theme)
 │   ├── providers/    # 外部 API 对接统一层 (llm/tts/smtp), 对外暴露统一接口
@@ -70,8 +70,8 @@ AI 驱动模块 (dictionary, translator, reading) 跳过 repository 层。
 | 模块       | 文件数 | Actions | 模式完整性         | 备注                              |
 | ---------- | ------ | ------- | ------------------ | --------------------------------- |
 | auth       | 12     | 3+1     | 完整 (两个子域)    | auth + forgot-password 各 6 文件; signUp/signIn/signOut 由客户端直接调用 authClient; signOutAction 仅用于 logout 页面 |
-| deck       | 6      | 12      | 完整               | 最复杂模块, 315 行 repository     |
-| card       | 6      | 7       | 完整               | 跨模块依赖 deck                   |
+| deck       | 6      | 14      | 完整               | 最复杂模块, 386 行 repository     |
+| card       | 6      | 9       | 完整               | 跨模块依赖 deck, hidden 字段      |
 | follow     | 6      | 4       | 完整               | 自包含, 无外部依赖                |
 | dictionary | 3      | 1       | 不完整             | 无 service/repo — AI 管道直接调用 |
 | translator | 4      | 3       | 不完整             | 无 repo — AI 管道, genIPA/genLanguage 有 try/catch, 失败返回空字符串 |

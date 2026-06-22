@@ -62,7 +62,7 @@ TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/pr
 
 ### `providers/tts.ts` 导出
 
-- `getTTSUrl(text, lang)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由, lang 为 `Auto` 时不带 lang 参数); 否则 → 返回 null
+- `getTTSUrl(text, lang, regenerate = false)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由, lang 为 `Auto` 时不带 lang 参数); 否则 → 返回 null。`regenerate` 为 true 时追加 `&_t=` 时间戳绕过缓存
 - `fetchPrimaryTtsAudio(text, lang?)` — 调 primary 接口 (basic auth), 返回 wav 音频流
 
 ### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)

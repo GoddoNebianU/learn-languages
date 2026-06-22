@@ -1,6 +1,6 @@
 # 页面架构
 
-26 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。9 个路由段有 loading.tsx (Skeleton 骨架屏), 4 个 error.tsx (根级 + dictionary/reading/translator)。
+25 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。9 个路由段有 loading.tsx (Skeleton 骨架屏), 4 个 error.tsx (根级 + dictionary/reading/translator)。
 
 ## 路由组
 
@@ -138,9 +138,9 @@ InDeck: `actionGetCardsByDeckId` → 渲染 CardItem 列表 → AddCardModal/Edi
 
 ### 记忆模式 (memorize)
 
-Server page: `getCurrentUserId` → `actionGetDeckById` → `Memorize(deckId, deckName)`
-Memorize: `actionGetCardsByDeckId` → 多种复习模式 (顺序/随机/无限/听写)
-卡片字段: 正面 (word + IPA) / 翻面 (词性 + 释义 + 例句, 例句可选)
+Server page: `getCurrentUserId` → `actionGetDeckById` → 所有权/公开校验 (`isOwner || isPublic`) → `Memorize(deckId, deckName)`。公开牌组无需登录即可访问。
+Memorize: `useMemorizeCards` → `useBatchedCards` (排除 hidden 卡片) → 2 种学习模式 (顺序/随机) + 切换 (翻转/听写/卡片模式) + 分组 (10/20/50 一组, 分组模式开启时显示双拖动条: 组别 + 组内序号)
+卡片字段: 正面 (word + IPA) / 翻面 (词性 + 释义 + 例句)。每个例句后附独立朗读按钮 (TTS)。翻面朗读仅翻转模式 (读单词)。
 
 ### 公开探索 (explore)
 
