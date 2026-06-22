@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { useTranslations } from "next-intl";
 import { Volume2, RefreshCw } from "lucide-react";
 import { VStack } from "@/design-system/stack";
+import { IconButton } from "@/design-system/icon-button";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
 
 const myFont = localFont({
@@ -58,18 +59,19 @@ function getBackContent(
             {m.example && (
               <span className="flex items-center gap-1 border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
                 <span className="flex-1">{m.example}</span>
-                <button
-                  type="button"
+                <IconButton
+                  shape="round"
+                  tone="muted"
+                  className="shrink-0 p-1"
                   onClick={() => {
                     if (m.example) onPlayText(m.example);
                   }}
                   disabled={isAudioLoading}
                   aria-label={readAloudLabel}
                   title={readAloudLabel}
-                  className="inline-flex shrink-0 items-center justify-center rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Volume2 className="h-4 w-4" />
-                </button>
+                </IconButton>
               </span>
             )}
           </div>
@@ -99,16 +101,16 @@ function PlayButton({
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
+    <IconButton
+      shape="round"
+      tone="muted"
       title={label}
-      className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
     >
       <Volume2 className="h-5 w-5" />
-    </button>
+    </IconButton>
   );
 }
 
@@ -143,16 +145,16 @@ function MemorizeCard({
                   disabled={isAudioLoading || !displayFront}
                   onClick={() => onPlayText(displayFront)}
                 />
-                <button
-                  type="button"
+                <IconButton
+                  shape="round"
+                  tone="muted"
                   onClick={() => onPlayText(displayFront, true)}
                   disabled={isAudioLoading || !displayFront}
                   aria-label={t("regenerateTts")}
                   title={t("regenerateTts")}
-                  className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <RefreshCw className="h-4 w-4" />
-                </button>
+                </IconButton>
               </div>
             </VStack>
 
@@ -187,16 +189,16 @@ function MemorizeCard({
                   disabled={isAudioLoading || !displayFront}
                   onClick={() => onPlayText(displayFront)}
                 />
-                <button
-                  type="button"
+                <IconButton
+                  shape="round"
+                  tone="muted"
                   onClick={() => onPlayText(displayFront, true)}
                   disabled={isAudioLoading || !displayFront}
                   aria-label={t("regenerateTts")}
                   title={t("regenerateTts")}
-                  className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <RefreshCw className="h-4 w-4" />
-                </button>
+                </IconButton>
               </div>
             </VStack>
 
@@ -216,16 +218,16 @@ function MemorizeCard({
                         disabled={isAudioLoading || !backText}
                         onClick={() => onPlayText(backText)}
                       />
-                      <button
-                        type="button"
+                      <IconButton
+                        shape="round"
+                        tone="muted"
                         onClick={() => onPlayText(backText, true)}
                         disabled={isAudioLoading || !backText}
                         aria-label={t("regenerateTts")}
                         title={t("regenerateTts")}
-                        className="inline-flex items-center justify-center rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary-600 disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <RefreshCw className="h-4 w-4" />
-                      </button>
+                      </IconButton>
                     </div>
                   )}
                 </VStack>
