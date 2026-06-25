@@ -104,7 +104,12 @@ export async function repoGetCardsByDeckId(
   const { deckId, limit, offset = 0, includeHidden = false } = input;
   const cards = await prisma.card.findMany({
     where: includeHidden ? { deckId } : { deckId, hidden: false },
-    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    include: {
+      meanings: {
+        select: { partOfSpeech: true, definition: true, example: true },
+        orderBy: { createdAt: "asc" },
+      },
+    },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
     ...(limit !== undefined ? { take: limit } : {}),
     skip: offset,
@@ -163,6 +168,22 @@ export async function repoGetCardStats(
   return { total };
 }
 
+export async function repoGetCardHash(
+  deckId: number,
+  includeHidden: boolean = false
+): Promise<{ total: number; lastModified: string }> {
+  const where = includeHidden ? { deckId } : { deckId, hidden: false };
+  const [total, latest] = await Promise.all([
+    prisma.card.count({ where }),
+    prisma.card.findFirst({
+      where,
+      select: { updatedAt: true },
+      orderBy: { updatedAt: "desc" },
+    }),
+  ]);
+  return { total, lastModified: latest?.updatedAt?.toISOString() ?? "" };
+}
+
 export async function repoCheckCardExistsByWord(
   input: RepoInputCheckCardExistsByWord
 ): Promise<boolean> {
@@ -188,7 +209,7 @@ export async function repoReorderCards(input: RepoInputReorderCards): Promise<vo
     input.cardIds.map((cardId, index) =>
       prisma.card.update({
           where: { id: cardId, deckId: input.deckId },
-          data: { sortOrder: index },
+          data: { sortOrder: index, updatedAt: new Date() },
         })
     )
   );

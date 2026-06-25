@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { actionGetCardsByDeckId, actionGetCardCount } from "@/modules/card/card-action";
+import { actionGetCardsByDeckId, actionGetCardHash } from "@/modules/card/card-action";
 import type { ActionOutputCard } from "@/modules/card/card-action-dto";
+import { useCardCache } from "@/lib/browser/card-cache";
 
-const BATCH_SIZE = 50;
+const BATCH_SIZE = 200;
 
 export function useBatchedCards(deckId: number, includeHidden: boolean = false) {
   const [cards, setCards] = useState<ActionOutputCard[]>([]);
@@ -13,27 +14,53 @@ export function useBatchedCards(deckId: number, includeHidden: boolean = false) 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const cacheGet = useCardCache((s) => s.get);
+  const cacheSet = useCardCache((s) => s.set);
+
   useEffect(() => {
     let ignore = false;
 
     async function loadAll() {
+      // Serve cached cards instantly (stale-while-revalidate)
+      const cached = cacheGet(deckId, includeHidden);
+      if (cached) {
+        setCards(cached.cards);
+        setLoaded(cached.cards.length);
+        setTotal(cached.cards.length);
+      } else {
+        setCards([]);
+        setLoaded(0);
+      }
+
       setIsLoading(true);
       setError(null);
-      setCards([]);
-      setLoaded(0);
 
       try {
-        // Step 1: get total count
-        const countResult = await actionGetCardCount({ deckId, includeHidden });
-      if (ignore) return;
-      if (!countResult.success || countResult.data === undefined) {
-          setError(countResult.message);
+        // Fetch cheap hash from server
+        const hashResult = await actionGetCardHash({ deckId, includeHidden });
+        if (ignore) return;
+        if (!hashResult.success || !hashResult.data) {
+          setError(hashResult.message);
           setIsLoading(false);
           return;
         }
-        setTotal(countResult.data.total);
 
-        // Step 2: load in batches
+        const serverHash = `${hashResult.data.total}:${hashResult.data.lastModified}`;
+
+        // Cache hit — hash matches, skip full fetch
+        if (cached && cached.hash === serverHash) {
+          setTotal(hashResult.data.total);
+          setIsLoading(false);
+          return;
+        }
+
+        // Cache miss — full batch fetch
+        setTotal(hashResult.data.total);
+        if (!cached) {
+          setCards([]);
+          setLoaded(0);
+        }
+
         let offset = 0;
         const allCards: ActionOutputCard[] = [];
         while (true) {
@@ -47,9 +74,11 @@ export function useBatchedCards(deckId: number, includeHidden: boolean = false) 
           allCards.push(...result.data);
           setCards([...allCards]);
           setLoaded(allCards.length);
-          if (result.data.length < BATCH_SIZE) break; // last batch
+          if (result.data.length < BATCH_SIZE) break;
           offset += BATCH_SIZE;
         }
+
+        cacheSet(deckId, includeHidden, serverHash, allCards);
         if (!ignore) setIsLoading(false);
       } catch (e) {
         if (!ignore) {
@@ -63,7 +92,7 @@ export function useBatchedCards(deckId: number, includeHidden: boolean = false) 
     return () => {
       ignore = true;
     };
-  }, [deckId, includeHidden]);
+  }, [deckId, includeHidden, cacheGet, cacheSet]);
 
   const progress = total > 0 ? Math.round((loaded / total) * 100) : 0;
 

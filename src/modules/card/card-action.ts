@@ -1,6 +1,7 @@
 "use server";
 
 import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { repoGetCardHash } from "./card-repository";
 import { repoIsDeckPublic } from "@/modules/deck/deck-repository";
 import { createLogger } from "@/lib/logger";
 import { ValidateError } from "@/lib/errors";
@@ -289,6 +290,28 @@ export async function actionGetCardByWord(input: unknown): Promise<ActionOutputG
     }
     log.error("Failed to get card by word", { error: e instanceof Error ? e.message : String(e) });
     return { success: false, message: "Failed to get card by word" };
+  }
+}
+
+export async function actionGetCardHash(input: unknown): Promise<{
+  success: boolean;
+  message: string;
+  data?: { total: number; lastModified: string };
+}> {
+  try {
+    const validated = validateActionInputGetCardCount(input);
+    const hasAccess = await checkDeckAccess(validated.deckId);
+    if (!hasAccess) {
+      return { success: false, message: "You do not have permission to view cards in this deck" };
+    }
+    const hash = await repoGetCardHash(validated.deckId, validated.includeHidden ?? false);
+    return { success: true, message: "Hash fetched", data: hash };
+  } catch (e) {
+    if (e instanceof ValidateError) {
+      return { success: false, message: e.message };
+    }
+    log.error("Failed to get card hash", { error: e instanceof Error ? e.message : String(e) });
+    return { success: false, message: "Failed to get card hash" };
   }
 }
 
