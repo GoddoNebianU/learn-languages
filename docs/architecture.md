@@ -15,14 +15,14 @@ src/
 │   ├── not-found.tsx
 │   └── api/auth/     # better-auth catch-all (唯一 API 路由)
 ├── modules/          # 业务逻辑 (action-service-repository)
-├── design-system/    # CVA 基础组件 (15 文件, 平铺, 纯展示组件无需 "use client")
+├── design-system/    # CVA 基础组件 (18 文件, 含 _shared/field/switch, 纯展示组件无需 "use client")
 ├── components/       # 业务组件 (layout/follow/ui + capability-hydrator + theme-provider + density-provider)
 ├── lib/              # 集成层 (env/db/auth/capability/providers/bigmodel/email/logger/browser/theme)
 │   ├── providers/    # 外部 API 对接统一层 (llm/tts/smtp), 对外暴露统一接口
 │   └── bigmodel/     # AI 管道编排 (orchestrator/types); LLM/TTS 集成已移至 providers/
 ├── shared/           # card-type, dictionary-type, translator-type, languages, theme-presets
 ├── utils/            # cn, validate, json, string
-├── hooks/            # useAudioPlayer
+├── hooks/            # useAudioPlayer, useBatchedCards
 ├── config/           # i18n, images
 └── i18n/             # next-intl 请求配置
 

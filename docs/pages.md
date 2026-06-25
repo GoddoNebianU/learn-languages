@@ -139,8 +139,16 @@ InDeck: `actionGetCardsByDeckId` → 渲染 CardItem 列表 → AddCardModal/Edi
 ### 记忆模式 (memorize)
 
 Server page: `getCurrentUserId` → `actionGetDeckById` → 所有权/公开校验 (`isOwner || isPublic`) → `Memorize(deckId, deckName)`。公开牌组无需登录即可访问。
-Memorize: `useMemorizeCards` → `useBatchedCards` (排除 hidden 卡片) → 2 种学习模式 (顺序/随机) + 切换 (翻转/听写/卡片模式) + 分组 (10/20/50 一组, 分组模式开启时显示双拖动条: 组别 + 组内序号)
+Memorize: `useMemorizeCards` → `useBatchedCards` (排除 hidden 卡片, hash 缓存 + stale-while-revalidate, 详见下) → 2 种学习模式 (顺序/随机) + 切换 (翻转/听写/卡片模式) + 分组 (10/20/50 一组, 分组模式开启时显示双拖动条: 组别 + 组内序号)
 卡片字段: 正面 (word + IPA) / 翻面 (词性 + 释义 + 例句)。每个例句后附独立朗读按钮 (TTS)。翻面朗读仅翻转模式 (读单词)。
+
+### 卡片缓存 (`useBatchedCards` + `lib/browser/card-cache.ts`)
+
+`useBatchedCards` 是 deck 详情页和 memorize 页共用的卡片加载 hook。通过 zustand 内存缓存 + 服务端 hash 校验实现 stale-while-revalidate:
+
+1. **首次挂载**: 批量拉取全部卡片 (BATCH_SIZE=200), 存入 zustand 缓存 (`hash = ${total}:${lastModified}`)
+2. **再次挂载** (deck ↔ memorize 切换): 瞬间从缓存显示卡片 → 同时拉轻量 hash (`actionGetCardHash`: count + max updatedAt) → hash 一致则跳过完整拉取
+3. **缓存失效**: 任何增删改/reorder 都会改变 `updatedAt` → 下次 hash 校验自动检测到变化 → 触发完整拉取。无需手动 invalidate。
 
 ### 公开探索 (explore)
 
