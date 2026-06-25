@@ -57,13 +57,13 @@ reading/
 
 TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接 inference.sh 托管的 OmniVoice (`infsh/omnivoice`, 支持 600+ 语言), 返回 wav (24kHz) 音频, 走 Bearer API Key 鉴权。
 
-- **Primary (inference.sh OmniVoice)**: inference.sh 托管的 TTS 应用 (`infsh/omnivoice`), 返回 wav 音频, 走 Bearer API Key 鉴权。异步任务模型: `POST /run` 提交任务 → 轮询 `GET /tasks/:id` → 下载 `output.audio.uri` 托管音频
+- **Primary (inference.sh OmniVoice)**: inference.sh 托管的 TTS 应用 (`infsh/omnivoice`), 返回 wav 音频, 走 Bearer API Key 鉴权。异步任务模型: `POST /run` 立即返回 task id → 轮询 `GET /tasks/:id` 到 status=10 → `output.audio` 是裸字符串 URL (WAV 24kHz), 二次 GET 下载
 - **lang 参数**: 保留兼容性但 OmniVoice 不使用 — 语言由 text 自动推导 (支持 600+ 语言)
 
 ### `providers/tts.ts` 导出
 
 - `getTTSUrl(text, lang, regenerate = false)` — 对外入口。若 primary 已配置 (apiKey 非空) → 返回 `/api/tts?text=&lang=` (代理路由); 否则 → 返回 null。`regenerate` 为 true 时追加 `&_t=` 时间戳绕过缓存
-- `fetchPrimaryTtsAudio(text, lang?)` — 调 inference.sh OmniVoice (Bearer Key): `POST /run` 提交 → 必要时轮询 → 下载 `output.audio.uri`, 返回 wav 音频
+- `fetchPrimaryTtsAudio(text, lang?)` — 调 inference.sh OmniVoice (Bearer Key): `POST /run` 提交 → 轮询 `GET /tasks/:id` → 下载 `output.audio` 字符串 URL, 返回 wav 音频
 
 ### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)
 
