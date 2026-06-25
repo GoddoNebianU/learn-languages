@@ -1,6 +1,6 @@
 # 页面架构
 
-25 个页面, 1 个 API 路由, 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。9 个路由段有 loading.tsx (Skeleton 骨架屏), 4 个 error.tsx (根级 + dictionary/reading/translator)。
+27 个页面, 2 个 API route 组 (auth + v1 REST), 3 个路由组 + 1 个管理路由, 单一根 layout。4 种渲染模式。9 个路由段有 loading.tsx (Skeleton 骨架屏), 4 个 error.tsx (根级 + dictionary/reading/translator)。
 
 ## 路由组
 
@@ -10,7 +10,8 @@ src/app/
 ├── page.tsx            # 首页 (Server Component)
 ├── error.tsx           # 根级错误边界 (Client Component)
 ├── not-found.tsx       # 404 页面
-├── api/auth/[...all]/  # 唯一 API 路由 (better-auth catch-all, 单用户模式返回 404)
+├── api/auth/[...all]/  # better-auth catch-all (单用户模式返回 404)
+├── api/v1/             # REST API (Bearer API Key, deck/card CRUD) — 见 docs/api-reference.md
 ├── admin/              # 管理后台 (独立认证) — 详见 config-system.md
 ├── (auth)/             # 认证路由组
 │   ├── login/          # 登录 (Client)
@@ -21,7 +22,8 @@ src/app/
 │   └── users/[username]/ # 用户资料 (Server) + following/ + followers/
 ├── (account)/          # 账户路由组
 │   ├── profile/        # 重定向到 /users/{username} 或 /decks
-│   └── settings/       # 设置 (Client, 主题切换)
+│   ├── settings/       # 设置 (Client, 主题 + 密度 + API Keys 管理)
+│   └── api-docs/       # REST API 文档 (Server, markdown 渲染)
 └── (learn)/            # 功能路由组
     ├── translator/     # 翻译 (Client, 401 行单体)
     ├── dictionary/     # 词典 (Server→Client) — 详见 features.md

@@ -6,18 +6,20 @@
 
 ```
 src/
-├── app/              # Next.js 路由 (25 pages, 1 API route, 单一根 layout)
+├── app/              # Next.js 路由 (27 pages, 2 API route 组)
 │   ├── (auth)/       # 认证: login, signup, logout, forgot/reset-password, users/[username]
-│   ├── (account)/    # 账户: profile, settings
+│   ├── (account)/    # 账户: profile, settings (含 API Keys 管理), api-docs (REST API 文档)
 │   ├── (learn)/      # 功能: translator, dictionary, srt-player, text-speaker, alphabet, explore, favorites, decks, memorize, reading
 │   ├── admin/        # 管理后台: 独立认证, 功能开关/services 配置 + 用户管理 (users/ 子路由)
 │   ├── error.tsx     # 根级错误边界 (生产环境隐藏 error.message)
 │   ├── not-found.tsx
-│   └── api/auth/     # better-auth catch-all (唯一 API 路由)
-├── modules/          # 业务逻辑 (action-service-repository)
+│   ├── api/auth/     # better-auth catch-all
+│   └── api/v1/       # REST API (Bearer API Key 认证, deck/card CRUD)
+├── modules/          # 业务逻辑 (action-service-repository, 含 api-key 模块)
 ├── design-system/    # CVA 基础组件 (18 文件, 含 _shared/field/switch, 纯展示组件无需 "use client")
 ├── components/       # 业务组件 (layout/follow/ui + capability-hydrator + theme-provider + density-provider)
-├── lib/              # 集成层 (env/db/auth/capability/providers/bigmodel/email/logger/browser/theme)
+├── lib/              # 集成层 (env/db/auth/capability/api-auth/providers/bigmodel/email/logger/browser/theme)
+│   ├── api-auth.ts   # REST API 认证: Bearer token → userId
 │   ├── providers/    # 外部 API 对接统一层 (llm/tts/smtp), 对外暴露统一接口
 │   └── bigmodel/     # AI 管道编排 (orchestrator/types); LLM/TTS 集成已移至 providers/
 ├── shared/           # card-type, dictionary-type, translator-type, languages, theme-presets
@@ -41,6 +43,10 @@ src/
 | 添加 AI 管道  | `src/lib/bigmodel/{name}/`  | 多阶段 orchestrator             |
 | 对接外部 API (LLM/TTS/SMTP) | `src/lib/providers/` | 统一接口层, bigmodel 调用 |
 | 管理后台配置  | `src/app/admin/`            | 独立认证, 功能开关/services 管理 |
+| REST API     | `src/app/api/v1/`           | Bearer API Key 认证, deck/card CRUD |
+| API Key 管理  | `src/modules/api-key/`      | 生成/列表/撤销, SHA-256 hash 存储 |
+| API 认证     | `src/lib/api-auth.ts`       | getApiUserId: Bearer → userId   |
+| API 文档     | `docs/api-reference.md` + `/api-docs` | markdown 源 + react-markdown 渲染 |
 | 添加 UI 组件  | `src/design-system/`        | 平铺文件, CVA                   |
 | 添加工具函数  | `src/utils/`                | 纯函数                          |
 | 数据库查询    | `src/modules/*/`            | Repository 层                   |
