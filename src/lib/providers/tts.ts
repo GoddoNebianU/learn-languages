@@ -15,6 +15,7 @@ const log = createLogger("tts");
  * - 轮询: GET /tasks/:id 直到 status=10
  * - 取音频: output.audio 是裸字符串 URL (WAV 24kHz), 二次 GET 下载
  * - 语言: OmniVoice 从 text 自动推导 (支持 600+ 语言)
+ * - 音色: voice_design 模式, 年轻女性
  *
  * 对外只导出 synthesizeTts server action, 不暴露 HTTP 接口。
  */
@@ -132,7 +133,7 @@ async function fetchPrimaryTtsAudio(
         headers: authHeaders(config.apiKey),
         body: JSON.stringify({
           app: OMNIVOICE_APP,
-          input: { text, mode: "auto" },
+          input: { text, mode: "voice_design", instruct: "female, young" },
         }),
         signal: controller.signal,
       });
