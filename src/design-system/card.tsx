@@ -3,42 +3,10 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
+import { focusRing, transition } from "./_shared";
 
-/**
- * Card 卡片组件
- *
- * Design System 中的卡片容器组件，提供统一的内容包装样式。
- *
- * @example
- * ```tsx
- * // 默认卡片
- * <Card>
- *   <p>卡片内容</p>
- * </Card>
- *
- * // 带边框的卡片
- * <Card variant="bordered" padding="lg">
- *   <p>带边框的内容</p>
- * </Card>
- *
- * // 无内边距卡片
- * <Card padding="none">
- *   <img src="image.jpg" alt="完全填充的图片" />
- * </Card>
- *
- * // 可点击的卡片
- * <Card clickable onClick={handleClick}>
- *   <p>点击我</p>
- * </Card>
- * ```
- */
-
-/**
- * 卡片变体样式
- */
 const cardVariants = cva(
-  // 基础样式
-  "rounded-lg bg-white transition-all duration-250",
+  cn("rounded-lg bg-white", transition),
   {
     variants: {
       variant: {
@@ -56,7 +24,10 @@ const cardVariants = cva(
         xl: "p-10",
       },
       clickable: {
-        true: "cursor-pointer hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
+        true: cn(
+          "cursor-pointer hover:shadow-primary/25 hover:-translate-y-0.5 active:translate-y-0",
+          focusRing
+        ),
         false: "",
       },
     },
@@ -74,32 +45,23 @@ export interface CardProps
   disabled?: boolean;
 }
 
-/**
- * Card 卡片组件
- */
-export function Card({
-  variant = "default",
-  padding = "md",
-  clickable = false,
-  className,
-  children,
-  onClick,
-  onKeyDown,
-  disabled,
-  ...props
-}: CardProps) {
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(function Card(
+  { variant = "default", padding = "md", clickable = false, className, children, onClick, onKeyDown, disabled, ...props },
+  ref
+) {
   const isClickable = clickable || !!onClick;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (isClickable && !disabled && (e.key === "Enter" || e.key === " ")) {
       e.preventDefault();
-      onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+      onClick?.(new MouseEvent("click", { bubbles: true }) as unknown as React.MouseEvent<HTMLDivElement>);
     }
     onKeyDown?.(e);
   };
 
   return (
     <div
+      ref={ref}
       className={cn(
         cardVariants({ variant, padding, clickable: isClickable }),
         disabled && "pointer-events-none opacity-50",
@@ -115,18 +77,11 @@ export function Card({
       {children}
     </div>
   );
-}
+});
 
-/**
- * CardBody - 卡片主体
- */
-export function CardBody({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
+export function CardBody({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
   return (
-    <div className={cn(className)} {...props}>
+    <div className={cn("p-2", className)} {...props}>
       {children}
     </div>
   );

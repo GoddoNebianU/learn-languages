@@ -3,6 +3,7 @@
 import React, { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
+import { focusRing, disabledStyles, transition } from "./_shared";
 
 /**
  * Textarea 多行文本输入组件
@@ -27,13 +28,23 @@ import { cn } from "@/utils/cn";
  */
 const textareaVariants = cva(
   // 基础样式
-  "flex w-full rounded-md border px-3 py-2 text-base transition-all duration-250 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none",
+  cn(
+    "flex w-full rounded-md border px-3 py-2 text-base placeholder:text-gray-400 resize-none",
+    transition,
+    focusRing,
+    disabledStyles
+  ),
   {
     variants: {
       variant: {
         default: "border-b-2 border-gray-300 bg-transparent rounded-t-md",
         bordered: "border-gray-300 bg-white",
         filled: "border-transparent bg-gray-100",
+      },
+      size: {
+        sm: "h-9 px-3 text-sm",
+        md: "h-10 px-4 text-base",
+        lg: "h-12 px-5 text-lg",
       },
       error: {
         true: "border-error-500 focus-visible:ring-error-500",
@@ -49,17 +60,20 @@ const textareaVariants = cva(
     ],
     defaultVariants: {
       variant: "default",
+      size: "md",
       error: false,
     },
   }
 );
 
 export type TextareaVariant = VariantProps<typeof textareaVariants>["variant"];
+export type TextareaSize = VariantProps<typeof textareaVariants>["size"];
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof textareaVariants> {
   // 自动调整高度
   autoResize?: boolean;
+  containerClassName?: string;
 }
 
 /**
@@ -69,8 +83,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (
     {
       variant = "default",
+      size = "md",
       error = false,
       className,
+      containerClassName,
       autoResize = false,
       onChange,
       rows = 3,
@@ -88,15 +104,21 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       onChange?.(e);
     };
 
-    return (
+    const textareaEl = (
       <textarea
         ref={ref}
         rows={rows}
-        className={cn(textareaVariants({ variant, error }), className)}
+        className={cn(textareaVariants({ variant, size, error }), className)}
         onChange={handleChange}
         aria-invalid={error ? "true" : undefined}
         {...props}
       />
+    );
+
+    return containerClassName ? (
+      <div className={cn("relative", containerClassName)}>{textareaEl}</div>
+    ) : (
+      textareaEl
     );
   }
 );

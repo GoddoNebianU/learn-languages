@@ -23,9 +23,6 @@ import { cn } from "@/utils/cn";
  *
  * // 无标签
  * <Progress value={60} showLabel={false} />
- *
- * // 自定义颜色
- * <Progress value={60} color="#35786f" />
  * ```
  */
 
@@ -43,10 +40,10 @@ const progressVariants = cva(
         lg: "h-3",
       },
       variant: {
-        default: "",
-        success: "",
-        warning: "",
-        error: "",
+        default: "[&>*]:bg-primary-500",
+        success: "[&>*]:bg-success-500",
+        warning: "[&>*]:bg-warning-500",
+        error: "[&>*]:bg-error-500",
       },
     },
     defaultVariants: {
@@ -61,8 +58,8 @@ interface ProgressProps
   value: number;
   showLabel?: boolean;
   label?: string;
-  animated?: boolean;
-  color?: string;
+  indeterminate?: boolean;
+  "aria-label"?: string;
 }
 
 /**
@@ -74,24 +71,12 @@ export function Progress({
   variant = "default",
   showLabel = true,
   label,
-  animated = true,
-  color,
+  indeterminate = true,
   className,
+  "aria-label": ariaLabel,
   ...props
 }: ProgressProps) {
   const clampedValue = Math.min(100, Math.max(0, value));
-
-  const getColor = () => {
-    if (color) return color;
-    const colors = {
-      default: "bg-primary-500",
-      success: "bg-success-500",
-      warning: "bg-warning-500",
-      error: "bg-error-500",
-    };
-    const actualVariant = variant ?? "default";
-    return colors[actualVariant];
-  };
 
   const formatLabel = () => {
     if (label !== undefined) return label;
@@ -108,12 +93,12 @@ export function Progress({
             aria-valuenow={clampedValue}
             aria-valuemin={0}
             aria-valuemax={100}
+            aria-label={ariaLabel}
           >
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500 ease-out",
-                getColor(),
-                animated && "animate-pulse"
+                indeterminate && "animate-pulse"
               )}
               style={{ width: `${clampedValue}%` }}
             />

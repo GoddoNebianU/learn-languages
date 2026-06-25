@@ -6,6 +6,7 @@ import { Eye, EyeOff, Shield } from "lucide-react";
 import { Button } from "@/design-system/button";
 import { Card } from "@/design-system/card";
 import { Input } from "@/design-system/input";
+import { IconButton } from "@/design-system/icon-button";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { actionAdminLogin } from "./admin-action";
@@ -72,13 +73,14 @@ export function AdminLogin(_props: AdminLoginProps) {
                   placeholder="Enter password"
                   disabled={isPending}
                 />
-                <button
-                  type="button"
+                <IconButton
+                  tone="muted"
+                  shape="round"
+                  icon={showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                />
               </div>
             </div>
 

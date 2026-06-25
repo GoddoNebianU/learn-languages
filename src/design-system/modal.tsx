@@ -2,6 +2,7 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -16,6 +17,7 @@ const FOCUSABLE_SELECTORS =
 
 interface ModalContextValue {
   titleId: string;
+  registerTitle: () => void;
 }
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -48,11 +50,16 @@ export function Modal({
   className,
 }: ModalProps) {
   const [isClosing, setIsClosing] = useState(false);
+  const [hasTitle, setHasTitle] = useState(false);
   const prevOpenRef = useRef(open);
-  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
+
+  const registerTitle = useCallback(() => {
+    setHasTitle(true);
+  }, []);
 
   const getFocusableElements = () => {
     if (!dialogRef.current) return [];
@@ -165,7 +172,7 @@ export function Modal({
   if (!shouldRender) return null;
 
   return (
-    <ModalContext.Provider value={{ titleId }}>
+    <ModalContext.Provider value={{ titleId, registerTitle }}>
       <div
         className={cn(
           "z-modal fixed inset-0 flex items-center justify-center p-4",
@@ -174,7 +181,7 @@ export function Modal({
         )}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId}
+        aria-labelledby={hasTitle ? titleId : undefined}
       >
         <div
           className={cn(
@@ -224,6 +231,9 @@ export interface ModalTitleProps extends React.HTMLAttributes<HTMLHeadingElement
 
 Modal.Title = function ModalTitle({ children, className, ...props }: ModalTitleProps) {
   const ctx = useContext(ModalContext);
+  useEffect(() => {
+    ctx?.registerTitle();
+  }, [ctx]);
   return (
     <h2
       id={ctx?.titleId}
@@ -278,17 +288,20 @@ Modal.Footer = function ModalFooter({
   );
 };
 
-export interface ModalCloseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface ModalCloseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  "aria-label"?: string;
+}
 
 Modal.CloseButton = function ModalCloseButton({
   className,
   onClick,
+  "aria-label": ariaLabel = "Close",
   ...props
 }: ModalCloseButtonProps) {
   return (
     <button
       type="button"
-      aria-label="Close"
+      aria-label={ariaLabel}
       className={cn(
         "rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
         className

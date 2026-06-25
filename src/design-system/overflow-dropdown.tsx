@@ -20,6 +20,8 @@ export interface OverflowDropdownProps<T> {
   getKey: (item: T) => string | number;
   /** 标签文本 */
   label?: string;
+  /** 触发按钮的 aria-label (默认 "More options") */
+  triggerAriaLabel?: string;
   /** 自定义类名 */
   className?: string;
 }
@@ -55,6 +57,7 @@ export function OverflowDropdown<T>({
   onItemClick,
   getKey,
   label = "+N",
+  triggerAriaLabel = "More options",
   className,
 }: OverflowDropdownProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,7 +149,7 @@ export function OverflowDropdown<T>({
         ref={triggerRef}
         onClick={toggleDropdown}
         className="flex items-center justify-center rounded-md bg-gray-100 px-3 py-1.5 text-sm transition-colors hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none"
-        aria-label="显示更多选项"
+        aria-label={triggerAriaLabel}
         aria-expanded={isOpen}
         aria-haspopup="menu"
       >

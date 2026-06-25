@@ -6,9 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   Eye,
   EyeOff,
-  Save,
-  LogOut,
-  Loader2,
   Mail,
   Volume2,
   Server,
@@ -19,6 +16,9 @@ import { toast } from "sonner";
 import { Button } from "@/design-system/button";
 import { Card } from "@/design-system/card";
 import { Input } from "@/design-system/input";
+import { IconButton } from "@/design-system/icon-button";
+import { Switch } from "@/design-system/switch";
+import { Field } from "@/design-system/field";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useCapabilityStore } from "@/lib/capability-store";
@@ -52,36 +52,41 @@ function SectionCard({ icon, title, children }: { icon: React.ReactNode; title: 
 function PasswordInput({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
   const [show, setShow] = useState(false);
   return (
-    <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
+    <Field label={label}>
       <div className="relative">
         <Input variant="bordered" type={show ? "text" : "password"} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
-        <button type="button" onClick={() => setShow(!show)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-          {show ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
+        <IconButton
+          tone="muted"
+          shape="round"
+          icon={show ? <EyeOff size={18} /> : <Eye size={18} />}
+          onClick={() => setShow(!show)}
+          aria-label={show ? "Hide password" : "Show password"}
+          className="absolute right-2 top-1/2 -translate-y-1/2"
+        />
       </div>
-    </div>
+    </Field>
   );
 }
 
 function LabeledInput({ label, value, onChange, type = "text", placeholder }: { label: string; value: string | number; onChange: (v: string) => void; type?: string; placeholder?: string }) {
   return (
-    <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
+    <Field label={label}>
       <Input variant="bordered" type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
-    </div>
+    </Field>
   );
 }
 
 function ToggleField({ label, description, checked, onChange }: { label: string; description: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
-    <label className="flex items-start gap-3 cursor-pointer">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+    <div className="flex items-start gap-3">
+      <div className="mt-0.5">
+        <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
+      </div>
       <div>
         <span className="text-sm font-medium text-gray-900">{label}</span>
         <p className="text-xs text-gray-500">{description}</p>
       </div>
-    </label>
+    </div>
   );
 }
 
@@ -187,29 +192,18 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
               <PasswordInput label="Password" value={smtp.pass} onChange={(v) => updateSmtp("pass", v)} placeholder="SMTP password" />
             </div>
             <LabeledInput label="From Address" value={smtp.from} onChange={(v) => updateSmtp("from", v)} placeholder="noreply@example.com" />
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={smtp.secure} onChange={(e) => updateSmtp("secure", e.target.checked)} className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+            <div className="flex items-center gap-2">
+              <Switch checked={smtp.secure} onCheckedChange={(v) => updateSmtp("secure", v)} aria-label="Use SSL/TLS" />
               <span className="text-sm font-medium text-gray-700">Use SSL/TLS</span>
-            </label>
+            </div>
           </div>
         </SectionCard>
 
         <div className="flex items-center gap-4">
-          <Button variant="primary" onClick={handleSave} disabled={isSaving}>
-            {isSaving ? (
-              <>
-                <Loader2 size={16} className="animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save size={16} />
-                Save All Settings
-              </>
-            )}
+          <Button variant="primary" onClick={handleSave} loading={isSaving}>
+            {isSaving ? "Saving..." : "Save All Settings"}
           </Button>
-          <Button variant="light" onClick={handleLogout} disabled={isLoggingOut}>
-            {isLoggingOut ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} />}
+          <Button variant="light" onClick={handleLogout} loading={isLoggingOut}>
             Logout
           </Button>
         </div>

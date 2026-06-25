@@ -9,14 +9,13 @@ import {
   Trash2,
   CheckCircle2,
   Circle,
-  Loader2,
-  Save,
   Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/design-system/button";
 import { Card } from "@/design-system/card";
 import { Input } from "@/design-system/input";
+import { IconButton } from "@/design-system/icon-button";
 import { Modal } from "@/design-system/modal";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -188,8 +187,7 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
               </div>
             </div>
             <div className="mt-4 flex gap-2">
-              <Button variant="primary" onClick={handleCreate} disabled={!canCreate}>
-                {isCreating ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              <Button variant="primary" onClick={handleCreate} disabled={!canCreate} loading={isCreating}>
                 Create
               </Button>
               <Button variant="light" onClick={() => setShowCreate(false)}>Cancel</Button>
@@ -222,20 +220,23 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
                     <td className="py-3 pr-4 font-medium text-gray-900">{user.username}</td>
                     <td className="py-3 pr-4 text-gray-600">{user.email}</td>
                     <td className="py-3 pr-4">
-                      <button
-                        type="button"
+                      <IconButton
+                        tone="muted"
+                        shape="round"
+                        icon={
+                          user.emailVerified ? (
+                            <CheckCircle2 size={18} className="text-green-500" />
+                          ) : (
+                            <Circle size={18} />
+                          )
+                        }
                         onClick={() => handleToggleVerified(user)}
-                        disabled={togglingId === user.id || isToggling}
-                        className="flex items-center gap-1 text-gray-400 hover:text-primary-600 disabled:opacity-50"
+                        loading={togglingId === user.id || isToggling}
+                        aria-label={user.emailVerified ? "Mark as unverified" : "Mark as verified"}
                         title={user.emailVerified ? "Mark as unverified" : "Mark as verified"}
                       >
-                        {user.emailVerified ? (
-                          <CheckCircle2 size={18} className="text-green-500" />
-                        ) : (
-                          <Circle size={18} />
-                        )}
                         <span className="text-xs">{user.emailVerified ? "Yes" : "No"}</span>
-                      </button>
+                      </IconButton>
                     </td>
                     <td className="py-3 pr-4 text-gray-500">
                       {new Date(user.createdAt).toLocaleDateString()}
@@ -243,41 +244,41 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
                     <td className="py-3">
                       {confirmingId === user.id ? (
                         <span className="flex items-center gap-2">
-                          <button
-                            type="button"
+                          <Button
+                            variant="danger"
+                            size="sm"
                             onClick={() => handleDelete(user.id)}
-                            disabled={isDeleting}
-                            className="text-xs font-medium text-red-600 hover:text-red-700"
+                            loading={isDeleting}
                           >
                             {isDeleting ? "Deleting..." : "Confirm delete?"}
-                          </button>
-                          <button
-                            type="button"
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => setConfirmingId(null)}
-                            className="text-xs text-gray-500 hover:text-gray-700"
                           >
                             Cancel
-                          </button>
+                          </Button>
                         </span>
                       ) : (
                         <span className="flex items-center gap-3">
-                          <button
-                            type="button"
+                          <IconButton
+                            tone="muted"
+                            shape="round"
+                            icon={<Pencil size={16} />}
                             onClick={() => openEdit(user)}
-                            className="text-gray-400 hover:text-primary-600"
+                            aria-label="Edit user"
                             title="Edit user"
-                          >
-                            <Pencil size={16} />
-                          </button>
-                          <button
-                            type="button"
+                          />
+                          <IconButton
+                            tone="danger"
+                            shape="round"
+                            icon={<Trash2 size={16} />}
                             onClick={() => setConfirmingId(user.id)}
                             disabled={isSystemAdmin(user)}
-                            className="text-gray-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-30"
+                            aria-label="Delete user"
                             title={isSystemAdmin(user) ? "System admin: cannot delete in single-user mode" : "Delete user"}
-                          >
-                            <Trash2 size={16} />
-                          </button>
+                          />
                         </span>
                       )}
                     </td>
@@ -322,8 +323,7 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="light" onClick={() => setEditingUser(null)}>Cancel</Button>
-          <Button variant="primary" onClick={handleUpdate} disabled={!canUpdate}>
-            {isUpdating ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+          <Button variant="primary" onClick={handleUpdate} disabled={!canUpdate} loading={isUpdating}>
             Save Changes
           </Button>
         </Modal.Footer>

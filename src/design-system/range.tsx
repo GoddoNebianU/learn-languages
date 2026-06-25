@@ -31,7 +31,7 @@ export interface RangeProps extends Omit<React.ComponentPropsWithoutRef<"input">
 export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
   ({ value, min = 0, max, onChange, disabled = false, className, ...props }, ref) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = parseInt(event.target.value);
+      const newValue = parseInt(event.target.value, 10);
       onChange(newValue);
     };
 
@@ -62,6 +62,3 @@ export const Range = React.forwardRef<HTMLInputElement, RangeProps>(
 );
 
 Range.displayName = "Range";
-
-// 向后兼容别名
-export const RangeInput = Range;

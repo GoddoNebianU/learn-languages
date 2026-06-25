@@ -1,11 +1,9 @@
-"use client";
-
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
+  "inline-flex items-center rounded-md font-medium",
   {
     variants: {
       variant: {
@@ -15,9 +13,15 @@ const badgeVariants = cva(
         warning: "bg-warning-50 text-warning-600",
         error: "bg-error-50 text-error-600",
       },
+      size: {
+        sm: "px-1.5 py-0.5 text-xs",
+        md: "px-2 py-1 text-xs",
+        lg: "px-2.5 py-1 text-sm",
+      },
     },
     defaultVariants: {
       variant: "neutral",
+      size: "md",
     },
   }
 );
@@ -28,9 +32,9 @@ interface BadgeProps
   children?: React.ReactNode;
 }
 
-export function Badge({ variant, className, children, ...props }: BadgeProps) {
+export function Badge({ variant, size, className, children, ...props }: BadgeProps) {
   return (
-    <span className={cn(badgeVariants({ variant }), className)} {...props}>
+    <span className={cn(badgeVariants({ variant, size }), className)} {...props}>
       {children}
     </span>
   );
