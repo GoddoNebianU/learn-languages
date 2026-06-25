@@ -24,9 +24,12 @@ const STATUS_COMPLETED = 10;
 const STATUS_FAILED = 11;
 const STATUS_CANCELLED = 12;
 
-const TIMEOUT_MS = 60_000;
-const POLL_INTERVAL_MS = 1_000;
+const TIMEOUT_MS = 90_000;
+const POLL_INTERVAL_MS = 1_500;
 const MAX_POLLS = 55;
+// status=10 但 output 尚未就绪时, 额外重试次数 (inference.sh 存在 status 先翻 output 后到的竞态)
+const OUTPUT_SETTLE_RETRIES = 4;
+const OUTPUT_SETTLE_INTERVAL_MS = 1_000;
 
 // ==================== 配置访问 ====================
 
@@ -51,11 +54,55 @@ function authHeaders(apiKey: string): Record<string, string> {
   };
 }
 
+/**
+ * 从 task.output 提取音频 URI, 兼容多种可能的字段结构。
+ * inference.sh 文件类型标准表示为 { uri: string }, 但实际响应可能存在字段名差异。
+ */
+function extractAudioUri(output: unknown): string | null {
+  if (!output || typeof output !== "object") return null;
+  const o = output as Record<string, unknown>;
+
+  // 常见路径: output.audio = { uri: "..." }
+  const audio = o.audio;
+  if (audio && typeof audio === "object") {
+    const uri = (audio as Record<string, unknown>).uri;
+    if (typeof uri === "string" && uri) return uri;
+  }
+  // output.audio 直接是 URL 字符串
+  if (typeof audio === "string" && audio.startsWith("http")) return audio;
+
+  // 备选字段名
+  for (const key of ["audio_url", "url", "file", "wav", "sound", "speech"]) {
+    const v = o[key];
+    if (typeof v === "string" && v.startsWith("http")) return v;
+    if (v && typeof v === "object") {
+      const uri = (v as Record<string, unknown>).uri;
+      if (typeof uri === "string" && uri) return uri;
+    }
+  }
+
+  // 兜底: 遍历 output 一级字段, 找任何 { uri: "http..." }
+  for (const key of Object.keys(o)) {
+    const v = o[key];
+    if (v && typeof v === "object") {
+      const uri = (v as Record<string, unknown>).uri;
+      if (typeof uri === "string" && uri.startsWith("http")) return uri;
+    }
+  }
+  return null;
+}
+
+/**
+ * 轮询任务直到终态。处理 inference.sh status=10 但 output 尚未就绪的竞态:
+ * 命中 status=10 但提取不到 audio uri 时, 额外重试几次等 output 就绪。
+ */
 async function pollTaskUntilDone(
   taskId: string,
   apiKey: string,
   signal: AbortSignal
 ): Promise<{ ok: true; audioUri: string } | { ok: false }> {
+  let settleRetries = 0;
+
   for (let i = 0; i < MAX_POLLS; i++) {
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
     if (signal.aborted) return { ok: false };
@@ -77,14 +124,19 @@ async function pollTaskUntilDone(
     const status = task.status as number;
 
     if (status === STATUS_COMPLETED) {
-      const output = (task.output ?? {}) as Record<string, unknown>;
-      const audio = (output.audio ?? {}) as Record<string, unknown>;
-      const audioUri = audio.uri as string | undefined;
-      if (!audioUri) {
-        log.warn("OmniVoice task completed but missing audio uri");
+      const uri = extractAudioUri(task.output);
+      if (uri) return { ok: true, audioUri: uri };
+      // status=10 但 output 未就绪: 重试等待 output 就绪, 不立即放弃
+      settleRetries++;
+      if (settleRetries > OUTPUT_SETTLE_RETRIES) {
+        log.warn("OmniVoice task completed but audio uri never appeared", {
+          output: JSON.stringify(task.output)?.slice(0, 800),
+          settleRetries,
+        });
         return { ok: false };
       }
-      return { ok: true, audioUri };
+      await new Promise((resolve) => setTimeout(resolve, OUTPUT_SETTLE_INTERVAL_MS));
+      continue;
     }
     if (status === STATUS_FAILED || status === STATUS_CANCELLED) {
       log.warn("OmniVoice task failed/cancelled", { status, error: task.error });
@@ -108,10 +160,10 @@ export async function fetchPrimaryTtsAudio(
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    // 1. 提交任务 (默认阻塞, 但兼容非阻塞: 未完成则轮询)
+    // 1. 提交任务 (?wait=true 显式要求阻塞到完成, 避免 status/output 竞态)
     let submitResp: Response;
     try {
-      submitResp = await fetch(RUN_URL, {
+      submitResp = await fetch(`${RUN_URL}?wait=true`, {
         method: "POST",
         headers: authHeaders(config.apiKey),
         body: JSON.stringify({
@@ -130,17 +182,25 @@ export async function fetchPrimaryTtsAudio(
     }
     const task = (await submitResp.json()) as Record<string, unknown>;
 
-    // 2. 取结果: 已完成直接读 uri, 否则轮询
+    // 2. 取结果: 已完成直接提取 uri, 否则轮询
     let audioUri: string;
     if (task.status === STATUS_COMPLETED) {
-      const output = (task.output ?? {}) as Record<string, unknown>;
-      const audio = (output.audio ?? {}) as Record<string, unknown>;
-      const uri = audio.uri as string | undefined;
+      const uri = extractAudioUri(task.output);
       if (!uri) {
-        log.warn("OmniVoice task completed but missing audio uri");
-        return { ok: false };
+        // 阻塞返回了 status=10 但 output 未就绪 — 退化到轮询补救
+        const taskId = task.id as string | undefined;
+        if (!taskId) {
+          log.warn("OmniVoice completed but no audio uri and no task id for retry", {
+            output: JSON.stringify(task.output)?.slice(0, 800),
+          });
+          return { ok: false };
+        }
+        const polled = await pollTaskUntilDone(taskId, config.apiKey, controller.signal);
+        if (!polled.ok) return { ok: false };
+        audioUri = polled.audioUri;
+      } else {
+        audioUri = uri;
       }
-      audioUri = uri;
     } else if (task.status === STATUS_FAILED || task.status === STATUS_CANCELLED) {
       log.warn("OmniVoice task failed/cancelled", { status: task.status, error: task.error });
       return { ok: false };
