@@ -56,7 +56,7 @@ graph TB
 
     Pages -->|"Server Actions"| Action
     Layout -->|"authClient"| AuthMod
-    Pages -->|"getTTSUrl"| TTS
+    Pages -->|"synthesizeTts"| TTS
 
     subgraph Server["Server (Next.js 16 App Router)"]
         subgraph Modules["modules/ — Action → Service → Repository"]
@@ -68,7 +68,7 @@ graph TB
             AuthMod["auth-mode.ts<br/>admin-auth.ts"]
             Cap["capability.ts<br/>Feature flags · LLM/TTS/SMTP config"]
             Pipelines["bigmodel/<br/>AI Pipelines"]
-            TTS["providers/tts.ts<br/>Primary TTS"]
+            TTS["providers/tts.ts<br/>TTS server action"]
         end
 
         Service -->|"ownership check"| Repository

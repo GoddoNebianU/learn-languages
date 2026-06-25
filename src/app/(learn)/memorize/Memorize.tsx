@@ -100,7 +100,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
     loadedTextRef.current = text;
     try {
-      await speak(text, "Auto", regenerate);
+      await speak(text);
     } catch (e) {
       console.error("TTS playback failed", e);
     }

@@ -2,6 +2,9 @@
 
 import { createLogger } from "@/lib/logger";
 import { getServices, getTtsConfig } from "@/lib/capability";
+import { getCurrentUserId } from "@/modules/shared/action-utils";
+import { logActivity } from "@/modules/activity/activity-service";
+import { ACTIVITY_ACTIONS } from "@/modules/activity/activity-constants";
 
 const log = createLogger("tts");
 
@@ -11,7 +14,9 @@ const log = createLogger("tts");
  * - 接口: POST https://api.inference.sh/run (异步任务, 立即返回 status<10)
  * - 轮询: GET /tasks/:id 直到 status=10
  * - 取音频: output.audio 是裸字符串 URL (WAV 24kHz), 二次 GET 下载
- * - 语言: OmniVoice 从 text 自动推导 (支持 600+ 语言), lang 参数仅用于审计日志
+ * - 语言: OmniVoice 从 text 自动推导 (支持 600+ 语言)
+ *
+ * 对外只导出 synthesizeTts server action, 不暴露 HTTP 接口。
  */
 
 const RUN_URL = "https://api.inference.sh/run";
@@ -38,8 +43,7 @@ function hasPrimary(config: { apiKey: string }): boolean {
   return !!config.apiKey;
 }
 
-// ==================== Primary TTS (inference.sh OmniVoice, 返回 wav) ====================
-// 供 /api/tts route 调用。凭据从 DB 读取,不暴露前端。
+// ==================== inference.sh OmniVoice ====================
 
 function authHeaders(apiKey: string): Record<string, string> {
   return {
@@ -49,24 +53,16 @@ function authHeaders(apiKey: string): Record<string, string> {
   };
 }
 
-/**
- * 从 task.output 提取音频 URL。
- * inference.sh file 类型字段标准返回裸字符串 URL (非 { uri } 对象),
- * 同时兼容 { uri } 对象形式以防御 API 变更。
- */
 function extractAudioUri(output: unknown): string | null {
   if (!output || typeof output !== "object") return null;
   const o = output as Record<string, unknown>;
   const audio = o.audio;
 
-  // 标准格式: output.audio = "https://cloud.inference.sh/.../xxx.wav"
   if (typeof audio === "string" && audio.startsWith("http")) return audio;
-  // 备选: output.audio = { uri: "https://..." }
   if (audio && typeof audio === "object") {
     const uri = (audio as Record<string, unknown>).uri;
     if (typeof uri === "string" && uri.startsWith("http")) return uri;
   }
-  // 兜底: 遍历一级字段找 URL
   for (const v of Object.values(o)) {
     if (typeof v === "string" && v.startsWith("http")) return v;
     if (v && typeof v === "object") {
@@ -77,7 +73,6 @@ function extractAudioUri(output: unknown): string | null {
   return null;
 }
 
-/** 轮询 GET /tasks/:id 直到终态, 返回 audio URL。 */
 async function pollTaskUntilDone(
   taskId: string,
   apiKey: string,
@@ -106,7 +101,7 @@ async function pollTaskUntilDone(
     if (status === STATUS_COMPLETED) {
       const uri = extractAudioUri(task.output);
       if (uri) return { ok: true, audioUri: uri };
-      log.warn("OmniVoice completed but no audio url in output", {
+      log.warn("OmniVoice completed but no audio url", {
         output: JSON.stringify(task.output)?.slice(0, 500),
       });
       return { ok: false };
@@ -120,19 +115,16 @@ async function pollTaskUntilDone(
   return { ok: false };
 }
 
-export async function fetchPrimaryTtsAudio(
-  text: string,
-  lang?: string
+async function fetchPrimaryTtsAudio(
+  text: string
 ): Promise<{ ok: true; buffer: ArrayBuffer; contentType: string } | { ok: false }> {
   const config = await getTtsProviderConfig();
   if (!hasPrimary(config)) return { ok: false };
-  void lang; // OmniVoice 自动推导语言, lang 仅用于审计日志
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    // 1. 提交任务 (POST /run 立即返回 status<10 + task id)
     let submitResp: Response;
     try {
       submitResp = await fetch(RUN_URL, {
@@ -154,12 +146,11 @@ export async function fetchPrimaryTtsAudio(
     }
     const task = (await submitResp.json()) as Record<string, unknown>;
 
-    // 2. 若提交即完成 (理论上少见) 直接取, 否则轮询
     let audioUri: string;
     if (task.status === STATUS_COMPLETED) {
       const uri = extractAudioUri(task.output);
       if (!uri) {
-        log.warn("OmniVoice completed but no audio url in output", {
+        log.warn("OmniVoice completed but no audio url", {
           output: JSON.stringify(task.output)?.slice(0, 500),
         });
         return { ok: false };
@@ -179,7 +170,6 @@ export async function fetchPrimaryTtsAudio(
       audioUri = polled.audioUri;
     }
 
-    // 3. 下载托管音频
     let audioResp: Response;
     try {
       audioResp = await fetch(audioUri, { signal: controller.signal });
@@ -205,23 +195,28 @@ export async function fetchPrimaryTtsAudio(
 // ==================== 对外接口 ====================
 
 /**
- * 获取 TTS 音频 URL。
- * - 配了 primary (apiKey): 返回 `/api/tts` 代理 URL, 由 route 调 inference.sh OmniVoice
- * - 没配 primary: 返回 null
- * lang 参数保留兼容性 (OmniVoice 自动从 text 推导语言), regenerate 为 true 时追加时间戳绕过缓存。
+ * 合成 TTS 音频 (server action)。
+ * 调 inference.sh OmniVoice, 返回 base64 编码的 WAV 音频。
+ * 不暴露 HTTP 接口 — 仅通过 server action RPC 从客户端调用。
+ *
+ * @returns null = 未配置或失败; { audio, contentType } = 成功
  */
-export async function getTTSUrl(
-  text: string,
-  lang: string,
-  regenerate = false
-): Promise<string | null> {
-  const config = await getTtsProviderConfig();
+export async function synthesizeTts(text: string): Promise<{
+  audio: string;
+  contentType: string;
+} | null> {
+  const result = await fetchPrimaryTtsAudio(text);
+  if (!result.ok) return null;
 
-  if (hasPrimary(config)) {
-    const base = `/api/tts?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(lang)}`;
-    return regenerate ? `${base}&_t=${Date.now()}` : base;
-  }
+  void logActivity({
+    userId: await getCurrentUserId(),
+    action: ACTIVITY_ACTIONS.TTS.SYNTHESIZE,
+    entityType: "tts",
+    metadata: { textLength: text.length },
+  });
 
-  log.warn("TTS not configured (apiKey missing)");
-  return null;
+  return {
+    audio: Buffer.from(result.buffer).toString("base64"),
+    contentType: result.contentType,
+  };
 }

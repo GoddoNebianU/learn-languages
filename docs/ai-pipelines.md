@@ -55,35 +55,34 @@ reading/
 
 ## 独立服务: TTS
 
-TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接 inference.sh 托管的 OmniVoice (`infsh/omnivoice`, 支持 600+ 语言), 返回 wav (24kHz) 音频, 走 Bearer API Key 鉴权。
+TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts` (`"use server"`)。通过 **server action** 对外暴露, 不开放 HTTP 接口。
 
-- **Primary (inference.sh OmniVoice)**: inference.sh 托管的 TTS 应用 (`infsh/omnivoice`), 返回 wav 音频, 走 Bearer API Key 鉴权。异步任务模型: `POST /run` 立即返回 task id → 轮询 `GET /tasks/:id` 到 status=10 → `output.audio` 是裸字符串 URL (WAV 24kHz), 二次 GET 下载
-- **lang 参数**: 保留兼容性但 OmniVoice 不使用 — 语言由 text 自动推导 (支持 600+ 语言)
+- **inference.sh OmniVoice** (`infsh/omnivoice`): 600+ 语言, 返回 WAV 24kHz。异步任务模型: `POST /run` → 轮询 `GET /tasks/:id` → 下载 `output.audio` 裸字符串 URL
+- **语言**: OmniVoice 从 text 自动推导, 无需传 lang 参数
+- **鉴权**: Bearer API Key (`inf_` 前缀), 存在 DB `system_config.services.tts.apiKey`, 仅服务端读取
 
-### `providers/tts.ts` 导出
+### `synthesizeTts(text)` server action
 
-- `getTTSUrl(text, lang, regenerate = false)` — 对外入口。若 primary 已配置 (apiKey 非空) → 返回 `/api/tts?text=&lang=` (代理路由); 否则 → 返回 null。`regenerate` 为 true 时追加 `&_t=` 时间戳绕过缓存
-- `fetchPrimaryTtsAudio(text, lang?)` — 调 inference.sh OmniVoice (Bearer Key): `POST /run` 提交 → 轮询 `GET /tasks/:id` → 下载 `output.audio` 字符串 URL, 返回 wav 音频
+唯一导出。调 inference.sh OmniVoice 合成音频, 返回 base64 编码的 WAV。客户端 `useAudioPlayer` hook 解码为 blob 后播放。**API Key 服务端从 DB 读取, 永不暴露给前端**。内部流程: 提交任务 → 轮询到完成 → 下载音频 → base64 编码 → 记审计日志 → 返回。
 
-### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)
+### 调用方
 
-`GET /api/tts?text=&lang=`。调 inference.sh OmniVoice 取 wav 返回客户端。**API Key 服务端从 DB 读取, 永不暴露给前端**。
+通过 `useAudioPlayer` hook 间接调用 `synthesizeTts`:
+- dictionary/SpeakButton — `speak(text)`
+- translator/page — `speak(text)`
+- text-speaker/page — `speak(text)` + replay/speed/loop
+- memorize/Memorize — `speak(text)` + replay/reset
 
-### 调用与错误处理
-
-- **调用者**: translator/page, text-speaker/page, memorize/Memorize, dictionary/SpeakButton (直接从页面组件调用 `getTTSUrl`)
-- **错误处理**: 捕获错误, 日志记录, 返回 `"error"` 字符串
-
-TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 URL, 不涉及数据库操作, 无需 action-service-repository 层。凭据调度收口在 `/api/tts` 代理 + `providers/tts.ts`, 页面只拿 URL。
+TTS 调用收口在 `providers/tts.ts` server action + `useAudioPlayer` hook, 页面只调 `speak(text)`, 不接触凭据、URL 构建、音频解码。
 
 ## 共享依赖
 
-> LLM/TTS/SMTP 等外部 API 对接代码统一收口在 `src/lib/providers/` (架构归属见 [architecture.md](./architecture.md)), 管道通过 `getAnswer()` / `getTTSUrl()` 调用。`bigmodel/` 仅保留管道编排逻辑 (orchestrator/types)。
+> LLM/TTS/SMTP 等外部 API 对接代码统一收口在 `src/lib/providers/` (架构归属见 [architecture.md](./architecture.md)), 管道通过 `getAnswer()` / `synthesizeTts()` 调用。`bigmodel/` 仅保留管道编排逻辑 (orchestrator/types)。
 
 | 文件 | 导出 | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
 | `@/lib/providers/llm.ts` | `getAnswer(prompt)` | LLM API 封装 (直接 fetch, 含重试: 指数退避, 最多 2 次, 30s 超时) |
-| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (inference.sh OmniVoice, 600+ 语言, Bearer Key) |
+| `@/lib/providers/tts.ts` | `synthesizeTts(text)` | TTS server action (inference.sh OmniVoice, 600+ 语言, Bearer Key) |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |
 | `@/lib/logger` | `createLogger()`            | 所有管道文件使用                         |

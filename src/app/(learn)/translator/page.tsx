@@ -57,13 +57,9 @@ export default function TranslatorPage() {
     });
   }, [isLoggedIn]);
 
-  const tts = async (text: string, locale: string) => {
+  const tts = async (text: string) => {
     try {
-      const theLanguage = locale
-        .toLowerCase()
-        .replace(/[^a-z]/g, "")
-        .replace(/^./, (match) => match.toUpperCase());
-      await speak(text, theLanguage);
+      await speak(text);
     } catch {
       toast.error("Failed to generate audio");
     }
@@ -201,7 +197,7 @@ export default function TranslatorPage() {
                 onClick={() => {
                   const text = taref.current?.value;
                   if (!text) return;
-                  tts(text, translationResult?.sourceLanguage || "");
+                  tts(text);
                 }}
               ></IconButton>
             </div>
@@ -272,7 +268,7 @@ export default function TranslatorPage() {
                 iconAlt="play"
                 onClick={() => {
                   if (!translationResult) return;
-                  tts(translationResult.translatedText, translationResult.targetLanguage);
+                  tts(translationResult.translatedText);
                 }}
               ></IconButton>
             </div>

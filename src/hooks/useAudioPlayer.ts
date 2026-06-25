@@ -1,17 +1,17 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { getTTSUrl } from "@/lib/providers/tts";
+import { synthesizeTts } from "@/lib/providers/tts";
 
 /**
  * 可复用的音频播放 hook。
  *
- * 所有音频通过 fetch → blob → object URL 加载, 避免 <audio> 元素
- * 对慢响应 (如 inference.sh TTS 生成 ~5s) 的超时问题。
+ * TTS 通过 server action (synthesizeTts) 合成, 返回 base64 音频,
+ * 解码为 blob 后播放。不暴露 HTTP 接口。
  *
- * - speak(text, lang?)  — TTS 全流程: getTTSUrl → fetch → blob → play
- * - playUrl(url)        — 直接 URL: fetch → blob → play
- * - replay()            — 重播当前音频 (不重新请求)
- * - reset()             — 停止并清空音频 (文本/卡片切换时调用)
- * - setSpeed(rate)      — 设置播放速度 (修复: 立即应用到 playbackRate)
+ * - speak(text)     — TTS 全流程: synthesizeTts → base64 → blob → play
+ * - playUrl(url)    — 直接 URL: fetch → blob → play
+ * - replay()        — 重播当前音频 (不重新请求)
+ * - reset()         — 停止并清空音频 (文本/卡片切换时调用)
+ * - setSpeed(rate)  — 设置播放速度 (立即应用到 playbackRate)
  */
 export function useAudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -66,16 +66,12 @@ export function useAudioPlayer() {
     };
   }, []);
 
-  const loadBlob = useCallback(async (url: string): Promise<void> => {
+  const loadFromBlob = useCallback(async (blob: Blob): Promise<void> => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const blob = await resp.blob();
-    const objectUrl = URL.createObjectURL(blob);
-
     if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    const objectUrl = URL.createObjectURL(blob);
     blobUrlRef.current = objectUrl;
 
     audio.src = objectUrl;
@@ -101,56 +97,53 @@ export function useAudioPlayer() {
     }
   }, []);
 
-  const speak = useCallback(
-    async (text: string, lang?: string, regenerate?: boolean): Promise<void> => {
-      const audio = audioRef.current;
-      if (!audio) return;
+  const speak = useCallback(async (text: string): Promise<void> => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const ttsUrl = await getTTSUrl(text, lang ?? "Auto", regenerate);
-        if (!ttsUrl) throw new Error("TTS not configured");
+    try {
+      const result = await synthesizeTts(text);
+      if (!result) throw new Error("TTS unavailable");
 
-        await loadBlob(ttsUrl);
-        setHasAudio(true);
-        setIsLoading(false);
-        await audio.play();
-      } catch (err) {
-        setIsLoading(false);
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        const e = err instanceof Error ? err : new Error(String(err));
-        setError(e);
-        throw e;
-      }
-    },
-    [loadBlob]
-  );
+      const blob = await (await fetch(`data:${result.contentType};base64,${result.audio}`)).blob();
+      await loadFromBlob(blob);
+      setHasAudio(true);
+      setIsLoading(false);
+      await audio.play();
+    } catch (err) {
+      setIsLoading(false);
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      const e = err instanceof Error ? err : new Error(String(err));
+      setError(e);
+      throw e;
+    }
+  }, [loadFromBlob]);
 
-  const playUrl = useCallback(
-    async (url: string): Promise<void> => {
-      const audio = audioRef.current;
-      if (!audio) return;
+  const playUrl = useCallback(async (url: string): Promise<void> => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        await loadBlob(url);
-        setHasAudio(true);
-        setIsLoading(false);
-        await audio.play();
-      } catch (err) {
-        setIsLoading(false);
-        if (err instanceof DOMException && err.name === "AbortError") return;
-        const e = err instanceof Error ? err : new Error(String(err));
-        setError(e);
-        throw e;
-      }
-    },
-    [loadBlob]
-  );
+    try {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      await loadFromBlob(await resp.blob());
+      setHasAudio(true);
+      setIsLoading(false);
+      await audio.play();
+    } catch (err) {
+      setIsLoading(false);
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      const e = err instanceof Error ? err : new Error(String(err));
+      setError(e);
+      throw e;
+    }
+  }, [loadFromBlob]);
 
   const replay = useCallback(async (): Promise<void> => {
     const audio = audioRef.current;

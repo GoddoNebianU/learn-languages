@@ -74,7 +74,7 @@ const { apiKey, apiUrl, modelName } = getLlmConfig(services);
 - `getServices()` → 原始 services JSON
 - `getLlmConfig(services)` / `getTtsConfig(services)` / `getSmtpConfig(services)` → 解构后的配置对象
 
-> `getTtsConfig(services)` 返回 `{ apiKey }`。`apiKey` 是 inference.sh 平台的 Bearer API Key (`inf_` 前缀, **仅服务端使用**, 经 `/api/tts` 代理转发, 永不下发前端)。apiKey 缺失则 TTS 不可用。TTS 调度细节见 [ai-pipelines.md](./ai-pipelines.md)。
+> `getTtsConfig(services)` 返回 `{ apiKey }`。`apiKey` 是 inference.sh 平台的 Bearer API Key (`inf_` 前缀, **仅服务端使用**, 由 `synthesizeTts` server action 消费, 永不下发前端)。apiKey 缺失则 TTS 不可用。TTS 调度细节见 [ai-pipelines.md](./ai-pipelines.md)。
 
 ### 客户端状态 `src/lib/capability-store.ts`
 
@@ -213,7 +213,7 @@ AdminSettings 保存
 | 4 个功能开关 (signup/userProfile/social/email) | ADMIN_JWT_SECRET |
 |  | NEXT_PUBLIC_AUTH_MODE |
 
-> TTS API Key (inference.sh Bearer token) 虽可热改, 但**仅服务端读取**, 由 `/api/tts` 代理消费, 前端只拿到最终音频 URL, 凭据不暴露。
+> TTS API Key (inference.sh Bearer token) 虽可热改, 但**仅服务端读取**, 由 `synthesizeTts` server action 消费, 前端只拿到最终音频, 凭据不暴露。
 
 ## 初始化
 

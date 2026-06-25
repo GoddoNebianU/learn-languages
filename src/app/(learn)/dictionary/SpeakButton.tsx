@@ -10,17 +10,14 @@ interface SpeakButtonProps {
   className?: string;
 }
 
-export function SpeakButton({ text, queryLang, className }: SpeakButtonProps) {
+export function SpeakButton({ text, className }: SpeakButtonProps) {
   const t = useTranslations("dictionary");
   const { speak, isLoading } = useAudioPlayer();
 
   const handlePlay = async () => {
     if (isLoading || !text) return;
-    const lang = queryLang
-      ? queryLang.charAt(0).toUpperCase() + queryLang.slice(1)
-      : "Auto";
     try {
-      await speak(text, lang);
+      await speak(text);
     } catch (e) {
       console.error("TTS playback failed", e);
     }

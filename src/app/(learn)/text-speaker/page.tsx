@@ -123,29 +123,9 @@ export default function TextSpeakerPage() {
     }
 
     try {
-      let theLanguage: string;
-
-      if (customLanguage.trim()) {
-        theLanguage = customLanguage.trim();
-      } else if (selectedLanguage !== "Auto") {
-        theLanguage = selectedLanguage;
-      } else if (language) {
-        theLanguage = language;
-      } else {
-        const tmp_language = await genLanguage(textRef.current.slice(0, 30));
-        setLanguage(tmp_language);
-        theLanguage = tmp_language;
-      }
-
-      theLanguage = theLanguage
-        .toLowerCase()
-        .replace(/[^a-z]/g, "")
-        .replace(/^./, (match) => match.toUpperCase());
-
-      await speak(textRef.current, theLanguage);
+      await speak(textRef.current);
     } catch (e) {
       console.error(t("audioPlaybackFailed"), e);
-      setLanguage(null);
     }
   };
 
