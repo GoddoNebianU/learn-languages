@@ -46,11 +46,7 @@ export interface ServiceInputUpdateAdminSettings {
   capabilities?: Capabilities;
   services?: {
     llm?: { apiKey: string; apiUrl: string; modelName: string };
-    tts?: {
-      primaryUrl: string;
-      primaryUsername: string;
-      primaryPassword: string;
-    };
+    tts?: { apiKey: string };
     smtp?: {
       host: string;
       port: number;
@@ -71,9 +67,7 @@ export interface AdminSettingsData {
       modelName: string;
     };
     tts: {
-      primaryUrl: string;
-      primaryUsername: string;
-      primaryPassword: string;
+      apiKey: string;
     };
     smtp: {
       host: string;
@@ -126,9 +120,7 @@ export async function serviceGetAdminSettings(): Promise<{
             modelName: llm.modelName ?? "",
           },
           tts: {
-            primaryUrl: tts.primaryUrl ?? "",
-            primaryUsername: tts.primaryUsername ?? "",
-            primaryPassword: maskSecret(tts.primaryPassword),
+            apiKey: maskSecret(tts.apiKey),
           },
           smtp: {
             host: (smtp.host as string) ?? "",
@@ -175,11 +167,7 @@ export async function serviceUpdateAdminSettings(
     }
     if (input.services?.tts) {
       mergedServices.tts = {
-        ...input.services.tts,
-        primaryPassword: preserveSecret(
-          input.services.tts.primaryPassword,
-          currentTts.primaryPassword
-        ),
+        apiKey: preserveSecret(input.services.tts.apiKey, currentTts.apiKey),
       };
     }
     if (input.services?.smtp) {

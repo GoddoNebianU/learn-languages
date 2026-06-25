@@ -26,7 +26,7 @@ const DEFAULT_CAPABILITIES = {
 
 const DEFAULT_SERVICES: InputJsonValue = {
   llm: { apiKey: "", apiUrl: "https://api.deepseek.com/chat/completions", modelName: "deepseek-v4-flash" },
-  tts: { primaryUrl: "", primaryUsername: "", primaryPassword: "" },
+  tts: { apiKey: "" },
   smtp: { host: "", port: 587, secure: false, user: "", pass: "", from: "" },
 };
 

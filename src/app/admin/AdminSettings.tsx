@@ -30,9 +30,7 @@ interface AdminSettingsProps {
     services: {
       llm: { apiKey: string; apiUrl: string; modelName: string };
       tts: {
-        primaryUrl: string;
-        primaryUsername: string;
-        primaryPassword: string;
+        apiKey: string;
       };
       smtp: { host: string; port: number; secure: boolean; user: string; pass: string; from: string };
     };
@@ -174,9 +172,7 @@ export function AdminSettings({ initialSettings }: AdminSettingsProps) {
 
         <SectionCard icon={<Volume2 size={20} />} title="TTS Service">
           <div className="space-y-4">
-            <LabeledInput label="Primary TTS URL" value={tts.primaryUrl} onChange={(v) => updateTts("primaryUrl", v)} placeholder="https://tts.example.com/generate" />
-            <LabeledInput label="Primary Username" value={tts.primaryUsername} onChange={(v) => updateTts("primaryUsername", v)} placeholder="Basic auth username" />
-            <PasswordInput label="Primary Password" value={tts.primaryPassword} onChange={(v) => updateTts("primaryPassword", v)} placeholder="Basic auth password" />
+            <PasswordInput label="inference.sh API Key" value={tts.apiKey} onChange={(v) => updateTts("apiKey", v)} placeholder="inf_..." />
           </div>
         </SectionCard>
 

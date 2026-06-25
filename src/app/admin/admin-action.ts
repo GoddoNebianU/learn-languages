@@ -153,13 +153,7 @@ const settingsSchema = z.object({
   services: z
     .object({
       llm: z.object({ apiKey: z.string(), apiUrl: z.string(), modelName: z.string() }).optional(),
-      tts: z
-        .object({
-          primaryUrl: z.string(),
-          primaryUsername: z.string(),
-          primaryPassword: z.string(),
-        })
-        .optional(),
+      tts: z.object({ apiKey: z.string() }).optional(),
       smtp: z
         .object({
           host: z.string(),

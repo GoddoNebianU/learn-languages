@@ -9,7 +9,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **Translation** -- multi-language AI translation with automatic language detection and IPA phonetic annotation
 - **Dictionary** -- AI-driven word lookup with part-of-speech analysis, definitions, and example sentences
 - **SRT Player** -- subtitle file playback with per-word lookup links and auto-pause
-- **Text-to-Speech** -- custom primary TTS endpoint for natural pronunciation
+- **Text-to-Speech** -- inference.sh OmniVoice TTS for natural pronunciation
 - **Decks & Cards** -- create, manage, and study vocabulary with drag-and-drop reordering and multiple review modes (sequential, random, infinite, dictation)
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
@@ -19,7 +19,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 
 ## Stack
 
-Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 locales) / OpenAI-compatible LLM / Custom TTS
+Next.js 16 (App Router) / React 19 / TypeScript / Tailwind CSS v4 / Prisma 7 / PostgreSQL / better-auth / next-intl (9 locales) / OpenAI-compatible LLM / inference.sh OmniVoice TTS
 
 ## Getting started
 
@@ -86,7 +86,7 @@ graph TB
 
     subgraph External["External Services"]
         LLM["Zhipu AI LLM<br/>(OpenAI API)"]
-        Qwen["Primary TTS<br/>(custom endpoint)"]
+        Qwen["inference.sh OmniVoice<br/>(TTS)"]
         SMTP["SMTP Server<br/>(nodemailer)"]
     end
 
@@ -120,7 +120,7 @@ Located in `src/lib/bigmodel/`. Multi-stage orchestrator pattern: `orchestrator.
 | reading | 2 | 1+N | Translate-split → per-sentence tokenize-align |
 | ocr | 1 | 1 | Image vocabulary extraction (unused) |
 
-Shared: `llm.ts` (OpenAI-compatible client), `tts.ts` (primary TTS service).
+Shared: `llm.ts` (OpenAI-compatible client), `tts.ts` (inference.sh OmniVoice TTS service).
 
 ### Single/Multi-user mode
 

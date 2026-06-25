@@ -55,19 +55,19 @@ reading/
 
 ## 独立服务: TTS
 
-TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接自部署的 Primary TTS 接口 (OmniVoice, 支持 600+ 语言), 返回 wav 音频, 走 HTTP basic auth。
+TTS 不是管道, 而是独立的音频合成服务, 对接代码在 `src/lib/providers/tts.ts`。采用**单层**结构: 仅对接 inference.sh 托管的 OmniVoice (`infsh/omnivoice`, 支持 600+ 语言), 返回 wav (24kHz) 音频, 走 Bearer API Key 鉴权。
 
-- **Primary (OmniVoice)**: 自部署 TTS 接口, 返回 wav 音频, 走 HTTP basic auth
-- **lang 参数**: 可选, 格式为首字母大写的英文语言名 (如 `Chinese` / `English` / `Esperanto`)。缺省 (`Auto`) 或 OmniVoice 无法识别时, 自动从 `text` 推导朗读语言
+- **Primary (inference.sh OmniVoice)**: inference.sh 托管的 TTS 应用 (`infsh/omnivoice`), 返回 wav 音频, 走 Bearer API Key 鉴权。异步任务模型: `POST /run` 提交任务 → 轮询 `GET /tasks/:id` → 下载 `output.audio.uri` 托管音频
+- **lang 参数**: 保留兼容性但 OmniVoice 不使用 — 语言由 text 自动推导 (支持 600+ 语言)
 
 ### `providers/tts.ts` 导出
 
-- `getTTSUrl(text, lang, regenerate = false)` — 对外入口。若 primary 已配置 → 返回 `/api/tts?text=&lang=` (代理路由, lang 为 `Auto` 时不带 lang 参数); 否则 → 返回 null。`regenerate` 为 true 时追加 `&_t=` 时间戳绕过缓存
-- `fetchPrimaryTtsAudio(text, lang?)` — 调 primary 接口 (basic auth), 返回 wav 音频流
+- `getTTSUrl(text, lang, regenerate = false)` — 对外入口。若 primary 已配置 (apiKey 非空) → 返回 `/api/tts?text=&lang=` (代理路由); 否则 → 返回 null。`regenerate` 为 true 时追加 `&_t=` 时间戳绕过缓存
+- `fetchPrimaryTtsAudio(text, lang?)` — 调 inference.sh OmniVoice (Bearer Key): `POST /run` 提交 → 必要时轮询 → 下载 `output.audio.uri`, 返回 wav 音频
 
 ### `/api/tts` 代理路由 (`src/app/api/tts/route.ts`)
 
-`GET /api/tts?text=&lang=`。调 primary 接口取 wav 返回客户端。**primary 凭据 (URL/用户名/密码) 服务端从 DB 读取, 永不暴露给前端**。
+`GET /api/tts?text=&lang=`。调 inference.sh OmniVoice 取 wav 返回客户端。**API Key 服务端从 DB 读取, 永不暴露给前端**。
 
 ### 调用与错误处理
 
@@ -83,7 +83,7 @@ TTS 直接从页面组件调用 (不经过 action 层),因为 TTS 返回音频 U
 | 文件 | 导出 | 用途                                     |
 | -------------- | --------------------------- | ---------------------------------------- |
 | `@/lib/providers/llm.ts` | `getAnswer(prompt)` | LLM API 封装 (直接 fetch, 含重试: 指数退避, 最多 2 次, 30s 超时) |
-| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (OmniVoice, 600+ 语言) |
+| `@/lib/providers/tts.ts` | `getTTSUrl` / `fetchPrimaryTtsAudio` | TTS 服务 (inference.sh OmniVoice, 600+ 语言, Bearer Key) |
 | `@/utils/json` | `parseAIGeneratedJSON<T>()` | 解析 AI 返回的 JSON (含 markdown 代码块) |
 | `@/lib/errors` | `LookUpError`               | 词典管道专用错误类                       |
 | `@/lib/logger` | `createLogger()`            | 所有管道文件使用                         |
