@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Button } from "@/design-system/button";
 import { Card } from "@/design-system/card";
 import { Input } from "@/design-system/input";
+import { Field } from "@/design-system/field";
 import { IconButton } from "@/design-system/icon-button";
 import { Modal } from "@/design-system/modal";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -169,22 +170,18 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
           <Card variant="bordered" padding="md">
             <h2 className="mb-4 text-lg font-semibold text-gray-900">New User</h2>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Name</label>
+              <Field label="Name">
                 <Input variant="bordered" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+              </Field>
+              <Field label="Username">
                 <Input variant="bordered" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="letters, numbers, underscores" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+              </Field>
+              <Field label="Email">
                 <Input variant="bordered" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="user@example.com" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+              </Field>
+              <Field label="Password">
                 <Input variant="bordered" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="min 8 characters" />
-              </div>
+              </Field>
             </div>
             <div className="mt-4 flex gap-2">
               <Button variant="primary" onClick={handleCreate} disabled={!canCreate} loading={isCreating}>
@@ -195,10 +192,9 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
           </Card>
         )}
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Search</label>
+        <Field label="Search">
           <Input variant="bordered" value={search} onChange={(e) => handleSearch(e.target.value)} placeholder="Search by username or email" />
-        </div>
+        </Field>
 
         <Card variant="bordered" padding="md">
           {users.length === 0 ? (
@@ -299,26 +295,25 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
         </Modal.Header>
         <Modal.Body>
           <div className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Name</label>
+            <Field label="Name">
               <Input variant="bordered" value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Full name" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+            </Field>
+            <Field
+              label="Username"
+              helperText={
+                editingUser && isSystemAdmin(editingUser)
+                  ? "System admin username is locked in single-user mode."
+                  : undefined
+              }
+            >
               <Input variant="bordered" value={editUsername} onChange={(e) => setEditUsername(e.target.value)} placeholder="letters, numbers, underscores" disabled={editingUser ? isSystemAdmin(editingUser) : false} />
-              {editingUser && isSystemAdmin(editingUser) && (
-                <p className="mt-1 text-xs text-amber-600">System admin username is locked in single-user mode.</p>
-              )}
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            </Field>
+            <Field label="Email">
               <Input variant="bordered" type="email" value={editEmail} onChange={(e) => setEditEmail(e.target.value)} placeholder="user@example.com" />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">New Password</label>
+            </Field>
+            <Field label="New Password" helperText="Min 8 characters. Leave blank to keep unchanged.">
               <Input variant="bordered" type="password" value={editPassword} onChange={(e) => setEditPassword(e.target.value)} placeholder="Leave blank to keep current password" />
-              <p className="mt-1 text-xs text-gray-400">Min 8 characters. Leave blank to keep unchanged.</p>
-            </div>
+            </Field>
           </div>
         </Modal.Body>
         <Modal.Footer>

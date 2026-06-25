@@ -6,6 +6,7 @@ import { Eye, EyeOff, Shield } from "lucide-react";
 import { Button } from "@/design-system/button";
 import { Card } from "@/design-system/card";
 import { Input } from "@/design-system/input";
+import { Field } from "@/design-system/field";
 import { IconButton } from "@/design-system/icon-button";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -62,8 +63,7 @@ export function AdminLogin(_props: AdminLoginProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+            <Field label="Password" errorText={error || undefined}>
               <div className="relative">
                 <Input
                   variant="bordered"
@@ -82,9 +82,7 @@ export function AdminLogin(_props: AdminLoginProps) {
                   className="absolute right-2 top-1/2 -translate-y-1/2"
                 />
               </div>
-            </div>
-
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            </Field>
 
             <Button variant="primary" type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Please wait..." : "Login"}

@@ -4,6 +4,7 @@ import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { LinkButton } from "@/design-system/link-button";
 import { Input } from "@/design-system/input";
+import { Field } from "@/design-system/field";
 import { Select } from "@/design-system/select";
 import { Textarea } from "@/design-system/textarea";
 import { Modal } from "@/design-system/modal";
@@ -140,10 +141,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
       <Modal.Body className="space-y-4">
         <div className="pt-4">
           <HStack gap={3}>
-            <div className="flex-1">
-              <label className="mb-2 block text-sm font-medium text-gray-800">
-                {t("cardType")}
-              </label>
+            <Field label={t("cardType")} className="flex-1">
               <Select
                 value={cardType}
                 onChange={(e) => setCardType(e.target.value as CardType)}
@@ -153,7 +151,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
                 <option value="PHRASE">{t("phraseCard")}</option>
                 <option value="SENTENCE">{t("sentenceCard")}</option>
               </Select>
-            </div>
+            </Field>
           </HStack>
         </div>
         <div className="border-t border-gray-100 pt-4"></div>
@@ -185,28 +183,28 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
           </HStack>
         </div>
 
-        <div className="border-t border-gray-100 pt-4">
-          <label className="mb-2 block text-sm font-medium text-gray-800">
-            {cardType === "SENTENCE" ? t("sentence") : t("word")} *
-          </label>
+        <Field
+          label={cardType === "SENTENCE" ? t("sentence") : t("word")}
+          required
+          className="border-t border-gray-100 pt-4"
+        >
           <Input
             value={word}
             onChange={(e) => setWord(e.target.value)}
             className="w-full"
             placeholder={cardType === "SENTENCE" ? t("sentencePlaceholder") : t("wordPlaceholder")}
           />
-        </div>
+        </Field>
 
         {showIpa && (
-          <div className="border-t border-gray-100 pt-4">
-            <label className="mb-2 block text-sm font-medium text-gray-800">{t("ipa")}</label>
+          <Field label={t("ipa")} className="border-t border-gray-100 pt-4">
             <Input
               value={ipa}
               onChange={(e) => setIpa(e.target.value)}
               className="w-full"
               placeholder={t("ipaPlaceholder")}
             />
-          </div>
+          </Field>
         )}
 
         <div className="border-t border-gray-100 pt-4">

@@ -57,39 +57,68 @@ components/
 
 ## 设计系统 `src/design-system/`
 
-基于 CVA 的可复用 UI 组件库。15 个组件文件, 平铺在目录下 (无子目录)。所有组件使用 Lucide React 图标 (非内联 SVG)。
+基于 CVA 的可复用 UI 组件库。18 个文件, 平铺在目录下 (无子目录)。`_shared.ts` 存放跨组件共享的 CVA 常量。所有组件使用 Lucide React 图标 (非内联 SVG)。
 
 ### 组件列表
 
 | 组件                                              | 文件                    | 说明                   |
 | ------------------------------------------------- | ----------------------- | ---------------------- |
-| Button                                            | `button.tsx`            | 按钮 (primary / light) |
-| IconButton                                        | `icon-button.tsx`       | 图标按钮 (shape: default/round, tone: default/muted) |
-| Badge                                             | `badge.tsx`             | 标签 (neutral/info/success/warning/error) |
-| LinkButton                                        | `link-button.tsx`       | 文字链接按钮           |
-| Card, CardBody                                     | `card.tsx`              | 卡片容器               |
-| Input                                             | `input.tsx`             | 输入框                 |
-| Select                                            | `select.tsx`            | 下拉选择               |
-| Textarea                                          | `textarea.tsx`          | 多行文本               |
-| Range                                             | `range.tsx`             | 范围滑块               |
-| Progress                                          | `progress.tsx`          | 进度条                 |
+| Button                                            | `button.tsx`            | 按钮 (primary / light / danger / ghost / outline), forwardRef, loading + aria-busy |
+| IconButton                                        | `icon-button.tsx`       | 图标按钮 (shape: default/round, tone: default/muted/danger), forwardRef, loading |
+| Badge                                             | `badge.tsx`             | 标签 (neutral/info/success/warning/error, size: sm/md/lg) |
+| LinkButton                                        | `link-button.tsx`       | 文字链接按钮, forwardRef |
+| Card, CardBody                                     | `card.tsx`              | 卡片容器, forwardRef |
+| Field                                             | `field.tsx`             | 表单字段包装器 (label/errorText/helperText, 自动 htmlFor/id/aria) |
+| Switch                                            | `switch.tsx`            | 开关切换 (role=switch, aria-checked) |
+| Input                                             | `input.tsx`             | 输入框, forwardRef |
+| Select                                            | `select.tsx`            | 下拉选择, forwardRef |
+| Textarea                                          | `textarea.tsx`          | 多行文本, forwardRef, size 变体 |
+| Range                                             | `range.tsx`             | 范围滑块, forwardRef |
+| Progress                                          | `progress.tsx`          | 进度条 (variant 色, indeterminate) |
 | Skeleton                                          | `skeleton.tsx`          | 骨架屏                 |
 | VStack, HStack                                    | `stack.tsx`             | 堆叠布局               |
 | Container                                         | `container.tsx`         | 容器                   |
-| Modal                                             | `modal.tsx`             | 模态框                 |
-| OverflowDropdown                                  | `overflow-dropdown.tsx` | 溢出下拉               |
+| Modal                                             | `modal.tsx`             | 模态框 (条件 aria-labelledby) |
+| OverflowDropdown                                  | `overflow-dropdown.tsx` | 溢出下拉 (triggerAriaLabel 可配) |
+| — (内部)                                          | `_shared.ts`            | 共享: focusRing / disabledStyles / transition / fieldVariants |
 
 ### Button 变体
 
-`variant`: `primary` (实心主色) 和 `light` (浅灰背景)。布尔变体: `pill` (圆角胶囊), `fullWidth` (全宽), `selected` (选中态)。
+`variant`: `primary` (实心主色) / `light` (浅灰) / `danger` (红色实心) / `ghost` (透明) / `outline` (描边)。布尔变体: `pill` (圆角胶囊), `fullWidth` (全宽), `selected` (ring 高亮, 不覆盖 variant 色), `loading` (spinner + aria-busy)。
 
 ```tsx
 <Button variant="primary">主操作</Button>
-<Button variant="light">次要操作</Button>
+<Button variant="danger">删除</Button>
+<Button variant="ghost">取消</Button>
 <Button variant="light" selected>选中态</Button>
-<Button variant="light" pill>圆角胶囊</Button>
-<Button variant="primary" fullWidth>全宽</Button>
+<Button variant="primary" loading>保存中</Button>
 ```
+
+### Field 表单包装器
+
+自动关联 label ↔ input (`htmlFor` / `id`), 接管 `aria-invalid` / `aria-describedby`, 渲染 required 指示符和错误/辅助文案。
+
+```tsx
+import { Field } from "@/design-system/field";
+
+<Field label="邮箱" required errorText="格式不正确">
+  <Input type="email" />
+</Field>
+```
+
+### Switch 开关
+
+替代原生 checkbox 的开关组件, `role="switch"` + `aria-checked`。
+
+```tsx
+import { Switch } from "@/design-system/switch";
+
+<Switch checked={enabled} onCheckedChange={setEnabled} />
+```
+
+### 共享样式 `_shared.ts`
+
+所有交互组件引用 `focusRing` / `disabledStyles` / `transition` 确保一致。表单组件 (Input/Select/Textarea) 共享 `fieldVariants` (variant/size/error)。
 
 ### 导入方式
 
@@ -101,7 +130,7 @@ import { LinkButton } from "@/design-system/link-button";
 
 ### CVA 使用模式
 
-12/15 组件使用 CVA (button, card, input, select, textarea, range, progress, skeleton, stack, container, icon-button, badge)。3 个不使用: link-button, modal, overflow-dropdown。
+17/18 文件使用 CVA (_shared.ts 是纯常量)。LinkButton 使用 forwardRef + cn。Modal 使用 compound component 模式。OverflowDropdown 使用 roving tabindex。
 
 ```tsx
 // 标准模式

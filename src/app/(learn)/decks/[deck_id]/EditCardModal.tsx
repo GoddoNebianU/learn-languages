@@ -4,6 +4,7 @@ import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { LinkButton } from "@/design-system/link-button";
 import { Input } from "@/design-system/input";
+import { Field } from "@/design-system/field";
 import { Textarea } from "@/design-system/textarea";
 import { Modal } from "@/design-system/modal";
 import { Badge } from "@/design-system/badge";
@@ -132,23 +133,19 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
         <Badge>{card.queryLang}</Badge>
         </HStack>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            {card.cardType === "SENTENCE" ? t("sentence") : t("word")} *
-          </label>
+        <Field label={card.cardType === "SENTENCE" ? t("sentence") : t("word")} required>
           <Input value={word} onChange={(e) => setWord(e.target.value)} className="w-full" />
-        </div>
+        </Field>
 
         {showIpa && (
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">{t("ipa")}</label>
+          <Field label={t("ipa")}>
             <Input
               value={ipa}
               onChange={(e) => setIpa(e.target.value)}
               className="w-full"
               placeholder={t("ipaPlaceholder")}
             />
-          </div>
+          </Field>
         )}
 
         <div>
