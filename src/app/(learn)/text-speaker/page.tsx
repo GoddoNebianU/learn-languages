@@ -15,7 +15,6 @@ import { useTranslations } from "next-intl";
 import { getLocalStorageOperator } from "@/lib/browser/localStorageOperators";
 import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { getTTSUrl } from "@/lib/providers/tts";
 
 const TTS_LANGUAGES = [
   { value: "Auto", label: "auto" },
@@ -71,16 +70,13 @@ export default function TextSpeakerPage() {
   const [saving, setSaving] = useState(false);
   const [ipaEnabled, setIPAEnabled] = useState(false);
   const [speed, setSpeed] = useState(1);
-  const [pause, setPause] = useState(true);
   const [autopause, setAutopause] = useState(true);
   const textRef = useRef("");
   const [language, setLanguage] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("Auto");
   const [customLanguage, setCustomLanguage] = useState<string>("");
   const [ipa, setIPA] = useState<string>("");
-  const objurlRef = useRef<string | null>(null);
-  const [processing, setProcessing] = useState(false);
-  const { stop, playAudio, audioRef } = useAudioPlayer();
+  const { speak, replay, stop, reset, isPlaying, isLoading, hasAudio, audioRef, setSpeed: applySpeed } = useAudioPlayer();
 
   const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
     typeof TextSpeakerArraySchema
@@ -91,23 +87,32 @@ export default function TextSpeakerPage() {
     if (!audio) return;
 
     const handleEnded = () => {
-      if (autopause) {
-        setPause(true);
-      } else if (objurlRef.current) {
-        void playAudio(objurlRef.current);
+      if (!autopause) {
+        void replay();
       }
     };
     audio.addEventListener("ended", handleEnded);
     return () => {
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [audioRef, autopause, playAudio]);
+  }, [audioRef, autopause, replay]);
 
-  const speak = async () => {
-    if (processing) return;
-    setProcessing(true);
+  const handleSpeak = async () => {
+    if (isLoading) return;
 
-    if (ipa.length === 0 && ipaEnabled && textRef.current.length !== 0) {
+    if (isPlaying) {
+      stop();
+      return;
+    }
+
+    if (hasAudio) {
+      void replay();
+      return;
+    }
+
+    if (!textRef.current.trim()) return;
+
+    if (ipaEnabled && ipa.length === 0) {
       try {
         const result = await genIPA(textRef.current);
         setIPA(result);
@@ -117,66 +122,31 @@ export default function TextSpeakerPage() {
       }
     }
 
-    if (pause) {
-      // 如果没在读
-      if (textRef.current.length === 0) {
-        // 没文本咋读
+    try {
+      let theLanguage: string;
+
+      if (customLanguage.trim()) {
+        theLanguage = customLanguage.trim();
+      } else if (selectedLanguage !== "Auto") {
+        theLanguage = selectedLanguage;
+      } else if (language) {
+        theLanguage = language;
       } else {
-        setPause(false);
-
-        if (objurlRef.current) {
-          // 之前有播放
-          await playAudio(objurlRef.current);
-        } else {
-          // 第一次播放
-          try {
-            let theLanguage: string;
-
-            if (customLanguage.trim()) {
-              theLanguage = customLanguage.trim();
-            } else if (selectedLanguage !== "Auto") {
-              theLanguage = selectedLanguage;
-            } else if (language) {
-              theLanguage = language;
-            } else {
-              const tmp_language = await genLanguage(textRef.current.slice(0, 30));
-              setLanguage(tmp_language);
-              theLanguage = tmp_language;
-            }
-
-            theLanguage = theLanguage
-              .toLowerCase()
-              .replace(/[^a-z]/g, "")
-              .replace(/^./, (match) => match.toUpperCase());
-
-            const ttsUrl = await getTTSUrl(textRef.current, theLanguage);
-            if (!ttsUrl) {
-              throw new Error("TTS returned no audio URL");
-            }
-            // fetch as blob then create object URL — avoids <audio> element
-            // timing out on slow TTS generation (inference.sh takes ~6s)
-            const audioResp = await fetch(ttsUrl);
-            if (!audioResp.ok) {
-              throw new Error(`TTS HTTP ${audioResp.status}`);
-            }
-            const blob = await audioResp.blob();
-            objurlRef.current = URL.createObjectURL(blob);
-            await playAudio(objurlRef.current);
-          } catch (e) {
-            console.error(t("audioPlaybackFailed"), e);
-            setPause(true);
-            setLanguage(null);
-            setProcessing(false);
-          }
-        }
+        const tmp_language = await genLanguage(textRef.current.slice(0, 30));
+        setLanguage(tmp_language);
+        theLanguage = tmp_language;
       }
-    } else {
-      // 如果在读就暂停
-      setPause(true);
-      stop();
-    }
 
-    setProcessing(false);
+      theLanguage = theLanguage
+        .toLowerCase()
+        .replace(/[^a-z]/g, "")
+        .replace(/^./, (match) => match.toUpperCase());
+
+      await speak(textRef.current, theLanguage);
+    } catch (e) {
+      console.error(t("audioPlaybackFailed"), e);
+      setLanguage(null);
+    }
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -185,19 +155,14 @@ export default function TextSpeakerPage() {
     setSelectedLanguage("Auto");
     setCustomLanguage("");
     setIPA("");
-    if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
-    objurlRef.current = null;
-    stop();
-    setPause(true);
+    reset();
   };
 
   const letMeSetSpeed = (new_speed: number) => {
     return () => {
       setSpeed(new_speed);
-      if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
-      objurlRef.current = null;
+      applySpeed(new_speed);
       stop();
-      setPause(true);
     };
   };
 
@@ -206,10 +171,7 @@ export default function TextSpeakerPage() {
     textRef.current = item.text;
     setLanguage(item.language);
     setIPA(item.ipa || "");
-    if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
-    objurlRef.current = null;
-    stop();
-    setPause(true);
+    reset();
   };
 
   const save = async () => {
@@ -330,20 +292,17 @@ export default function TextSpeakerPage() {
           {/* 播放/暂停按钮 */}
           <IconButton
             size={28}
-            onClick={speak}
-            iconSrc={pause ? IMAGES.play_arrow : IMAGES.pause}
+            onClick={handleSpeak}
+            iconSrc={!isPlaying ? IMAGES.play_arrow : IMAGES.pause}
             iconAlt="playorpause"
-            className={`${processing ? "bg-gray-200" : ""}`}
+            className={`${isLoading ? "bg-gray-200" : ""}`}
           ></IconButton>
           {/* 自动暂停按钮 */}
           <IconButton
             size={28}
             onClick={() => {
               setAutopause(!autopause);
-              if (objurlRef.current) {
-                stop();
-              }
-              setPause(true);
+              stop();
             }}
             iconSrc={autopause ? IMAGES.autoplay : IMAGES.autopause}
             iconAlt="autoplayorpause"
@@ -375,9 +334,7 @@ export default function TextSpeakerPage() {
                 onClick={() => {
                   setSelectedLanguage(lang.value);
                   setCustomLanguage("");
-                  if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
-                  objurlRef.current = null;
-                  setPause(true);
+                  reset();
                 }}
                 size="sm"
               >
@@ -391,9 +348,7 @@ export default function TextSpeakerPage() {
               onChange={(e) => {
                 setCustomLanguage(e.target.value);
                 setSelectedLanguage("Auto");
-                if (objurlRef.current) URL.revokeObjectURL(objurlRef.current);
-                objurlRef.current = null;
-                setPause(true);
+                reset();
               }}
               placeholder={t("customLanguage")}
               className="w-auto min-w-[120px]"

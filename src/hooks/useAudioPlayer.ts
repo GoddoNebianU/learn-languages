@@ -1,238 +1,229 @@
 import { useRef, useEffect, useState, useCallback } from "react";
+import { getTTSUrl } from "@/lib/providers/tts";
 
-type AudioPlayerError = Error | null;
-
+/**
+ * 可复用的音频播放 hook。
+ *
+ * 所有音频通过 fetch → blob → object URL 加载, 避免 <audio> 元素
+ * 对慢响应 (如 inference.sh TTS 生成 ~5s) 的超时问题。
+ *
+ * - speak(text, lang?)  — TTS 全流程: getTTSUrl → fetch → blob → play
+ * - playUrl(url)        — 直接 URL: fetch → blob → play
+ * - replay()            — 重播当前音频 (不重新请求)
+ * - reset()             — 停止并清空音频 (文本/卡片切换时调用)
+ * - setSpeed(rate)      — 设置播放速度 (修复: 立即应用到 playbackRate)
+ */
 export function useAudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const [state, setState] = useState({
-    isPlaying: false,
-    isLoading: false,
-    duration: 0,
-    currentTime: 0,
-    volume: 1,
-  });
-  const [error, setError] = useState<AudioPlayerError>(null);
+  const blobUrlRef = useRef<string | null>(null);
+  const speedRef = useRef(1);
 
-  // Initialize audio element
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasAudio, setHasAudio] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = "metadata";
+    audio.preload = "auto";
     audioRef.current = audio;
 
-    // Event listeners
-    const handleLoadStart = () => setState((prev) => ({ ...prev, isLoading: true }));
-    const handleCanPlay = () => setState((prev) => ({ ...prev, isLoading: false }));
-    const handleLoadedMetadata = () => setState((prev) => ({ ...prev, duration: audio.duration }));
-    const handleTimeUpdate = () =>
-      setState((prev) => ({ ...prev, currentTime: audio.currentTime }));
-    const handleEnded = () => setState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
-    const handleError = (e: Event) => {
-      const target = e.target as HTMLAudioElement;
-      // 忽略中止错误，这些是预期的
-      if (target.error?.code !== MediaError.MEDIA_ERR_ABORTED) {
-        setError(new Error(target.error?.message || "Audio playback error"));
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const onLoadedMetadata = () => setDuration(audio.duration || 0);
+    const onEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
+    const onError = () => {
+      if (audio.error?.code !== MediaError.MEDIA_ERR_ABORTED) {
+        setError(new Error(audio.error?.message || "Audio playback error"));
       }
-      setState((prev) => ({ ...prev, isLoading: false, isPlaying: false }));
+      setIsLoading(false);
+      setIsPlaying(false);
     };
 
-    audio.addEventListener("loadstart", handleLoadStart);
-    audio.addEventListener("canplay", handleCanPlay);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("ended", onEnded);
+    audio.addEventListener("error", onError);
 
     return () => {
-      // 中止所有进行中的操作
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      audio.removeEventListener("loadstart", handleLoadStart);
-      audio.removeEventListener("canplay", handleCanPlay);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
-
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-        audioRef.current = null;
-      }
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("error", onError);
+      audio.pause();
+      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
     };
   }, []);
 
-  const play = useCallback(async () => {
-    if (!audioRef.current) return;
+  const loadBlob = useCallback(async (url: string): Promise<void> => {
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    try {
-      setError(null);
-      await audioRef.current.play();
-      setState((prev) => ({ ...prev, isPlaying: true }));
-    } catch (err) {
-      // 忽略中止错误
-      if (err instanceof Error && err.name === "AbortError") {
-        return;
-      }
-      const error = err instanceof Error ? err : new Error("Failed to play audio");
-      setError(error);
-      setState((prev) => ({ ...prev, isPlaying: false }));
-      throw error;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const blob = await resp.blob();
+    const objectUrl = URL.createObjectURL(blob);
+
+    if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    blobUrlRef.current = objectUrl;
+
+    audio.src = objectUrl;
+    audio.playbackRate = speedRef.current;
+
+    if (audio.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+      await new Promise<void>((resolve, reject) => {
+        const onReady = () => {
+          cleanup();
+          resolve();
+        };
+        const onErr = () => {
+          cleanup();
+          reject(new Error("Audio decode failed"));
+        };
+        const cleanup = () => {
+          audio.removeEventListener("canplay", onReady);
+          audio.removeEventListener("error", onErr);
+        };
+        audio.addEventListener("canplay", onReady, { once: true });
+        audio.addEventListener("error", onErr, { once: true });
+      });
     }
+  }, []);
+
+  const speak = useCallback(
+    async (text: string, lang?: string, regenerate?: boolean): Promise<void> => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const ttsUrl = await getTTSUrl(text, lang ?? "Auto", regenerate);
+        if (!ttsUrl) throw new Error("TTS not configured");
+
+        await loadBlob(ttsUrl);
+        setHasAudio(true);
+        setIsLoading(false);
+        await audio.play();
+      } catch (err) {
+        setIsLoading(false);
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        const e = err instanceof Error ? err : new Error(String(err));
+        setError(e);
+        throw e;
+      }
+    },
+    [loadBlob]
+  );
+
+  const playUrl = useCallback(
+    async (url: string): Promise<void> => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await loadBlob(url);
+        setHasAudio(true);
+        setIsLoading(false);
+        await audio.play();
+      } catch (err) {
+        setIsLoading(false);
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        const e = err instanceof Error ? err : new Error(String(err));
+        setError(e);
+        throw e;
+      }
+    },
+    [loadBlob]
+  );
+
+  const replay = useCallback(async (): Promise<void> => {
+    const audio = audioRef.current;
+    if (!audio || !blobUrlRef.current) return;
+    audio.currentTime = 0;
+    await audio.play().catch(() => {});
   }, []);
 
   const pause = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setState((prev) => ({ ...prev, isPlaying: false }));
-    }
+    audioRef.current?.pause();
   }, []);
 
   const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    setCurrentTime(0);
+  }, []);
+
+  const reset = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.src = "";
     }
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
+    setHasAudio(false);
+    setIsPlaying(false);
+    setIsLoading(false);
+    setCurrentTime(0);
+    setDuration(0);
+    setError(null);
+  }, []);
+
+  const seek = useCallback((time: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = Math.max(0, Math.min(audio.duration || 0, time));
   }, []);
 
   const setVolume = useCallback((volume: number) => {
     if (audioRef.current) {
-      const clampedVolume = Math.max(0, Math.min(1, volume));
-      audioRef.current.volume = clampedVolume;
-      setState((prev) => ({ ...prev, volume: clampedVolume }));
+      audioRef.current.volume = Math.max(0, Math.min(1, volume));
     }
   }, []);
 
-  const seek = useCallback((time: number) => {
+  const setSpeed = useCallback((speed: number) => {
+    speedRef.current = speed;
     if (audioRef.current) {
-      const clampedTime = Math.max(0, Math.min(audioRef.current.duration || 0, time));
-      audioRef.current.currentTime = clampedTime;
-      setState((prev) => ({ ...prev, currentTime: clampedTime }));
+      audioRef.current.playbackRate = speed;
     }
   }, []);
-
-  const load = useCallback(async (audioUrl: string) => {
-    if (!audioRef.current) return;
-
-    // 中止之前的加载操作
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-
-    try {
-      setError(null);
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      // 如果信号已经中止，直接返回
-      if (abortController.signal.aborted) {
-        return;
-      }
-
-      // 重置当前播放状态
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-
-      // Only load if URL is different or we need to force reload
-      if (audioRef.current.src !== audioUrl) {
-        audioRef.current.src = audioUrl;
-
-        await new Promise<void>((resolve, reject) => {
-          if (!audioRef.current) {
-            reject(new Error("Audio element not found"));
-            return;
-          }
-
-          // 检查是否已经中止
-          if (abortController.signal.aborted) {
-            reject(new DOMException("Aborted", "AbortError"));
-            return;
-          }
-
-          const handleCanPlay = () => {
-            cleanup();
-            resolve();
-          };
-
-          const handleError = (e: Event) => {
-            cleanup();
-            const target = e.target as HTMLAudioElement;
-            // 如果是中止错误，不视为真正的错误
-            if (target.error?.code === MediaError.MEDIA_ERR_ABORTED) {
-              reject(new DOMException("Aborted", "AbortError"));
-            } else {
-              reject(new Error("Failed to load audio"));
-            }
-          };
-
-          const handleAbort = () => {
-            cleanup();
-            reject(new DOMException("Aborted", "AbortError"));
-          };
-
-          const cleanup = () => {
-            audioRef.current?.removeEventListener("canplay", handleCanPlay);
-            audioRef.current?.removeEventListener("error", handleError);
-            abortController.signal.removeEventListener("abort", handleAbort);
-          };
-
-          audioRef.current.addEventListener("canplay", handleCanPlay, { once: true });
-          audioRef.current.addEventListener("error", handleError, { once: true });
-          abortController.signal.addEventListener("abort", handleAbort, { once: true });
-
-          // 如果音频已经可以播放，立即解析
-          if (audioRef.current.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
-            handleCanPlay();
-          }
-        });
-      }
-
-      if (!abortController.signal.aborted) {
-        setState((prev) => ({ ...prev, isLoading: false }));
-      }
-    } catch (err) {
-      // 忽略中止错误
-      if (err instanceof DOMException && err.name === "AbortError") {
-        return;
-      }
-      const error = err instanceof Error ? err : new Error("Failed to load audio");
-      setError(error);
-      setState((prev) => ({ ...prev, isLoading: false }));
-      throw error;
-    } finally {
-      // 清理中止控制器，如果仍然是当前的话
-      if (abortControllerRef.current === abortController) {
-        abortControllerRef.current = null;
-      }
-    }
-  }, []);
-
-  // 同时加载和播放的便捷方法
-  const playAudio = useCallback(
-    async (audioUrl: string) => {
-      await load(audioUrl);
-      await play();
-    },
-    [load, play]
-  );
 
   return {
-    ...state,
-    play,
+    isPlaying,
+    isLoading,
+    hasAudio,
+    error,
+    duration,
+    currentTime,
+    speak,
+    playUrl,
+    replay,
     pause,
     stop,
-    setVolume,
+    reset,
     seek,
-    load,
-    playAudio,
-    error,
+    setVolume,
+    setSpeed,
     audioRef,
   };
 }

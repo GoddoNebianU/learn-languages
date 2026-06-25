@@ -21,7 +21,6 @@ import { Skeleton } from "@/design-system/skeleton";
 import { HStack, VStack } from "@/design-system/stack";
 import { Range } from "@/design-system/range";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSUrl } from "@/lib/providers/tts";
 import { useMemorizeCards } from "./useMemorizeCards";
 import type { StudyMode } from "./useMemorizeCards";
 import { MemorizeCard } from "./MemorizeCard";
@@ -66,19 +65,12 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
     currentCard,
   } = useMemorizeCards(deckId);
 
-  const { play, stop, load } = useAudioPlayer();
-  const audioUrlRef = useRef<string | null>(null);
-  const loadedTextRef = useRef<string | null>(null);
-  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const { speak, replay, reset, isLoading: isAudioLoading } = useAudioPlayer();
+  const loadedTextRef = useRef<string>("");
 
-  const cleanupAudio = () => {
-    if (audioUrlRef.current) {
-      URL.revokeObjectURL(audioUrlRef.current);
-      audioUrlRef.current = null;
-    }
-    loadedTextRef.current = null;
-    stop();
-    setIsAudioLoading(false);
+  const clearAudio = () => {
+    loadedTextRef.current = "";
+    reset();
   };
 
   const handleShowAnswer = () => {
@@ -87,40 +79,30 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
 
   const handleNextCard = () => {
     nextCard();
-    cleanupAudio();
+    clearAudio();
   };
 
   const handlePrevCard = () => {
     prevCard();
-    cleanupAudio();
+    clearAudio();
   };
 
   const playTTS = async (text: string, regenerate = false) => {
     if (isAudioLoading) return;
 
-    if (!regenerate && loadedTextRef.current === text && audioUrlRef.current) {
+    if (!regenerate && loadedTextRef.current === text) {
       try {
-        await play();
+        await replay();
         return;
       } catch {
       }
     }
 
-    setIsAudioLoading(true);
+    loadedTextRef.current = text;
     try {
-      const audioUrl = await getTTSUrl(text, "Auto", regenerate);
-
-      if (audioUrl) {
-        cleanupAudio();
-        loadedTextRef.current = text;
-        audioUrlRef.current = audioUrl;
-        await load(audioUrl);
-        play();
-      }
+      await speak(text, "Auto", regenerate);
     } catch (e) {
       console.error("TTS playback failed", e);
-    } finally {
-      setIsAudioLoading(false);
     }
   };
 
@@ -244,7 +226,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
                 max={totalGroups - 1}
                 onChange={(value) => {
                   goToGroup(value);
-                  cleanupAudio();
+                  clearAudio();
                 }}
               />
             </div>
@@ -262,7 +244,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
                 onChange={(value) => {
                   setCurrentIndex(value);
                   setShowAnswer(false);
-                  cleanupAudio();
+                  clearAudio();
                 }}
               />
             </div>
@@ -275,7 +257,7 @@ const Memorize: React.FC<MemorizeProps> = ({ deckId, deckName }) => {
             onChange={(value) => {
               setCurrentIndex(value);
               setShowAnswer(false);
-              cleanupAudio();
+              clearAudio();
             }}
             className="mb-4"
           />

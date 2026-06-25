@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Volume2 } from "lucide-react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { getTTSUrl } from "@/lib/providers/tts";
 
 interface SpeakButtonProps {
   text: string;
@@ -14,25 +12,17 @@ interface SpeakButtonProps {
 
 export function SpeakButton({ text, queryLang, className }: SpeakButtonProps) {
   const t = useTranslations("dictionary");
-  const { play, load } = useAudioPlayer();
-  const [isLoading, setIsLoading] = useState(false);
+  const { speak, isLoading } = useAudioPlayer();
 
   const handlePlay = async () => {
     if (isLoading || !text) return;
-    setIsLoading(true);
+    const lang = queryLang
+      ? queryLang.charAt(0).toUpperCase() + queryLang.slice(1)
+      : "Auto";
     try {
-      const lang = queryLang
-        ? queryLang.charAt(0).toUpperCase() + queryLang.slice(1)
-        : "Auto";
-      const audioUrl = await getTTSUrl(text, lang);
-      if (audioUrl) {
-        await load(audioUrl);
-        play();
-      }
+      await speak(text, lang);
     } catch (e) {
       console.error("TTS playback failed", e);
-    } finally {
-      setIsLoading(false);
     }
   };
 

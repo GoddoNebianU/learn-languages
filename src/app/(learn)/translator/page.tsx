@@ -16,7 +16,6 @@ import { actionGetMyDecks } from "@/modules/deck/deck-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
 import type { CardType } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
-import { getTTSUrl } from "@/lib/providers/tts";
 import { TSharedTranslationResult } from "@/shared/translator-type";
 import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -40,7 +39,7 @@ export default function TranslatorPage() {
     sourceLanguage: string;
     targetLanguage: string;
   } | null>(null);
-  const { load, play } = useAudioPlayer();
+  const { speak } = useAudioPlayer();
 
   const { data: session } = authClient.useSession();
   const noSignup = !useCapabilityStore((s: CapabilityState) => s.has("signup"));
@@ -64,14 +63,8 @@ export default function TranslatorPage() {
         .toLowerCase()
         .replace(/[^a-z]/g, "")
         .replace(/^./, (match) => match.toUpperCase());
-
-      const url = await getTTSUrl(text, theLanguage);
-      if (!url) {
-        throw new Error("TTS returned no audio URL");
-      }
-      await load(url);
-      await play();
-    } catch (error) {
+      await speak(text, theLanguage);
+    } catch {
       toast.error("Failed to generate audio");
     }
   };
