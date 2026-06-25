@@ -80,7 +80,7 @@ export default function TextSpeakerPage() {
   const [ipa, setIPA] = useState<string>("");
   const objurlRef = useRef<string | null>(null);
   const [processing, setProcessing] = useState(false);
-  const { play, stop, load, audioRef } = useAudioPlayer();
+  const { stop, playAudio, audioRef } = useAudioPlayer();
 
   const { get: getFromLocalStorage, set: setIntoLocalStorage } = getLocalStorageOperator<
     typeof TextSpeakerArraySchema
@@ -94,16 +94,14 @@ export default function TextSpeakerPage() {
       if (autopause) {
         setPause(true);
       } else if (objurlRef.current) {
-        load(objurlRef.current);
-        play();
+        void playAudio(objurlRef.current);
       }
     };
     audio.addEventListener("ended", handleEnded);
     return () => {
       audio.removeEventListener("ended", handleEnded);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioRef, autopause]);
+  }, [audioRef, autopause, playAudio]);
 
   const speak = async () => {
     if (processing) return;
@@ -128,8 +126,7 @@ export default function TextSpeakerPage() {
 
         if (objurlRef.current) {
           // 之前有播放
-          load(objurlRef.current);
-          play();
+          await playAudio(objurlRef.current);
         } else {
           // 第一次播放
           try {
@@ -156,8 +153,7 @@ export default function TextSpeakerPage() {
             if (!objurlRef.current) {
               throw new Error("TTS returned no audio URL");
             }
-            load(objurlRef.current);
-            play();
+            await playAudio(objurlRef.current);
           } catch (e) {
             console.error(t("audioPlaybackFailed"), e);
             setPause(true);
