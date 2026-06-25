@@ -149,10 +149,18 @@ export default function TextSpeakerPage() {
               .replace(/[^a-z]/g, "")
               .replace(/^./, (match) => match.toUpperCase());
 
-            objurlRef.current = await getTTSUrl(textRef.current, theLanguage);
-            if (!objurlRef.current) {
+            const ttsUrl = await getTTSUrl(textRef.current, theLanguage);
+            if (!ttsUrl) {
               throw new Error("TTS returned no audio URL");
             }
+            // fetch as blob then create object URL — avoids <audio> element
+            // timing out on slow TTS generation (inference.sh takes ~6s)
+            const audioResp = await fetch(ttsUrl);
+            if (!audioResp.ok) {
+              throw new Error(`TTS HTTP ${audioResp.status}`);
+            }
+            const blob = await audioResp.blob();
+            objurlRef.current = URL.createObjectURL(blob);
             await playAudio(objurlRef.current);
           } catch (e) {
             console.error(t("audioPlaybackFailed"), e);
