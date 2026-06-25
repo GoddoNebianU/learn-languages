@@ -46,6 +46,7 @@ model User {
   followers       Follow[]       @relation("UserFollowers")
   following       Follow[]       @relation("UserFollowing")
   activities      ActivityLog[]
+  apiKeys         ApiKey[]
 
   @@map("user")
 }
@@ -194,6 +195,26 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@map("follows")
+}
+
+// ============================================
+// API Keys (for REST API access)
+// ============================================
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  userId     String
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("api_keys")
 }
 
 // ============================================

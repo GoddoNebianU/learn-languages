@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 import { Button } from "@/design-system/button";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ApiKeysSection } from "./ApiKeysSection";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
@@ -102,6 +103,8 @@ export default function SettingsPage() {
           </Button>
         </div>
       </div>
+
+      <ApiKeysSection />
     </PageLayout>
   );
 }
