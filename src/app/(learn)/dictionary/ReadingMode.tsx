@@ -16,7 +16,8 @@ import { Select } from "@/design-system/select";
 import { Skeleton } from "@/design-system/skeleton";
 import { HStack } from "@/design-system/stack";
 import { Modal } from "@/design-system/modal";
-import { RefreshCw, Trash2, ClipboardPaste, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Spinner } from "@/design-system/spinner";
+import { RefreshCw, Trash2, ClipboardPaste, CheckCircle2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { getNativeName } from "@/shared/languages";
 
@@ -198,7 +199,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
     switch (processingState) {
       case "looking-up":
       case "saving":
-        return <Loader2 className="h-5 w-5 animate-spin text-primary-500" />;
+        return <Spinner size={20} className="text-primary-500" />;
       case "done":
         return <CheckCircle2 className="h-5 w-5 text-green-500" />;
       case "error":

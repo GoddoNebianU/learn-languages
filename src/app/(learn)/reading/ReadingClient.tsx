@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/design-system/button";
+import { Spinner } from "@/design-system/spinner";
+import { Alert } from "@/design-system/alert";
 import { actionReadText } from "@/modules/reading/reading-action";
-import { ArrowUpDown, RefreshCw, Loader2 } from "lucide-react";
+import { ArrowUpDown, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 import { ParagraphView } from "./components/ParagraphView";
@@ -262,37 +264,36 @@ export function ReadingClient() {
                   hovered={hovered}
                 />
               ) : (
-                <div
-                  key={pIdx}
-                  className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950"
-                >
-                  <p className="mb-2 text-sm text-red-700 dark:text-red-300">
-                    {t("paragraphError", { index: pIdx + 1 })}
-                  </p>
-                  <p className="mb-3 text-xs text-red-500 dark:text-red-400">
-                    {slot.error}
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="light"
-                      size="sm"
-                      onClick={() => handleRetry(pIdx)}
-                      disabled={slot.retrying}
-                    >
-                      {slot.retrying ? (
-                        <Loader2 size={14} className="animate-spin" />
-                      ) : (
-                        <RefreshCw size={14} />
-                      )}
-                      {slot.retrying ? t("retrying") : t("retry")}
-                    </Button>
-                    {slot.retrying && (
-                      <Button variant="light" size="sm" onClick={handleCancelRetry}>
-                        {t("cancel")}
+                <Alert key={pIdx} variant="error">
+                  <div className="w-full">
+                    <p className="mb-2 text-sm">
+                      {t("paragraphError", { index: pIdx + 1 })}
+                    </p>
+                    <p className="mb-3 text-xs opacity-80">
+                      {slot.error}
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="light"
+                        size="sm"
+                        onClick={() => handleRetry(pIdx)}
+                        disabled={slot.retrying}
+                      >
+                        {slot.retrying ? (
+                          <Spinner size={14} />
+                        ) : (
+                          <RefreshCw size={14} />
+                        )}
+                        {slot.retrying ? t("retrying") : t("retry")}
                       </Button>
-                    )}
+                      {slot.retrying && (
+                        <Button variant="light" size="sm" onClick={handleCancelRetry}>
+                          {t("cancel")}
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </Alert>
               )
             )}
           </div>

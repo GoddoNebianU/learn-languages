@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Button } from "@/design-system/button";
 import { LinkButton } from "@/design-system/link-button";
+import { Table, THead, TBody, TR, TH, TD } from "@/design-system/table";
 import { actionGetUserProfileByUsername } from "@/modules/auth/auth-action";
 import { actionGetDecksByUserId } from "@/modules/deck/deck-action";
 import { actionGetFollowStatus } from "@/modules/follow/follow-action";
@@ -163,57 +164,35 @@ export default async function UserPage({ params }: UserPageProps) {
           <p className="py-8 text-center text-gray-500">{t("decks.noDecks")}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
-                  >
-                    {t("decks.deckName")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
-                  >
-                    {t("decks.totalCards")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
-                  >
-                    {t("decks.createdAt")}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase"
-                  >
-                    {t("decks.actions")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+            <Table>
+              <THead>
+                <TR>
+                  <TH scope="col">{t("decks.deckName")}</TH>
+                  <TH scope="col">{t("decks.totalCards")}</TH>
+                  <TH scope="col">{t("decks.createdAt")}</TH>
+                  <TH scope="col" className="text-right">{t("decks.actions")}</TH>
+                </TR>
+              </THead>
+              <TBody>
                 {decks.map((deck) => (
-                  <tr key={deck.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{deck.name}</div>
-                      <div className="text-sm text-gray-500">ID: {deck.id}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{deck.cardCount ?? 0}</div>
-                    </td>
-                    <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                  <TR key={deck.id} className="hover:bg-gray-50">
+                    <TD className="whitespace-nowrap">
+                      <div className="font-medium text-gray-900">{deck.name}</div>
+                      <div className="text-gray-500">ID: {deck.id}</div>
+                    </TD>
+                    <TD className="whitespace-nowrap">{deck.cardCount ?? 0}</TD>
+                    <TD className="whitespace-nowrap">
                       {new Date(deck.createdAt).toLocaleDateString(locale)}
-                    </td>
-                    <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
+                    </TD>
+                    <TD className="whitespace-nowrap text-right">
                       <Link href={`/decks/${deck.id}`}>
                         <LinkButton>{t("decks.view")}</LinkButton>
                       </Link>
-                    </td>
-                  </tr>
+                    </TD>
+                  </TR>
                 ))}
-              </tbody>
-            </table>
+              </TBody>
+            </Table>
           </div>
         )}
       </div>

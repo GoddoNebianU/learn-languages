@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/design-system/button";
 import { Textarea } from "@/design-system/textarea";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
-import { Loader2, Languages } from "lucide-react";
+import { Spinner } from "@/design-system/spinner";
+import { Languages } from "lucide-react";
 
 interface ReadingInputFormProps {
   targetLanguage: string;
@@ -51,7 +52,7 @@ export function ReadingInputForm({
         <div className="shrink-0 pb-2">
           {processing ? (
             <Button variant="light" size="lg" onClick={onCancel} className="text-xl">
-              <Loader2 size={20} className="animate-spin" />
+              <Spinner size={20} />
               {t("processingParagraphs", { count: progress.total })}
             </Button>
           ) : (

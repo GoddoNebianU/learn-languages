@@ -57,7 +57,7 @@ components/
 
 ## 设计系统 `src/design-system/`
 
-基于 CVA 的可复用 UI 组件库。18 个文件, 平铺在目录下 (无子目录)。`_shared.ts` 存放跨组件共享的 CVA 常量。所有组件使用 Lucide React 图标 (非内联 SVG)。
+基于 CVA 的可复用 UI 组件库。21 个文件, 平铺在目录下 (无子目录)。`_shared.ts` 存放跨组件共享的 CVA 常量。所有组件使用 Lucide React 图标 (非内联 SVG)。
 
 ### 组件列表
 
@@ -75,9 +75,12 @@ components/
 | Textarea                                          | `textarea.tsx`          | 多行文本, forwardRef, size 变体 |
 | Range                                             | `range.tsx`             | 范围滑块, forwardRef |
 | Progress                                          | `progress.tsx`          | 进度条 (variant 色, indeterminate) |
+| Spinner                                           | `spinner.tsx`           | 加载指示器 (size px, role=status, 内部 Loader2 animate-spin) |
+| Alert                                             | `alert.tsx`             | 提示横幅 (info/success/warning/error), role=alert |
 | Skeleton                                          | `skeleton.tsx`          | 骨架屏                 |
 | VStack, HStack                                    | `stack.tsx`             | 堆叠布局               |
-| Container                                         | `container.tsx`         | 容器                   |
+| Container                                         | `container.tsx`         | 容器 (size + padding 变体) |
+| Table, THead, TBody, TR, TH, TD                   | `table.tsx`             | 表格组件族 (替换原生 table, 统一边框/内边距/字号) |
 | Modal                                             | `modal.tsx`             | 模态框 (条件 aria-labelledby) |
 | OverflowDropdown                                  | `overflow-dropdown.tsx` | 溢出下拉 (triggerAriaLabel 可配) |
 | — (内部)                                          | `_shared.ts`            | 共享: focusRing / disabledStyles / transition / fieldVariants |
@@ -116,6 +119,55 @@ import { Switch } from "@/design-system/switch";
 <Switch checked={enabled} onCheckedChange={setEnabled} />
 ```
 
+### Spinner 加载指示器
+
+替代临时 `<Loader2 className="animate-spin">` 的统一加载指示器, `role="status"` + `aria-label`。
+
+```tsx
+import { Spinner } from "@/design-system/spinner";
+
+<Spinner size={20} />            // 默认 20px
+<Spinner size={16} className="text-primary-500" />
+```
+
+### Alert 提示横幅
+
+替代临时 `<div className="rounded-lg border-2 border-warning-300 bg-warning-50 p-4">` 的语义化横幅, `role="alert`, variant 提供语义色。
+
+```tsx
+import { Alert } from "@/design-system/alert";
+
+<Alert variant="warning">
+  <AlertTriangle size={18} className="mt-0.5 shrink-0" />
+  <div className="flex-1">内容</div>
+</Alert>
+```
+
+### Table 表格组件族
+
+替代原生 `<table>` 的统一组件族, 统一 `border-collapse`/边框/内边距/字号。需要 `overflow-x-auto` 外层包裹。
+
+```tsx
+import { Table, THead, TBody, TR, TH, TD } from "@/design-system/table";
+
+<Table>
+  <THead>
+    <TR>
+      <TH scope="col">列名</TH>
+      <TH scope="col" className="text-right">操作</TH>
+    </TR>
+  </THead>
+  <TBody>
+    {rows.map((r) => (
+      <TR key={r.id}>
+        <TD className="whitespace-nowrap">{r.name}</TD>
+        <TD className="text-right">{r.action}</TD>
+      </TR>
+    ))}
+  </TBody>
+</Table>
+```
+
 ### 共享样式 `_shared.ts`
 
 所有交互组件引用 `focusRing` / `disabledStyles` / `transition` 确保一致。表单组件 (Input/Select/Textarea) 共享 `fieldVariants` (variant/size/error)。
@@ -130,7 +182,7 @@ import { LinkButton } from "@/design-system/link-button";
 
 ### CVA 使用模式
 
-17/18 文件使用 CVA (_shared.ts 是纯常量)。LinkButton 使用 forwardRef + cn。Modal 使用 compound component 模式。OverflowDropdown 使用 roving tabindex。
+18/21 文件使用 CVA (`_shared.ts` 纯常量, `spinner.tsx`/`table.tsx` 用 cn)。Alert 使用 CVA 定义 variant 色。LinkButton 使用 forwardRef + cn。Modal 使用 compound component 模式。OverflowDropdown 使用 roving tabindex。
 
 ```tsx
 // 标准模式
@@ -158,7 +210,7 @@ import { cn } from "@/utils/cn";
 - 使用 Lucide React (`import { X } from "lucide-react"`)
 - 禁止内联 `<svg>` (Navbar GithubIcon 是唯一例外)
 - 图标按钮使用 `IconButton` 组件, 非 `<button>` + SVG
-- 按钮加载状态用 `<Loader2>`, 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>`
+- 加载指示器使用 `Spinner` 组件 (替换临时 `<Loader2 className="animate-spin">`), 模态框关闭用 `<X>`, 下拉选择用 `<ChevronDown>` (Button/IconButton 内部 loading 仍用 Loader2)
 
 ### 密度模式 (Compact Design System)
 

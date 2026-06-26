@@ -81,7 +81,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(function Card(
 
 export function CardBody({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }) {
   return (
-    <div className={cn("p-2", className)} {...props}>
+    <div className={cn("p-4", className)} {...props}>
       {children}
     </div>
   );

@@ -18,6 +18,7 @@ import { Input } from "@/design-system/input";
 import { Field } from "@/design-system/field";
 import { IconButton } from "@/design-system/icon-button";
 import { Modal } from "@/design-system/modal";
+import { Table, THead, TBody, TR, TH, TD } from "@/design-system/table";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -200,22 +201,22 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
           {users.length === 0 ? (
             <p className="py-8 text-center text-gray-500">No users found.</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 text-left text-gray-500">
-                  <th className="pb-2 pr-4 font-medium">Username</th>
-                  <th className="pb-2 pr-4 font-medium">Email</th>
-                  <th className="pb-2 pr-4 font-medium">Verified</th>
-                  <th className="pb-2 pr-4 font-medium">Created</th>
-                  <th className="pb-2 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Username</TH>
+                  <TH>Email</TH>
+                  <TH>Verified</TH>
+                  <TH>Created</TH>
+                  <TH>Actions</TH>
+                </TR>
+              </THead>
+              <TBody>
                 {users.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-100 last:border-0">
-                    <td className="py-3 pr-4 font-medium text-gray-900">{user.username}</td>
-                    <td className="py-3 pr-4 text-gray-600">{user.email}</td>
-                    <td className="py-3 pr-4">
+                  <TR key={user.id}>
+                    <TD className="font-medium text-gray-900">{user.username}</TD>
+                    <TD>{user.email}</TD>
+                    <TD>
                       <IconButton
                         tone="muted"
                         shape="round"
@@ -233,11 +234,11 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
                       >
                         <span className="text-xs">{user.emailVerified ? "Yes" : "No"}</span>
                       </IconButton>
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500">
+                    </TD>
+                    <TD className="text-gray-500">
                       {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="py-3">
+                    </TD>
+                    <TD>
                       {confirmingId === user.id ? (
                         <span className="flex items-center gap-2">
                           <Button
@@ -277,11 +278,11 @@ export function AdminUsers({ initialUsers, initialSearch }: AdminUsersProps) {
                           />
                         </span>
                       )}
-                    </td>
-                  </tr>
+                    </TD>
+                  </TR>
                 ))}
-              </tbody>
-            </table>
+              </TBody>
+            </Table>
           )}
         </Card>
 

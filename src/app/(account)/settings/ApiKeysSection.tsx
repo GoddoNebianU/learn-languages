@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useTransition, useCallback } from "react";
-import { Copy, Check, Trash2, Plus, Key, Loader2, AlertTriangle, BookOpen } from "lucide-react";
+import { Copy, Check, Trash2, Plus, Key, AlertTriangle, BookOpen } from "lucide-react";
 import { Button } from "@/design-system/button";
 import { Input } from "@/design-system/input";
 import { Field } from "@/design-system/field";
+import { Spinner } from "@/design-system/spinner";
+import { Alert } from "@/design-system/alert";
 import Link from "next/link";
 import { actionCreateApiKey, actionListApiKeys, actionRevokeApiKey } from "@/modules/api-key/api-key-action";
 
@@ -94,20 +96,20 @@ export function ApiKeysSection() {
 
       {/* Created key display */}
       {createdKey && (
-        <div className="mb-4 rounded-lg border-2 border-warning-300 bg-warning-50 p-4">
-          <div className="mb-2 flex items-center gap-2 text-warning-700">
-            <AlertTriangle size={18} />
-            <span className="font-medium">Save this key now — you won&apos;t see it again.</span>
+        <Alert variant="warning" className="mb-4">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0" />
+          <div className="flex-1">
+            <p className="mb-2 font-medium">Save this key now — you won&apos;t see it again.</p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 truncate rounded bg-white px-3 py-2 text-sm text-gray-900">{createdKey}</code>
+              <Button variant="light" onClick={copyKey} size="sm">
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+              <Button variant="light" onClick={() => setCreatedKey(null)} size="sm">Dismiss</Button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded bg-white px-3 py-2 text-sm">{createdKey}</code>
-            <Button variant="light" onClick={copyKey} size="sm">
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? "Copied" : "Copy"}
-            </Button>
-            <Button variant="light" onClick={() => setCreatedKey(null)} size="sm">Dismiss</Button>
-          </div>
-        </div>
+        </Alert>
       )}
 
       {/* Create form */}
@@ -139,7 +141,7 @@ export function ApiKeysSection() {
       {/* Key list */}
       {loading ? (
         <div className="flex items-center gap-2 text-gray-500">
-          <Loader2 size={16} className="animate-spin" /> Loading...
+          <Spinner size={16} /> Loading...
         </div>
       ) : keys.length === 0 ? (
         <p className="text-sm text-gray-400">No API keys yet.</p>

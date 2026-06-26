@@ -51,7 +51,7 @@ graph TB
         Pages["Pages<br/>(Client Components)"]
         Layout["Layout<br/>Navbar · NavSession"]
         BizComps["Business Components<br/>follow · ui"]
-        DS["Design System<br/>CVA · 15 components"]
+        DS["Design System<br/>CVA · 21 components"]
     end
 
     Pages -->|"Server Actions"| Action

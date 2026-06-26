@@ -18,9 +18,6 @@ import { cn } from "@/utils/cn";
  * <Container size="sm">小容器</Container>
  * <Container size="lg">大容器</Container>
  *
- * // 全宽容器
- * <Container fullWidth>全宽容器</Container>
- *
  * // 带内边距
  * <Container padding="xl">带内边距的容器</Container>
  * ```
@@ -56,15 +53,10 @@ const containerVariants = cva(
         lg: "px-8",
         xl: "px-10",
       },
-      fullWidth: {
-        true: "w-full",
-        false: "",
-      },
     },
     defaultVariants: {
       size: "7xl",
       padding: "md",
-      fullWidth: false,
     },
   }
 );
@@ -84,13 +76,12 @@ export interface ContainerProps
 export function Container({
   size = "7xl",
   padding = "md",
-  fullWidth = false,
   className,
   children,
   ...props
 }: ContainerProps) {
   return (
-    <div className={cn(containerVariants({ size, padding, fullWidth }), className)} {...props}>
+    <div className={cn(containerVariants({ size, padding }), className)} {...props}>
       {children}
     </div>
   );
