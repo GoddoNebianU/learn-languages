@@ -47,6 +47,8 @@ model User {
   following       Follow[]       @relation("UserFollowing")
   activities      ActivityLog[]
   apiKeys         ApiKey[]
+  courses         Course[]
+  courseEnrollments CourseEnrollment[]
 
   @@map("user")
 }
@@ -251,4 +253,71 @@ model ActivityLog {
   @@index([action])
   @@index([createdAt])
   @@map("activity_logs")
+}
+
+// ============================================
+// Courses
+// ============================================
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @default("") @db.Text
+  language    String   @default("")
+  userId      String
+  visibility  Visibility @default(PRIVATE)
+  coverImage  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapters    Chapter[]
+  enrollments CourseEnrollment[]
+
+  @@index([userId])
+  @@index([visibility])
+  @@map("courses")
+}
+
+model Chapter {
+  id        Int      @id @default(autoincrement())
+  courseId  Int
+  title     String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  items     ChapterItem[]
+
+  @@index([courseId])
+  @@map("chapters")
+}
+
+model ChapterItem {
+  id         Int      @id @default(autoincrement())
+  chapterId  Int
+  type       String
+  title      String
+  sortOrder  Int      @default(0)
+  content    Json     @default("{}")
+  deckId     Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  chapter    Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@index([chapterId])
+  @@map("chapter_items")
+}
+
+model CourseEnrollment {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  courseId  Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_enrollments")
 }

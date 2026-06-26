@@ -72,10 +72,10 @@
     "deleteConfirm": "Are you sure you want to delete this card?",
     "deleteDeckConfirm": "Are you sure you want to delete this deck? All cards will be lost.",
     "cardDeleted": "Card deleted",
-      "hide": "Hide",
-      "show": "Show",
-      "cardHidden": "Card hidden",
-      "cardShown": "Card shown",
+    "hide": "Hide",
+    "show": "Show",
+    "cardHidden": "Card hidden",
+    "cardShown": "Card shown",
     "permissionDenied": "You do not have permission to perform this action",
     "resetProgress": "Reset",
     "resetProgressTitle": "Reset Deck Progress",
@@ -284,7 +284,8 @@
     "folders": "Decks",
     "explore": "Explore",
     "favorites": "Favorites",
-    "settings": "Settings"
+    "settings": "Settings",
+    "courses": "Courses"
   },
   "settings": {
     "title": "Settings",
@@ -298,7 +299,7 @@
       "amber": "Amber",
       "emerald": "Emerald",
       "orange": "Orange",
-        "slate": "Slate",
+      "slate": "Slate",
       "sage": "Sage",
       "taupe": "Taupe",
       "mauve": "Mauve",

@@ -22,6 +22,13 @@ export const ACTIVITY_ACTIONS = {
     FAVORITE_TOGGLE: "deck.favorite_toggle",
     REORDER: "deck.reorder",
   },
+  COURSE: {
+    CREATE: "course.create",
+    UPDATE: "course.update",
+    DELETE: "course.delete",
+    ENROLL: "course.enroll",
+    UNENROLL: "course.unenroll",
+  },
   CARD: {
     CREATE: "card.create",
     UPDATE: "card.update",

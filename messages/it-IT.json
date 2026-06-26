@@ -129,10 +129,10 @@
     "deleteConfirm": "Eliminare questa carta?",
     "deleteDeckConfirm": "Eliminare questo mazzo? Tutte le carte andranno perse.",
     "cardDeleted": "Carta eliminata",
-      "hide": "Nascondi",
-      "show": "Mostra",
-      "cardHidden": "Carta nascosta",
-      "cardShown": "Carta mostrata",
+    "hide": "Nascondi",
+    "show": "Mostra",
+    "cardHidden": "Carta nascosta",
+    "cardShown": "Carta mostrata",
     "cardUpdated": "Carta aggiornata"
   },
   "home": {
@@ -316,7 +316,8 @@
     "folders": "Mazzi",
     "explore": "Esplora",
     "favorites": "Preferiti",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "courses": "Courses"
   },
   "settings": {
     "title": "Impostazioni",
@@ -330,7 +331,7 @@
       "amber": "Ambra",
       "emerald": "Smeraldo",
       "orange": "Arancione",
-        "slate": "Ardesia",
+      "slate": "Ardesia",
       "sage": "Salvia",
       "taupe": "Talpa",
       "mauve": "Malva",

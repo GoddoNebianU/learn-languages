@@ -96,10 +96,10 @@
     "deleteConfirm": "确定删除这张卡片吗？",
     "deleteDeckConfirm": "确定删除这个牌组吗？所有卡片将丢失。",
     "cardDeleted": "卡片已删除",
-      "hide": "隐藏",
-      "show": "显示",
-      "cardHidden": "卡片已隐藏",
-      "cardShown": "卡片已显示",
+    "hide": "隐藏",
+    "show": "显示",
+    "cardHidden": "卡片已隐藏",
+    "cardShown": "卡片已显示",
     "cardUpdated": "卡片已更新"
   },
   "home": {
@@ -284,7 +284,8 @@
     "folders": "牌组",
     "explore": "探索",
     "favorites": "收藏",
-    "settings": "设置"
+    "settings": "设置",
+    "courses": "Courses"
   },
   "settings": {
     "title": "设置",
@@ -298,7 +299,7 @@
       "amber": "琥珀",
       "emerald": "翡翠",
       "orange": "橙色",
-        "slate": "石墨",
+      "slate": "石墨",
       "sage": "鼠尾草",
       "taupe": "暖沙",
       "mauve": "薰衣草",

@@ -129,10 +129,10 @@
     "deleteConfirm": "Supprimer cette carte?",
     "deleteDeckConfirm": "Supprimer ce deck ? Toutes les cartes seront perdues.",
     "cardDeleted": "Carte supprimée",
-      "hide": "Masquer",
-      "show": "Afficher",
-      "cardHidden": "Carte masquée",
-      "cardShown": "Carte affichée",
+    "hide": "Masquer",
+    "show": "Afficher",
+    "cardHidden": "Carte masquée",
+    "cardShown": "Carte affichée",
     "cardUpdated": "Carte mise à jour"
   },
   "home": {
@@ -316,7 +316,8 @@
     "folders": "Decks",
     "explore": "Explorer",
     "favorites": "Favoris",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "courses": "Courses"
   },
   "settings": {
     "title": "Paramètres",
@@ -330,7 +331,7 @@
       "amber": "Ambre",
       "emerald": "Émeraude",
       "orange": "Orange",
-        "slate": "Ardoise",
+      "slate": "Ardoise",
       "sage": "Sauge",
       "taupe": "Taupe",
       "mauve": "Mauve",

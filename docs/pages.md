@@ -33,6 +33,7 @@ src/app/
     ├── explore/        # 公开牌组 (Server→Client) + [id]/ 详情
     ├── favorites/      # 收藏 (Server→Client)
     ├── decks/          # 牌组管理 (Server→Client) + [deck_id]/ 详情 — 详见 features.md
+    ├── courses/        # 课程管理 (Server→Client) + [id]/ 详情 + [id]/edit/ 编辑 — 详见 features.md
     ├── memorize/       # 记忆模式 (Server→Client, ?deck_id=xxx)
     └── reading/        # 阅读理解 (Client, AI 翻译+分词对齐) — 详见 features.md
 ```

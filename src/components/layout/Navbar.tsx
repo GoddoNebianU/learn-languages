@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
+import { BookOpen, Compass, Folder, Heart, Home, Settings, User } from "lucide-react";
 import { LanguageSettings } from "./LanguageSettings";
 import { SessionFeatures, UserLink, MobileMenuSession } from "./NavSession";
 import { auth } from "@/auth";
@@ -35,6 +35,7 @@ export async function Navbar() {
 
   const loggedInMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
+    { label: t("courses"), href: "/courses", icon: <BookOpen size={18} /> },
     ...(hasSocial
       ? [
           { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
@@ -49,6 +50,7 @@ export async function Navbar() {
 
   const loggedOutMobileItems: NavigationItem[] = [
     { label: t("folders"), href: "/decks", icon: <Folder size={18} /> },
+    { label: t("courses"), href: "/courses", icon: <BookOpen size={18} /> },
     { label: t("explore"), href: "/explore", icon: <Compass size={18} /> },
     { label: t("settings"), href: "/settings", icon: <Settings size={18} /> },
     { label: t("sign_in"), href: "/login", icon: <User size={18} /> },
@@ -66,6 +68,9 @@ export async function Navbar() {
         <LanguageSettings />
         <Link href="/decks" className={`${navLinkClass} hidden! md:block!`}>
           {t("folders")}
+        </Link>
+        <Link href="/courses" className={`${navLinkClass} hidden! md:block!`}>
+          {t("courses")}
         </Link>
         {hasSocial && (
           <Link href="/explore" className={`${navLinkClass} hidden! md:block!`}>

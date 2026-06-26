@@ -175,6 +175,10 @@ User
 │   ├── Card
 │   │   └── CardMeaning
 │   └── DeckFavorite
+├── Course
+│   ├── Chapter
+│   │   └── ChapterItem
+│   └── CourseEnrollment
 └── Follow
     ├── follower
     └── following

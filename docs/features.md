@@ -71,6 +71,87 @@ src/app/(learn)/decks/
 
 ---
 
+## Courses 课程管理
+
+课程 (Course) → 章节 (Chapter) → 章节 item (ChapterItem) 三级结构,支持报名 (CourseEnrollment)。内容与代码分离:所有课程内容存于数据库 `ChapterItem.content` JSON 字段。
+
+### 结构
+
+```
+src/modules/course/
+├── course-repository-dto.ts   # 输入输出类型 + 内容 JSON 形状 (ArticleContent/DialogueContent/ExerciseContent)
+├── course-repository.ts       # Prisma CRUD: Course/Chapter/ChapterItem/CourseEnrollment
+├── course-service-dto.ts      # Service 层类型
+├── course-service.ts          # 业务逻辑 + serviceCheckOwnership (course/chapter/item 三级所有权)
+├── course-action-dto.ts       # Zod schemas + Action 输入输出类型
+└── course-action.ts           # 21 个 server actions ("use server"), getCurrentUserId 鉴权
+
+src/app/(learn)/courses/
+├── page.tsx                         # Server: 公开课程预取 → CoursesClient
+├── CoursesClient.tsx                # Client: Explore / My Courses / Enrolled 三标签 + 搜索 + 创建课程
+└── [id]/
+    ├── page.tsx                     # Server: course + chapters + items 预取, 所有权/公开校验
+    ├── CourseDetailClient.tsx       # Client: 课程头 + 可展开章节 + item 内容查看 + 报名
+    ├── components/
+    │   └── ContentViewers.tsx       # 四种内容查看器 + 安全 JSON 解析器
+    └── edit/
+        ├── page.tsx                 # Server: 所有权校验, 预取 course/chapters/items
+        ├── CourseEditor.tsx         # Client: 课程设置 + 章节增删改排序 + item 管理
+        └── ContentEditors.tsx       # 四种内容编辑器 (按类型)
+```
+
+### 内容类型 (ChapterItem.type)
+
+`content` 字段为 Prisma `Json`,各类型形状:
+
+| 类型       | content 形状                                                            | 查看                 | 编辑                          |
+| ---------- | ----------------------------------------------------------------------- | -------------------- | ----------------------------- |
+| ARTICLE    | `{ body: string }` (Markdown)                                           | react-markdown 渲染  | Textarea (onBlur 保存)        |
+| DIALOGUE   | `{ lines: { speaker, text, translation? }[] }`                          | 对话气泡布局         | 行编辑器 (增删/排序)          |
+| MEMORIZE   | 空,使用 `deckId` 关联 Deck                                              | 链接到 /memorize     | 下拉选择用户牌组 (actionGetMyDecks) |
+| EXERCISE   | `{ questions: { type, question, options?, answer, explanation? }[] }`  | 交互式答题           | 题目编辑器 (增删题/选项)      |
+
+内容查看/编辑均经 `parseArticleContent` / `parseDialogueContent` / `parseExerciseContent` 安全解析 `unknown` JSON (无 `as any`)。
+
+### 查找位置
+
+| 任务                | 位置                              | 备注                                              |
+| ------------------- | --------------------------------- | ------------------------------------------------- |
+| 课程 CRUD           | `src/modules/course/course-action.ts` | 21 个 actions, 含报名/取消报名                 |
+| 内容存储            | `ChapterItem.content` JSON 字段   | 内容与代码分离                                    |
+| 课程内容查看        | `components/ContentViewers.tsx`   | ARTICLE/DIALOGUE/MEMORIZE/EXERCISE 四种查看器     |
+| 课程内容编辑        | `edit/ContentEditors.tsx`         | 按类型编辑器, MEMORIZE 用 actionGetMyDecks 选牌组 |
+| 章节排序            | `CourseEditor.tsx` moveChapter    | 上/下移按钮, actionUpdateChapter(sortOrder)       |
+| 三级所有权校验      | `course-action.ts` check*Ownership | course → chapter (via courseId) → item (via chapterId) |
+| 公开课程访问        | `[id]/page.tsx`                   | isOwner + isPublic 校验                            |
+| i18n                | 暂无 (硬编码英文)                 | 管理员功能, 后续国际化                            |
+
+### Server→Client 委托
+
+```
+/courses:
+  page.tsx (Server: 公开课程预取)
+  → CoursesClient (Client: 三标签切换 + 创建课程 Modal)
+
+/courses/[id]:
+  page.tsx (Server: 预取 course + chapters + items, 权限校验)
+  → CourseDetailClient (Client: 展开/折叠章节, 报名/取消)
+
+/courses/[id]/edit:
+  page.tsx (Server: 所有权校验, 预取全部数据)
+  → CourseEditor (Client: 课程设置 + 章节/item 增删改排序 + 自动保存)
+```
+
+### 备注
+
+- 章节和 item 的 sortOrder 由 repository 自动计算 (`prisma.chapter.count`),无需客户端传入
+- MEMORIZE 类型通过 `deckId` 关联已存在的 Deck,内容字段留空
+- EXERCISE 的 MULTIPLE_CHOICE 答案为选项索引 (number),FILL_BLANK 为文本 (string)
+- 编辑器对课程/章节标题使用失焦保存,内容编辑即时调用 actionUpdateChapterItem
+- 课程 visibility: PUBLIC | PRIVATE, 私有课程仅作者可见
+
+---
+
 ## Dictionary 词典
 
 AI 词典查询页,两种模式: NormalMode (单词查询) 和 ReadingMode (逐词查词+存卡)。自有 Zustand store 管理查询状态。

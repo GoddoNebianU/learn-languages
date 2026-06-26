@@ -236,7 +236,8 @@
     "folders": "Decks",
     "explore": "Erkunden",
     "favorites": "Favoriten",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "courses": "Courses"
   },
   "settings": {
     "title": "Einstellungen",
@@ -250,7 +251,7 @@
       "amber": "Bernstein",
       "emerald": "Smaragd",
       "orange": "Orange",
-        "slate": "Schiefer",
+      "slate": "Schiefer",
       "sage": "Salbei",
       "taupe": "Taupe",
       "mauve": "Malve",
@@ -623,10 +624,10 @@
     "deleteConfirm": "Karte wirklich löschen?",
     "deleteDeckConfirm": "Dieses Deck wirklich löschen? Alle Karten gehen verloren.",
     "cardDeleted": "Karte gelöscht",
-      "hide": "Ausblenden",
-      "show": "Anzeigen",
-      "cardHidden": "Karte ausgeblendet",
-      "cardShown": "Karte eingeblendet",
+    "hide": "Ausblenden",
+    "show": "Anzeigen",
+    "cardHidden": "Karte ausgeblendet",
+    "cardShown": "Karte eingeblendet",
     "cardUpdated": "Karte aktualisiert"
   }
 }

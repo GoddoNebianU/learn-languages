@@ -71,10 +71,10 @@
     "deleteConfirm": "Ĉu vi certe volas forigi ĉi tiun karton?",
     "deleteDeckConfirm": "Ĉu vi certe volas forigi ĉi tiun kartaron? Ĉiuj kartoj estos perditaj.",
     "cardDeleted": "Karto forigita",
-      "hide": "Kaŝi",
-      "show": "Montri",
-      "cardHidden": "Karto kaŝita",
-      "cardShown": "Karto montrita",
+    "hide": "Kaŝi",
+    "show": "Montri",
+    "cardHidden": "Karto kaŝita",
+    "cardShown": "Karto montrita",
     "permissionDenied": "Vi ne havas permeson plenumi ĉi tiun agon",
     "resetProgress": "Restarigi",
     "resetProgressTitle": "Restarigi Kartaran Progreson",
@@ -282,7 +282,8 @@
     "folders": "Kartaroj",
     "explore": "Esplori",
     "favorites": "Favoratoj",
-    "settings": "Agordoj"
+    "settings": "Agordoj",
+    "courses": "Courses"
   },
   "settings": {
     "title": "Agordoj",
@@ -296,7 +297,7 @@
       "amber": "Ambro",
       "emerald": "Smeraldo",
       "orange": "Oranĝo",
-        "slate": "Ardezo",
+      "slate": "Ardezo",
       "sage": "Salvio",
       "taupe": "Taŭpo",
       "mauve": "Malvo",
