@@ -47,6 +47,7 @@ export default async function LessonPage({
         lesson={itemResult.data}
         courseTitle={courseResult.data.title}
         courseId={courseId}
+        courseLanguage={courseResult.data.language}
       />
     </PageLayout>
   );

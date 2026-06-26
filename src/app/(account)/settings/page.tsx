@@ -5,14 +5,22 @@ import { useDensity } from "@/components/density-provider";
 import { useTranslations } from "next-intl";
 import { cn } from "@/utils/cn";
 import { Button } from "@/design-system/button";
+import { Select } from "@/design-system/select";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ApiKeysSection } from "./ApiKeysSection";
+import { DICT_LANGUAGES, getDictDefLang, setDictDefLang } from "@/shared/dictionary";
+import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const { currentTheme, setTheme, availableThemes } = useTheme();
   const { density, setDensity } = useDensity();
+  const [dictLang, setDictLang] = useState("chinese");
+
+  useEffect(() => {
+    setDictLang(getDictDefLang());
+  }, []);
 
   const themeNames: Record<string, string> = {
     teal: t("themeNames.teal"),
@@ -101,6 +109,22 @@ export default function SettingsPage() {
               {t("densityCompactDescription")}
             </span>
           </Button>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-1 text-lg font-semibold text-gray-800">Dictionary Language</h2>
+        <p className="mb-3 text-sm text-gray-500">Default language for dictionary definitions when clicking words in courses.</p>
+        <div className="max-w-xs">
+          <Select
+            variant="bordered"
+            value={dictLang}
+            onChange={(e) => { setDictLang(e.target.value); setDictDefLang(e.target.value); }}
+          >
+            {DICT_LANGUAGES.map((lang) => (
+              <option key={lang.value} value={lang.value}>{lang.label}</option>
+            ))}
+          </Select>
         </div>
       </div>
 

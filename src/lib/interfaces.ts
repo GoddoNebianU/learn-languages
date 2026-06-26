@@ -15,5 +15,6 @@ export type SupportedAlphabets = "japanese" | "english" | "uyghur" | "esperanto"
 export interface Letter {
   letter: string;
   letter_sound_ipa: string;
+  letter_name_ipa?: string;
   roman_letter?: string;
 }

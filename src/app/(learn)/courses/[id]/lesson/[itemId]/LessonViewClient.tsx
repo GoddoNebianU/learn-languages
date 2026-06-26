@@ -1,22 +1,26 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Volume2, CheckCircle2, XCircle } from "lucide-react";
-import { useState } from "react";
 import { IconButton } from "@/design-system/icon-button";
 import { Badge } from "@/design-system/badge";
 import { VStack, HStack } from "@/design-system/stack";
 import { Spinner } from "@/design-system/spinner";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
+import { openDictionary, getDictDefLang } from "@/shared/dictionary";
 import type { ActionOutputChapterItem } from "@/modules/course/course-action-dto";
 import type { LessonContent, VocabularyItem, DialogueLine, ExerciseQuestion } from "@/modules/course/course-repository-dto";
+
+const RTL_LANGUAGES = ["uyghur", "arabic", "hebrew", "persian", "urdu", "pashto", "kurdish", "sindhi"];
 
 interface LessonViewClientProps {
   lesson: ActionOutputChapterItem;
   courseTitle: string;
   courseId: number;
+  courseLanguage?: string;
 }
 
 function parseLesson(content: unknown): LessonContent {

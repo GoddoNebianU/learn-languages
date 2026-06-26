@@ -6,7 +6,7 @@ import { Letter, SupportedAlphabets } from "@/lib/interfaces";
 import { Button } from "@/design-system/button";
 import { IconButton } from "@/design-system/icon-button";
 import { IMAGES } from "@/config/images";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, Square } from "lucide-react";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { Card } from "@/design-system/card";
 
@@ -23,6 +23,9 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
   const [showLetter, setShowLetter] = useState(true);
   const [showRoman, setShowRoman] = useState(false);
   const [isRandomMode, setIsRandomMode] = useState(false);
+  const [viewMode, setViewMode] = useState<"flashcard" | "table">("flashcard");
+
+  const isRTL = alphabetType === "uyghur";
 
   // 只有日语假名显示罗马音按钮
   const hasRomanization = alphabetType === "japanese";
@@ -123,6 +126,15 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           <div className="flex flex-wrap gap-2">
             <Button
               variant="light"
+              selected={viewMode === "table"}
+              onClick={() => setViewMode(viewMode === "table" ? "flashcard" : "table")}
+              className="rounded-full px-3 py-1 text-sm"
+              pill
+            >
+              <LayoutGrid size={14} />
+            </Button>
+            <Button
+              variant="light"
               selected={showLetter}
               onClick={() => setShowLetter(!showLetter)}
               className="rounded-full px-3 py-1 text-sm transition-colors"
@@ -166,6 +178,26 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
         </div>
 
         {/* 字母主要内容显示区域 */}
+        {viewMode === "table" ? (
+          <div dir={isRTL ? "rtl" : "ltr"} className="mb-8 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+            {alphabet.map((letter, i) => (
+              <div key={i} className="rounded-lg border border-gray-200 p-3 text-center hover:border-primary-300 hover:shadow-sm transition-all">
+                <div className="text-3xl font-bold text-gray-800 md:text-4xl">{letter.letter}</div>
+                {showIPA && (
+                  <>
+                    <div className="mt-1 text-sm text-gray-500">{letter.letter_sound_ipa}</div>
+                    {letter.letter_name_ipa && (
+                      <div className="text-xs text-gray-400">{letter.letter_name_ipa}</div>
+                    )}
+                  </>
+                )}
+                {showRoman && hasRomanization && letter.roman_letter && (
+                  <div className="text-sm text-gray-400">{letter.roman_letter}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="mb-8 text-center">
           {/* 字母本身（可隐藏） */}
           {showLetter ? (
@@ -189,7 +221,8 @@ export function AlphabetCard({ alphabet, alphabetType, onBack }: AlphabetCardPro
           {showRoman && hasRomanization && currentLetter.roman_letter && (
             <div className="text-lg text-gray-500 md:text-xl">{currentLetter.roman_letter}</div>
           )}
-        </div>
+          </div>
+        )}
 
         {/* 底部导航控制区域 */}
         <div className="flex items-center justify-between">
