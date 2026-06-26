@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   BookOpen,
@@ -10,7 +9,6 @@ import {
   GraduationCap,
   MessagesSquare,
   ListChecks,
-  Pencil,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -44,7 +42,6 @@ export function CourseDetailClient({
   isOwner,
   currentUserId,
 }: CourseDetailClientProps) {
-  const router = useRouter();
   const [enrolled, setEnrolled] = useState(false);
   const [enrollLoading, setEnrollLoading] = useState(true);
   const [togglingEnroll, setTogglingEnroll] = useState(false);
@@ -93,10 +90,7 @@ export function CourseDetailClient({
             </VStack>
             <HStack gap={2} align="center">
               {isOwner ? (
-                <Button variant="primary" onClick={() => router.push(`/courses/${course.id}/edit`)}>
-                  <Pencil size={16} />
-                  Edit Course
-                </Button>
+                <Badge variant="info">Owner</Badge>
               ) : enrollLoading ? (
                 <Spinner size={18} />
               ) : (
@@ -118,7 +112,7 @@ export function CourseDetailClient({
           <Card variant="bordered" padding="lg">
             <p className="text-center text-sm text-gray-400">
               {isOwner
-                ? "No chapters yet. Edit the course to add chapters and lessons."
+                ? "No chapters yet. Course content is managed directly in the database."
                 : "This course has no content yet."}
             </p>
           </Card>

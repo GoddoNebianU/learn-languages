@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Globe, Lock, Plus, Search, User } from "lucide-react";
-import { toast } from "sonner";
+import { BookOpen, Globe, Lock, Search, User } from "lucide-react";
 import { Button } from "@/design-system/button";
 import { Input } from "@/design-system/input";
 import { Badge } from "@/design-system/badge";
@@ -11,11 +10,9 @@ import { Card } from "@/design-system/card";
 import { VStack, HStack } from "@/design-system/stack";
 import { Skeleton } from "@/design-system/skeleton";
 import { IconButton } from "@/design-system/icon-button";
-import { Modal } from "@/design-system/modal";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
-  actionCreateCourse,
   actionGetPublicCourses,
   actionGetMyCourses,
   actionGetEnrolledCourses,
@@ -155,12 +152,6 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newLanguage, setNewLanguage] = useState("");
-  const [creating, setCreating] = useState(false);
-
   const loadMyCourses = async () => {
     setLoading(true);
     const result = await actionGetMyCourses();
@@ -193,27 +184,6 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
     setLoading(false);
   };
 
-  const handleCreate = async () => {
-    if (!newTitle.trim()) return;
-    setCreating(true);
-    const result = await actionCreateCourse({
-      title: newTitle.trim(),
-      description: newDescription.trim() || undefined,
-      language: newLanguage.trim() || undefined,
-    });
-    setCreating(false);
-    if (result.success && result.courseId) {
-      toast.success("Course created");
-      setShowCreateModal(false);
-      setNewTitle("");
-      setNewDescription("");
-      setNewLanguage("");
-      router.push(`/courses/${result.courseId}/edit`);
-    } else {
-      toast.error(result.message);
-    }
-  };
-
   const displayed = useMemo<CardCourse[]>(() => {
     if (tab === "explore") return publicCourses.map(toCardCourse);
     if (tab === "mine") return myCourses.map(toCardCourse);
@@ -223,13 +193,7 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
   return (
     <PageLayout>
       <VStack gap={4} align="stretch">
-        <HStack align="center" justify="between" wrap>
-          <PageHeader title="Courses" subtitle="Learn with structured chapters and lessons." />
-          <Button variant="primary" onClick={() => setShowCreateModal(true)}>
-            <Plus size={18} />
-            New Course
-          </Button>
-        </HStack>
+        <PageHeader title="Courses" subtitle="Learn with structured chapters and lessons." />
 
         <HStack gap={2} align="center">
           <TabButton active={tab === "explore"} onClick={() => handleTabChange("explore")}>
@@ -274,52 +238,6 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
           <CourseGrid courses={displayed} />
         )}
       </VStack>
-
-      <Modal open={showCreateModal} onClose={() => setShowCreateModal(false)} size="md">
-        <Modal.Header>
-          <Modal.Title>New Course</Modal.Title>
-          <Modal.CloseButton onClick={() => setShowCreateModal(false)} />
-        </Modal.Header>
-        <Modal.Body>
-          <VStack gap={4} align="stretch">
-            <VStack gap={1} align="stretch">
-              <label className="text-sm font-medium text-gray-700">Title</label>
-              <Input
-                variant="bordered"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="e.g. Beginner Spanish"
-              />
-            </VStack>
-            <VStack gap={1} align="stretch">
-              <label className="text-sm font-medium text-gray-700">Description</label>
-              <Input
-                variant="bordered"
-                value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
-                placeholder="What will students learn?"
-              />
-            </VStack>
-            <VStack gap={1} align="stretch">
-              <label className="text-sm font-medium text-gray-700">Language</label>
-              <Input
-                variant="bordered"
-                value={newLanguage}
-                onChange={(e) => setNewLanguage(e.target.value)}
-                placeholder="e.g. Spanish"
-              />
-            </VStack>
-          </VStack>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="light" onClick={() => setShowCreateModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" loading={creating} onClick={handleCreate}>
-            Create
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </PageLayout>
   );
 }
