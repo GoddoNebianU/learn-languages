@@ -1,12 +1,38 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useEffect, useRef } from "react";
 
-const SwaggerUI = dynamic(() => import("swagger-ui-react"), {
-  ssr: false,
-  loading: () => <p className="text-gray-500">Loading API docs...</p>,
-});
+declare global {
+  interface Window {
+    SwaggerUIBundle?: (config: { spec: object; domNode: HTMLElement }) => void;
+  }
+}
 
 export function SwaggerUIClient({ spec }: { spec: object }) {
-  return <SwaggerUI spec={spec} />;
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+
+    const cssLink = document.createElement("link");
+    cssLink.rel = "stylesheet";
+    cssLink.href = "https://unpkg.com/swagger-ui-dist@5/swagger-ui.css";
+    document.head.appendChild(cssLink);
+
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js";
+    script.onload = () => {
+      window.SwaggerUIBundle?.({ spec, domNode: container });
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      cssLink.remove();
+      script.remove();
+      container.innerHTML = "";
+    };
+  }, [spec]);
+
+  return <div ref={ref} />;
 }

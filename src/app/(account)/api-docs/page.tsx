@@ -7,7 +7,7 @@ export default function ApiDocsPage() {
   return (
     <PageLayout>
       <PageHeader title="REST API" subtitle="Interactive API documentation — click Authorize to try requests" />
-      <div className="max-w-4xl">
+      <div className="max-w-5xl">
         <SwaggerUIClient spec={openApiSpec as object} />
       </div>
     </PageLayout>
