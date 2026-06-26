@@ -174,6 +174,10 @@
     "moreFeatures": {
       "name": "더 많은 기능",
       "description": "개발 중, 기대해주세요"
+    },
+    "courses": {
+      "name": "코스",
+      "description": "대화, 기사, 어휘, 연습문제가 있는 구조화된 수업"
     }
   },
   "auth": {

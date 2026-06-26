@@ -47,7 +47,7 @@ export default async function HomePage() {
       <div className="flex h-32 w-full flex-col items-center justify-center bg-[#bbbbbb]">
         <div className="h-0 w-0 border-t-30 border-r-40 border-l-40 border-t-white border-r-transparent border-l-transparent"></div>
       </div>
-      <div className="grid w-full grid-cols-1 grid-rows-6 bg-white md:grid-cols-3">
+      <div className="grid w-full grid-cols-1 grid-rows-8 bg-white md:grid-cols-3">
         <LinkArea
           href="/translator"
           name={t("translator.name")}
@@ -89,6 +89,12 @@ export default async function HomePage() {
           name={t("reading.name")}
           description={t("reading.description")}
           color="#8a7aaa"
+        ></LinkArea>
+        <LinkArea
+          href="/courses"
+          name={t("courses.name")}
+          description={t("courses.description")}
+          color="#d4a056"
         ></LinkArea>
       </div>
     </>

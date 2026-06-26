@@ -120,7 +120,7 @@ export function CourseDetailClient({
   };
 
   return (
-    <PageLayout variant="full-width">
+    <PageLayout>
       <VStack gap={6} align="stretch">
         <Card variant="bordered" padding="lg" className="flex flex-col gap-4">
           <HStack align="start" justify="between" wrap>

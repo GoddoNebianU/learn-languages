@@ -141,6 +141,10 @@
     "moreFeatures": {
       "name": "More Features",
       "description": "Under development, stay tuned"
+    },
+    "courses": {
+      "name": "Courses",
+      "description": "Structured lessons with dialogue, articles, vocabulary, and exercises"
     }
   },
   "auth": {

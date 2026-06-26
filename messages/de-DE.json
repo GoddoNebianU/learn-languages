@@ -94,6 +94,10 @@
     "moreFeatures": {
       "name": "Weitere Funktionen",
       "description": "In Entwicklung, bleiben Sie gespannt"
+    },
+    "courses": {
+      "name": "Kurse",
+      "description": "Strukturierte Lektionen mit Dialogen, Texten, Vokabeln und Übungen"
     }
   },
   "auth": {

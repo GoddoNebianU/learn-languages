@@ -140,6 +140,10 @@
     "moreFeatures": {
       "name": "Pli da Funkcioj",
       "description": "En evoluo, restu atentaj"
+    },
+    "courses": {
+      "name": "Kursoj",
+      "description": "Strukturitaj lecionoj kun dialogoj, artikoloj, vortprovizo kaj ekzercoj"
     }
   },
   "auth": {

@@ -140,6 +140,10 @@
     "moreFeatures": {
       "name": "その他の機能",
       "description": "開発中、お楽しみに"
+    },
+    "courses": {
+      "name": "コース",
+      "description": "対話、文章、語彙、練習を含む構造化レッスン"
     }
   },
   "auth": {

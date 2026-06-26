@@ -221,7 +221,7 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
   }, [tab, publicCourses, myCourses, enrolledCourses]);
 
   return (
-    <PageLayout variant="full-width">
+    <PageLayout>
       <VStack gap={4} align="stretch">
         <HStack align="center" justify="between" wrap>
           <PageHeader title="Courses" subtitle="Learn with structured chapters and lessons." />

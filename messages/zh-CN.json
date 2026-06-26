@@ -141,6 +141,10 @@
     "moreFeatures": {
       "name": "更多功能",
       "description": "开发中，敬请期待"
+    },
+    "courses": {
+      "name": "课程",
+      "description": "包含对话、短文、词汇和练习的结构化课程"
     }
   },
   "auth": {
