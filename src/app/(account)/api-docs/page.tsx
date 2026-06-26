@@ -1,18 +1,14 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { openApiSpec } from "./openapi-spec";
+import { SwaggerUIClient } from "./SwaggerUIClient";
 
-export default async function ApiDocsPage() {
-  const mdPath = path.join(process.cwd(), "docs", "api-reference.md");
-  const content = await fs.readFile(mdPath, "utf-8");
-
+export default function ApiDocsPage() {
   return (
     <PageLayout>
-      <PageHeader title="REST API" subtitle="Deck and card management via HTTP" />
-      <div className="max-w-3xl">
-        <MarkdownRenderer content={content} />
+      <PageHeader title="REST API" subtitle="Interactive API documentation — click Authorize to try requests" />
+      <div className="max-w-4xl">
+        <SwaggerUIClient spec={openApiSpec as object} />
       </div>
     </PageLayout>
   );
