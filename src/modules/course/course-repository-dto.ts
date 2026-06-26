@@ -15,7 +15,7 @@ export interface VocabularyItem {
 }
 
 export interface LessonContent {
-  article?: { body: string };
+  article?: { body: string; translation?: string };
   dialogue?: { lines: DialogueLine[] };
   vocabulary?: { items: VocabularyItem[] };
   grammar?: { body: string };

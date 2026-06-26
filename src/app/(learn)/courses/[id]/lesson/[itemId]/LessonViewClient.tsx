@@ -28,8 +28,10 @@ function parseLesson(content: unknown): LessonContent {
   if (!content || typeof content !== "object") return {};
   const c = content as Record<string, unknown>;
   const result: LessonContent = {};
-  if (c.article && typeof c.article === "object" && typeof (c.article as { body?: unknown }).body === "string")
-    result.article = { body: (c.article as { body: string }).body };
+  if (c.article && typeof c.article === "object" && typeof (c.article as { body?: unknown }).body === "string") {
+    const a = c.article as { body: string; translation?: unknown };
+    result.article = { body: a.body, translation: typeof a.translation === "string" ? a.translation : undefined };
+  }
   if (c.dialogue && typeof c.dialogue === "object" && Array.isArray((c.dialogue as { lines?: unknown }).lines))
     result.dialogue = { lines: (c.dialogue as { lines: DialogueLine[] }).lines };
   if (c.vocabulary && typeof c.vocabulary === "object" && Array.isArray((c.vocabulary as { items?: unknown }).items))
@@ -222,6 +224,14 @@ export function LessonViewClient({ lesson, courseTitle, courseLanguage }: Lesson
           <div dir={dir} className={proseClass}>
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{content.article.body}</ReactMarkdown>
           </div>
+          {content.article.translation && content.article.translation.trim() && (
+            <div className="rounded-lg bg-gray-50 p-4">
+              <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Translation</div>
+              <div className="prose prose-sm max-w-none text-gray-600 [&_p]:my-1.5 [&_h1]:text-base [&_h2]:text-sm">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.article.translation}</ReactMarkdown>
+              </div>
+            </div>
+          )}
         </VStack>
       )}
 
