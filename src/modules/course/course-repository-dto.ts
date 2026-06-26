@@ -58,6 +58,7 @@ export interface RepoInputCreateCourse {
   title: string;
   description?: string;
   language?: string;
+  learnerLanguage?: string;
   userId: string;
   visibility?: Visibility;
   coverImage?: string;
@@ -68,6 +69,7 @@ export interface RepoInputUpdateCourse {
   title?: string;
   description?: string;
   language?: string;
+  learnerLanguage?: string;
   visibility?: Visibility;
   coverImage?: string | null;
 }
@@ -100,6 +102,7 @@ export type RepoOutputCourse = {
   title: string;
   description: string;
   language: string;
+  learnerLanguage: string;
   userId: string;
   visibility: Visibility;
   coverImage: string | null;

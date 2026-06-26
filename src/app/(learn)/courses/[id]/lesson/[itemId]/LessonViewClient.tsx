@@ -4,13 +4,12 @@ import { useMemo, useState } from "react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Volume2, CheckCircle2, XCircle } from "lucide-react";
-import { IconButton } from "@/design-system/icon-button";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { Badge } from "@/design-system/badge";
 import { VStack, HStack } from "@/design-system/stack";
 import { Spinner } from "@/design-system/spinner";
+import { SpeakButtons } from "@/components/ui/SpeakButtons";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
-import { openDictionary, getDictDefLang } from "@/shared/dictionary";
 import type { ActionOutputChapterItem } from "@/modules/course/course-action-dto";
 import type { LessonContent, VocabularyItem, DialogueLine, ExerciseQuestion } from "@/modules/course/course-repository-dto";
 
@@ -27,40 +26,21 @@ function parseLesson(content: unknown): LessonContent {
   if (!content || typeof content !== "object") return {};
   const c = content as Record<string, unknown>;
   const result: LessonContent = {};
-  if (c.article && typeof c.article === "object" && typeof (c.article as { body?: unknown }).body === "string") {
+  if (c.article && typeof c.article === "object" && typeof (c.article as { body?: unknown }).body === "string")
     result.article = { body: (c.article as { body: string }).body };
-  }
-  if (c.dialogue && typeof c.dialogue === "object" && Array.isArray((c.dialogue as { lines?: unknown }).lines)) {
+  if (c.dialogue && typeof c.dialogue === "object" && Array.isArray((c.dialogue as { lines?: unknown }).lines))
     result.dialogue = { lines: (c.dialogue as { lines: DialogueLine[] }).lines };
-  }
-  if (c.vocabulary && typeof c.vocabulary === "object" && Array.isArray((c.vocabulary as { items?: unknown }).items)) {
+  if (c.vocabulary && typeof c.vocabulary === "object" && Array.isArray((c.vocabulary as { items?: unknown }).items))
     result.vocabulary = { items: (c.vocabulary as { items: VocabularyItem[] }).items };
-  }
-  if (c.grammar && typeof c.grammar === "object" && typeof (c.grammar as { body?: unknown }).body === "string") {
+  if (c.grammar && typeof c.grammar === "object" && typeof (c.grammar as { body?: unknown }).body === "string")
     result.grammar = { body: (c.grammar as { body: string }).body };
-  }
-  if (c.exercises && typeof c.exercises === "object" && Array.isArray((c.exercises as { questions?: unknown }).questions)) {
+  if (c.exercises && typeof c.exercises === "object" && Array.isArray((c.exercises as { questions?: unknown }).questions))
     result.exercises = { questions: (c.exercises as { questions: ExerciseQuestion[] }).questions };
-  }
   return result;
 }
 
 function stripMarkdown(md: string): string {
   return md.replace(/[#*`>\-_~\[\]]/g, "").replace(/\|/g, " ").replace(/\n{2,}/g, ". ").trim();
-}
-
-function SpeakButton({ text, speak, isLoading }: { text: string; speak: (t: string) => Promise<void>; isLoading: boolean }) {
-  return (
-    <IconButton
-      size={16}
-      onClick={() => speak(text)}
-      loading={isLoading}
-      aria-label="Read aloud"
-      className="text-gray-400 hover:text-primary-500"
-    >
-      <Volume2 size={16} />
-    </IconButton>
-  );
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -70,7 +50,6 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
   const [answers, setAnswers] = useState<Record<number, string | number>>({});
   const [submitted, setSubmitted] = useState<Record<number, boolean>>({});
-
   if (questions.length === 0) return null;
 
   return (
@@ -95,16 +74,12 @@ function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
                   const showResult = wasSubmitted && selected;
                   const showCorrect = wasSubmitted && oi === Number(q.answer);
                   return (
-                    <button
-                      key={oi}
-                      type="button"
-                      disabled={wasSubmitted}
+                    <button key={oi} type="button" disabled={wasSubmitted}
                       onClick={() => setAnswers((p) => ({ ...p, [idx]: oi }))}
                       className={`flex items-center gap-2 rounded-md border px-3 py-2 text-left text-sm transition-colors ${
                         showResult ? (correct ? "border-success-300 bg-success-50" : "border-error-300 bg-error-50")
                         : showCorrect ? "border-success-300 bg-success-50"
-                        : selected ? "border-primary-400 bg-primary-50"
-                        : "border-gray-200 hover:bg-gray-50"
+                        : selected ? "border-primary-400 bg-primary-50" : "border-gray-200 hover:bg-gray-50"
                       } ${wasSubmitted ? "cursor-default" : "cursor-pointer"}`}
                     >
                       <span className="font-mono text-xs text-gray-500">{String.fromCharCode(65 + oi)}</span>
@@ -115,9 +90,7 @@ function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
               </VStack>
             )}
             {q.type === "FILL_BLANK" && (
-              <input
-                type="text"
-                disabled={wasSubmitted}
+              <input type="text" disabled={wasSubmitted}
                 value={typeof answers[idx] === "string" ? (answers[idx] as string) : ""}
                 onChange={(e) => setAnswers((p) => ({ ...p, [idx]: e.target.value }))}
                 placeholder="Type your answer..."
@@ -126,14 +99,10 @@ function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
             )}
             <HStack gap={2} align="center">
               {!wasSubmitted ? (
-                <button
-                  type="button"
-                  disabled={answers[idx] === undefined || answers[idx] === ""}
+                <button type="button" disabled={answers[idx] === undefined || answers[idx] === ""}
                   onClick={() => setSubmitted((p) => ({ ...p, [idx]: true }))}
                   className="rounded-md bg-primary-500 px-3 py-1 text-sm font-medium text-white disabled:opacity-40"
-                >
-                  Check
-                </button>
+                >Check</button>
               ) : (
                 <HStack gap={1} align="center">
                   {correct ? (
@@ -145,19 +114,14 @@ function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
                       <XCircle size={16} /><span className="text-sm font-medium">Answer: {String(q.answer)}</span>
                     </HStack>
                   )}
-                  <button
-                    type="button"
+                  <button type="button"
                     onClick={() => { setSubmitted((p) => ({ ...p, [idx]: false })); setAnswers((p) => { const n = { ...p }; delete n[idx]; return n; }); }}
                     className="rounded-md bg-gray-100 px-3 py-1 text-sm text-gray-600 hover:bg-gray-200"
-                  >
-                    Retry
-                  </button>
+                  >Retry</button>
                 </HStack>
               )}
             </HStack>
-            {wasSubmitted && q.explanation && (
-              <p className="rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-600">{q.explanation}</p>
-            )}
+            {wasSubmitted && q.explanation && <p className="rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-600">{q.explanation}</p>}
           </VStack>
         );
       })}
@@ -165,14 +129,17 @@ function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
   );
 }
 
-export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps) {
-  const { speak, isLoading } = useAudioPlayer();
+export function LessonViewClient({ lesson, courseTitle, courseLanguage }: LessonViewClientProps) {
+  const { speak, playOrReplay, isLoading } = useAudioPlayer();
   const content = useMemo(() => parseLesson(lesson.content), [lesson.content]);
+  const isRTL = RTL_LANGUAGES.includes((courseLanguage || "").toLowerCase());
+  const dir = isRTL ? "rtl" : "ltr";
+  const proseClass = "prose prose-sm max-w-none text-gray-800 [&_p]:my-2 [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1 [&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:bg-gray-50 [&_pre]:p-3 [&_blockquote]:border-l-2 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:text-gray-600 [&_table]:border-collapse [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-1 [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-1";
 
   return (
     <VStack gap={8} align="stretch">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{lesson.title}</h1>
+        <h1 className="text-2xl font-bold text-gray-900" dir={dir}>{lesson.title}</h1>
         <p className="mt-1 text-sm text-gray-400">{courseTitle}</p>
       </div>
 
@@ -181,7 +148,7 @@ export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps)
         <VStack gap={3} align="stretch">
           <HStack justify="between" align="center">
             <SectionTitle>Dialogue</SectionTitle>
-            <SpeakButton text={content.dialogue.lines.map((l) => l.text).join(". ")} speak={speak} isLoading={isLoading} />
+            <SpeakButtons text={content.dialogue.lines.map((l) => l.text).join(". ")} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
           </HStack>
           <VStack gap={3} align="stretch">
             {content.dialogue.lines.map((line, i) => (
@@ -192,9 +159,9 @@ export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps)
                 <VStack gap={0.5} align="stretch" className="flex-1">
                   <HStack gap={2} align="center">
                     <span className="text-xs font-semibold text-gray-700">{line.speaker}</span>
-                    <SpeakButton text={line.text} speak={speak} isLoading={isLoading} />
+                    <SpeakButtons text={line.text} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
                   </HStack>
-                  <p className="text-sm text-gray-800">{line.text}</p>
+                  <p className="text-sm text-gray-800" dir={dir}>{line.text}</p>
                   {line.translation && <p className="text-xs italic text-gray-400">{line.translation}</p>}
                 </VStack>
               </HStack>
@@ -208,9 +175,9 @@ export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps)
         <VStack gap={3} align="stretch">
           <HStack justify="between" align="center">
             <SectionTitle>Article</SectionTitle>
-            <SpeakButton text={stripMarkdown(content.article.body)} speak={speak} isLoading={isLoading} />
+            <SpeakButtons text={stripMarkdown(content.article.body)} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
           </HStack>
-          <div className="prose prose-sm max-w-none text-gray-800 [&_p]:my-2 [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1 [&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:bg-gray-50 [&_pre]:p-3 [&_blockquote]:border-l-2 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:text-gray-600 [&_table]:border-collapse [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-1 [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-1">
+          <div dir={dir} className={proseClass}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.article.body}</ReactMarkdown>
           </div>
         </VStack>
@@ -234,12 +201,12 @@ export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps)
               <tbody>
                 {content.vocabulary.items.map((item, i) => (
                   <tr key={i} className="border-b border-gray-100">
-                    <td className="py-2 px-3 font-medium text-gray-900">{item.word}</td>
+                    <td className="py-2 px-3 font-medium text-gray-900" dir={dir}>{item.word}</td>
                     <td className="py-2 px-3 text-gray-500">{item.pronunciation || "—"}</td>
                     <td className="py-2 px-3 text-gray-700">{item.translation}</td>
-                    <td className="py-2 px-3 text-gray-500">{item.example || "—"}</td>
+                    <td className="py-2 px-3 text-gray-500" dir={dir}>{item.example || "—"}</td>
                     <td className="py-2 px-3">
-                      <SpeakButton text={item.word} speak={speak} isLoading={isLoading} />
+                      <SpeakButtons text={item.word} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
                     </td>
                   </tr>
                 ))}
@@ -254,9 +221,9 @@ export function LessonViewClient({ lesson, courseTitle }: LessonViewClientProps)
         <VStack gap={3} align="stretch">
           <HStack justify="between" align="center">
             <SectionTitle>Grammar</SectionTitle>
-            <SpeakButton text={stripMarkdown(content.grammar.body)} speak={speak} isLoading={isLoading} />
+            <SpeakButtons text={stripMarkdown(content.grammar.body)} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
           </HStack>
-          <div className="prose prose-sm max-w-none text-gray-800 [&_p]:my-2 [&_h1]:text-lg [&_h2]:text-base [&_ul]:list-disc [&_ul]:pl-5 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1">
+          <div className={proseClass}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.grammar.body}</ReactMarkdown>
           </div>
         </VStack>

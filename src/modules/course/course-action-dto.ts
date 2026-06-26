@@ -10,6 +10,7 @@ export const schemaActionInputCreateCourse = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(5000).optional(),
   language: z.string().max(50).optional(),
+  learnerLanguage: z.string().max(50).optional(),
   visibility: z.enum(["PRIVATE", "PUBLIC"]).optional(),
   coverImage: z.string().url().max(1000).optional(),
 });
@@ -21,6 +22,7 @@ export const schemaActionInputUpdateCourse = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(5000).optional(),
   language: z.string().max(50).optional(),
+  learnerLanguage: z.string().max(50).optional(),
   visibility: z.enum(["PRIVATE", "PUBLIC"]).optional(),
   coverImage: z.string().url().max(1000).nullable().optional(),
 });

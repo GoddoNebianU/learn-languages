@@ -17,6 +17,7 @@ export function useAudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const blobUrlRef = useRef<string | null>(null);
   const speedRef = useRef(1);
+  const lastSpokenTextRef = useRef<string | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -111,6 +112,7 @@ export function useAudioPlayer() {
       const blob = await (await fetch(`data:${result.contentType};base64,${result.audio}`)).blob();
       await loadFromBlob(blob);
       setHasAudio(true);
+      lastSpokenTextRef.current = text;
       setIsLoading(false);
       await audio.play();
     } catch (err) {
@@ -151,6 +153,17 @@ export function useAudioPlayer() {
     audio.currentTime = 0;
     await audio.play().catch(() => {});
   }, []);
+
+  const playOrReplay = useCallback(
+    async (text: string): Promise<void> => {
+      if (blobUrlRef.current && lastSpokenTextRef.current === text) {
+        await replay();
+      } else {
+        await speak(text);
+      }
+    },
+    [replay, speak]
+  );
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
@@ -209,6 +222,7 @@ export function useAudioPlayer() {
     duration,
     currentTime,
     speak,
+    playOrReplay,
     playUrl,
     replay,
     pause,

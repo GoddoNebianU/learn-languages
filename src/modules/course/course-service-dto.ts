@@ -9,6 +9,7 @@ export type ServiceInputCreateCourse = {
   title: string;
   description?: string;
   language?: string;
+  learnerLanguage?: string;
   userId: string;
   visibility?: Visibility;
   coverImage?: string;
@@ -19,6 +20,7 @@ export type ServiceInputUpdateCourse = {
   title?: string;
   description?: string;
   language?: string;
+  learnerLanguage?: string;
   visibility?: Visibility;
   coverImage?: string | null;
 };
@@ -56,6 +58,7 @@ export type ServiceOutputCourse = {
   title: string;
   description: string;
   language: string;
+  learnerLanguage: string;
   userId: string;
   visibility: Visibility;
   coverImage: string | null;

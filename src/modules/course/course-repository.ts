@@ -41,6 +41,7 @@ type CourseWithPublicIncludes = {
   title: string;
   description: string;
   language: string;
+  learnerLanguage: string;
   userId: string;
   visibility: Visibility;
   coverImage: string | null;
@@ -56,6 +57,7 @@ function mapCourseToPublicOutput(course: CourseWithPublicIncludes): RepoOutputPu
     title: course.title,
     description: course.description,
     language: course.language,
+    learnerLanguage: course.learnerLanguage,
     userId: course.userId,
     visibility: course.visibility,
     coverImage: course.coverImage,
@@ -78,6 +80,7 @@ export async function repoCreateCourse(input: RepoInputCreateCourse): Promise<nu
       title: input.title,
       description: input.description ?? "",
       language: input.language ?? "",
+      learnerLanguage: input.learnerLanguage ?? "",
       userId: input.userId,
       visibility: input.visibility ?? Visibility.PRIVATE,
       coverImage: input.coverImage ?? null,
@@ -120,6 +123,7 @@ export async function repoGetCourseById(
     title: course.title,
     description: course.description,
     language: course.language,
+    learnerLanguage: course.learnerLanguage,
     userId: course.userId,
     visibility: course.visibility,
     coverImage: course.coverImage,
@@ -142,6 +146,7 @@ export async function repoGetCoursesByUserId(
     title: course.title,
     description: course.description,
     language: course.language,
+    learnerLanguage: course.learnerLanguage,
     userId: course.userId,
     visibility: course.visibility,
     coverImage: course.coverImage,
