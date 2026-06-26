@@ -5,6 +5,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CheckCircle2, XCircle } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/design-system/badge";
 import { VStack, HStack } from "@/design-system/stack";
 import { Spinner } from "@/design-system/spinner";
@@ -12,6 +13,7 @@ import { SpeakButtons } from "@/components/ui/SpeakButtons";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import type { ActionOutputChapterItem } from "@/modules/course/course-action-dto";
 import type { LessonContent, VocabularyItem, DialogueLine, ExerciseQuestion } from "@/modules/course/course-repository-dto";
+import { getDictDefLang } from "@/shared/dictionary";
 
 const RTL_LANGUAGES = ["uyghur", "arabic", "hebrew", "persian", "urdu", "pashto", "kurdish", "sindhi"];
 
@@ -45,6 +47,40 @@ function stripMarkdown(md: string): string {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="border-b border-gray-200 pb-2 text-lg font-bold text-gray-900">{children}</h2>;
+}
+
+function ClickableWords({ children, ql, dl }: { children: React.ReactNode; ql: string; dl: string }) {
+  if (typeof children === "string") {
+    return (
+      <>
+        {children.split(/(\s+)/).map((part, i) => {
+          if (!part.trim()) return <span key={i}>{part}</span>;
+          const clean = part.replace(/[^\p{L}\p{N}'’]/gu, "");
+          if (!clean) return <span key={i}>{part}</span>;
+          return (
+            <Link
+              key={i}
+              href={`/dictionary?q=${encodeURIComponent(clean)}&ql=${encodeURIComponent(ql)}&dl=${encodeURIComponent(dl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer rounded px-0.5 hover:bg-primary-100 hover:text-primary-600 transition-colors"
+            >
+              {part}
+            </Link>
+          );
+        })}
+      </>
+    );
+  }
+  if (Array.isArray(children)) {
+    return <>{React.Children.map(children, (c, i) => <ClickableWords key={i} ql={ql} dl={dl}>{c}</ClickableWords>)}</>;
+  }
+  if (React.isValidElement(children)) {
+    const el = children as React.ReactElement<{ children?: React.ReactNode }>;
+    if (el.props.children === undefined) return children;
+    return React.cloneElement(el, {}, <ClickableWords ql={ql} dl={dl}>{el.props.children}</ClickableWords>);
+  }
+  return <>{children}</>;
 }
 
 function ExerciseSection({ questions }: { questions: ExerciseQuestion[] }) {
@@ -134,7 +170,13 @@ export function LessonViewClient({ lesson, courseTitle, courseLanguage }: Lesson
   const content = useMemo(() => parseLesson(lesson.content), [lesson.content]);
   const isRTL = RTL_LANGUAGES.includes((courseLanguage || "").toLowerCase());
   const dir = isRTL ? "rtl" : "ltr";
+  const ql = (courseLanguage || "").toLowerCase();
+  const dl = typeof window !== "undefined" ? getDictDefLang() : "chinese";
   const proseClass = "prose prose-sm max-w-none text-gray-800 [&_p]:my-2 [&_h1]:text-lg [&_h2]:text-base [&_h3]:text-sm [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1 [&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:bg-gray-50 [&_pre]:p-3 [&_blockquote]:border-l-2 [&_blockquote]:border-gray-300 [&_blockquote]:pl-3 [&_blockquote]:text-gray-600 [&_table]:border-collapse [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-1 [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-1";
+  const markdownComponents = {
+    p: ({ children }: { children?: React.ReactNode }) => <p><ClickableWords ql={ql} dl={dl}>{children}</ClickableWords></p>,
+    li: ({ children }: { children?: React.ReactNode }) => <li><ClickableWords ql={ql} dl={dl}>{children}</ClickableWords></li>,
+  };
 
   return (
     <VStack gap={8} align="stretch">
@@ -178,7 +220,7 @@ export function LessonViewClient({ lesson, courseTitle, courseLanguage }: Lesson
             <SpeakButtons text={stripMarkdown(content.article.body)} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
           </HStack>
           <div dir={dir} className={proseClass}>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content.article.body}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{content.article.body}</ReactMarkdown>
           </div>
         </VStack>
       )}
