@@ -327,13 +327,32 @@ export async function repoDeleteChapterItem(input: RepoInputDeleteChapterItem): 
 export async function repoGetChapterItems(
   input: RepoInputGetChapterItems
 ): Promise<RepoOutputChapterItem[]> {
-  log.debug("Getting chapter items", { chapterId: input.chapterId });
+  log.debug("Getting chapter items", { chapterId: input.chapterId, summary: input.summary });
   const items = await prisma.chapterItem.findMany({
     where: { chapterId: input.chapterId },
     orderBy: { sortOrder: "asc" },
+    ...(input.summary ? {
+      select: { id: true, chapterId: true, type: true, title: true, sortOrder: true, deckId: true, createdAt: true, updatedAt: true },
+    } : {}),
   });
 
   return items.map((item) => ({
+    id: item.id,
+    chapterId: item.chapterId,
+    type: item.type as RepoOutputChapterItem["type"],
+    title: item.title,
+    sortOrder: item.sortOrder,
+    content: "content" in item ? item.content : null,
+    deckId: item.deckId,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  }));
+}
+
+export async function repoGetChapterItemById(itemId: number): Promise<RepoOutputChapterItem | null> {
+  const item = await prisma.chapterItem.findUnique({ where: { id: itemId } });
+  if (!item) return null;
+  return {
     id: item.id,
     chapterId: item.chapterId,
     type: item.type as RepoOutputChapterItem["type"],
@@ -343,7 +362,7 @@ export async function repoGetChapterItems(
     deckId: item.deckId,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
-  }));
+  };
 }
 
 // ============================================

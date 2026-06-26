@@ -51,9 +51,10 @@ export default async function CourseDetailPage({
   const chaptersResult = await actionGetChaptersByCourseId({ courseId });
   const chapters = chaptersResult.success ? (chaptersResult.data ?? []) : [];
 
+  // Fetch items in SUMMARY mode (no content JSON — just metadata for the directory)
   const chaptersWithItems = await Promise.all(
     chapters.map(async (chapter) => {
-      const itemsResult = await actionGetChapterItems({ chapterId: chapter.id });
+      const itemsResult = await actionGetChapterItems({ chapterId: chapter.id, summary: true });
       return {
         ...chapter,
         items: itemsResult.success ? (itemsResult.data ?? []) : [],

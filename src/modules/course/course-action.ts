@@ -525,7 +525,9 @@ export async function actionGetChapterItems(
 ): Promise<ActionOutputGetChapterItems> {
   try {
     const validatedInput = validateActionInputGetChapterItems(input);
-    const result = await serviceGetChapterItems({ chapterId: validatedInput.chapterId });
+    const summary = typeof (input as { summary?: boolean }).summary === "boolean"
+      ? (input as { summary: boolean }).summary : false;
+    const result = await serviceGetChapterItems({ chapterId: validatedInput.chapterId, summary });
 
     if (!result.success || !result.data) {
       return { success: false, message: result.message };
@@ -534,6 +536,18 @@ export async function actionGetChapterItems(
     return { success: true, message: result.message, data: result.data };
   } catch (e) {
     log.error("Failed to get chapter items", { error: e });
+    return { success: false, message: "Unknown error occurred" };
+  }
+}
+
+export async function actionGetChapterItemById(itemId: number) {
+  try {
+    const { repoGetChapterItemById } = await import("./course-repository");
+    const item = await repoGetChapterItemById(itemId);
+    if (!item) return { success: false, message: "Item not found" };
+    return { success: true, message: "OK", data: item };
+  } catch (e) {
+    log.error("Failed to get chapter item", { error: e });
     return { success: false, message: "Unknown error occurred" };
   }
 }

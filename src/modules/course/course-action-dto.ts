@@ -97,7 +97,7 @@ export const validateActionInputGetChaptersByCourseId = generateValidator(
 // ChapterItem — input schemas
 // ============================================
 
-const chapterItemTypeSchema = z.enum(["ARTICLE", "DIALOGUE", "MEMORIZE", "EXERCISE"]);
+const chapterItemTypeSchema = z.enum(["ARTICLE", "DIALOGUE", "MEMORIZE", "EXERCISE", "LESSON"]);
 
 export const schemaActionInputCreateChapterItem = z.object({
   chapterId: z.number().int().positive(),
@@ -132,6 +132,7 @@ export const validateActionInputDeleteChapterItem = generateValidator(
 
 export const schemaActionInputGetChapterItems = z.object({
   chapterId: z.number().int().positive(),
+  summary: z.boolean().optional(),
 });
 export type ActionInputGetChapterItems = z.infer<typeof schemaActionInputGetChapterItems>;
 export const validateActionInputGetChapterItems = generateValidator(schemaActionInputGetChapterItems);

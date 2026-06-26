@@ -126,6 +126,7 @@ export type ServiceInputDeleteChapterItem = {
 
 export type ServiceInputGetChapterItems = {
   chapterId: number;
+  summary?: boolean;
 };
 
 export type ServiceOutputChapterItem = {

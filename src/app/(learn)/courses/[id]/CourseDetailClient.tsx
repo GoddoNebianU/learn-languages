@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   BookOpen,
-  ChevronDown,
   ChevronRight,
   FileText,
   GraduationCap,
-  ListChecks,
   MessagesSquare,
+  ListChecks,
   Pencil,
   Users,
 } from "lucide-react";
@@ -30,36 +30,13 @@ import type {
   ActionOutputChapterItem,
   ActionOutputCourse,
 } from "@/modules/course/course-action-dto";
-import type { ChapterItemType } from "@/modules/course/course-repository-dto";
-import {
-  ArticleViewer,
-  DialogueViewer,
-  ExerciseViewer,
-  MemorizeViewer,
-} from "../components/ContentViewers";
-
-type ChapterWithItems = ActionOutputChapter & { items: ActionOutputChapterItem[] };
 
 interface CourseDetailClientProps {
   course: ActionOutputCourse;
-  chapters: ChapterWithItems[];
+  chapters: (ActionOutputChapter & { items: ActionOutputChapterItem[] })[];
   isOwner: boolean;
   currentUserId: string | null;
 }
-
-const itemTypeIcon: Record<ChapterItemType, React.ReactNode> = {
-  ARTICLE: <FileText size={16} />,
-  DIALOGUE: <MessagesSquare size={16} />,
-  MEMORIZE: <BookOpen size={16} />,
-  EXERCISE: <ListChecks size={16} />,
-};
-
-const itemTypeLabel: Record<ChapterItemType, string> = {
-  ARTICLE: "Article",
-  DIALOGUE: "Dialogue",
-  MEMORIZE: "Memorize",
-  EXERCISE: "Exercise",
-};
 
 export function CourseDetailClient({
   course,
@@ -68,10 +45,6 @@ export function CourseDetailClient({
   currentUserId,
 }: CourseDetailClientProps) {
   const router = useRouter();
-  const [expandedChapter, setExpandedChapter] = useState<number | null>(
-    chapters[0]?.id ?? null
-  );
-  const [openItem, setOpenItem] = useState<number | null>(null);
   const [enrolled, setEnrolled] = useState(false);
   const [enrollLoading, setEnrollLoading] = useState(true);
   const [togglingEnroll, setTogglingEnroll] = useState(false);
@@ -100,28 +73,10 @@ export function CourseDetailClient({
     }
   };
 
-  const handleItemClick = (itemId: number) => {
-    setOpenItem((prev) => (prev === itemId ? null : itemId));
-  };
-
-  const renderContent = (item: ActionOutputChapterItem) => {
-    switch (item.type) {
-      case "ARTICLE":
-        return <ArticleViewer content={item.content} />;
-      case "DIALOGUE":
-        return <DialogueViewer content={item.content} />;
-      case "MEMORIZE":
-        return <MemorizeViewer deckId={item.deckId} />;
-      case "EXERCISE":
-        return <ExerciseViewer content={item.content} />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <PageLayout>
       <VStack gap={6} align="stretch">
+        {/* Course header */}
         <Card variant="bordered" padding="lg" className="flex flex-col gap-4">
           <HStack align="start" justify="between" wrap>
             <VStack gap={2} align="start" className="flex-1">
@@ -136,13 +91,9 @@ export function CourseDetailClient({
                 <p className="text-sm text-gray-600 md:text-base">{course.description}</p>
               )}
             </VStack>
-
             <HStack gap={2} align="center">
               {isOwner ? (
-                <Button
-                  variant="primary"
-                  onClick={() => router.push(`/courses/${course.id}/edit`)}
-                >
+                <Button variant="primary" onClick={() => router.push(`/courses/${course.id}/edit`)}>
                   <Pencil size={16} />
                   Edit Course
                 </Button>
@@ -162,6 +113,7 @@ export function CourseDetailClient({
           </HStack>
         </Card>
 
+        {/* Chapter directory */}
         {chapters.length === 0 ? (
           <Card variant="bordered" padding="lg">
             <p className="text-center text-sm text-gray-400">
@@ -172,70 +124,43 @@ export function CourseDetailClient({
           </Card>
         ) : (
           <VStack gap={3} align="stretch">
-            {chapters.map((chapter, idx) => {
-              const isExpanded = expandedChapter === chapter.id;
-              return (
-                <Card key={chapter.id} variant="bordered" padding="none">
-                  <button
-                    type="button"
-                    onClick={() => setExpandedChapter(isExpanded ? null : chapter.id)}
-                    className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-gray-50"
-                  >
-                    <HStack gap={3} align="center">
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700">
-                        {idx + 1}
-                      </span>
-                      <span className="font-semibold text-gray-900">{chapter.title}</span>
-                      <Badge variant="neutral">{chapter.items.length} lessons</Badge>
-                    </HStack>
-                    {isExpanded ? (
-                      <ChevronDown size={18} className="text-gray-400" />
-                    ) : (
-                      <ChevronRight size={18} className="text-gray-400" />
-                    )}
-                  </button>
+            {chapters.map((chapter, idx) => (
+              <Card key={chapter.id} variant="bordered" padding="none">
+                {/* Chapter header */}
+                <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700">
+                    {idx + 1}
+                  </span>
+                  <span className="font-semibold text-gray-900">{chapter.title}</span>
+                  <Badge variant="neutral">{chapter.items.length} lessons</Badge>
+                </div>
 
-                  {isExpanded && (
-                    <VStack gap={0} align="stretch" className="border-t border-gray-100">
-                      {chapter.items.length === 0 ? (
-                        <p className="px-5 py-3 text-sm text-gray-400">No lessons in this chapter.</p>
-                      ) : (
-                        chapter.items.map((item) => {
-                          const isOpen = openItem === item.id;
-                          return (
-                            <div key={item.id} className="border-b border-gray-100 last:border-b-0">
-                              <button
-                                type="button"
-                                onClick={() => handleItemClick(item.id)}
-                                className="flex w-full items-center gap-3 px-5 py-3 text-left hover:bg-gray-50"
-                              >
-                                <span className="text-gray-400">
-                                  {itemTypeIcon[item.type]}
-                                </span>
-                                <span className="flex-1 text-sm font-medium text-gray-800">
-                                  {item.title}
-                                </span>
-                                <Badge variant="neutral" size="sm">
-                                  {itemTypeLabel[item.type]}
-                                </Badge>
-                                {isOpen ? (
-                                  <ChevronDown size={16} className="text-gray-400" />
-                                ) : (
-                                  <ChevronRight size={16} className="text-gray-400" />
-                                )}
-                              </button>
-                              {isOpen && (
-                                <div className="px-5 pb-5 pt-1">{renderContent(item)}</div>
-                              )}
-                            </div>
-                          );
-                        })
-                      )}
-                    </VStack>
-                  )}
-                </Card>
-              );
-            })}
+                {/* Lesson list */}
+                {chapter.items.length === 0 ? (
+                  <p className="px-5 py-3 text-sm text-gray-400">No lessons in this chapter.</p>
+                ) : (
+                  <VStack gap={0} align="stretch">
+                    {chapter.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={`/courses/${course.id}/lesson/${item.id}`}
+                        className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors"
+                      >
+                        <span className="text-gray-400">
+                          {item.type === "LESSON" ? <BookOpen size={16} /> :
+                           item.type === "ARTICLE" ? <FileText size={16} /> :
+                           item.type === "DIALOGUE" ? <MessagesSquare size={16} /> :
+                           item.type === "EXERCISE" ? <ListChecks size={16} /> :
+                           <BookOpen size={16} />}
+                        </span>
+                        <span className="flex-1 text-sm font-medium text-gray-800">{item.title}</span>
+                        <ChevronRight size={16} className="text-gray-300" />
+                      </Link>
+                    ))}
+                  </VStack>
+                )}
+              </Card>
+            ))}
           </VStack>
         )}
 

@@ -4,7 +4,23 @@ import { Visibility } from "../../../generated/prisma/enums";
 // Content JSON shapes (stored in ChapterItem.content)
 // ============================================
 
-export type ChapterItemType = "ARTICLE" | "DIALOGUE" | "MEMORIZE" | "EXERCISE";
+export type ChapterItemType = "ARTICLE" | "DIALOGUE" | "MEMORIZE" | "EXERCISE" | "LESSON";
+
+export interface VocabularyItem {
+  word: string;
+  pronunciation?: string;
+  translation: string;
+  partOfSpeech?: string;
+  example?: string;
+}
+
+export interface LessonContent {
+  article?: { body: string };
+  dialogue?: { lines: DialogueLine[] };
+  vocabulary?: { items: VocabularyItem[] };
+  grammar?: { body: string };
+  exercises?: { questions: ExerciseQuestion[] };
+}
 
 export interface DialogueLine {
   speaker: string;
@@ -157,6 +173,7 @@ export interface RepoInputDeleteChapterItem {
 
 export interface RepoInputGetChapterItems {
   chapterId: number;
+  summary?: boolean;
 }
 
 export type RepoOutputChapterItem = {
