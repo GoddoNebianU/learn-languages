@@ -1,7 +1,12 @@
+export type CardExample = {
+  example: string;
+  translation?: string | null;
+};
+
 export type CardMeaning = {
   partOfSpeech: string | null;
   definition: string;
-  example?: string | null;
+  examples: CardExample[];
 };
 
 export const CardTypeEnum = {

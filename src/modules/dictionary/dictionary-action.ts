@@ -48,7 +48,7 @@ export async function actionLookUpDictionary(
                   ipa: card.ipa ?? undefined,
                   definition: m.definition,
                   partOfSpeech: m.partOfSpeech ?? undefined,
-                  example: m.example ?? "",
+                  example: m.examples[0]?.example ?? "",
                 }));
                 return { continue: false, cachedEntries };
               }

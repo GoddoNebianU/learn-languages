@@ -30,7 +30,17 @@ export const openApiSpec = {
         properties: {
           partOfSpeech: { type: "string", nullable: true, example: "noun" },
           definition: { type: "string", example: "a greeting" },
-          example: { type: "string", nullable: true, example: "Hello, world!" },
+          examples: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                example: { type: "string", example: "Hello, world!" },
+                translation: { type: "string", nullable: true, example: "你好，世界！" },
+              },
+              required: ["example"],
+            },
+          },
         },
         required: ["definition"],
       },

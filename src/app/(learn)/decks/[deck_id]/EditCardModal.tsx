@@ -13,10 +13,11 @@ import { Plus, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { actionUpdateCard } from "@/modules/card/card-action";
-import type { ActionOutputCard, CardMeaning } from "@/modules/card/card-action-dto";
+import type { ActionOutputCard, CardMeaning, CardExample } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
-type MeaningWithId = CardMeaning & { id: string };
+type ExampleWithId = CardExample & { id: string };
+type MeaningWithId = Omit<CardMeaning, "examples"> & { id: string; examples: ExampleWithId[] };
 
 interface EditCardModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
   const [word, setWord] = useState("");
   const [ipa, setIpa] = useState("");
   const [meanings, setMeanings] = useState<MeaningWithId[]>([
-    { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+    { partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,8 +44,12 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
       setIpa(card.ipa || "");
       setMeanings(
         card.meanings.length > 0
-          ? card.meanings.map((m) => ({ ...m, id: crypto.randomUUID() }))
-          : [{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]
+          ? card.meanings.map((m) => ({
+              ...m,
+              id: crypto.randomUUID(),
+              examples: m.examples.map((e) => ({ ...e, id: crypto.randomUUID() })),
+            }))
+          : [{ partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() }]
       );
     }
   }, [card]);
@@ -52,7 +57,7 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
   const addMeaning = () => {
     setMeanings([
       ...meanings,
-      { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+      { partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() },
     ]);
   };
 
@@ -62,9 +67,46 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
     }
   };
 
-  const updateMeaning = (index: number, field: keyof CardMeaning, value: string) => {
+  const updateMeaning = (index: number, field: "partOfSpeech" | "definition", value: string) => {
     const updated = [...meanings];
     updated[index] = { ...updated[index], [field]: value || null };
+    setMeanings(updated);
+  };
+
+  const addExample = (meaningIndex: number) => {
+    const updated = [...meanings];
+    updated[meaningIndex] = {
+      ...updated[meaningIndex],
+      examples: [
+        ...updated[meaningIndex].examples,
+        { id: crypto.randomUUID(), example: "", translation: null },
+      ],
+    };
+    setMeanings(updated);
+  };
+
+  const removeExample = (meaningIndex: number, exampleIndex: number) => {
+    const updated = [...meanings];
+    updated[meaningIndex] = {
+      ...updated[meaningIndex],
+      examples: updated[meaningIndex].examples.filter((_, i) => i !== exampleIndex),
+    };
+    setMeanings(updated);
+  };
+
+  const updateExample = (
+    meaningIndex: number,
+    exampleIndex: number,
+    field: "example" | "translation",
+    value: string
+  ) => {
+    const updated = [...meanings];
+    const examples = [...updated[meaningIndex].examples];
+    examples[exampleIndex] = {
+      ...examples[exampleIndex],
+      [field]: value || null,
+    };
+    updated[meaningIndex] = { ...updated[meaningIndex], examples };
     setMeanings(updated);
   };
 
@@ -92,7 +134,15 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
         meanings: validMeanings.map((m) => ({
           partOfSpeech: card.cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
           definition: m.definition!.trim(),
-          example: m.example?.trim() || null,
+          examples:
+            card.cardType === "SENTENCE"
+              ? []
+              : m.examples
+                  .filter((e) => e.example.trim())
+                  .map((e) => ({
+                    example: e.example.trim(),
+                    translation: e.translation?.trim() || null,
+                  })),
         })),
       });
 
@@ -187,12 +237,43 @@ export function EditCardModal({ isOpen, onClose, card, onUpdated }: EditCardModa
                     </IconButton>
                   )}
                 </HStack>
-                <Textarea
-                  value={meaning.example || ""}
-                  onChange={(e) => updateMeaning(index, "example", e.target.value)}
-                  placeholder={t("examplePlaceholder")}
-                  className="min-h-[40px] w-full text-sm"
-                />
+                {card.cardType !== "SENTENCE" && (
+                  <div className="space-y-2">
+                    {meaning.examples.map((ex, exIdx) => (
+                      <div key={ex.id} className="space-y-1.5 rounded-md bg-white p-2">
+                        <HStack gap={2} align="start">
+                          <div className="flex-1">
+                            <Textarea
+                              value={ex.example}
+                              onChange={(e) => updateExample(index, exIdx, "example", e.target.value)}
+                              placeholder={t("examplePlaceholder")}
+                              className="min-h-[40px] w-full text-sm"
+                            />
+                          </div>
+                          <IconButton
+                            onClick={() => removeExample(index, exIdx)}
+                            className="shrink-0 p-1 text-gray-400 hover:text-red-500"
+                          >
+                            <Trash2 size={14} />
+                          </IconButton>
+                        </HStack>
+                        <Input
+                          value={ex.translation || ""}
+                          onChange={(e) => updateExample(index, exIdx, "translation", e.target.value)}
+                          placeholder={t("translationPlaceholder")}
+                          className="w-full text-sm"
+                          size="sm"
+                        />
+                      </div>
+                    ))}
+                    <LinkButton
+                      onClick={() => addExample(index)}
+                      className="text-xs text-blue-600 hover:text-blue-700"
+                    >
+                      {t("addExample")}
+                    </LinkButton>
+                  </div>
+                )}
               </div>
             ))}
           </VStack>

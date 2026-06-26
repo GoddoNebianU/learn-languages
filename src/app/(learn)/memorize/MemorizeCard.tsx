@@ -24,7 +24,10 @@ function getBackText(card: ActionOutputCard, isReversed: boolean): string {
   if (isReversed) {
     return card.word;
   }
-  return card.meanings.map((m) => m.example).filter(Boolean).join(" ");
+  return card.meanings
+    .flatMap((m) => m.examples.map((e) => e.example))
+    .filter(Boolean)
+    .join(" ");
 }
 
 function getBackContent(
@@ -56,16 +59,24 @@ function getBackContent(
           )}
           <div className="flex flex-col gap-1">
             <span className="text-gray-800">{m.definition}</span>
-            {m.example && (
-              <span className="flex items-center gap-1 border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500">
-                <span className="flex-1">{m.example}</span>
+            {m.examples.map((e, exIdx) => (
+              <span
+                key={exIdx}
+                className="flex items-start gap-1 border-l-2 border-primary-400/40 pl-2 text-sm italic text-gray-500"
+              >
+                <span className="flex-1">
+                  {e.example}
+                  {e.translation && (
+                    <span className="mt-0.5 block not-italic text-gray-400">
+                      {e.translation}
+                    </span>
+                  )}
+                </span>
                 <IconButton
                   shape="round"
                   tone="muted"
                   className="shrink-0 p-1"
-                  onClick={() => {
-                    if (m.example) onPlayText(m.example);
-                  }}
+                  onClick={() => onPlayText(e.example)}
                   disabled={isAudioLoading}
                   aria-label={readAloudLabel}
                   title={readAloudLabel}
@@ -73,7 +84,7 @@ function getBackContent(
                   <Volume2 className="h-4 w-4" />
                 </IconButton>
               </span>
-            )}
+            ))}
           </div>
         </div>
       ))}

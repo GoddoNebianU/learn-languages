@@ -155,13 +155,26 @@ model CardMeaning {
   cardId       Int
   partOfSpeech String?
   definition   String
-  example      String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   card         Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  examples     CardExample[]
 
   @@index([cardId])
   @@map("card_meanings")
+}
+
+model CardExample {
+  id          Int      @id @default(autoincrement())
+  meaningId   Int
+  example     String
+  translation String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  meaning     CardMeaning @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+
+  @@index([meaningId])
+  @@map("card_examples")
 }
 
 model DeckFavorite {

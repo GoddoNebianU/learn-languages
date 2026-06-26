@@ -13,10 +13,11 @@ import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { actionCreateCard } from "@/modules/card/card-action";
-import type { CardType, CardMeaning } from "@/modules/card/card-action-dto";
+import type { CardType, CardMeaning, CardExample } from "@/modules/card/card-action-dto";
 import { toast } from "sonner";
 
-type MeaningWithId = CardMeaning & { id: string };
+type ExampleWithId = CardExample & { id: string };
+type MeaningWithId = Omit<CardMeaning, "examples"> & { id: string; examples: ExampleWithId[] };
 
 const QUERY_LANGUAGES = [
   { value: "en", label: "english" as const },
@@ -41,7 +42,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
   const [queryLang, setQueryLang] = useState("en");
   const [customQueryLang, setCustomQueryLang] = useState("");
   const [meanings, setMeanings] = useState<MeaningWithId[]>([
-    { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+    { partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() },
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -50,7 +51,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
   const addMeaning = () => {
     setMeanings([
       ...meanings,
-      { partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() },
+      { partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() },
     ]);
   };
 
@@ -62,7 +63,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
 
   const updateMeaning = (
     index: number,
-    field: "partOfSpeech" | "definition" | "example",
+    field: "partOfSpeech" | "definition",
     value: string
   ) => {
     const updated = [...meanings];
@@ -73,13 +74,50 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
     setMeanings(updated);
   };
 
+  const addExample = (meaningIndex: number) => {
+    const updated = [...meanings];
+    updated[meaningIndex] = {
+      ...updated[meaningIndex],
+      examples: [
+        ...updated[meaningIndex].examples,
+        { id: crypto.randomUUID(), example: "", translation: null },
+      ],
+    };
+    setMeanings(updated);
+  };
+
+  const removeExample = (meaningIndex: number, exampleIndex: number) => {
+    const updated = [...meanings];
+    updated[meaningIndex] = {
+      ...updated[meaningIndex],
+      examples: updated[meaningIndex].examples.filter((_, i) => i !== exampleIndex),
+    };
+    setMeanings(updated);
+  };
+
+  const updateExample = (
+    meaningIndex: number,
+    exampleIndex: number,
+    field: "example" | "translation",
+    value: string
+  ) => {
+    const updated = [...meanings];
+    const examples = [...updated[meaningIndex].examples];
+    examples[exampleIndex] = {
+      ...examples[exampleIndex],
+      [field]: value || null,
+    };
+    updated[meaningIndex] = { ...updated[meaningIndex], examples };
+    setMeanings(updated);
+  };
+
   const resetForm = () => {
     setCardType("WORD");
     setWord("");
     setIpa("");
     setQueryLang("en");
     setCustomQueryLang("");
-    setMeanings([{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]);
+    setMeanings([{ partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() }]);
   };
 
   const handleAdd = () => {
@@ -107,7 +145,15 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
       meanings: validMeanings.map((m) => ({
         partOfSpeech: cardType === "SENTENCE" ? null : m.partOfSpeech?.trim() || null,
         definition: m.definition!.trim(),
-        example: cardType === "SENTENCE" ? null : (m.example?.trim() || null),
+        examples:
+          cardType === "SENTENCE"
+            ? []
+            : m.examples
+                .filter((e) => e.example.trim())
+                .map((e) => ({
+                  example: e.example.trim(),
+                  translation: e.translation?.trim() || null,
+                })),
       })),
     }).then((cardResult) => {
       if (!cardResult.success) {
@@ -117,7 +163,7 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
       onAdded();
       setWord("");
       setIpa("");
-      setMeanings([{ partOfSpeech: null, definition: "", example: null, id: crypto.randomUUID() }]);
+      setMeanings([{ partOfSpeech: null, definition: "", examples: [], id: crypto.randomUUID() }]);
       toast.success(t("cardAdded") || "Card added successfully");
     }).catch(() => {
       toast.error("Unknown error");
@@ -247,12 +293,41 @@ export function AddCardModal({ isOpen, onClose, deckId, onAdded }: AddCardModalP
                   )}
                 </HStack>
                 {cardType !== "SENTENCE" && (
-                  <Textarea
-                    value={meaning.example || ""}
-                    onChange={(e) => updateMeaning(index, "example", e.target.value)}
-                    placeholder={t("examplePlaceholder")}
-                    className="min-h-[40px] w-full text-sm"
-                  />
+                  <div className="space-y-2">
+                    {meaning.examples.map((ex, exIdx) => (
+                      <div key={ex.id} className="space-y-1.5 rounded-md bg-white p-2">
+                        <HStack gap={2} align="start">
+                          <div className="flex-1">
+                            <Textarea
+                              value={ex.example}
+                              onChange={(e) => updateExample(index, exIdx, "example", e.target.value)}
+                              placeholder={t("examplePlaceholder")}
+                              className="min-h-[40px] w-full text-sm"
+                            />
+                          </div>
+                          <IconButton
+                            onClick={() => removeExample(index, exIdx)}
+                            className="shrink-0 p-1 text-gray-400 hover:text-red-500"
+                          >
+                            <Trash2 size={14} />
+                          </IconButton>
+                        </HStack>
+                        <Input
+                          value={ex.translation || ""}
+                          onChange={(e) => updateExample(index, exIdx, "translation", e.target.value)}
+                          placeholder={t("translationPlaceholder")}
+                          className="w-full text-sm"
+                          size="sm"
+                        />
+                      </div>
+                    ))}
+                    <LinkButton
+                      onClick={() => addExample(index)}
+                      className="text-xs text-blue-600 hover:text-blue-700"
+                    >
+                      {t("addExample")}
+                    </LinkButton>
+                  </div>
                 )}
               </div>
             ))}

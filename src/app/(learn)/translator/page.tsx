@@ -151,7 +151,7 @@ export default function TranslatorPage() {
           {
             partOfSpeech: null,
             definition: translationResult.translatedText,
-            example: null,
+            examples: [],
           },
         ],
       });

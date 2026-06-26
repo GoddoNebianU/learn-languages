@@ -31,7 +31,12 @@ export async function repoCreateCard(input: RepoInputCreateCard): Promise<number
         create: input.meanings.map((m: CardMeaning) => ({
           partOfSpeech: m.partOfSpeech,
           definition: m.definition,
-          example: m.example,
+          examples: {
+            create: (m.examples ?? []).map((e) => ({
+              example: e.example,
+              translation: e.translation ?? null,
+            })),
+          },
         })),
       },
     },
@@ -64,9 +69,25 @@ export async function repoUpdateCard(input: RepoInputUpdateCard): Promise<void> 
           cardId: input.cardId,
           partOfSpeech: m.partOfSpeech,
           definition: m.definition,
-          example: m.example,
         })),
       });
+      const createdMeanings = await tx.cardMeaning.findMany({
+        where: { cardId: input.cardId },
+        orderBy: { createdAt: "asc" },
+        select: { id: true },
+      });
+      for (let i = 0; i < input.meanings.length; i++) {
+        const examples = input.meanings[i].examples ?? [];
+        if (examples.length > 0 && createdMeanings[i]) {
+          await tx.cardExample.createMany({
+            data: examples.map((e) => ({
+              meaningId: createdMeanings[i].id,
+              example: e.example,
+              translation: e.translation ?? null,
+            })),
+          });
+        }
+      }
     }
     if (input.hidden !== undefined) {
       await tx.card.update({
@@ -93,7 +114,12 @@ export async function repoDeleteCard(input: RepoInputDeleteCard): Promise<void> 
 export async function repoGetCardById(cardId: number): Promise<RepoOutputCard | null> {
   const card = await prisma.card.findUnique({
     where: { id: cardId },
-    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    include: {
+      meanings: {
+        select: { partOfSpeech: true, definition: true, examples: { select: { example: true, translation: true }, orderBy: { createdAt: "asc" } } },
+        orderBy: { createdAt: "asc" },
+      },
+    },
   });
   return card as RepoOutputCard | null;
 }
@@ -106,7 +132,7 @@ export async function repoGetCardsByDeckId(
     where: includeHidden ? { deckId } : { deckId, hidden: false },
     include: {
       meanings: {
-        select: { partOfSpeech: true, definition: true, example: true },
+        select: { partOfSpeech: true, definition: true, examples: { select: { example: true, translation: true }, orderBy: { createdAt: "asc" } } },
         orderBy: { createdAt: "asc" },
       },
     },
@@ -130,7 +156,12 @@ export async function repoGetRandomCard(
   const skip = Math.floor(Math.random() * count);
   const cards = await prisma.card.findMany({
     where: whereClause,
-    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    include: {
+      meanings: {
+        select: { partOfSpeech: true, definition: true, examples: { select: { example: true, translation: true }, orderBy: { createdAt: "asc" } } },
+        orderBy: { createdAt: "asc" },
+      },
+    },
     skip,
     take: 1,
   });
@@ -198,7 +229,12 @@ export async function repoGetCardByWord(
 ): Promise<RepoOutputCard | null> {
   const card = await prisma.card.findFirst({
     where: { deckId: input.deckId, word: input.word },
-    include: { meanings: { orderBy: { createdAt: "asc" } } },
+    include: {
+      meanings: {
+        select: { partOfSpeech: true, definition: true, examples: { select: { example: true, translation: true }, orderBy: { createdAt: "asc" } } },
+        orderBy: { createdAt: "asc" },
+      },
+    },
   });
   return card as RepoOutputCard | null;
 }

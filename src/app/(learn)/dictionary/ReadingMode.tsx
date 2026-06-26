@@ -91,7 +91,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
               ipa: card.ipa ?? undefined,
               definition: m.definition,
               partOfSpeech: m.partOfSpeech ?? undefined,
-              example: m.example ?? "",
+              example: m.examples[0]?.example ?? "",
             })),
           };
           setReadingSearchResult(cachedResult);
@@ -152,7 +152,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
         const meanings = lookupData.entries.map((e) => ({
           partOfSpeech: e.partOfSpeech || null,
           definition: e.definition,
-          example: e.example || null,
+          examples: e.example ? [{ example: e.example }] : [],
         }));
 
         const cardResult = await actionCreateCard({
@@ -250,7 +250,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
       const meanings = newResult.entries.map((e) => ({
         partOfSpeech: e.partOfSpeech || null,
         definition: e.definition,
-        example: e.example || null,
+        examples: e.example ? [{ example: e.example }] : [],
       }));
 
       const updateResult = await actionUpdateCard({

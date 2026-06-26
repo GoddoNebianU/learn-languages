@@ -112,7 +112,12 @@ Owners see hidden cards; others don't.
         {
           "partOfSpeech": "noun",
           "definition": "a greeting",
-          "example": "Hello, world!"
+          "examples": [
+            {
+              "example": "Hello, world!",
+              "translation": null
+            }
+          ]
         }
       ]
     }
@@ -137,7 +142,7 @@ Owner only.
 | `cardType` | `"WORD"` \| `"PHRASE"` \| `"SENTENCE"` | No | `"WORD"` |
 | `meanings` | array | No | `[]` |
 
-Each meaning: `{ partOfSpeech?: string, definition: string, example?: string }`
+Each meaning: `{ partOfSpeech?: string, definition: string, examples: [{ example: string, translation?: string | null }] }`
 
 **Response `201`** — the created card object.
 

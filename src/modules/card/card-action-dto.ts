@@ -1,14 +1,19 @@
 import z from "zod";
 import { generateValidator } from "@/utils/validate";
-import type { RepoOutputCard, CardMeaning, CardType } from "./card-repository-dto";
+import type { RepoOutputCard, CardMeaning, CardExample, CardType } from "./card-repository-dto";
 
 export type ActionOutputCard = RepoOutputCard;
-export type { CardMeaning, CardType };
+export type { CardMeaning, CardExample, CardType };
+
+const CardExampleSchema = z.object({
+  example: z.string(),
+  translation: z.string().optional().nullable(),
+});
 
 const CardMeaningSchema = z.object({
   partOfSpeech: z.string().nullable(),
   definition: z.string(),
-  example: z.string().optional().nullable(),
+  examples: z.array(CardExampleSchema),
 });
 
 export const schemaActionInputCreateCard = z.object({

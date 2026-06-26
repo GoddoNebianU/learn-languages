@@ -48,7 +48,7 @@ export async function PUT(
     card: {
       id: card.id, deckId: card.deckId, word: card.word, ipa: card.ipa,
       queryLang: card.queryLang, cardType: card.cardType, hidden: card.hidden,
-      meanings: (card.meanings ?? []).map((m) => ({ partOfSpeech: m.partOfSpeech, definition: m.definition, example: m.example })),
+      meanings: (card.meanings ?? []).map((m) => ({ partOfSpeech: m.partOfSpeech, definition: m.definition, examples: (m.examples ?? []).map((e) => ({ example: e.example, translation: e.translation })) })),
     },
   });
 }

@@ -120,7 +120,7 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
       const meanings = searchResult.entries.map((e) => ({
         partOfSpeech: e.partOfSpeech || null,
         definition: e.definition,
-        example: e.example || null,
+        examples: e.example ? [{ example: e.example }] : [],
       }));
 
       const cardResult = await actionCreateCard({

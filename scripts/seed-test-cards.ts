@@ -26,7 +26,7 @@ type SeedCard = {
   ipa: string | null;
   queryLang: string;
   cardType: CardType;
-  meanings: { partOfSpeech: string | null; definition: string; example: string | null }[];
+  meanings: { partOfSpeech: string | null; definition: string; examples: { example: string; translation?: string | null }[] }[];
 };
 
 // ============================================
@@ -151,7 +151,7 @@ const vocabularyCards: SeedCard[] = [
   ipa: ipa as string,
   queryLang: "English",
   cardType: "WORD" as CardType,
-  meanings: [{ partOfSpeech: pos as string, definition: def as string, example: ex as string }],
+  meanings: [{ partOfSpeech: pos as string, definition: def as string, examples: [{ example: ex as string }] }],
 }));
 
 // ============================================
@@ -267,7 +267,7 @@ const phraseCards: SeedCard[] = [
   ipa: null,
   queryLang: "English",
   cardType: "PHRASE" as CardType,
-  meanings: [{ partOfSpeech: null, definition: def as string, example: ex as string }],
+  meanings: [{ partOfSpeech: null, definition: def as string, examples: [{ example: ex as string }] }],
 }));
 
 // ============================================
@@ -381,7 +381,7 @@ const sentenceCards: SeedCard[] = [
   ipa: null,
   queryLang: "English",
   cardType: "SENTENCE" as CardType,
-  meanings: [{ partOfSpeech: null, definition: "", example: null }],
+  meanings: [{ partOfSpeech: null, definition: "", examples: [] }],
 }));
 
 // Add Chinese translations for sentences
@@ -534,7 +534,7 @@ const businessCards: SeedCard[] = [
         ipa: ipa,
         queryLang: "English",
         cardType: (hasSpaces ? "PHRASE" : "WORD") as CardType,
-        meanings: [{ partOfSpeech: pos, definition: def, example: ex }],
+        meanings: [{ partOfSpeech: pos, definition: def, examples: [{ example: ex }] }],
       };
     }
     const [phrase, def, ex] = item as [string, string, string];
@@ -543,7 +543,7 @@ const businessCards: SeedCard[] = [
       ipa: null,
       queryLang: "English",
       cardType: "PHRASE" as CardType,
-      meanings: [{ partOfSpeech: null, definition: def, example: ex }],
+      meanings: [{ partOfSpeech: null, definition: def, examples: [{ example: ex }] }],
     };
   }
   const businessSentenceTranslations: Record<string, string> = {
@@ -588,7 +588,7 @@ const businessCards: SeedCard[] = [
     ipa: null,
     queryLang: "English",
     cardType: "SENTENCE" as CardType,
-    meanings: [{ partOfSpeech: null, definition: businessSentenceTranslations[item] || "", example: null }],
+    meanings: [{ partOfSpeech: null, definition: businessSentenceTranslations[item] || "", examples: [] }],
   };
 });
 
@@ -651,16 +651,25 @@ async function main() {
       select: { id: true, sortOrder: true },
     });
 
-    const meaningData: { cardId: number; partOfSpeech: string | null; definition: string; example: string | null }[] = [];
     for (const cc of createdCards) {
       const original = deckData.cards[cc.sortOrder];
       if (!original) continue;
       for (const m of original.meanings) {
-        meaningData.push({ cardId: cc.id, partOfSpeech: m.partOfSpeech, definition: m.definition, example: m.example });
+        await prisma.cardMeaning.create({
+          data: {
+            cardId: cc.id,
+            partOfSpeech: m.partOfSpeech,
+            definition: m.definition,
+            examples: {
+              create: m.examples.map((e) => ({
+                example: e.example,
+                translation: e.translation ?? null,
+              })),
+            },
+          },
+        });
       }
     }
-
-    await prisma.cardMeaning.createMany({ data: meaningData });
 
     console.log(`  Created deck "${deckData.name}" with ${deckData.cards.length} cards`);
   }

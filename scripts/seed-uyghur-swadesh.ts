@@ -29,7 +29,7 @@ type JsonCard = {
   queryLang: string;
   cardType: "WORD" | "PHRASE" | "SENTENCE";
   sortOrder: number;
-  meanings: { partOfSpeech: string | null; definition: string; example: string | null }[];
+  meanings: { partOfSpeech: string | null; definition: string; examples: { example: string; translation?: string | null }[] }[];
 };
 
 type JsonFile = {
@@ -92,22 +92,27 @@ async function main() {
   });
 
   // Map sortOrder -> original card to preserve meanings order
-  const meaningData: { cardId: number; partOfSpeech: string | null; definition: string; example: string | null }[] = [];
   for (const cc of createdCards) {
     const original = data.cards[cc.sortOrder];
     if (!original) continue;
     for (const m of original.meanings) {
-      meaningData.push({
-        cardId: cc.id,
-        partOfSpeech: m.partOfSpeech,
-        definition: m.definition,
-        example: m.example,
+      await prisma.cardMeaning.create({
+        data: {
+          cardId: cc.id,
+          partOfSpeech: m.partOfSpeech,
+          definition: m.definition,
+          examples: {
+            create: m.examples.map((e) => ({
+              example: e.example,
+              translation: e.translation ?? null,
+            })),
+          },
+        },
       });
     }
   }
-  await prisma.cardMeaning.createMany({ data: meaningData });
 
-  console.log(`Inserted ${createdCards.length} cards and ${meaningData.length} meanings`);
+  console.log(`Inserted ${createdCards.length} cards`);
   console.log("Seed complete!");
 }
 
