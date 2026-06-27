@@ -20,22 +20,16 @@
 import { PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const sourceUrl = process.env.SOURCE_DATABASE_URL;
-const targetUrl = process.env.DATABASE_URL;
+function bail(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
+
+const sourceUrl = process.env.SOURCE_DATABASE_URL ?? bail("SOURCE_DATABASE_URL is required (the database to copy FROM)");
+const targetUrl = process.env.DATABASE_URL ?? bail("DATABASE_URL is required (the database to copy TO)");
 const username = process.argv[2] ?? "goddonebianu";
 
-if (!sourceUrl) {
-  console.error("SOURCE_DATABASE_URL is required (the database to copy FROM)");
-  process.exit(1);
-}
-if (!targetUrl) {
-  console.error("DATABASE_URL is required (the database to copy TO)");
-  process.exit(1);
-}
-if (sourceUrl === targetUrl) {
-  console.error("SOURCE_DATABASE_URL and DATABASE_URL must differ");
-  process.exit(1);
-}
+if (sourceUrl === targetUrl) bail("SOURCE_DATABASE_URL and DATABASE_URL must differ");
 
 const srcPrisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: sourceUrl }) });
 const tgtPrisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: targetUrl }) });
@@ -45,21 +39,13 @@ async function main() {
   console.log(`  source: ${sourceUrl.replace(/:[^:@]+@/, ":***@")}`);
   console.log(`  target: ${targetUrl.replace(/:[^:@]+@/, ":***@")}`);
 
-  // 1. Resolve the user in both databases by username.
   const srcUser = await srcPrisma.user.findFirst({ where: { username } });
   const tgtUser = await tgtPrisma.user.findFirst({ where: { username } });
-  if (!srcUser) {
-    console.error(`User "${username}" not found in SOURCE database`);
-    process.exit(1);
-  }
-  if (!tgtUser) {
-    console.error(`User "${username}" not found in TARGET database`);
-    process.exit(1);
-  }
+  if (!srcUser) bail(`User "${username}" not found in SOURCE database`);
+  if (!tgtUser) bail(`User "${username}" not found in TARGET database`);
   console.log(`  source user id=${srcUser.id}`);
   console.log(`  target user id=${tgtUser.id}`);
 
-  // 2. Read all courses owned by the user from the source (with chapters + items).
   const courses = await srcPrisma.course.findMany({
     where: { userId: srcUser.id },
     include: {
@@ -76,9 +62,7 @@ async function main() {
     console.log(`  - [${c.language}] "${c.title}" (${c.chapters.length} chapters, ${itemCount} items)`);
   }
 
-  // 3. Copy each course idempotently.
   for (const course of courses) {
-    // Drop any existing course with the same title owned by the target user.
     const existing = await tgtPrisma.course.findMany({
       where: { userId: tgtUser.id, title: course.title },
       select: { id: true },
