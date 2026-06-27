@@ -1,13 +1,15 @@
 import { TSharedEntry } from "@/shared/dictionary-type";
 import { useTranslations } from "next-intl";
-import { SpeakButton } from "./SpeakButton";
+import { SpeakButtons } from "@/components/ui/SpeakButtons";
 
 interface DictionaryEntryProps {
   entry: TSharedEntry;
-  queryLang: string;
+  speak: (text: string) => Promise<void>;
+  playOrReplay: (text: string) => Promise<void>;
+  isLoading: boolean;
 }
 
-export function DictionaryEntry({ entry, queryLang }: DictionaryEntryProps) {
+export function DictionaryEntry({ entry, speak, playOrReplay, isLoading }: DictionaryEntryProps) {
   const t = useTranslations("dictionary");
 
   return (
@@ -31,7 +33,7 @@ export function DictionaryEntry({ entry, queryLang }: DictionaryEntryProps) {
           <h3 className="mb-1 text-sm font-semibold text-gray-700">{t("example")}</h3>
           <div className="flex items-center gap-2">
             <p className="border-l-4 border-[#35786f] pl-4 text-gray-700">{entry.example}</p>
-            <SpeakButton text={entry.example} queryLang={queryLang} />
+            <SpeakButtons text={entry.example} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
           </div>
         </div>
       )}

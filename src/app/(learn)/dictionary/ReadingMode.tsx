@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { DictionaryEntry } from "./DictionaryEntry";
-import { SpeakButton } from "./SpeakButton";
+import { SpeakButtons } from "@/components/ui/SpeakButtons";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { actionLookUpDictionary } from "@/modules/dictionary/dictionary-action";
 import { actionGetCardByWord, actionCreateCard, actionUpdateCard, actionDeleteCard } from "@/modules/card/card-action";
 import type { ActionOutputDeck } from "@/modules/deck/deck-action-dto";
@@ -32,6 +33,7 @@ type ProcessingState = "idle" | "looking-up" | "saving" | "done" | "error";
 
 export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: ReadingModeProps) {
   const t = useTranslations("dictionary");
+  const { speak, playOrReplay, isLoading } = useAudioPlayer();
 
   const [selectedDeckId, setSelectedDeckId] = useState<number | null>(
     decks.length > 0 ? decks[0].id : null
@@ -340,7 +342,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
             <div className="flex-1">
               <h2 className="mb-2 flex items-center gap-2 text-3xl font-bold text-gray-800">
                 {readingSearchResult.standardForm}
-                <SpeakButton text={readingSearchResult.standardForm} queryLang={queryLang} />
+                <SpeakButtons text={readingSearchResult.standardForm} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
               </h2>
             </div>
             {currentCardId && (
@@ -367,7 +369,7 @@ export function ReadingMode({ queryLang, definitionLang, decks, isLoggedIn }: Re
           <div className="space-y-6">
             {readingSearchResult.entries.map((entry, index) => (
               <div key={index} className="border-t border-gray-200 pt-4">
-                <DictionaryEntry entry={entry} queryLang={queryLang} />
+                <DictionaryEntry entry={entry} speak={speak} playOrReplay={playOrReplay} isLoading={isLoading} />
               </div>
             ))}
           </div>

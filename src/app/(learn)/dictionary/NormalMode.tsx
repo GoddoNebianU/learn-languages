@@ -16,7 +16,8 @@ import { Skeleton } from "@/design-system/skeleton";
 import { Plus, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { getNativeName } from "@/shared/languages";
-import { SpeakButton } from "./SpeakButton";
+import { SpeakButtons } from "@/components/ui/SpeakButtons";
+import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
 interface NormalModeProps {
   queryLang: string;
@@ -29,6 +30,7 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
   const t = useTranslations("dictionary");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { speak, playOrReplay, isLoading } = useAudioPlayer();
 
   const {
     query,
@@ -187,7 +189,7 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
               <div className="flex-1">
                 <h2 className="mb-2 flex items-center gap-2 text-3xl font-bold text-gray-800">
                   {searchResult.standardForm}
-                  <SpeakButton text={searchResult.standardForm} queryLang={queryLang} />
+                  <SpeakButtons text={searchResult.standardForm} playOrReplay={playOrReplay} regenerate={speak} isLoading={isLoading} />
                 </h2>
               </div>
               <HStack align="center" gap={2} className="ml-4">
@@ -226,7 +228,7 @@ export function NormalMode({ queryLang, definitionLang, decks, isLoggedIn }: Nor
             <div className="space-y-6">
               {searchResult.entries.map((entry, index) => (
                 <div key={index} className="border-t border-gray-200 pt-4">
-                  <DictionaryEntry entry={entry} queryLang={queryLang} />
+                  <DictionaryEntry entry={entry} speak={speak} playOrReplay={playOrReplay} isLoading={isLoading} />
                 </div>
               ))}
             </div>
