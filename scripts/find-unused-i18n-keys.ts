@@ -265,12 +265,56 @@ walkSrc(SRC_DIR);
 const unused = [...allKeys].filter((k) => !usedKeys.has(k)).sort();
 const notInJson = [...usedKeys].filter((k) => !allKeys.has(k)).sort();
 
-// group unused by top-level namespace
 const byNs = new Map<string, string[]>();
 for (const k of unused) {
   const ns = k.split(".", 1)[0];
   if (!byNs.has(ns)) byNs.set(ns, []);
   byNs.get(ns)!.push(k);
+}
+
+const argv = new Set(process.argv.slice(2));
+const BASELINE_PATH = path.join(ROOT, "scripts", "i18n-unused-baseline.json");
+
+function loadBaseline(): Set<string> {
+  if (!fs.existsSync(BASELINE_PATH)) return new Set();
+  const data = JSON.parse(fs.readFileSync(BASELINE_PATH, "utf8"));
+  return new Set(Array.isArray(data?.unused) ? data.unused : []);
+}
+
+if (argv.has("--update-baseline")) {
+  fs.writeFileSync(BASELINE_PATH, JSON.stringify({ unused }, null, 2) + "\n");
+  console.log(`Wrote ${unused.length} unused key(s) to ${path.relative(ROOT, BASELINE_PATH)}`);
+  console.log("Commit this file to update the CI baseline.");
+  process.exit(0);
+}
+
+if (argv.has("--check")) {
+  const baseline = loadBaseline();
+  const unusedSet = new Set(unused);
+  const newUnused = unused.filter((k) => !baseline.has(k));
+  const staleBaseline = [...baseline].filter((k) => !unusedSet.has(k));
+  const failures: string[] = [];
+  if (notInJson.length)
+    failures.push(`${notInJson.length} code reference(s) match no JSON key (typo/missing):\n  ${notInJson.join("\n  ")}`);
+  if (dynamicKeySites.length)
+    failures.push(`${dynamicKeySites.length} unresolved dynamic key site(s):\n  ${dynamicKeySites.join("\n  ")}`);
+  if (rootNamespaceSites.length)
+    failures.push(`${rootNamespaceSites.length} root-namespace useTranslations() site(s):\n  ${rootNamespaceSites.join("\n  ")}`);
+  if (newUnused.length)
+    failures.push(`${newUnused.length} NEW unused key(s) not in baseline:\n  ${newUnused.join("\n  ")}`);
+
+  if (failures.length) {
+    console.error(`FAIL: i18n check (${failures.length} regression(s))\n`);
+    for (const f of failures) console.error(`- ${f}\n`);
+    console.error(`Total unused: ${unused.length} (baseline: ${baseline.size})`);
+    if (staleBaseline.length)
+      console.error(`Note: ${staleBaseline.length} baseline key(s) are now used — run with --update-baseline to shrink it.`);
+    process.exit(1);
+  }
+  console.log(`PASS: i18n check — ${unused.length} unused key(s) all in baseline, 0 regressions.`);
+  if (staleBaseline.length)
+    console.log(`Note: ${staleBaseline.length} baseline key(s) are now used (cleanup) — run with --update-baseline to shrink it.`);
+  process.exit(0);
 }
 
 console.log(`Locales scanned: ${localeNames.length} (${localeNames.join(", ")})`);
@@ -282,7 +326,7 @@ for (const [ns, keys] of [...byNs.entries()].sort((a, b) => b[1].length - a[1].l
   console.log(`[${ns}]  (${keys.length})`);
   for (const k of keys) {
     const locs = keyToLocales.get(k)!;
-    const note = locs.length === localeNames.length ? "" : `   ⚠ only in: ${locs.join(", ")}`;
+    const note = locs.length === localeNames.length ? "" : `   (only in: ${locs.join(", ")})`;
     console.log(`  ${k}${note}`);
   }
   console.log();

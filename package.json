@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:i18n": "tsx scripts/find-unused-i18n-keys.ts --check",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "postinstall": "prisma generate"
@@ -66,6 +67,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "prisma": "^7.7.0",
     "tailwindcss": "^4.2.3",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   }
 }
