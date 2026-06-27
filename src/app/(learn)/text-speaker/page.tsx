@@ -17,50 +17,18 @@ import { genIPA, genLanguage } from "@/modules/translator/translator-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 
 const TTS_LANGUAGES = [
-  { value: "Auto", label: "auto" },
-  { value: "Chinese", label: "chinese" },
-  { value: "English", label: "english" },
-  { value: "Japanese", label: "japanese" },
-  { value: "Korean", label: "korean" },
-  { value: "French", label: "french" },
-  { value: "German", label: "german" },
-  { value: "Italian", label: "italian" },
-  { value: "Spanish", label: "spanish" },
-  { value: "Portuguese", label: "portuguese" },
-  { value: "Russian", label: "russian" },
+  { value: "Auto", label: "auto", key: "languages.auto" },
+  { value: "Chinese", label: "chinese", key: "languages.chinese" },
+  { value: "English", label: "english", key: "languages.english" },
+  { value: "Japanese", label: "japanese", key: "languages.japanese" },
+  { value: "Korean", label: "korean", key: "languages.korean" },
+  { value: "French", label: "french", key: "languages.french" },
+  { value: "German", label: "german", key: "languages.german" },
+  { value: "Italian", label: "italian", key: "languages.italian" },
+  { value: "Spanish", label: "spanish", key: "languages.spanish" },
+  { value: "Portuguese", label: "portuguese", key: "languages.portuguese" },
+  { value: "Russian", label: "russian", key: "languages.russian" },
 ] as const;
-
-type TTSLabel = (typeof TTS_LANGUAGES)[number]["label"];
-
-function getLanguageLabel(
-  t: ReturnType<typeof useTranslations<"text_speaker">>,
-  label: TTSLabel
-): string {
-  switch (label) {
-    case "auto":
-      return t("languages.auto");
-    case "chinese":
-      return t("languages.chinese");
-    case "english":
-      return t("languages.english");
-    case "japanese":
-      return t("languages.japanese");
-    case "korean":
-      return t("languages.korean");
-    case "french":
-      return t("languages.french");
-    case "german":
-      return t("languages.german");
-    case "italian":
-      return t("languages.italian");
-    case "spanish":
-      return t("languages.spanish");
-    case "portuguese":
-      return t("languages.portuguese");
-    case "russian":
-      return t("languages.russian");
-  }
-}
 
 export default function TextSpeakerPage() {
   const t = useTranslations("text_speaker");
@@ -318,7 +286,7 @@ export default function TextSpeakerPage() {
                 }}
                 size="sm"
               >
-                {getLanguageLabel(t, lang.label)}
+                {t(lang.key)}
               </Button>
             ))}
             <Input

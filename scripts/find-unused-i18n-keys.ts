@@ -85,6 +85,15 @@ function baseCalleeName(call: ts.CallExpression): string | null {
   return null;
 }
 
+/** Walk a method-call chain (a.slice().filter()…) down to its base identifier. */
+function arrayReceiverName(node: ts.Expression): string | null {
+  if (ts.isIdentifier(node)) return node.text;
+  if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
+    return arrayReceiverName(node.expression.expression);
+  }
+  return null;
+}
+
 // ---------- per-file analysis ----------
 const usedKeys = new Set<string>();
 const dynamicKeySites: string[] = [];
@@ -190,8 +199,9 @@ function analyzeFile(filePath: string) {
   walk((node) => {
     if (!ts.isCallExpression(node)) return;
     const e = node.expression;
-    if (!ts.isPropertyAccessExpression(e) || !ts.isIdentifier(e.expression)) return;
-    if (!ITER_METHODS.has(e.name.text) || !constObjArrays.has(e.expression.text)) return;
+    if (!ts.isPropertyAccessExpression(e) || !ITER_METHODS.has(e.name.text)) return;
+    const receiver = arrayReceiverName(e.expression);
+    if (!receiver || !constObjArrays.has(receiver)) return;
     const cb = node.arguments[0];
     let paramName: string | null = null;
     if (ts.isArrowFunction(cb) && cb.parameters[0] && ts.isIdentifier(cb.parameters[0].name)) {
@@ -201,7 +211,7 @@ function analyzeFile(filePath: string) {
     }
     if (!paramName) return;
     if (cbParamToArray.has(paramName)) cbParamDrops.add(paramName);
-    else cbParamToArray.set(paramName, e.expression.text);
+    else cbParamToArray.set(paramName, receiver);
   });
   for (const d of cbParamDrops) cbParamToArray.delete(d);
 
