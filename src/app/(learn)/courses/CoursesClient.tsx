@@ -27,6 +27,7 @@ type TabKey = "explore" | "mine" | "enrolled";
 
 interface CoursesClientProps {
   initialPublicCourses: ActionOutputPublicCourse[];
+  isLoggedIn: boolean;
 }
 
 type CardCourse = {
@@ -142,7 +143,7 @@ function CourseGrid({ courses }: { courses: CardCourse[] }) {
   );
 }
 
-export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
+export function CoursesClient({ initialPublicCourses, isLoggedIn }: CoursesClientProps) {
   const router = useRouter();
   const [tab, setTab] = useState<TabKey>("explore");
   const [publicCourses, setPublicCourses] =
@@ -199,12 +200,16 @@ export function CoursesClient({ initialPublicCourses }: CoursesClientProps) {
           <TabButton active={tab === "explore"} onClick={() => handleTabChange("explore")}>
             Explore
           </TabButton>
-          <TabButton active={tab === "mine"} onClick={() => handleTabChange("mine")}>
-            My Courses
-          </TabButton>
-          <TabButton active={tab === "enrolled"} onClick={() => handleTabChange("enrolled")}>
-            Enrolled
-          </TabButton>
+          {isLoggedIn && (
+            <>
+              <TabButton active={tab === "mine"} onClick={() => handleTabChange("mine")}>
+                My Courses
+              </TabButton>
+              <TabButton active={tab === "enrolled"} onClick={() => handleTabChange("enrolled")}>
+                Enrolled
+              </TabButton>
+            </>
+          )}
         </HStack>
 
         {tab === "explore" && (
