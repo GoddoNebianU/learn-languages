@@ -1,7 +1,5 @@
 "use server";
 
-export * from "./deck-favorite-action";
-
 import { createLogger } from "@/lib/logger";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { ValidateError } from "@/lib/errors";

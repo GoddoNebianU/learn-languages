@@ -102,32 +102,44 @@ async function createDeckForLesson(
     },
   });
 
-  const items = lesson.vocabulary.items;
-  for (let i = 0; i < items.length; i++) {
-    const v = items[i];
-    if (!v.word || !v.translation) continue;
-    await prisma.card.create({
-      data: {
-        deckId: deck.id,
-        word: v.word,
-        ipa: v.pronunciation ?? null,
-        queryLang: "uyghur",
-        cardType: "WORD",
-        sortOrder: i,
-        meanings: {
-          create: [
-            {
-              partOfSpeech: v.partOfSpeech ?? null,
-              definition: v.translation,
-              examples: v.example
-                ? { create: [{ example: v.example }] }
-                : undefined,
-            },
-          ],
-        },
-      },
-    });
+  const items = lesson.vocabulary.items.filter((v) => v.word && v.translation);
+  if (items.length === 0) return deck.id;
+
+  await prisma.card.createMany({
+    data: items.map((v, i) => ({
+      deckId: deck.id,
+      word: v.word,
+      ipa: v.pronunciation ?? null,
+      queryLang: "uyghur",
+      cardType: "WORD" as const,
+      sortOrder: i,
+    })),
+  });
+
+  const cards = await prisma.card.findMany({
+    where: { deckId: deck.id },
+    orderBy: { sortOrder: "asc" },
+    select: { id: true, sortOrder: true },
+  });
+
+  const meaningsData = cards.map((c) => {
+    const v = items[c.sortOrder];
+    return { cardId: c.id, partOfSpeech: v?.partOfSpeech ?? null, definition: v?.translation ?? "" };
+  }).filter((m) => m.definition);
+  await prisma.cardMeaning.createMany({ data: meaningsData });
+
+  const meanings = await prisma.cardMeaning.findMany({
+    where: { cardId: { in: cards.map((c) => c.id) } },
+    select: { id: true, cardId: true },
+  });
+  const examplesData: { meaningId: number; example: string }[] = [];
+  for (const m of meanings) {
+    const card = cards.find((c) => c.id === m.cardId);
+    if (!card) continue;
+    const v = items[card.sortOrder];
+    if (v?.example) examplesData.push({ meaningId: m.id, example: v.example });
   }
+  if (examplesData.length > 0) await prisma.cardExample.createMany({ data: examplesData });
 
   return deck.id;
 }

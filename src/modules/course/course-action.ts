@@ -268,6 +268,3 @@ export async function actionSearchPublicCourses(
     return { success: false, message: "Unknown error occurred" };
   }
 }
-
-export * from "./course-chapter-action";
-export * from "./course-enrollment-action";

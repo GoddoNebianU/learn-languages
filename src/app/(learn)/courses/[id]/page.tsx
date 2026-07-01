@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import {
   actionGetCourseById,
+} from "@/modules/course/course-action";
+import {
   actionGetChaptersByCourseId,
   actionGetChapterItems,
-} from "@/modules/course/course-action";
+} from "@/modules/course/course-chapter-action";
 import { CourseDetailClient } from "./CourseDetailClient";
 
 export async function generateMetadata({

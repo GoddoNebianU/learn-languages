@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { actionGetChapterItemById, actionGetCourseById } from "@/modules/course/course-action";
+import { actionGetCourseById } from "@/modules/course/course-action";
+import { actionGetChapterItemById } from "@/modules/course/course-chapter-action";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LessonViewClient } from "./LessonViewClient";
 import type { Metadata } from "next";

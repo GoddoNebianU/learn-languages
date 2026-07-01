@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import Link from "next/link";
-import { actionToggleDeckFavorite, actionCheckDeckFavorite } from "@/modules/deck/deck-action";
+import { actionToggleDeckFavorite, actionCheckDeckFavorite } from "@/modules/deck/deck-favorite-action";
 import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
 import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";

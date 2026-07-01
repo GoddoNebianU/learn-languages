@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getCurrentUserId } from "@/modules/shared/action-utils";
 import { redirect } from "next/navigation";
 import { FavoritesClient } from "./FavoritesClient";
-import { actionGetUserFavoriteDecks } from "@/modules/deck/deck-action";
+import { actionGetUserFavoriteDecks } from "@/modules/deck/deck-favorite-action";
 import type { ActionOutputUserFavoriteDeck } from "@/modules/deck/deck-action-dto";
 
 export const metadata: Metadata = {

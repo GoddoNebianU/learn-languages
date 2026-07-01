@@ -22,7 +22,7 @@ import {
   actionCheckEnrollment,
   actionEnrollCourse,
   actionUnenrollCourse,
-} from "@/modules/course/course-action";
+} from "@/modules/course/course-enrollment-action";
 import type {
   ActionOutputChapter,
   ActionOutputChapterItem,

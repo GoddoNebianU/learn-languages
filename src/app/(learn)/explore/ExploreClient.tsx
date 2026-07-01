@@ -11,11 +11,8 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { PageHeader } from "@/components/ui/PageHeader";
-import {
-  actionSearchPublicDecks,
-  actionToggleDeckFavorite,
-  actionCheckDeckFavorites,
-} from "@/modules/deck/deck-action";
+import { actionSearchPublicDecks } from "@/modules/deck/deck-action";
+import { actionToggleDeckFavorite, actionCheckDeckFavorites } from "@/modules/deck/deck-favorite-action";
 import type { ActionOutputPublicDeck } from "@/modules/deck/deck-action-dto";
 import { authClient } from "@/lib/auth-client";
 import { useCapabilityStore, type CapabilityState } from "@/lib/capability-store";

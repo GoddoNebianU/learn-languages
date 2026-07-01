@@ -15,9 +15,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import {
   actionGetPublicCourses,
   actionGetMyCourses,
-  actionGetEnrolledCourses,
   actionSearchPublicCourses,
 } from "@/modules/course/course-action";
+import { actionGetEnrolledCourses } from "@/modules/course/course-enrollment-action";
 import type {
   ActionOutputCourse,
   ActionOutputPublicCourse,

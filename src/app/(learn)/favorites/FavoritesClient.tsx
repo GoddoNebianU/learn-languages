@@ -10,7 +10,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { CardList } from "@/components/ui/CardList";
 import { VStack } from "@/design-system/stack";
 import { Skeleton } from "@/design-system/skeleton";
-import { actionGetUserFavoriteDecks, actionToggleDeckFavorite } from "@/modules/deck/deck-action";
+import { actionGetUserFavoriteDecks, actionToggleDeckFavorite } from "@/modules/deck/deck-favorite-action";
 import type { ActionOutputUserFavoriteDeck } from "@/modules/deck/deck-action-dto";
 
 interface FavoriteCardProps {
