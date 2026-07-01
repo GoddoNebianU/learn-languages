@@ -71,7 +71,10 @@ async function main() {
       },
     });
 
-    const toDelete = [shengci, yufa, lianxi].filter(Boolean).map((it) => it.id);
+    const toDelete: number[] = [];
+    for (const it of [shengci, yufa, lianxi]) {
+      if (it) toDelete.push(it.id);
+    }
     if (toDelete.length) {
       await prisma.chapterItem.deleteMany({ where: { id: { in: toDelete } } });
     }

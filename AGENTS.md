@@ -9,3 +9,4 @@
 - 每个完整的改动之后都要 git commit
 - 每次改动后检查文档与代码是否对齐,有偏差就同步更新（文档包括 `docs/`、`README.md`、`README.zh-CN.md`）
 - 数据库 schema 有变更时,git push 之前要先 `prisma db push` 到 `.env` 和 `.env.production` 两个数据库
+- 所有 `.ts` / `.tsx` 文件不超过 **400 行**；超出则按职责拆分（`pnpm lint:max-lines` 检查，CI 强制执行）

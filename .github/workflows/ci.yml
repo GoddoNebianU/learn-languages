@@ -25,4 +25,7 @@ jobs:
       - name: i18n check (no new unused keys, no typos/dynamic regressions)
         run: pnpm lint:i18n
 
+      - name: File length check (no file > 400 lines)
+        run: pnpm lint:max-lines
+
       - run: pnpm build

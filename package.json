@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:i18n": "tsx scripts/find-unused-i18n-keys.ts --check",
+    "lint:max-lines": "tsx scripts/check-file-length.ts",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "postinstall": "prisma generate"
