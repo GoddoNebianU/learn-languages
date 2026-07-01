@@ -98,6 +98,7 @@ async function createDeckForLesson(
       desc: `Uyghur vocabulary — ${lesson.title}`,
       userId,
       visibility: "PUBLIC",
+      source: "course",
       sortOrder,
     },
   });

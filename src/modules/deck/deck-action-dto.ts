@@ -43,6 +43,7 @@ export type ActionOutputDeck = {
   desc: string;
   userId: string;
   visibility: "PRIVATE" | "PUBLIC";
+  source: string | null;
   createdAt: Date;
   updatedAt: Date;
   cardCount?: number;

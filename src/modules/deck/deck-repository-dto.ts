@@ -34,6 +34,7 @@ export type RepoOutputDeck = {
   desc: string;
   userId: string;
   visibility: Visibility;
+  source: string | null;
   createdAt: Date;
   updatedAt: Date;
   cardCount?: number;

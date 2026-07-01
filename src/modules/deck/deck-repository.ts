@@ -30,6 +30,7 @@ type DeckWithPublicIncludes = {
   desc: string;
   userId: string;
   visibility: Visibility;
+  source: string | null;
   createdAt: Date;
   updatedAt: Date;
   _count?: { cards?: number; favorites?: number };
@@ -43,6 +44,7 @@ function mapDeckToPublicOutput(deck: DeckWithPublicIncludes): RepoOutputPublicDe
     desc: deck.desc,
     userId: deck.userId,
     visibility: deck.visibility,
+    source: deck.source,
     createdAt: deck.createdAt,
     updatedAt: deck.updatedAt,
     cardCount: deck._count?.cards ?? 0,
@@ -97,6 +99,7 @@ export async function repoGetDeckById(input: RepoInputGetDeckById): Promise<Repo
     desc: deck.desc,
     userId: deck.userId,
     visibility: deck.visibility,
+    source: deck.source,
     createdAt: deck.createdAt,
     updatedAt: deck.updatedAt,
     cardCount: deck._count?.cards ?? 0,
@@ -123,6 +126,7 @@ export async function repoGetDecksByUserId(
     desc: deck.desc,
     userId: deck.userId,
     visibility: deck.visibility,
+    source: deck.source,
     createdAt: deck.createdAt,
     updatedAt: deck.updatedAt,
     cardCount: deck._count?.cards ?? 0,

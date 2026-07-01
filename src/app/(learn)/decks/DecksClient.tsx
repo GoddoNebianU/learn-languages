@@ -1,6 +1,7 @@
 "use client";
 
-import { Layers, Plus } from "lucide-react";
+import { Layers, Plus, BookOpen } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/design-system/button";
 import { Skeleton } from "@/design-system/skeleton";
 import { VStack } from "@/design-system/stack";
@@ -49,6 +50,10 @@ export function DecksClient({ userId }: DecksClientProps) {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
+  const [tab, setTab] = useState<"my" | "course">("my");
+
+  const myDecks = decks.filter((d) => !d.source);
+  const courseDecks = decks.filter((d) => d.source === "course");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -65,21 +70,19 @@ export function DecksClient({ userId }: DecksClientProps) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = decks.findIndex((d) => d.id === active.id);
-    const newIndex = decks.findIndex((d) => d.id === over.id);
+    const oldIndex = myDecks.findIndex((d) => d.id === active.id);
+    const newIndex = myDecks.findIndex((d) => d.id === over.id);
     if (oldIndex === -1 || newIndex === -1) return;
 
-    // Optimistic update
-    const newDecks = [...decks];
-    const [moved] = newDecks.splice(oldIndex, 1);
-    newDecks.splice(newIndex, 0, moved);
-    setDecks(newDecks);
+    const newOrder = [...myDecks];
+    const [moved] = newOrder.splice(oldIndex, 1);
+    newOrder.splice(newIndex, 0, moved);
+    setDecks((prev) => [...newOrder, ...prev.filter((d) => d.source)]);
 
-    // Persist new order
-    const result = await actionReorderDecks({ deckIds: newDecks.map((d) => d.id) });
+    const result = await actionReorderDecks({ deckIds: newOrder.map((d) => d.id) });
     if (!result.success) {
       toast.error(result.message);
-      loadDecks(); // Revert on failure
+      loadDecks();
     }
   };
 
@@ -129,12 +132,30 @@ const handleCreateDeckConfirm = async () => {
       <PageLayout>
         <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-        <div className="mb-4 flex gap-2">
-          <Button variant="light" onClick={handleCreateDeck}>
-            <Plus size={18} />
-            {t("newDeck")}
-          </Button>
+        <div className="mb-4 flex items-center gap-2">
+          <button
+            onClick={() => setTab("my")}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${tab === "my" ? "bg-primary-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+          >
+            {t("title")} ({myDecks.length})
+          </button>
+          <button
+            onClick={() => setTab("course")}
+            className={`inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${tab === "course" ? "bg-primary-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+          >
+            <BookOpen size={14} />
+            课程牌组 ({courseDecks.length})
+          </button>
         </div>
+
+        {tab === "my" && (
+          <div className="mb-4 flex gap-2">
+            <Button variant="light" onClick={handleCreateDeck}>
+              <Plus size={18} />
+              {t("newDeck")}
+            </Button>
+          </div>
+        )}
 
         <CardList>
           {loading ? (
@@ -142,7 +163,27 @@ const handleCreateDeckConfirm = async () => {
               <Skeleton variant="circular" className="mb-3 h-8 w-8" />
               <p className="text-sm text-gray-500">{t("loading")}</p>
             </VStack>
-          ) : decks.length === 0 ? (
+          ) : tab === "course" ? (
+            courseDecks.length === 0 ? (
+              <div className="py-12 text-center text-sm text-gray-400">暂无课程牌组</div>
+            ) : (
+              <VStack gap={2} align="stretch">
+                {courseDecks.map((deck) => (
+                  <Link
+                    key={deck.id}
+                    href={`/memorize?deck_id=${deck.id}`}
+                    className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-primary-300 hover:bg-gray-50"
+                  >
+                    <BookOpen size={18} className="shrink-0 text-gray-400" />
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-medium text-gray-900">{deck.name}</div>
+                      {deck.desc && <div className="truncate text-sm text-gray-500">{deck.desc}</div>}
+                    </div>
+                  </Link>
+                ))}
+              </VStack>
+            )
+          ) : myDecks.length === 0 ? (
             <div className="py-12 text-center text-gray-400">
               <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
                 <Layers size={24} className="text-gray-400" />
@@ -156,10 +197,10 @@ const handleCreateDeckConfirm = async () => {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={decks.map((d) => d.id)}
+                items={myDecks.map((d) => d.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {decks.map((deck) => (
+                {myDecks.map((deck) => (
                   <SortableDeckCard
                     key={deck.id}
                     deck={deck}

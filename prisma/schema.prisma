@@ -121,6 +121,7 @@ model Deck {
   desc       String         @default("") @db.Text
   userId     String
   visibility Visibility     @default(PRIVATE)
+  source     String?
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   sortOrder  Int            @default(0)
@@ -130,6 +131,7 @@ model Deck {
 
   @@index([userId])
   @@index([visibility])
+  @@index([source])
   @@map("decks")
 }
 
