@@ -9,6 +9,7 @@ import {
   GraduationCap,
   MessagesSquare,
   ListChecks,
+  Pencil,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -89,6 +90,12 @@ export function CourseDetailClient({
               )}
             </VStack>
             <HStack gap={2} align="center">
+              {isOwner && (
+                <Button variant="light" href={`/courses/${course.id}/edit`}>
+                  <Pencil size={16} />
+                  Edit Course
+                </Button>
+              )}
               {isOwner ? (
                 <Badge variant="info">Owner</Badge>
               ) : enrollLoading ? (
@@ -112,7 +119,7 @@ export function CourseDetailClient({
           <Card variant="bordered" padding="lg">
             <p className="text-center text-sm text-gray-400">
               {isOwner
-                ? "No chapters yet. Course content is managed directly in the database."
+                ? "No chapters yet. Click \"Edit Course\" to start adding content."
                 : "This course has no content yet."}
             </p>
           </Card>
