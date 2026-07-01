@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/design-system/badge";
 import { VStack, HStack } from "@/design-system/stack";
@@ -238,7 +238,18 @@ export function LessonViewClient({ lesson, courseTitle, courseLanguage }: Lesson
       {/* Vocabulary */}
       {content.vocabulary && content.vocabulary.items.length > 0 && (
         <VStack gap={3} align="stretch">
-          <SectionTitle>Vocabulary</SectionTitle>
+          <HStack justify="between" align="center">
+            <SectionTitle>Vocabulary</SectionTitle>
+            {lesson.deckId && (
+              <Link
+                href={`/memorize?deck_id=${lesson.deckId}`}
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-700 transition-colors hover:bg-primary-100"
+              >
+                <GraduationCap size={16} />
+                Study
+              </Link>
+            )}
+          </HStack>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
