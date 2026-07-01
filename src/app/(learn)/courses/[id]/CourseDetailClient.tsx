@@ -118,43 +118,69 @@ export function CourseDetailClient({
           </Card>
         ) : (
           <VStack gap={3} align="stretch">
-            {chapters.map((chapter, idx) => (
-              <Card key={chapter.id} variant="bordered" padding="none">
-                {/* Chapter header */}
-                <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700">
-                    {idx + 1}
-                  </span>
-                  <span className="font-semibold text-gray-900">{chapter.title}</span>
-                  <Badge variant="neutral">{chapter.items.length} lessons</Badge>
-                </div>
+            {chapters.map((chapter, idx) => {
+              const singleItem = chapter.items.length === 1 ? chapter.items[0] : null;
 
-                {/* Lesson list */}
-                {chapter.items.length === 0 ? (
-                  <p className="px-5 py-3 text-sm text-gray-400">No lessons in this chapter.</p>
-                ) : (
-                  <VStack gap={0} align="stretch">
-                    {chapter.items.map((item) => (
-                      <Link
-                        key={item.id}
-                        href={`/courses/${course.id}/lesson/${item.id}`}
-                        className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors"
-                      >
-                        <span className="text-gray-400">
-                          {item.type === "LESSON" ? <BookOpen size={16} /> :
-                           item.type === "ARTICLE" ? <FileText size={16} /> :
-                           item.type === "DIALOGUE" ? <MessagesSquare size={16} /> :
-                           item.type === "EXERCISE" ? <ListChecks size={16} /> :
-                           <BookOpen size={16} />}
-                        </span>
-                        <span className="flex-1 text-sm font-medium text-gray-800">{item.title}</span>
-                        <ChevronRight size={16} className="text-gray-300" />
-                      </Link>
-                    ))}
-                  </VStack>
-                )}
-              </Card>
-            ))}
+              if (singleItem) {
+                const titlesDiffer = chapter.title !== singleItem.title;
+                return (
+                  <Card key={chapter.id} variant="bordered" padding="none">
+                    <Link
+                      href={`/courses/${course.id}/lesson/${singleItem.id}`}
+                      className="flex items-center gap-3 px-5 py-4 transition-colors hover:bg-gray-50"
+                    >
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700">
+                        {idx + 1}
+                      </span>
+                      <BookOpen size={16} className="shrink-0 text-gray-400" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-gray-900">{singleItem.title}</span>
+                        {titlesDiffer && (
+                          <span className="block text-xs text-gray-400">{chapter.title}</span>
+                        )}
+                      </span>
+                      <ChevronRight size={16} className="shrink-0 text-gray-300" />
+                    </Link>
+                  </Card>
+                );
+              }
+
+              return (
+                <Card key={chapter.id} variant="bordered" padding="none">
+                  <div className="flex items-center gap-3 border-b border-gray-100 px-5 py-4">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700">
+                      {idx + 1}
+                    </span>
+                    <span className="font-semibold text-gray-900">{chapter.title}</span>
+                    <Badge variant="neutral">{chapter.items.length} lessons</Badge>
+                  </div>
+
+                  {chapter.items.length === 0 ? (
+                    <p className="px-5 py-3 text-sm text-gray-400">No lessons in this chapter.</p>
+                  ) : (
+                    <VStack gap={0} align="stretch">
+                      {chapter.items.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={`/courses/${course.id}/lesson/${item.id}`}
+                          className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-gray-50"
+                        >
+                          <span className="text-gray-400">
+                            {item.type === "LESSON" ? <BookOpen size={16} /> :
+                             item.type === "ARTICLE" ? <FileText size={16} /> :
+                             item.type === "DIALOGUE" ? <MessagesSquare size={16} /> :
+                             item.type === "EXERCISE" ? <ListChecks size={16} /> :
+                             <BookOpen size={16} />}
+                          </span>
+                          <span className="flex-1 text-sm font-medium text-gray-800">{item.title}</span>
+                          <ChevronRight size={16} className="text-gray-300" />
+                        </Link>
+                      ))}
+                    </VStack>
+                  )}
+                </Card>
+              );
+            })}
           </VStack>
         )}
 
