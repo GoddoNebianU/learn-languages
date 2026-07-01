@@ -11,7 +11,7 @@ Full-stack language learning platform. AI-powered translation, dictionary lookup
 - **SRT Player** -- subtitle file playback with per-word lookup links and auto-pause
 - **Text-to-Speech** -- inference.sh OmniVoice TTS for natural pronunciation
 - **Decks & Cards** -- create, manage, and study vocabulary with drag-and-drop reordering and multiple review modes (sequential, random, infinite, dictation)
-- **Courses** -- structured language courses with chapters, lessons (article, dialogue, vocabulary, grammar, exercises), per-lesson vocabulary decks, and an in-browser course editor
+- **Courses** -- structured language courses with chapters, lessons (article, dialogue, vocabulary, grammar, exercises), per-lesson vocabulary decks, and an in-browser course editor. Public courses are viewable without login.
 - **Social** -- public decks, favorites, user follows
 - **Single-user mode** -- deploy without authentication, auto-creates a default admin user
 - **Reading** -- AI-powered reading comprehension with sentence-by-sentence translation and word-level alignment
